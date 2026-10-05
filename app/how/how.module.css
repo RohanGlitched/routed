@@ -1,0 +1,17 @@
+.page { max-width: 920px; padding-top: clamp(24px, 5vw, 64px); }
+.h1 { margin: 0; font-family: var(--wood); font-weight: 900; font-size: clamp(52px, 7vw, 96px); line-height: 0.9; }
+.lede { font-size: 19px; line-height: 1.6; color: var(--ink-2); margin: 24px 0 0; max-width: 40em; }
+.sec { margin-top: 64px; }
+.sec > p { color: var(--ink-2); max-width: 44em; }
+.h2 { margin: 0 0 18px; padding-top: 14px; border-top: 3px solid var(--ink); font-family: var(--wood); font-weight: 800; font-size: clamp(32px, 4vw, 48px); line-height: 1; }
+.calls { list-style: none; margin: 0; padding: 0; }
+.calls li { padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.calls h3 { margin: 0 0 4px; font-size: 18px; }
+.calls p { margin: 0; color: var(--ink-2); }
+.endpoint { margin-top: 6px !important; font-size: 13px; color: var(--blue) !important; font-weight: 600; }
+.example { margin-top: 12px; padding: 12px 14px; background: var(--panel); border-left: 3px solid var(--blue); }
+.example code { display: block; margin: 6px 0; font-size: 12px; color: var(--mute); overflow-wrap: anywhere; }
+.q { font-weight: 600; color: var(--ink) !important; }
+.a { font-size: 14px; }
+.note { font-size: 14px; color: var(--mute); margin-top: 16px; }
+.rules { margin: 0; padding-left: 20px; color: var(--ink-2); display: grid; gap: 8px; max-width: 44em; }

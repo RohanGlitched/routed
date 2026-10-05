@@ -1,0 +1,45 @@
+:root {
+  --stock: #fbfbf9;
+  --poster-stock: #f6f5f0;
+  --ink: #16151b;
+  --ink-2: #3a3943;
+  --mute: #6b6a74;
+  --rule: #d9d8de;
+  --fire: #ff3b7a;
+  --fire-deep: #d81b5c;
+  --blue: #1747d6;
+  --blue-deep: #0f36ab;
+  --panel: #ffffff;
+  --wood: var(--font-wood), "Big Shoulders", Impact, sans-serif;
+  --text: var(--font-text), "Schibsted Grotesk", system-ui, sans-serif;
+  --gutter: clamp(16px, 5vw, 72px);
+  --max: 1296px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--stock);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+/* Schibsted Grotesk widens commas under tabular figures, so numbers keep proportional figures. */
+a { color: inherit; }
+img, svg { max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+::selection { background: rgba(255, 59, 122, 0.25); }
+
+.skip { position: absolute; left: -9999px; top: 0; z-index: 10; background: var(--ink); color: #fff; padding: 10px 14px; }
+.skip:focus { left: 12px; top: 12px; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

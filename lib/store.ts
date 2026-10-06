@@ -24,7 +24,8 @@ async function readRaw(id: string): Promise<{ rec: TourRecord; etag?: string } |
   }
   const r = await get(key(id), { access: "private", useCache: false }).catch(() => null);
   if (!r?.stream) return null;
-  return { rec: JSON.parse(await new Response(r.stream).text()) as TourRecord, etag: r.blob.etag };
+  // larger (compressed) reads come back with a weak ETag, W/"…"; If-Match needs the strong form or it never matches
+  return { rec: JSON.parse(await new Response(r.stream).text()) as TourRecord, etag: r.blob.etag?.replace(/^W\//, "") };
 }
 
 async function writeRaw(rec: TourRecord, etag?: string): Promise<void> {

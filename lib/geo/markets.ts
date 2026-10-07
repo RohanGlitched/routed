@@ -79,12 +79,24 @@ export function nearestMarket(p: { lat: number; lon: number }, region?: RegionId
   return best;
 }
 
-const fold = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+/** Lower case, no accents or punctuation, and "Saint"/"St.", "Fort"/"Ft." written one way, so "St. Louis" meets "Saint Louis". */
+const fold = (s: string) =>
+  s
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\bsaint\b/g, "st")
+    .replace(/\bsainte\b/g, "ste")
+    .replace(/\bfort\b/g, "ft")
+    .replace(/\bmount\b/g, "mt");
 
 const ALIASES: Record<string, string> = {
   nyc: "new york", "new york city": "new york", brooklyn: "new york", manhattan: "new york", la: "los angeles", sf: "san francisco",
   philly: "philadelphia", dc: "washington", "washington dc": "washington", "washington d c": "washington", nola: "new orleans",
-  vegas: "las vegas", atx: "austin", "st louis": "saint louis", "st. louis": "saint louis", "st paul": "saint paul",
+  vegas: "las vegas", atx: "austin", "st paul": "minneapolis", "twin cities": "minneapolis", "quebec city": "quebec", "kansas city mo": "kansas city",
 };
 
 /**
@@ -107,6 +119,11 @@ export function findMarket(text: string, region?: RegionId): Market | null {
       const hit = c.filter((m) => matchesQualifier(m, q));
       if (hit.length) candidates = hit;
     }
+  }
+  // "Québec City", "Oklahoma City" (kept), "Mexico City": try without a trailing "city".
+  if (!candidates.length && name.endsWith(" city")) {
+    const n = name.slice(0, -5);
+    candidates = MARKETS.filter((m) => (!region || m.region === region) && (fold(m.ascii) === n || fold(m.name) === n));
   }
   if (!candidates.length) return null;
   if (qualifier) {

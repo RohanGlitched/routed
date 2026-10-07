@@ -3,7 +3,7 @@ import { findMarket, marketId, marketLabel, REGIONS, type RegionId } from "../ge
 import { RADIUS_KM } from "../geo/route";
 import { MODELS, structured } from "../nebius";
 import { describeRequest, qlooGet, search } from "../qloo";
-import type { Artist, CityScore, Guess, GuessStop, Stop } from "../types";
+import type { Artist, CityScore, Guess, GuessStop, Plan, Stop } from "../types";
 import type { Log } from "./tools";
 
 /**
@@ -128,4 +128,30 @@ const fold = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerC
 function sameCity(where: string, city: string): boolean {
   const w = fold(where), c = fold(city).replace(/^(new york city|nyc)$/, "new york");
   return w.includes(c) || (c === "new york" && /brooklyn|manhattan|queens/.test(w));
+}
+
+/**
+ * Re-matches a stored model-alone tour's cities to markets and recomputes the totals, without calling Qloo or the
+ * model again. Used when city matching improves (St. Louis once failed to match and counted as "no fans").
+ */
+export function rescore(plan: Plan): Guess | undefined {
+  const g = plan.guess;
+  if (!g) return undefined;
+  const byId = new Map(plan.cities.map((c) => [c.marketId, c]));
+  const stops = g.stops.map((s) => {
+    if (s.marketId) return s;
+    const m = findMarket(s.label, plan.region) ?? findMarket(s.city, plan.region);
+    if (!m) return s;
+    const score = byId.get(marketId(m));
+    return { ...s, label: marketLabel(m), marketId: marketId(m), affinity: score?.affinity, rank: score?.rank };
+  });
+  const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : undefined);
+  return {
+    ...g,
+    stops,
+    cityMean: { routed: g.cityMean.routed, guess: mean(stops.map((x) => x.affinity ?? 0)) },
+    rankMean: { routed: g.rankMean.routed, guess: mean(stops.map((x) => x.rank ?? plan.cities.length + 1)) },
+    shared: stops.filter((x) => x.marketId && plan.stops.some((s) => s.marketId === x.marketId)).length,
+    unscored: stops.filter((x) => x.affinity === undefined).length,
+  };
 }

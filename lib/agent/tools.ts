@@ -90,7 +90,7 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
 }
 
 /** National chains: a street team's poster goes in the independent shop, not the franchise. */
-const CHAINS = /(starbucks|panera|dunkin|peet'?s|tim hortons|costa coffee|pret|caff[eè] nero|barnes|waterstones|blue bottle|philz|caribou|greggs|mcdonald|chipotle|subway)/i;
+const CHAINS = /\b(starbucks|panera|dunkin|peet'?s|tim hortons|costa coffee|pret|caff[eè] nero|barnes|waterstones|blue bottle|philz|caribou|greggs|mcdonald|chipotle|subway)\b/i;
 
 const SPOTS = {
   after: { tags: AFTER_TAGS, ask: (a: string, c: string) => `Where do ${a} fans go out in ${c}?` },

@@ -129,6 +129,8 @@ export function findMarket(text: string, region?: RegionId): Market | null {
   if (qualifier) {
     const hit = candidates.filter((m) => matchesQualifier(m, qualifier));
     if (hit.length) candidates = hit;
+    // "Charleston, WV" is too small to be a market: never quietly route from Charleston, SC instead.
+    else if (isPlaceName(qualifier)) return null;
   }
   return candidates.sort((a, b) => b.pop - a.pop)[0] ?? null;
 }
@@ -141,6 +143,12 @@ const US_STATES: Record<string, string> = {
   OK: "oklahoma", OR: "oregon", PA: "pennsylvania", RI: "rhode island", SC: "south carolina", SD: "south dakota", TN: "tennessee", TX: "texas",
   UT: "utah", VT: "vermont", VA: "virginia", WA: "washington", WV: "west virginia", WI: "wisconsin", WY: "wyoming",
 };
+
+/** Whether a qualifier names a state, province or country we know (so a miss on it means "not this city"). */
+function isPlaceName(q: string): boolean {
+  const names = [...Object.keys(US_STATES), ...Object.values(US_STATES), ...Object.keys(CA_ABBR), ...Object.values(CA_ABBR), ...Object.keys(COUNTRY), ...Object.values(COUNTRY), "uk", "england", "scotland", "wales", "usa", "us"];
+  return names.some((n) => fold(n) === q);
+}
 
 function matchesQualifier(m: Market, q: string): boolean {
   if (!q) return true;

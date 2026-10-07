@@ -66,7 +66,7 @@ export async function scoreGuess(opts: { artist: Artist; region: RegionId; citie
 
   const guessed: GuessStop[] = await Promise.all(
     raw.stops.map(async (s): Promise<GuessStop> => {
-      const m = findMarket(`${s.city}, ${s.area}`, region) ?? findMarket(s.city, region);
+      const m = findMarket(`${s.city}, ${s.area}`, region);
       const score = m ? byId.get(marketId(m)) : undefined;
       const out: GuessStop = { city: s.city, label: m ? marketLabel(m) : `${s.city}, ${s.area}`, marketId: m ? marketId(m) : undefined, affinity: score?.affinity, rank: score?.rank, venue: s.venue };
       // Resolve the named room on Qloo; keep it only if Qloo's match is in that city.
@@ -140,7 +140,7 @@ export function rescore(plan: Plan): Guess | undefined {
   const byId = new Map(plan.cities.map((c) => [c.marketId, c]));
   const stops = g.stops.map((s) => {
     if (s.marketId) return s;
-    const m = findMarket(s.label, plan.region) ?? findMarket(s.city, plan.region);
+    const m = findMarket(s.label, plan.region);
     if (!m) return s;
     const score = byId.get(marketId(m));
     return { ...s, label: marketLabel(m), marketId: marketId(m), affinity: score?.affinity, rank: score?.rank };

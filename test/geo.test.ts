@@ -20,6 +20,13 @@ test("finds markets the way people type them", () => {
   assert.equal(marketLabel(m("Manchester, NH")), "Manchester, NH");
   assert.equal(marketLabel(m("Washington DC")), "Washington, DC");
   assert.equal(findMarket("Atlantis"), null);
+  assert.equal(marketLabel(m("St. Louis, MO")), "St. Louis, MO");
+  assert.equal(marketLabel(m("Saint Louis")), "St. Louis, MO");
+  assert.equal(marketLabel(m("Ft. Lauderdale")), "Fort Lauderdale, FL");
+  assert.equal(marketLabel(m("St. Paul, MN")), "Minneapolis, MN");
+  // A named state that doesn't match is a miss, not a city of the same name somewhere else.
+  assert.equal(findMarket("Charleston, WV"), null);
+  assert.equal(marketLabel(m("Charleston")), "Charleston, SC");
 });
 
 test("market ids are stable and unique", () => {

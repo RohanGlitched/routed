@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { independents } from "@/lib/chains";
 import type { Spot, Stop } from "@/lib/types";
 import s from "./tour.module.css";
 
@@ -104,11 +105,11 @@ export function DaySheet({ stop, prev, total, artist, pending }: { stop: Stop; p
               </dd>
             </>
           )}
-          {(stop.posters?.length ?? 0) > 0 && (
+          {independents(stop.posters).length > 0 && (
             <>
               <dt>Posters</dt>
               <dd>
-                <Spots spots={stop.posters!} />
+                <Spots spots={independents(stop.posters)} />
                 <span className={s.alt}>Where {artist} fans shop and hang out in {stop.city}.</span>
               </dd>
             </>

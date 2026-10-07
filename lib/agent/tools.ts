@@ -1,5 +1,6 @@
 import "server-only";
 import { marketById, type Market } from "../geo/markets";
+import { CHAINS } from "../chains";
 import { describeRequest, recommend, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
 
@@ -89,8 +90,6 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
   }
 }
 
-/** National chains: a street team's poster goes in the independent shop, not the franchise. */
-const CHAINS = /\b(starbucks|panera|dunkin|peet'?s|tim hortons|costa coffee|pret|caff[eè] nero|barnes|waterstones|blue bottle|philz|caribou|greggs|mcdonald|chipotle|subway)\b/i;
 
 const SPOTS = {
   after: { tags: AFTER_TAGS, ask: (a: string, c: string) => `Where do ${a} fans go out in ${c}?` },

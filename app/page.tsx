@@ -3,6 +3,7 @@ import { RouteForm } from "@/components/home/RouteForm";
 import { Poster } from "@/components/poster/Poster";
 import { opener, room } from "@/lib/agent/evidence";
 import { MARKETS, type RegionId } from "@/lib/geo/markets";
+import { independents } from "@/lib/chains";
 import { posterFor } from "@/lib/poster";
 import { loadTour, shelfTours, showcaseTours } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
@@ -221,10 +222,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ a
           <p className={s.versusLede}>The same audience across the rest of Qloo&apos;s graph becomes the work around a tour. For {plan.artist.name}:</p>
           <dl className={s.beyondList}>
             <div>
-              <dt>Pitch these podcasts</dt>
-              <dd>{plan.audience.media.podcasts.slice(0, 3).map((x) => x.name).join(", ")}</dd>
-            </div>
-            <div>
               <dt>Approach these brands</dt>
               <dd>{plan.audience.brands.slice(0, 3).map((x) => x.name).join(", ")}</dd>
             </div>
@@ -234,12 +231,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ a
                 <dd>{plan.audience.taste.themes.slice(0, 3).map((x) => x.name).join(", ")}</dd>
               </div>
             ) : null}
-            {plan.stops[0]?.posters?.length ? (
+            {independents(plan.stops[0]?.posters).length ? (
               <div>
                 <dt>Poster run in {plan.stops[0].city}</dt>
-                <dd>{plan.stops[0].posters.slice(0, 3).map((x) => x.name).join(", ")}</dd>
+                <dd>{independents(plan.stops[0]!.posters).slice(0, 3).map((x) => x.name).join(", ")}</dd>
               </div>
             ) : null}
+            <div>
+              <dt>Pitch these podcasts</dt>
+              <dd>{plan.audience.media.podcasts.slice(0, 3).map((x) => x.name).join(", ")}</dd>
+            </div>
           </dl>
         </section>
       ) : null}

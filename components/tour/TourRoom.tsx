@@ -153,7 +153,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           {plan!.audience?.advice && <p className={s.advice}>{plan!.audience.advice}</p>}
           <ol className={s.sheets}>
             {stops.map((st, i) => (
-              <DaySheet key={st.marketId} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} />
+              <DaySheet key={st.marketId} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} />
             ))}
           </ol>
         </section>

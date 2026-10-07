@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { fit } from "@/lib/agent/evidence";
 import { independents } from "@/lib/chains";
 import type { Spot, Stop } from "@/lib/types";
 import s from "./tour.module.css";
@@ -33,7 +34,7 @@ function Checked({ text }: { text: string }) {
 }
 
 /** One stop, laid out like a tour manager's day sheet. */
-export function DaySheet({ stop, prev, total, artist, pending }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean }) {
+export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const d = new Date(`${stop.date}T12:00:00Z`);
@@ -86,6 +87,12 @@ export function DaySheet({ stop, prev, total, artist, pending }: { stop: Stop; p
                         {host(room.capacity.source)}
                       </a>
                       .
+                      {draw && fit(room, draw) !== "fits" && (
+                        <span className={s.sizeNote}>
+                          {" "}
+                          {fit(room, draw) === "too small" ? "Small" : "Large"} for a usual crowd of {draw.toLocaleString("en-US")}; none of the other rooms these fans go to here was confirmed to fit, so ask about a bigger room or a second night.
+                        </span>
+                      )}
                     </>
                   ) : (
                     !pending && "Capacity not found on the web; ask the room."

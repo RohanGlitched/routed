@@ -131,7 +131,8 @@ function TourList({ title, rows, n, mean, ours = false }: { title: string; rows:
 function RankStrip({ ours, theirs, cap }: { ours: { name: string; rank: number }[]; theirs: { name: string; rank?: number }[]; cap: number }) {
   const W = 760, H = 112, L = 12, R = 12;
   const x = (rank: number) => L + ((Math.min(rank, cap) - 1) / Math.max(1, cap - 1)) * (W - L - R);
-  const ticks = [1, 10, 20, 30, 40, 50, 75, 100, 150, 200].filter((t) => t <= cap);
+  // Leave room for the end label: no tick within 50 px of it.
+  const ticks = [1, 10, 20, 30, 40, 50, 75, 100, 150, 200].filter((t) => t <= cap && x(cap) - x(t) > 50);
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className={c.svg} role="img" aria-label={`Routed's cities rank ${ours.map((o) => `#${o.rank}`).join(", ")}; the model alone's rank ${theirs.map((t) => (t.rank ? `#${t.rank}` : "unranked")).join(", ")}.`}>
       <line x1={L} x2={W - R} y1={56} y2={56} stroke="var(--ink)" strokeWidth="2" />

@@ -122,14 +122,20 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
           const row = i % rows;
           const x = 32 + col * (colW + 24);
           const y = datesTop + row * rowH;
+          const tx = x + (compact ? 50 : 58);
+          const room = colW - (tx - x) - 4;
+          const cityFs = Math.min(20, rowH * 0.52);
+          const venueFs = Math.min(11.5, rowH * 0.3);
+          // Wood type is condensed, about half an em per capital: squeeze anything wider than its column.
+          const squeeze = (text: string, fs: number, k: number) => (text.length * fs * k > room ? { textLength: room, lengthAdjust: "spacingAndGlyphs" as const } : {});
           return (
             <g key={`b${i}`}>
               <rect x={x} y={y} width={colW} height={2} />
-              <text x={x + (compact ? 50 : 58)} y={y + rowH * 0.5 + 2} className={s.city} style={{ fontSize: Math.min(20, rowH * 0.52) }}>
+              <text x={tx} y={y + rowH * 0.5 + 2} className={s.city} style={{ fontSize: cityFs }} {...squeeze(st.city, cityFs, 0.46)}>
                 {st.city.toUpperCase()}
               </text>
               {st.venue && rowH >= 30 && (
-                <text x={x + (compact ? 50 : 58)} y={y + rowH * 0.5 + 15} className={s.venue} style={{ fontSize: Math.min(11.5, rowH * 0.3) }}>
+                <text x={tx} y={y + rowH * 0.5 + 15} className={s.venue} style={{ fontSize: venueFs }} {...squeeze(st.venue, venueFs, 0.52)}>
                   {st.venue.toUpperCase()}
                 </text>
               )}

@@ -1,8 +1,9 @@
 // Runs the with/without-Qloo benchmark: one tour per artist below, on a live Routed, each shelved on /proof.
-// Usage: ADMIN_TOKEN=… node scripts/bench.mjs [baseUrl] [first-n]
+// Usage: ADMIN_TOKEN=… node scripts/bench.mjs [baseUrl] [how-many] [skip]
 // The artists span sizes, genres and regions on purpose; the list is fixed so the benchmark can be re-run.
 const BASE = process.argv[2] ?? "http://localhost:3800";
 const LIMIT = Number(process.argv[3] ?? 99);
+const SKIP = Number(process.argv[4] ?? 0);
 export const ARTISTS = [
   { artist: "Japanese Breakfast", from: "Portland, OR", draw: 1500 },
   { artist: "MJ Lenderman", from: "Asheville, NC", draw: 900 },
@@ -21,7 +22,7 @@ export const ARTISTS = [
 ];
 const date = new Date(Date.now() + 150 * 86_400_000).toISOString().slice(0, 10);
 
-for (const a of ARTISTS.slice(0, LIMIT)) {
+for (const a of ARTISTS.slice(SKIP, SKIP + LIMIT)) {
   const t0 = Date.now();
   const r = await fetch(`${BASE}/api/tours`, { method: "POST", headers: { "content-type": "application/json", ...(process.env.ADMIN_TOKEN ? { authorization: `Bearer ${process.env.ADMIN_TOKEN}` } : {}) }, body: JSON.stringify({ ...a, firstDate: date, shows: 8 }) });
   const { id, error } = await r.json();

@@ -12,6 +12,13 @@ export function season(iso: string): string {
 }
 
 /** Everything the poster needs from a plan (works with a partial plan while it streams in). */
+/** "Austin City Limits Live (ACL Live & 3TEN ACL Live)" → "Austin City Limits Live": a poster line, not a listing. */
+export function shortVenue(name?: string): string | undefined {
+  if (!name) return undefined;
+  const v = name.replace(/\s*\([^)]*\)/g, "").split(/\s+[|–—-]\s+|,\s/)[0]!.trim();
+  return v.length > 34 ? `${v.slice(0, 33).trimEnd()}…` : v;
+}
+
 export function posterFor(plan: Partial<Plan>): PosterProps | null {
   if (!plan.artist || !plan.region) return null;
   const stops = plan.stops ?? [];
@@ -23,7 +30,7 @@ export function posterFor(plan: Partial<Plan>): PosterProps | null {
     dots: map.dots,
     route: map.route,
     start: map.start,
-    stops: stops.map((s) => ({ date: s.date, city: s.city, venue: (s.rooms.find((r) => r.id === s.roomId) ?? s.rooms[0])?.name })),
+    stops: stops.map((s) => ({ date: s.date, city: s.city, venue: shortVenue((s.rooms.find((r) => r.id === s.roomId) ?? s.rooms[0])?.name) })),
     topCity: plan.cities?.[0]?.name,
   };
 }

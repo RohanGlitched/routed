@@ -41,9 +41,41 @@ A typical eight-show tour makes about 65 Qloo calls. Every one is listed, with i
 
 ## With and without Qloo
 
-<!-- BENCH -->
+Fourteen artists, eight shows each, run on the live site. The same model (Nemotron 3 Ultra), starting city and crowd size on both sides; the model alone gets the artist's name, Routed's agent gets Qloo. Each number is the average rank of a tour's cities among every city where Qloo found that artist's fans (lower is closer to the fans).
+
+**Routed's cities averaged #6.7. The same model without Qloo averaged #26.1.**
+
+| Artist | Routed | Model alone | Cities in common | Strongest city the model missed | Weakest city it chose |
+|---|---|---|---|---|---|
+| [Tyler Childers](https://routed-tours.vercel.app/tour/sdagxkp8gm) | #7.3 | #83.3 | 2 of 8 | Calgary (#1) | Chicago (#204) |
+| [Caamp](https://routed-tours.vercel.app/tour/4qwt7mque3) | #7.4 | #44.6 | 2 of 8 | Boulder (#2) | Detroit (#117) |
+| [Khruangbin](https://routed-tours.vercel.app/tour/2m67zmzkrr) | #4.6 | #38.1 | 2 of 8 | San Francisco (#1) | Atlanta (#74) |
+| [Waxahatchee](https://routed-tours.vercel.app/tour/mnhd55duvy) | #10.0 | #41.5 | 2 of 8 | Portland (#1) | Atlanta (#113) |
+| [MJ Lenderman](https://routed-tours.vercel.app/tour/a4qrqq54ie) | #5.3 | #32.5 | 4 of 8 | Chicago (#1) | Louisville (#104) |
+| [Zach Bryan](https://routed-tours.vercel.app/tour/xdvfdj75mk) | #7.4 | #28.6 | 2 of 8 | Knoxville (#2) | Chicago (#90) |
+| [Clairo](https://routed-tours.vercel.app/tour/bgwwqbrpvi) | #6.4 | #20.8 | 2 of 8 | Los Angeles (#1) | Detroit (#45) |
+| [Turnstile](https://routed-tours.vercel.app/tour/g7s28i8yg5) | #6.3 | #15.1 | 4 of 8 | Los Angeles (#3) | Detroit (#35) |
+| [Parcels](https://routed-tours.vercel.app/tour/tzfgyayvcf) | #6.0 | #14.6 | 5 of 8 | Lyon (#6) | Oslo (#52) |
+| [Japanese Breakfast](https://routed-tours.vercel.app/tour/cmmfwx684m) | #5.0 | #10.9 | 5 of 8 | Montréal (#4) | Denver (#27) |
+| [Alvvays](https://routed-tours.vercel.app/tour/7avtndas55) | #4.8 | #10.5 | 3 of 8 | San Francisco (#1) | Detroit (#21) |
+| [Wet Leg](https://routed-tours.vercel.app/tour/pdhj49duus) | #6.6 | #8.3 | 4 of 8 | Norwich (#20) | Birmingham (#16) |
+| [Arlo Parks](https://routed-tours.vercel.app/tour/vxcr7ssgef) | #8.6 | #9.5 | 4 of 8 | Edinburgh (#9) | Southampton (#25) |
+| [Fontaines D.C.](https://routed-tours.vercel.app/tour/vhcf3evf6t) | #8.7 | #6.9 | 4 of 8 | Edinburgh (#10) | Birmingham (#13) |
+
+The gap closes in the UK, where touring cities are few and the biggest ones are also where the fans are; for Fontaines D.C. the model alone did slightly better. Qloo earns its keep where an artist's audience doesn't follow the population: Qloo puts Tyler Childers' strongest fans in Calgary and Caamp's in Boulder, while the model alone booked Tyler Childers into Chicago (#204 on his map), Caamp into Detroit (#117) and MJ Lenderman into Louisville (#104).
 
 The [benchmark page](https://routed-tours.vercel.app/proof) has every run, the strongest city the model alone missed, the weakest one it chose, and how each artist's home city ranks on their own heatmap (an outside check that the map matches the world).
+
+## Use it from your own agent
+
+Routed is also an MCP server (Streamable HTTP). Add `https://routed-tours.vercel.app/api/mcp` to any assistant that supports remote MCP servers and it gets four tools:
+
+| Tool | What it does |
+|---|---|
+| `fan_map` | Where an artist's fans over-index in North America, the UK and Ireland, or mainland Europe |
+| `fan_profile` | Who the fans are: door advice, sound, mood, themes, dishes, podcasts, brands, films, TV, books |
+| `route_tour` | A whole tour in about a minute, with the dates, rooms, openers and a link to the tour book |
+| `get_tour` | Reads back a tour book by its link |
 
 ## How it works
 

@@ -71,6 +71,7 @@ export default async function Proof() {
   const routedOutside = tours.reduce((n, t) => n + (t.plan?.stops.filter((s) => s.score.rank > 25).length ?? 0), 0);
   const homes = r.filter((x) => x.home !== undefined);
   const cap = Math.max(40, ...r.map((x) => Math.ceil(x.guess / 10) * 10));
+  const close = r.filter((x) => x.guess - x.routed < 2);
 
   return (
     <div className={`wrap ${s.page}`}>
@@ -110,6 +111,11 @@ export default async function Proof() {
               Artist by artist
             </h2>
             <p className={s.note}>Average rank of each tour&apos;s cities among every city where Qloo found fans. Left is stronger.</p>
+            {close.length > 0 && (
+              <p className={s.close}>
+                The gap closes where touring cities are few and the biggest ones are also where the fans are: for {close.map((x) => x.artist).join(", ")}, the model alone did about as well or better. Qloo earns its keep where an artist&apos;s audience doesn&apos;t follow the population.
+              </p>
+            )}
             <ul className={s.dumbbells}>
               {r.map((x) => (
                 <li key={x.id}>

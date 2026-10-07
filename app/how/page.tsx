@@ -57,6 +57,13 @@ export default async function How() {
       </section>
 
       <section className={s.sec}>
+        <h2 className={s.h2}>Use it from your own agent</h2>
+        <p>
+          Routed is also an MCP server. Add <code>https://routed-tours.vercel.app/api/mcp</code> to any assistant that supports remote MCP servers (Claude, ChatGPT, VS Code) and it gets four tools: <b>fan_map</b> (where an artist&apos;s fans over-index), <b>fan_profile</b> (who they are and what else they love), <b>route_tour</b> (a whole tour in about a minute, with a link to its tour book) and <b>get_tour</b>.
+        </p>
+      </section>
+
+      <section className={s.sec}>
         <h2 className={s.h2}>The control group</h2>
         <p>
           Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for fourteen artists.

@@ -14,15 +14,18 @@
     "node": "22.x"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "^2.3.1",
     "@vercel/blob": "^2.8.0",
     "d3-geo": "^3.1.1",
+    "mcp-handler": "^2.2.0",
     "next": "^15.5.27",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "server-only": "^0.0.1",
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
-    "world-atlas": "^2.0.2"
+    "world-atlas": "^2.0.2",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/d3-geo": "^3.1.1",

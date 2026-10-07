@@ -38,7 +38,7 @@ A manager deciding where to play has a streaming dashboard that counts plays, no
 | Is the audience growing? | `/v2/trending` |
 | How well does each room match, ours and the model's? | `/v2/insights` `filter.type=urn:entity:place`, `filter.results.entities=<every room on both tours>` |
 
-A typical eight-show tour makes about 65 Qloo calls. Every one is listed, with its plain-words question, the exact request (never the key) and the answer, at the end of its tour book.
+A typical eight-show tour makes about 55 Qloo calls. Every one is listed, with its plain-words question, the exact request (never the key) and the answer, at the end of its tour book.
 
 ## With and without Qloo
 

@@ -117,9 +117,9 @@ npm test                     # unit tests: routing rules, scoring, capacity pars
 | `QLOO_API_KEY` | Every Qloo call (hackathon host `https://hackathon.api.qloo.com`, header `X-Api-Key`) |
 | `QLOO_BASE_URL` | Optional, defaults to the hackathon host |
 | `NEBIUS_API_KEY` | The agent, the control group and the pitches. Without it, the fixed plan and template pitches run |
-| `TAVILY_API_KEY` | Room capacities from the web. Without it, capacity reads "ask the room" |
+| `TAVILY_API_KEY` | Optional: room capacities use Tavily's keyless mode by default; set `TAVILY_USE_KEY=1` to search with this key instead |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob for tours and the capacity cache. Without it, tours are files under `.data/` |
-| `DAILY_MODEL_CAP` | Model runs per day for the public demo (default 200) |
+| `DAILY_MODEL_CAP` | Model runs per day for the public demo (default 200; the live site uses 50) |
 | `ADMIN_TOKEN` | Optional: shelving tours on the poster wall and the benchmark (`scripts/bench.mjs`) |
 
 `node scripts/probe-qloo.mjs "Artist"` measures every Qloo call Routed depends on and saves the raw responses, which is how the tags, the Europe polygon and the scoring were chosen.

@@ -8,7 +8,28 @@ import { pickCapacity } from "./agent/capacity";
  */
 const API = "https://api.tavily.com";
 
-export const hasTavily = () => Boolean(process.env.TAVILY_API_KEY);
+/**
+ * Routed searches in Tavily's keyless mode by default, so it spends none of the account's monthly credits (another
+ * project relies on them). TAVILY_USE_KEY=1 switches to the key. Either way at most WEB_DAILY_CAP searches a day
+ * per server instance, on top of the shared cache below.
+ */
+const USE_KEY = process.env.TAVILY_USE_KEY === "1" && Boolean(process.env.TAVILY_API_KEY);
+const WEB_DAILY_CAP = Number(process.env.WEB_DAILY_CAP || 60);
+let webDay = "";
+let webCount = 0;
+
+export const hasTavily = () => process.env.TAVILY_OFF !== "1";
+
+function takeSearch(): boolean {
+  const d = new Date().toISOString().slice(0, 10);
+  if (d !== webDay) {
+    webDay = d;
+    webCount = 0;
+  }
+  if (webCount >= WEB_DAILY_CAP) return false;
+  webCount++;
+  return true;
+}
 
 type Cap = { value: number; source: string; quote: string };
 
@@ -55,10 +76,10 @@ export async function roomCapacity(venue: string, city: string): Promise<Cap | n
   const key = `${venue}|${city}`.toLowerCase();
   await load();
   if (memo.has(key)) return memo.get(key)!;
-  if (!hasTavily()) return null;
+  if (!hasTavily() || !takeSearch()) return null;
   const r = await fetch(`${API}/search`, {
     method: "POST",
-    headers: { authorization: `Bearer ${process.env.TAVILY_API_KEY}`, "content-type": "application/json" },
+    headers: USE_KEY ? { authorization: `Bearer ${process.env.TAVILY_API_KEY}`, "content-type": "application/json" } : { "x-tavily-access-mode": "keyless", "content-type": "application/json" },
     body: JSON.stringify({ query: `${venue} ${city} venue capacity`, search_depth: "basic", max_results: 5, include_answer: false }),
     signal: AbortSignal.timeout(12_000),
   });

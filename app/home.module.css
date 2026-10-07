@@ -100,3 +100,46 @@
   .steps { grid-template-columns: 1fr; }
   .wall { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 }
+
+/* With and without Qloo */
+.versusSec { margin-top: clamp(80px, 10vw, 140px); }
+.versusHead { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(20px, 4vw, 56px); align-items: end; margin-bottom: 32px; }
+.versusHead .h2 { margin: 0; }
+.versusLede { margin: 0; font-size: 17px; color: var(--ink-2); max-width: 36em; }
+.duel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr); gap: clamp(16px, 3vw, 36px); align-items: start; }
+.duelSide { border-top: 4px solid var(--blue); padding-top: 14px; min-width: 0; }
+.duelOurs { border-top-color: var(--fire); }
+.duelSide h3 { margin: 0 0 10px; font-size: 16px; }
+.duelSide ol { list-style: none; margin: 0; padding: 0; }
+.duelSide li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+.duelSide li b { font-family: var(--wood); font-weight: 800; font-size: 18px; color: var(--blue); }
+.duelOurs li b { color: var(--fire-deep); }
+.duelSide li.cold { color: var(--mute); }
+.duelSide li.cold b { color: #9e9da7; }
+.duelSide > p { margin: 12px 0 0; font-size: 15px; }
+.duelSide > p b { font-family: var(--wood); font-weight: 900; font-size: 30px; vertical-align: -3px; }
+.duelNote { align-self: end; font-size: 17px; }
+.duelNote p { margin: 0 0 16px; }
+.duelNote b { font-weight: 700; }
+.more { display: inline-block; font-weight: 700; color: var(--ink); text-decoration-color: var(--fire); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+.beyond { margin-top: clamp(80px, 10vw, 140px); }
+.beyond .versusLede { margin-bottom: 24px; }
+.beyondList { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0; border-top: 3px solid var(--ink); }
+.beyondList > div { padding: 16px 18px 18px 0; min-width: 0; }
+.beyondList > div + div { padding-left: 18px; border-left: 1px solid var(--rule); }
+.beyondList dt { font-family: var(--wood); font-weight: 800; font-size: 22px; color: var(--blue); line-height: 1.05; }
+.beyondList dd { margin: 8px 0 0; font-size: 16px; }
+
+@media (max-width: 900px) {
+  .versusHead { grid-template-columns: 1fr; }
+  .duel { grid-template-columns: 1fr 1fr; }
+  .duelNote { grid-column: 1 / -1; }
+  .beyondList { grid-template-columns: 1fr 1fr; }
+  .beyondList > div:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+@media (max-width: 560px) {
+  .duel { grid-template-columns: 1fr; }
+  .beyondList { grid-template-columns: 1fr; }
+  .beyondList > div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
+}

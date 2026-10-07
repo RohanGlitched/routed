@@ -34,7 +34,7 @@ export type Msg =
 export type ToolCall = { id: string; type: "function"; function: { name: string; arguments: string } };
 export type ToolDef = { type: "function"; function: { name: string; description: string; parameters: Record<string, unknown> } };
 
-export type ChatResult = { model: string; content: string; toolCalls: ToolCall[]; usage?: { prompt_tokens: number; completion_tokens: number } };
+export type ChatResult = { model: string; content: string; toolCalls: ToolCall[]; finish?: string; usage?: { prompt_tokens: number; completion_tokens: number } };
 
 export function hasKey(): boolean {
   return Boolean(process.env.NEBIUS_API_KEY);
@@ -52,14 +52,14 @@ async function once(model: string, body: Record<string, unknown>, timeoutMs: num
     console.error(`[nebius] ${model} HTTP ${r.status}: ${text}`);
     throw new Error(`HTTP ${r.status}`);
   }
-  const j = (await r.json()) as { choices: { message: { content: string | null; tool_calls?: ToolCall[] } }[]; usage?: ChatResult["usage"] };
+  const j = (await r.json()) as { choices: { message: { content: string | null; tool_calls?: ToolCall[] }; finish_reason?: string }[]; usage?: ChatResult["usage"] };
   const m = j.choices?.[0]?.message;
   if (!m) throw new Error("empty response");
-  return { model, content: (m.content ?? "").trim(), toolCalls: m.tool_calls ?? [], usage: j.usage };
+  return { model, content: (m.content ?? "").trim(), toolCalls: m.tool_calls ?? [], finish: j.choices[0]?.finish_reason, usage: j.usage };
 }
 
 /** One chat call, trying each model in the chain until one answers. */
-export async function chat(chain: string[], body: { messages: Msg[]; tools?: ToolDef[]; tool_choice?: unknown; response_format?: unknown; max_tokens?: number; temperature?: number }, timeoutMs = 30_000): Promise<ChatResult> {
+export async function chat(chain: string[], body: { messages: Msg[]; tools?: ToolDef[]; tool_choice?: unknown; response_format?: unknown; max_tokens?: number; temperature?: number; chat_template_kwargs?: Record<string, unknown> }, timeoutMs = 30_000): Promise<ChatResult> {
   if (!hasKey()) throw new Error("NEBIUS_API_KEY is not set");
   let last: unknown;
   // Two passes over the chain: Token Factory has answered 401 to every model for a few seconds at a time
@@ -90,17 +90,26 @@ export function parseJson<T>(text: string): T {
   }
 }
 
-/** Structured output under a strict JSON schema. Retries the next model when one returns something unparsable. */
-export async function structured<T>(chain: string[], opts: { name: string; schema: Record<string, unknown>; messages: Msg[]; maxTokens?: number; timeoutMs?: number }): Promise<{ data: T; model: string }> {
+/**
+ * Structured output under a strict JSON schema. Retries the next model when one returns something unparsable.
+ * Reasoning is off unless asked for: with it on, Nemotron 3 Ultra spent the whole token budget thinking and was
+ * cut off mid-JSON (finish "length", measured Oct 7); off, the same answer came back in about a second.
+ */
+export async function structured<T>(chain: string[], opts: { name: string; schema: Record<string, unknown>; messages: Msg[]; maxTokens?: number; timeoutMs?: number; think?: boolean }): Promise<{ data: T; model: string }> {
   let last: unknown;
   for (const model of chain) {
     try {
       const r = await chat(
         [model],
-        { messages: opts.messages, max_tokens: opts.maxTokens ?? 2500, response_format: { type: "json_schema", json_schema: { name: opts.name, strict: true, schema: opts.schema } } },
+        { messages: opts.messages, max_tokens: opts.maxTokens ?? 2500, response_format: { type: "json_schema", json_schema: { name: opts.name, strict: true, schema: opts.schema } }, chat_template_kwargs: { enable_thinking: Boolean(opts.think) } },
         opts.timeoutMs ?? 30_000,
       );
-      return { data: parseJson<T>(r.content), model: r.model };
+      try {
+        return { data: parseJson<T>(r.content), model: r.model };
+      } catch (e) {
+        console.error(`[nebius] ${model} returned non-JSON for ${opts.name} (${r.content.length} chars, finish ${r.finish ?? "?"}): ${r.content.slice(0, 200)}`);
+        throw e;
+      }
     } catch (e) {
       last = e;
     }

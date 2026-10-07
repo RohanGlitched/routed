@@ -65,16 +65,22 @@ export type PosterMap = {
 };
 
 /**
- * Dot radius: a floor so the land reads, plus heat from nearby tiles (affinity, falling off over ~130 km).
- * Normalised to the hottest dot on this map, so every poster uses the full range of the screen.
+ * Dot radius: a floor so the land reads, plus heat from nearby tiles (falling off over ~130 km). A tile's heat is
+ * its strength (affinity × popularity) stretched between the weakest and strongest tiles kept, squared, so the
+ * hot spots stand out instead of the whole map reading 0.9. Normalised to the hottest dot on this map, so every
+ * poster uses the full range of the screen.
  */
-export function posterMap(region: RegionId, heat: { lat: number; lon: number; affinity: number }[], stops: { lat: number; lon: number }[], start?: { lat: number; lon: number }): PosterMap {
+export function posterMap(region: RegionId, heat: { lat: number; lon: number; affinity: number; popularity?: number }[], stops: { lat: number; lon: number }[], start?: { lat: number; lon: number }): PosterMap {
   const { proj, points } = mask(region);
+  const strength = heat.map((t) => t.affinity * (t.popularity ?? 1));
+  const lo = Math.min(...strength), hi = Math.max(...strength);
+  const tiles = heat.map((t, i) => ({ lat: t.lat, lon: t.lon, w: hi > lo ? ((strength[i]! - lo) / (hi - lo)) ** 2 : 1 }));
   const raw = points.map((p) => {
     let h = 0;
-    for (const t of heat) {
+    for (const t of tiles) {
+      if (t.w < 0.02) continue;
       const d = km(p, t);
-      if (d < 420) h = Math.max(h, t.affinity * Math.exp(-((d / 130) ** 2)));
+      if (d < 420) h = Math.max(h, t.w * Math.exp(-((d / 130) ** 2)));
     }
     return h;
   });

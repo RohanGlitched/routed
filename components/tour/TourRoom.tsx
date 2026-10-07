@@ -9,6 +9,8 @@ import { Audience } from "./Audience";
 import { CallSheet } from "./CallSheet";
 import { DaySheet } from "./DaySheet";
 import { downloadPoster } from "./download";
+import { Campaign } from "./Campaign";
+import { Control } from "./Control";
 import s from "./tour.module.css";
 
 type Event = { t: "log"; line: LogLine } | { t: "plan"; plan: Partial<Plan> } | { t: "done"; at: string; engine: TourRecord["engine"] } | { t: "error"; message: string };
@@ -156,6 +158,9 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           </ol>
         </section>
       )}
+
+      {!running && plan?.guess && <Control plan={plan} agent={rec.engine?.agent} />}
+      {!running && plan?.audience && <Campaign plan={plan} />}
 
       {!running && rec.log.length > 0 && (
         <details className={s.trace}>

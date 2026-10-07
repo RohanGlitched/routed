@@ -19,7 +19,8 @@ export function doorAdvice(age: Audience["age"]): string | undefined {
   const young = age["24_and_younger"];
   const older = (age["35_to_44"] ?? 0) + (age["45_to_54"] ?? 0) + (age["55_and_older"] ?? 0);
   if (young === undefined && !older) return undefined;
-  if ((young ?? 0) >= 0.1) return "Fans over-index at 24 and under: ask every room for an all-ages or 18+ show.";
+  const peak = topAge(age);
+  if ((young ?? 0) >= 0.1) return peak && peak.bucket !== "24_and_younger" ? `Fans peak at ${AGE_LABEL[peak.bucket]}, and the under-25s over-index too: ask every room for an all-ages or 18+ show.` : "Fans over-index at 24 and under: ask every room for an all-ages or 18+ show.";
   if ((young ?? 0) > 0) return "Fans lean young: an all-ages or 18+ door keeps the under-21s in.";
   if (older >= 0.15) return "Fans skew 35 and over: 21+ rooms and seated theatres both work; earlier set times help.";
   return "Fans are spread across ages: any door policy works.";

@@ -9,14 +9,21 @@ export const metadata: Metadata = { title: "How it works", description: "The age
 
 const CALLS: { match: RegExp; title: string; why: string; endpoint: string }[] = [
   { match: /^Who is/, title: "Find the artist", why: "Resolves the name to a Qloo entity, so every later call is about the right act.", endpoint: "GET /search" },
-  { match: /over-index in/, title: "Where the fans are", why: "A heatmap of the region: each tile scores how much this artist's fans over-index there compared with the place's own taste. Routed puts each tile in its city.", endpoint: "GET /v2/insights with filter.type=urn:heatmap" },
+  { match: /over-index in/, title: "Where the fans are", why: "A heatmap of the region: thousands of map tiles, each with how far this artist's fans over-index there and how much taste signal the tile carries. Routed puts each tile in its city and ranks cities by the two together.", endpoint: "GET /v2/insights with filter.type=urn:heatmap" },
   { match: /by age and gender/, title: "Who the fans are", why: "Signed over- and under-index by age and gender. A young skew means asking rooms for all-ages shows.", endpoint: "GET /v2/insights with filter.type=urn:demographics" },
-  { match: /else do .* love/, title: "What else they love", why: "Taste analysis: the concepts that describe this audience. Used in pitches and to brief the agent.", endpoint: "GET /v2/insights with filter.type=urn:tag" },
-  { match: /growing/, title: "Momentum", why: "Weekly popularity percentile for the last six months.", endpoint: "GET /v2/trending" },
+  { match: /listen to\?/, title: "The sound", why: "Taste analysis restricted to music genres: how to describe the night to a talent buyer.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:genre:music" },
+  { match: /describe the music/, title: "The mood", why: "The words this audience's favourite music is tagged with (Sensitive, Dreamy, Anthemic): tone for the poster and the ads.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:artist:qloo" },
+  { match: /themes/, title: "The themes", why: "Themes this audience connects with across books, film and music: the creative brief.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:theme:qloo" },
+  { match: /dishes/, title: "The food", why: "Dishes these fans seek out at restaurants: a pre-show pop-up partner or the rider.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:specialty_dish:place" },
+  { match: /podcasts/, title: "Press", why: "Cross-domain: the podcasts this audience over-indexes on, to pitch first.", endpoint: "GET /v2/insights with filter.type=urn:entity:podcast" },
   { match: /brands/, title: "Merch and partners", why: "Cross-domain: brands these fans over-index on.", endpoint: "GET /v2/insights with filter.type=urn:entity:brand" },
-  { match: /^Which rooms/, title: "Rooms in each city", why: "Places tagged as music venues inside the city, ranked by affinity to the artist's fans. The agent calls this per city and swaps a city out when its rooms don't fit.", endpoint: "GET /v2/insights with filter.type=urn:entity:place" },
-  { match: /^Who could open/, title: "Openers", why: "Artists no bigger than the headliner whose audience matches, weighted to the city's own taste.", endpoint: "GET /v2/insights with filter.type=urn:entity:artist and signal.location" },
-  { match: /go out in/, title: "After the show", why: "Cross-domain again: the bars these fans over-index on in that city.", endpoint: "GET /v2/insights with filter.type=urn:entity:place" },
+  { match: /films/, title: "Films, TV and books", why: "Cross-domain: what this audience watches and reads, for content and tie-ins.", endpoint: "GET /v2/insights with filter.type=urn:entity:movie, tv_show and book" },
+  { match: /growing/, title: "Momentum", why: "Weekly popularity percentile for the last six months; shown when it moved.", endpoint: "GET /v2/trending" },
+  { match: /^Which rooms/, title: "Rooms in each city", why: "Places tagged live music venue or concert hall inside the city, ranked by affinity to the artist's fans. Chapels, museums, stores and casinos that carry the tag are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
+  { match: /^Who could open/, title: "Openers", why: "Artists no bigger than the headliner whose audience matches, weighted to the city's own taste.", endpoint: "GET /v2/insights with filter.type=urn:entity:artist, signal.location.query and filter.popularity.max" },
+  { match: /see a poster/, title: "The poster run", why: "Cross-domain: the record stores, bookshops and cafés these fans go to in each city. Chains are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
+  { match: /go out in/, title: "After the show", why: "Cross-domain again: the bars these fans over-index on in that city.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
+  { match: /each room, Routed/, title: "Scoring both tours", why: "Every room from Routed's tour and the model-alone tour, scored against this artist's fans in one call restricted to exactly those rooms, so both sides share a scale.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.results.entities" },
 ];
 
 async function example(): Promise<{ id: string; artist: string; log: LogLine[] } | null> {
@@ -39,13 +46,20 @@ export default async function How() {
       <section className={s.sec}>
         <h2 className={s.h2}>The agent</h2>
         <p>
-          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) gets the ranked heatmap cities, the fans&apos; age skew and tastes, and three tools: look up rooms in a city, look up openers in a
-          city, and finish. It chooses which cities to investigate, calls the tools (several at once), replaces a city whose rooms don&apos;t fit, and submits one room and one opener per stop
-          with a one-line reason.
+          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does, in three moves. It <b>shortlists</b> cities from Qloo&apos;s ranked heatmap, weighing fan strength against geography, with a few alternates. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room and one opener per city, swapping in an alternate when a city&apos;s rooms don&apos;t fit, and writes one sentence on why.
         </p>
         <p>
-          Rules hold it in. Cities must come from Qloo&apos;s candidates; the radius clause is enforced; every chosen city gets its room lookup even if the agent skipped it; gaps are filled
-          from the ranking. If the model is down or the day&apos;s budget is spent, the same steps run as a fixed plan, and the tour book says which one ran.
+          Rules hold it in. Cities must come from Qloo&apos;s candidates; the radius clause is enforced; the booked room&apos;s capacity is checked on the web, and with a known crowd size a room that misses it is swapped for one that fits; gaps are filled from the ranking. If the model is down or the day&apos;s budget is spent, the same steps run as a fixed plan, and the tour book says which one ran.
+        </p>
+        <p>
+          A free-running tool loop came first. Nemotron repeated lookups and ran out of turns on most tours, so the moves are fixed and the choices are the model&apos;s. Every model call returns strict JSON with reasoning off, which took a booking from about a minute to a few seconds.
+        </p>
+      </section>
+
+      <section className={s.sec}>
+        <h2 className={s.h2}>The control group</h2>
+        <p>
+          Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for fourteen artists.
         </p>
       </section>
 
@@ -98,7 +112,9 @@ export default async function How() {
           <li>Qloo affinity says where fans over-index, not how many tickets will sell. It&apos;s the first question a booker asks, not the last.</li>
           <li>Room availability, offers and guarantees come from the rooms. The pitch asks for them.</li>
           <li>Drive times are estimates from distance, not a road router.</li>
-          <li>Routed sends Qloo only public names: the artist and the cities. No personal data is collected or sent.</li>
+          <li>Routed sends Qloo only public names: the artist, cities and venues. No personal data is collected or sent.</li>
+          <li>Qloo sometimes merges two acts with one name (one &ldquo;Wednesday&rdquo; profile carries Japanese visual-kei tags). Routed takes Qloo&apos;s best match for the name; check the genres on the tour book.</li>
+          <li>The comparison scores both tours on Qloo&apos;s own evidence. It shows how much closer the agent gets to where Qloo says the fans are, not ticket sales.</li>
         </ul>
       </section>
     </div>

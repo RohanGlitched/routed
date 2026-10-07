@@ -16,6 +16,14 @@ export function longDate(iso: string): string {
   return `${d.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })}, ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
 }
 
+/** How a room's known capacity compares with the usual crowd: 60% to 250% of the draw fits. */
+export function fit(r: Room, draw?: number): "fits" | "too small" | "too big" | "unknown" {
+  if (!draw || !r.capacity) return "unknown";
+  if (r.capacity.value < draw * 0.6) return "too small";
+  if (r.capacity.value > draw * 2.5) return "too big";
+  return "fits";
+}
+
 export const room = (s: Stop): Room | undefined => s.rooms.find((r) => r.id === s.roomId) ?? s.rooms[0];
 export const opener = (s: Stop): Opener | undefined => s.openers.find((o) => o.id === s.openerId) ?? s.openers[0];
 
@@ -36,7 +44,10 @@ export function evidenceLines(plan: Plan, s: Stop): string[] {
   }
   if (o) lines.push(`Suggested opener: ${o.name}${o.affinity !== undefined ? `, Qloo audience affinity ${pct(o.affinity)} out of 100 with ${plan.artist.name}` : ""}${o.shared.length ? `; shared tastes: ${o.shared.slice(0, 3).join(", ")}` : ""}.`);
   if (top) lines.push(`Audience: Qloo says ${plan.artist.name} fans over-index most at ages ${AGE_LABEL[top.bucket]}.`);
-  if (plan.audience.tags.length) lines.push(`What these fans also love (Qloo taste analysis): ${plan.audience.tags.slice(0, 5).map((t) => t.name).join(", ")}.`);
+  const t = plan.audience.taste;
+  if (t?.music?.length) lines.push(`The sound these fans love (Qloo taste analysis): ${t.music.slice(0, 4).map((x) => x.name).join(", ")}.`);
+  if (t?.vibe?.length) lines.push(`How these fans describe the music they love: ${t.vibe.slice(0, 3).map((x) => x.name.toLowerCase()).join(", ")}.`);
+  if (!t && plan.audience.tags.length) lines.push(`What these fans also love (Qloo taste analysis): ${plan.audience.tags.slice(0, 5).map((x) => x.name).join(", ")}.`);
   if (s.after.length) lines.push(`Where these fans go out in ${s.city} (Qloo): ${s.after.slice(0, 2).map((a) => a.name).join(", ")}.`);
   const trend = plan.audience.trend;
   if (trend.length >= 2) {

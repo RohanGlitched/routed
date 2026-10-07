@@ -31,7 +31,29 @@ export class QlooError extends Error {
 const memo = new Map<string, { at: number; body: unknown }>();
 const TTL_MS = 6 * 3600_000;
 
-/** One GET. Cached for six hours per URL (taste data moves weekly); retried once on a 429 or 5xx. */
+/**
+ * Qloo's hackathon key is rate limited (a tour's per-stop lookups fired together got 429s, measured Oct 7), so
+ * requests go through one gate: at most MAX_IN_FLIGHT at once, starts at least GAP_MS apart.
+ */
+const MAX_IN_FLIGHT = Number(process.env.QLOO_CONCURRENCY || 4);
+const GAP_MS = Number(process.env.QLOO_GAP_MS || 110);
+let inFlight = 0;
+let lastStart = 0;
+const waiting: (() => void)[] = [];
+
+async function gate(): Promise<() => void> {
+  while (inFlight >= MAX_IN_FLIGHT) await new Promise<void>((r) => waiting.push(r));
+  inFlight++;
+  const wait = lastStart + GAP_MS - Date.now();
+  lastStart = Math.max(Date.now(), lastStart + GAP_MS);
+  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+  return () => {
+    inFlight--;
+    waiting.shift()?.();
+  };
+}
+
+/** One GET. Cached for six hours per URL (taste data moves weekly); retried with backoff on a 429 or 5xx. */
 export async function qlooGet<T>(path: string, query: Query, timeoutMs = 20_000): Promise<{ body: T; request: QlooRequest }> {
   const q: Record<string, string> = {};
   for (const [k, v] of Object.entries(query)) if (v !== undefined && v !== "") q[k] = String(v);
@@ -42,15 +64,18 @@ export async function qlooGet<T>(path: string, query: Query, timeoutMs = 20_000)
   if (!hasQloo()) throw new QlooError("QLOO_API_KEY is not set", 0, request);
 
   let last: QlooError | null = null;
-  for (let attempt = 0; attempt < 2; attempt++) {
-    if (attempt) await new Promise((r) => setTimeout(r, 800));
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (attempt) await new Promise((r) => setTimeout(r, 700 * 2 ** (attempt - 1) + Math.random() * 300));
     let r: Response;
+    const release = await gate();
     try {
       r = await fetch(url, { headers: { "X-Api-Key": process.env.QLOO_API_KEY!, accept: "application/json" }, signal: AbortSignal.timeout(timeoutMs) });
     } catch (e) {
+      release();
       last = new QlooError(`Qloo didn't answer (${(e as Error).name === "TimeoutError" ? "timed out" : "network error"})`, 0, request);
       continue;
     }
+    release();
     if (r.ok) {
       const body = (await r.json()) as T;
       memo.set(url, { at: Date.now(), body });
@@ -113,6 +138,7 @@ type RawEntity = {
   tags?: { id?: string; tag_id?: string; name?: string; type?: string }[];
   properties?: Record<string, unknown> & {
     image?: { url?: string };
+    images?: { url?: string }[];
     geocode?: Record<string, unknown>;
     address?: string;
     description?: string;
@@ -142,7 +168,7 @@ export function toEntity(e: RawEntity): Entity {
     id: String(e.entity_id ?? e.id ?? ""),
     name: String(e.name ?? ""),
     subtype: e.subtype,
-    image: str(p.image?.url),
+    image: str(p.image?.url) ?? str(p.images?.[0]?.url),
     popularity: num(e.popularity),
     affinity: num(e.query?.affinity ?? e.affinity),
     disambiguation: str(e.disambiguation),

@@ -17,6 +17,7 @@ export function Footer() {
         </p>
         <nav className={s.footNav} aria-label="Footer">
           <Link href="/how">How it works</Link>
+          <Link href="/proof">With and without Qloo</Link>
           <a href={REPO_URL}>Source code</a>
         </nav>
       </div>

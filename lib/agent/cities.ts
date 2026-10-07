@@ -1,19 +1,31 @@
 import { marketId, marketLabel, nearestMarket, type Market, type RegionId } from "../geo/markets";
 import type { CityScore } from "../types";
 
-/** Where to ask Qloo for the heatmap, per region. Several areas when one name doesn't cover the region. */
-export const HEAT_AREAS: Record<RegionId, string[]> = {
-  na: (process.env.QLOO_HEAT_NA ?? "United States|Canada").split("|"),
-  uk: (process.env.QLOO_HEAT_UK ?? "United Kingdom|Ireland").split("|"),
-  eu: (process.env.QLOO_HEAT_EU ?? "Europe").split("|"),
+export type HeatArea = { name: string; within: string };
+
+/**
+ * Where to ask Qloo for the heatmap, per region: a locality name Qloo resolves, or a WKT polygon where no name
+ * works. ("Europe" resolves to a street in Colombes, near Paris, so the continent is drawn as a polygon.)
+ */
+export const HEAT_AREAS: Record<RegionId, HeatArea[]> = {
+  na: [
+    { name: "the United States", within: "United States" },
+    { name: "Canada", within: "Canada" },
+  ],
+  uk: [
+    { name: "the United Kingdom", within: "United Kingdom" },
+    { name: "Ireland", within: "Ireland" },
+  ],
+  eu: [{ name: "mainland Europe", within: "POLYGON((-10 36, 30 36, 30 60, 25 71, 5 62, -10 52, -10 36))" }],
 };
 
 export type HeatTile = { lat: number; lon: number; affinity: number; rank?: number; popularity?: number };
 
 /**
  * Turns heatmap tiles into ranked touring markets: each tile goes to the market it sits in (within 60 km), and a
- * market scores its best tile. Ranked by affinity, then by the tile's rank among the artist's own tiles, then
- * by popularity (how much signal is there), so a tiny hot tile in a big city doesn't beat a whole hot city by noise.
+ * market scores its best tile. Qloo's tile affinity is a rank across the whole map (the top 1% all read 0.99+),
+ * so on its own it crowns one-tile hot spots (Indio, which is the Coachella grounds). A tile's strength is
+ * affinity × popularity: how far fans over-index there times how much taste signal the tile carries at all.
  */
 export function scoreCities(tiles: HeatTile[], region: RegionId): CityScore[] {
   const by = new Map<string, { m: Market; best: HeatTile; n: number }>();
@@ -46,8 +58,10 @@ export function scoreCities(tiles: HeatTile[], region: RegionId): CityScore[] {
 
 const round = (v: number) => Math.round(v * 1000) / 1000;
 
+export const strength = (t: HeatTile) => t.affinity * (t.popularity ?? 1);
+
 function better(a: HeatTile, b: HeatTile): boolean {
-  if (Math.abs(a.affinity - b.affinity) > 0.005) return a.affinity > b.affinity;
-  if ((a.rank ?? 0) !== (b.rank ?? 0)) return (a.rank ?? 0) > (b.rank ?? 0);
-  return (a.popularity ?? 0) > (b.popularity ?? 0);
+  const d = strength(a) - strength(b);
+  if (Math.abs(d) > 1e-6) return d > 0;
+  return (a.rank ?? 0) > (b.rank ?? 0);
 }

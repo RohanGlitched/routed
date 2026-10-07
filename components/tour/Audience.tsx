@@ -8,6 +8,9 @@ export function Audience({ plan }: { plan: Plan }) {
   const ages = AGE_ORDER.filter((b) => a.age[b] !== undefined);
   const max = Math.max(0.05, ...ages.map((b) => Math.abs(a.age[b]!)));
   const trend = a.trend.filter((p) => p.percentile !== undefined);
+  // A flat line says nothing: show the trend only when it moved; otherwise the themes these fans connect with.
+  const moved = trend.length > 2 && Math.abs(trend.at(-1)!.percentile! - trend[0]!.percentile!) >= 1;
+  const themes = a.taste?.themes ?? [];
   return (
     <div className={s.audience}>
       {ages.length > 0 && (
@@ -31,7 +34,7 @@ export function Audience({ plan }: { plan: Plan }) {
       )}
       {a.tags.length > 0 && (
         <figure className={s.panel}>
-          <figcaption>These fans also love</figcaption>
+          <figcaption>The sound and mood these fans love</figcaption>
           <ul className={s.chips}>
             {a.tags.slice(0, 8).map((t) => (
               <li key={t.id}>{t.name}</li>
@@ -39,7 +42,20 @@ export function Audience({ plan }: { plan: Plan }) {
           </ul>
         </figure>
       )}
-      {trend.length > 2 && <Trend points={trend as { date: string; percentile: number }[]} />}
+      {moved ? (
+        <Trend points={trend as { date: string; percentile: number }[]} />
+      ) : (
+        themes.length > 0 && (
+          <figure className={s.panel}>
+            <figcaption>Themes these fans connect with</figcaption>
+            <ul className={s.chips}>
+              {themes.slice(0, 7).map((t) => (
+                <li key={t.id}>{t.name}</li>
+              ))}
+            </ul>
+          </figure>
+        )
+      )}
       {a.brands.length > 0 && (
         <figure className={s.panel}>
           <figcaption>Brands they over-index on, for merch and partners</figcaption>

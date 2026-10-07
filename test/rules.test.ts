@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { capacitiesIn, pickCapacity } from "../lib/agent/capacity.ts";
-import { checkNumbers, longDate } from "../lib/agent/evidence.ts";
+import { checkNumbers, fit, longDate } from "../lib/agent/evidence.ts";
 import { scoreCities } from "../lib/agent/cities.ts";
 import { doorAdvice, topAge } from "../lib/agent/audience.ts";
 
@@ -42,19 +42,30 @@ test("dates read the way a booker writes them", () => {
   assert.equal(longDate("2027-03-12"), "Friday, March 12");
 });
 
-test("heatmap tiles become ranked cities; a city scores its best tile", () => {
+test("heatmap tiles become ranked cities; a city scores its strongest tile (affinity × popularity)", () => {
   const tiles = [
     { lat: 41.88, lon: -87.63, affinity: 0.71, popularity: 0.9 }, // Chicago
-    { lat: 41.95, lon: -87.65, affinity: 0.93, popularity: 0.8 }, // Chicago (Lakeview)
-    { lat: 45.52, lon: -122.68, affinity: 0.88 }, // Portland
+    { lat: 41.95, lon: -87.65, affinity: 0.93, popularity: 0.8 }, // Chicago (Lakeview): 0.744
+    { lat: 45.52, lon: -122.68, affinity: 0.88, popularity: 0.7 }, // Portland: 0.616
+    { lat: 33.72, lon: -116.22, affinity: 0.99, popularity: 0.3 }, // Indio: hot but thin, 0.297
     { lat: 35.0, lon: -60.0, affinity: 0.99 }, // Atlantic: no city
   ];
   const cities = scoreCities(tiles, "na");
   assert.deepEqual(cities.map((c) => [c.name, c.affinity, c.tiles, c.rank]), [
     ["Chicago", 0.93, 2, 1],
     ["Portland", 0.88, 1, 2],
+    ["Indio", 0.99, 1, 3],
   ]);
   assert.equal(cities[0]!.marketId, "chicago-us-il");
+});
+
+test("a room fits a crowd between 60% and 250% of the draw", () => {
+  const r = (value?: number) => ({ id: "x", name: "x", tags: [], ...(value ? { capacity: { value, source: "s", quote: "q" } } : {}) });
+  assert.equal(fit(r(1000), 1500), "fits");
+  assert.equal(fit(r(800), 1500), "too small");
+  assert.equal(fit(r(4000), 1500), "too big");
+  assert.equal(fit(r(), 1500), "unknown");
+  assert.equal(fit(r(1000)), "unknown");
 });
 
 test("door advice follows the age skew", () => {

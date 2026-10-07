@@ -1,4 +1,5 @@
 import "server-only";
+import { get, put } from "@vercel/blob";
 import { pickCapacity } from "./agent/capacity";
 
 /**
@@ -9,10 +10,50 @@ const API = "https://api.tavily.com";
 
 export const hasTavily = () => Boolean(process.env.TAVILY_API_KEY);
 
-const memo = new Map<string, { value: number; source: string; quote: string } | null>();
+type Cap = { value: number; source: string; quote: string };
 
-export async function roomCapacity(venue: string, city: string): Promise<{ value: number; source: string; quote: string } | null> {
+/**
+ * Searches cost credits (1,000 a month on the free plan), so every answer, found or not, is remembered: in
+ * memory, and in one private blob read once per server instance, so a room is searched once, not once a tour.
+ */
+const memo = new Map<string, Cap | null>();
+const INDEX = "capacity/index.json";
+let loaded: Promise<void> | null = null;
+let dirty = false;
+let flushing: ReturnType<typeof setTimeout> | null = null;
+
+const useBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+
+function load(): Promise<void> {
+  if (!useBlob()) return Promise.resolve();
+  loaded ??= (async () => {
+    const r = await get(INDEX, { access: "private", useCache: false }).catch(() => null);
+    if (!r?.stream) return;
+    const j = JSON.parse(await new Response(r.stream).text()) as Record<string, Cap | null>;
+    for (const [k, v] of Object.entries(j)) if (!memo.has(k)) memo.set(k, v);
+  })().catch(() => {});
+  return loaded;
+}
+
+function scheduleFlush() {
+  if (!useBlob()) return;
+  dirty = true;
+  if (flushing) return;
+  flushing = setTimeout(async () => {
+    flushing = null;
+    if (!dirty) return;
+    dirty = false;
+    // Merge with what other instances wrote since this one loaded.
+    const r = await get(INDEX, { access: "private", useCache: false }).catch(() => null);
+    const theirs = r?.stream ? (JSON.parse(await new Response(r.stream).text()) as Record<string, Cap | null>) : {};
+    const all = { ...theirs, ...Object.fromEntries(memo) };
+    await put(INDEX, JSON.stringify(all), { access: "private", contentType: "application/json", addRandomSuffix: false, allowOverwrite: true }).catch((e) => console.error("[tavily] cache write failed", e));
+  }, 4000);
+}
+
+export async function roomCapacity(venue: string, city: string): Promise<Cap | null> {
   const key = `${venue}|${city}`.toLowerCase();
+  await load();
   if (memo.has(key)) return memo.get(key)!;
   if (!hasTavily()) return null;
   const r = await fetch(`${API}/search`, {
@@ -29,5 +70,6 @@ export async function roomCapacity(venue: string, city: string): Promise<{ value
   const pages = (j.results ?? []).map((x) => ({ url: x.url, text: `${x.title}\n${x.content}` }));
   const cap = pickCapacity(venue, pages);
   memo.set(key, cap);
+  scheduleFlush();
   return cap;
 }

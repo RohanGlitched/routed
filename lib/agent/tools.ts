@@ -7,8 +7,13 @@ import type { Artist, LogLine, Opener, Room, Spot } from "../types";
  * The per-city Qloo lookups the agent can call, each logged with its plain question and exact request.
  * Tag URNs come from env so a probe result can change them without a deploy.
  */
-export const VENUE_TAGS = (process.env.QLOO_VENUE_TAGS ?? "urn:tag:genre:place:music_venue").split(",");
-export const AFTER_TAGS = (process.env.QLOO_AFTER_TAGS ?? "urn:tag:genre:place:bar").split(",");
+export const VENUE_TAGS = (process.env.QLOO_VENUE_TAGS ?? "urn:tag:genre:place:live_music_venue,urn:tag:genre:place:concert_hall").split(",");
+export const AFTER_TAGS = (process.env.QLOO_AFTER_TAGS ?? "urn:tag:genre:place:restaurant:live_music_bar,urn:tag:genre:place:restaurant:cocktail_bar,urn:tag:genre:place:restaurant:bar").split(",");
+/** Where a street team puts up posters: the record stores, bookshops and cafés these fans already go to. */
+export const POSTER_TAGS = (process.env.QLOO_POSTER_TAGS ?? "urn:tag:genre:place:record_store,urn:tag:genre:place:book_store,urn:tag:genre:place:restaurant:coffee_shop").split(",");
+
+/** Places tagged as music venues that aren't rooms a touring band books (Qloo tags chapels and casinos too). */
+const NOT_A_ROOM = /church|chapel|cathedral|place_of_worship|museum|casino|hotel|stadium|amusement|school|university|record_store|music_store|clothing_store|book_store|winery/;
 
 export type Log = (line: Omit<LogLine, "at">) => void;
 
@@ -46,8 +51,8 @@ export async function lookUpRooms(artist: Artist, marketId: string, log: Log): P
   const m = marketById(marketId);
   if (!m) return [];
   try {
-    const [r, ms] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), tags: VENUE_TAGS, take: 8 }));
-    const rooms = r.entities.filter((e) => !e.place?.isClosed).map(toRoom).slice(0, 6);
+    const [r, ms] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), tags: VENUE_TAGS, take: 12 }));
+    const rooms = r.entities.filter((e) => !e.place?.isClosed && !e.tags.some((t) => /genre:place|category:place/.test(t.id) && NOT_A_ROOM.test(t.id))).map(toRoom).slice(0, 8);
     log({ kind: "qloo", text: `Which rooms in ${m.name} do ${artist.name} fans go to?`, result: rooms.length ? rooms.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "No music venues came back.", request: describeRequest(r.request), ms });
     return rooms;
   } catch (e) {
@@ -84,17 +89,45 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
   }
 }
 
-/** Cross-domain: the bars this artist's fans over-index on in the city, for the aftershow and the advance. */
-export async function lookUpAfter(artist: Artist, marketId: string, log: Log): Promise<Spot[]> {
+/** National chains: a street team's poster goes in the independent shop, not the franchise. */
+const CHAINS = /(starbucks|panera|dunkin|peet'?s|tim hortons|costa coffee|pret|caff[eè] nero|barnes|waterstones|blue bottle|philz|caribou|greggs|mcdonald|chipotle|subway)/i;
+
+const SPOTS = {
+  after: { tags: AFTER_TAGS, ask: (a: string, c: string) => `Where do ${a} fans go out in ${c}?` },
+  posters: { tags: POSTER_TAGS, ask: (a: string, c: string) => `Where in ${c} would ${a} fans see a poster?` },
+} as const;
+
+/**
+ * Cross-domain lookups for the advance: the bars these fans go to after a show (aftershow) and the record stores,
+ * bookshops and cafés they go to (the poster run). Rooms the tour already uses and music venues are left out.
+ */
+export async function lookUpSpots(kind: keyof typeof SPOTS, artist: Artist, marketId: string, log: Log, skip: string[] = []): Promise<Spot[]> {
   const m = marketById(marketId);
   if (!m) return [];
+  const { tags, ask } = SPOTS[kind];
   try {
-    const [r, ms] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), tags: AFTER_TAGS, take: 3 }));
-    const spots = r.entities.slice(0, 2).map((e) => ({ id: e.id, name: e.name, address: e.place?.address ?? e.disambiguation, affinity: e.affinity }));
-    log({ kind: "qloo", text: `Where do ${artist.name} fans go out in ${m.name}?`, result: spots.map((s) => s.name).join(", ") || "Nothing came back.", request: describeRequest(r.request), ms });
+    const [r, ms] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), tags, exclude: skip.length ? skip : undefined, take: 8 }));
+    const spots = r.entities
+      .filter((e) => !e.place?.isClosed && !skip.includes(e.id) && !CHAINS.test(e.name) && !e.tags.some((t) => VENUE_TAGS.includes(t.id)))
+      .slice(0, 3)
+      .map((e) => ({ id: e.id, name: e.name, address: e.place?.address ?? e.disambiguation, affinity: e.affinity, kind: spotKind(e.tags.map((t) => t.id)) }));
+    log({ kind: "qloo", text: ask(artist.name, m.name), result: spots.map((x) => x.name).join(", ") || "Nothing came back.", request: describeRequest(r.request), ms });
     return spots;
   } catch (e) {
-    log({ kind: "qloo", text: `Where do ${artist.name} fans go out in ${m.name}?`, result: (e as Error).message, failed: true });
+    log({ kind: "qloo", text: ask(artist.name, m.name), result: (e as Error).message, failed: true });
     return [];
   }
+}
+
+/** "Record store", "Bookshop", "Café", "Cocktail bar"… from the place's tags, for the day sheet. */
+function spotKind(ids: string[]): string | undefined {
+  const has = (t: string) => ids.some((x) => x.endsWith(t));
+  if (has(":record_store")) return "Record store";
+  if (has(":book_store")) return "Bookshop";
+  if (has(":coffee_shop") || has(":cafe")) return "Café";
+  if (has(":live_music_bar")) return "Live music bar";
+  if (has(":cocktail_bar")) return "Cocktail bar";
+  if (has(":wine_bar")) return "Wine bar";
+  if (has(":bar")) return "Bar";
+  return undefined;
 }

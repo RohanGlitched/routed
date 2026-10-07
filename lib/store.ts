@@ -72,21 +72,25 @@ export async function updateTour(id: string, fn: (rec: TourRecord) => TourRecord
   return null;
 }
 
-/** The curated tours flagged for the home page (the poster wall), newest first. */
-export async function showcaseTours(): Promise<TourRecord[]> {
+export type Shelf = "showcase" | "bench";
+
+/** Tours on a shelf, newest first: "showcase" (the poster wall) or "bench" (the with/without-Qloo benchmark). */
+export async function shelfTours(shelf: Shelf): Promise<TourRecord[]> {
   let ids: string[] = [];
   if (!useBlob()) {
     ids = (await fs.readdir(LOCAL_DIR).catch(() => [] as string[])).filter((f) => f.endsWith(".json")).map((f) => f.slice(0, -5));
   } else {
-    const page = await list({ prefix: "showcase/", limit: 60 });
-    ids = page.blobs.map((b) => b.pathname.slice(9, -5));
+    const page = await list({ prefix: `${shelf}/`, limit: 100 });
+    ids = page.blobs.map((b) => b.pathname.slice(shelf.length + 1, -5));
   }
-  const recs = (await Promise.all(ids.map((id) => loadTour(id).catch(() => null)))).filter((r): r is TourRecord => Boolean(r?.showcase && r.status === "done"));
+  const recs = (await Promise.all(ids.map((id) => loadTour(id).catch(() => null)))).filter((r): r is TourRecord => Boolean(r?.[shelf] && r.status === "done"));
   return recs.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
-/** Marks a tour as a home-page example (an empty marker blob, so listing stays cheap). */
-export async function markShowcase(id: string): Promise<void> {
-  await updateTour(id, (r) => ({ ...r, showcase: true }));
-  if (useBlob()) await put(`showcase/${id}.json`, "{}", { access: "private", contentType: "application/json", addRandomSuffix: false, allowOverwrite: true });
+export const showcaseTours = () => shelfTours("showcase");
+
+/** Puts a tour on a shelf (an empty marker blob, so listing stays cheap). */
+export async function shelve(id: string, shelf: Shelf): Promise<void> {
+  await updateTour(id, (r) => ({ ...r, [shelf]: true }));
+  if (useBlob()) await put(`${shelf}/${id}.json`, "{}", { access: "private", contentType: "application/json", addRandomSuffix: false, allowOverwrite: true });
 }

@@ -13,6 +13,7 @@ export function Header() {
         <nav className={s.nav} aria-label="Main">
           <Link href="/#route">Route a tour</Link>
           <Link href="/#wall">Poster wall</Link>
+          <Link href="/proof">With and without Qloo</Link>
           <Link href="/how">How it works</Link>
         </nav>
       </div>

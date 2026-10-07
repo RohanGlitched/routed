@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Stop } from "@/lib/types";
+import type { Spot, Stop } from "@/lib/types";
 import s from "./tour.module.css";
 
 const pct = (v?: number) => (v === undefined ? null : Math.round(v * 100));
@@ -104,11 +104,21 @@ export function DaySheet({ stop, prev, total, artist, pending }: { stop: Stop; p
               </dd>
             </>
           )}
+          {(stop.posters?.length ?? 0) > 0 && (
+            <>
+              <dt>Posters</dt>
+              <dd>
+                <Spots spots={stop.posters!} />
+                <span className={s.alt}>Where {artist} fans shop and hang out in {stop.city}.</span>
+              </dd>
+            </>
+          )}
           {stop.after.length > 0 && (
             <>
               <dt>After</dt>
               <dd>
-                Where {artist} fans go out here: {stop.after.map((a) => a.name).join(", ")}
+                <Spots spots={stop.after} />
+                <span className={s.alt}>Where these fans go out here: the aftershow, or where to send the crew.</span>
               </dd>
             </>
           )}
@@ -150,5 +160,20 @@ export function DaySheet({ stop, prev, total, artist, pending }: { stop: Stop; p
         )}
       </div>
     </li>
+  );
+}
+
+/** "Mississippi Records (record store), Cloudforest (café)". */
+function Spots({ spots }: { spots: Spot[] }) {
+  return (
+    <span>
+      {spots.map((x, i) => (
+        <span key={x.id}>
+          {i > 0 && ", "}
+          <b>{x.name}</b>
+          {x.kind && <span className={s.kindNote}> ({x.kind.toLowerCase()})</span>}
+        </span>
+      ))}
+    </span>
   );
 }

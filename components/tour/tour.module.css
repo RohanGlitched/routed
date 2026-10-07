@@ -127,3 +127,5 @@
   .call { grid-template-columns: 52px minmax(0, 1fr); }
   .ms { display: none; }
 }
+
+.kindNote { color: var(--mute); font-weight: 400; }

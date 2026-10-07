@@ -4,7 +4,7 @@ import { Poster } from "@/components/poster/Poster";
 import { opener, room } from "@/lib/agent/evidence";
 import { MARKETS, type RegionId } from "@/lib/geo/markets";
 import { posterFor } from "@/lib/poster";
-import { loadTour, showcaseTours } from "@/lib/store";
+import { loadTour, shelfTours, showcaseTours } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
 import s from "./home.module.css";
 
@@ -24,9 +24,30 @@ function biggest(region: RegionId, n: number) {
     .map((m) => m.name);
 }
 
+/** The pitch's strongest sentence or two for the home page: the longest paragraph, struck figures removed. */
+function pitchLine(body: string): string {
+  const para =
+    body
+      .split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l && !/^(hi|hello|thanks)\b/i.test(l))
+      .sort((a, b) => b.length - a.length)[0] ?? "";
+  const clean = para.replace(/~~[^~]+~~/g, "").replace(/\s+/g, " ");
+  const sentences = clean.match(/[^.!?]+[.!?]+/g) ?? [clean];
+  return sentences.slice(0, 2).join(" ").trim();
+}
+
+/** The benchmark in two numbers, for the home page. */
+async function bench(): Promise<{ n: number; routed: number; guess: number } | null> {
+  const tours = (await shelfTours("bench").catch(() => [] as TourRecord[])).filter((t) => t.plan?.guess?.rankMean.guess !== undefined);
+  if (!tours.length) return null;
+  const avg = (f: (t: TourRecord) => number) => tours.reduce((a, t) => a + f(t), 0) / tours.length;
+  return { n: tours.length, routed: avg((t) => t.plan!.guess!.rankMean.routed ?? 0), guess: avg((t) => t.plan!.guess!.rankMean.guess ?? 0) };
+}
+
 export default async function Home({ searchParams }: { searchParams: Promise<{ artist?: string; from?: string }> }) {
   const q = await searchParams;
-  const { hero, wall } = await showcase();
+  const [{ hero, wall }, b] = await Promise.all([showcase(), bench()]);
   const plan = hero?.plan;
   const poster = plan ? posterFor(plan) : null;
   const stop = plan?.stops?.[1] ?? plan?.stops?.[0];
@@ -126,7 +147,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ a
             <li className={s.step}>
               <h3>Pitch every room, checked</h3>
               <p>Nemotron drafts a hold request from each stop&apos;s evidence. Every figure in it is checked against that evidence; anything that isn&apos;t there is struck out.</p>
-              {stop.pitch && <blockquote className={s.quote}>{stop.pitch.body.split("\n").filter(Boolean).slice(1, 3).join(" ").replace(/~~/g, "")}</blockquote>}
+              {stop.pitch && <blockquote className={s.quote}>{pitchLine(stop.pitch.body)}</blockquote>}
               {room(stop)?.capacity && (
                 <p className={s.small}>
                   {room(stop)!.name} holds {room(stop)!.capacity!.value.toLocaleString("en-US")}, per {new URL(room(stop)!.capacity!.source).hostname.replace(/^www\./, "")}.
@@ -136,6 +157,92 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ a
           </ol>
         </section>
       )}
+
+      {plan?.guess && (
+        <section className={`wrap ${s.versusSec}`} aria-labelledby="versus-title">
+          <div className={s.versusHead}>
+            <h2 id="versus-title" className={s.h2}>
+              The same model, without Qloo
+            </h2>
+            <p className={s.versusLede}>
+              Every tour runs twice. Before the agent looks anything up, the same model routes the same shows from what it already knows, and both tours are scored on the artist&apos;s own Qloo evidence.
+            </p>
+          </div>
+          <div className={s.duel}>
+            <div className={s.duelSide}>
+              <h3>{plan.artist.name}, model alone</h3>
+              <ol>
+                {plan.guess.stops.map((g, i) => (
+                  <li key={i} className={g.rank && g.rank <= 25 ? undefined : s.cold}>
+                    <span>{g.city}</span>
+                    <b>{g.rank ? `#${g.rank}` : "no fans"}</b>
+                  </li>
+                ))}
+              </ol>
+              <p>
+                Average rank <b>#{Math.round(plan.guess.rankMean.guess ?? 0)}</b> of {plan.guess.ranked}
+              </p>
+            </div>
+            <div className={`${s.duelSide} ${s.duelOurs}`}>
+              <h3>{plan.artist.name}, with Qloo</h3>
+              <ol>
+                {plan.stops.map((x) => (
+                  <li key={x.marketId}>
+                    <span>{x.city}</span>
+                    <b>#{x.score.rank}</b>
+                  </li>
+                ))}
+              </ol>
+              <p>
+                Average rank <b>#{Math.round(plan.guess.rankMean.routed ?? 0)}</b> of {plan.guess.ranked}
+              </p>
+            </div>
+            <div className={s.duelNote}>
+              {b ? (
+                <p>
+                  Across <b>{b.n}</b> artists in the benchmark, Routed&apos;s cities averaged <b>#{Math.round(b.routed)}</b> on each artist&apos;s fan map. The same model alone averaged <b>#{Math.round(b.guess)}</b>.
+                </p>
+              ) : (
+                <p>Cities in grey sit outside the artist&apos;s top 25 on Qloo&apos;s heatmap.</p>
+              )}
+              <Link href="/proof" className={s.more}>
+                See every artist
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {plan?.audience?.media?.podcasts?.length ? (
+        <section className={`wrap ${s.beyond}`} aria-labelledby="beyond-title">
+          <h2 id="beyond-title" className={s.h2}>
+            Beyond the room
+          </h2>
+          <p className={s.versusLede}>The same audience across the rest of Qloo&apos;s graph becomes the work around a tour. For {plan.artist.name}:</p>
+          <dl className={s.beyondList}>
+            <div>
+              <dt>Pitch these podcasts</dt>
+              <dd>{plan.audience.media.podcasts.slice(0, 3).map((x) => x.name).join(", ")}</dd>
+            </div>
+            <div>
+              <dt>Approach these brands</dt>
+              <dd>{plan.audience.brands.slice(0, 3).map((x) => x.name).join(", ")}</dd>
+            </div>
+            {plan.audience.taste?.themes?.length ? (
+              <div>
+                <dt>Write to these themes</dt>
+                <dd>{plan.audience.taste.themes.slice(0, 3).map((x) => x.name).join(", ")}</dd>
+              </div>
+            ) : null}
+            {plan.stops[0]?.posters?.length ? (
+              <div>
+                <dt>Poster run in {plan.stops[0].city}</dt>
+                <dd>{plan.stops[0].posters.slice(0, 3).map((x) => x.name).join(", ")}</dd>
+              </div>
+            ) : null}
+          </dl>
+        </section>
+      ) : null}
 
       {wall.length > 0 && (
         <section className={`wrap ${s.wallSec}`} id="wall" aria-labelledby="wall-title">

@@ -2,15 +2,15 @@ import "server-only";
 import { findMarket, marketId, marketLabel, REGIONS } from "../geo/markets";
 import { orderStops, schedule } from "../geo/route";
 import { modelLabel } from "../nebius";
-import { demographics, describeRequest, search, tasteTags, trending, wherePopular, recommend, type Entity } from "../qloo";
-import type { Artist, Audience, CityScore, Engine, LogLine, Plan, Stop } from "../types";
-import { roomCapacity } from "../web";
-import { doorAdvice } from "./audience";
-import { HEAT_AREAS, scoreCities, type HeatTile } from "./cities";
+import { describeRequest, search, wherePopular, type Entity } from "../qloo";
+import type { Artist, CityScore, Engine, LogLine, Plan, Stop, TourInput } from "../types";
+import { buildDossier } from "./dossier";
+import { HEAT_AREAS, scoreCities, strength, type HeatTile } from "./cities";
 import { checkNumbers, evidenceLines, room } from "./evidence";
 import { writePitches } from "./pitch";
+import { askWithoutQloo, scoreGuess } from "./guess";
 import { planTour } from "./plan";
-import { lookUpAfter } from "./tools";
+import { lookUpSpots } from "./tools";
 
 /**
  * One routing run, as a stream of events the page renders as they arrive:
@@ -58,7 +58,7 @@ const toArtist = (e: Entity): Artist => ({
   genres: e.tags.filter((t) => /genre/.test(t.type ?? t.id)).map((t) => t.name).slice(0, 5),
 });
 
-export async function* runTour(input: { artist: string; from: string; firstDate: string; shows: number }, useModel: boolean): AsyncGenerator<Event> {
+export async function* runTour(input: TourInput, useModel: boolean): AsyncGenerator<Event> {
   const ch = channel<Event>();
   const engine: Engine = { planned: useModel ? "model" : "fixed" };
   const log = (l: Omit<LogLine, "at">) => ch.push({ t: "log", line: { at: now(), ...l } });
@@ -82,84 +82,43 @@ export async function* runTour(input: { artist: string; from: string; firstDate:
     const from = { marketId: marketId(home), label: marketLabel(home), lat: home.lat, lon: home.lon };
     ch.push({ t: "plan", plan: { artist, region, from, firstDate: input.firstDate } });
 
+    // The control group starts now: the same model, no Qloo. Scored once Routed's tour exists.
+    const guessP = useModel ? askWithoutQloo(artist, marketLabel(home), region, input.shows, input.draw) : Promise.resolve(null);
+    if (useModel) log({ kind: "model", text: `Asked the model alone, with no Qloo, to route the same ${input.shows} shows (the control group).` });
+
     // 2. Where the fans are, and who they are, in parallel.
-    const end = new Date().toISOString().slice(0, 10);
-    const start = new Date(Date.now() - 26 * 7 * 86_400_000).toISOString().slice(0, 10);
     const heatP = Promise.all(
       HEAT_AREAS[region].map(async (area) => {
         const t0 = Date.now();
         try {
-          const r = await wherePopular(artist.id, area, 50);
-          log({ kind: "qloo", text: `Where do ${artist.name} fans over-index in ${area}?`, result: `${r.tiles.length} heatmap tiles`, request: describeRequest(r.request), ms: Date.now() - t0 });
+          const r = await wherePopular(artist.id, area.within, 50);
+          log({ kind: "qloo", text: `Where do ${artist.name} fans over-index in ${area.name}?`, result: `${r.tiles.length} heatmap tiles`, request: describeRequest(r.request), ms: Date.now() - t0 });
           return r.tiles;
         } catch (e) {
-          log({ kind: "qloo", text: `Where do ${artist.name} fans over-index in ${area}?`, result: (e as Error).message, failed: true });
+          log({ kind: "qloo", text: `Where do ${artist.name} fans over-index in ${area.name}?`, result: (e as Error).message, failed: true });
           return [] as HeatTile[];
         }
       }),
     ).then((l) => l.flat());
 
-    const audience: Audience = { age: {}, gender: {}, tags: [], trend: [], brands: [] };
-    const audP = Promise.all([
-      (async () => {
-        const t0 = Date.now();
-        try {
-          const r = await demographics(artist.id);
-          if (r.skew) {
-            audience.age = r.skew.age;
-            audience.gender = r.skew.gender;
-            audience.advice = doorAdvice(audience.age);
-          }
-          log({ kind: "qloo", text: `Who are ${artist.name}'s fans, by age and gender?`, result: audience.advice ?? "No demographic skew came back.", request: describeRequest(r.request), ms: Date.now() - t0 });
-        } catch (e) {
-          log({ kind: "qloo", text: `Who are ${artist.name}'s fans?`, result: (e as Error).message, failed: true });
-        }
-      })(),
-      (async () => {
-        const t0 = Date.now();
-        try {
-          const r = await tasteTags([artist.id], { take: 12 });
-          audience.tags = r.tags.filter((x) => x.name.toLowerCase() !== artist.name.toLowerCase()).slice(0, 10).map((x) => ({ id: x.id, name: x.name, affinity: x.affinity }));
-          log({ kind: "qloo", text: `What else do ${artist.name} fans love?`, result: audience.tags.slice(0, 5).map((x) => x.name).join(", ") || "Nothing came back.", request: describeRequest(r.request), ms: Date.now() - t0 });
-        } catch (e) {
-          log({ kind: "qloo", text: `What else do ${artist.name} fans love?`, result: (e as Error).message, failed: true });
-        }
-      })(),
-      (async () => {
-        const t0 = Date.now();
-        try {
-          const r = await trending(artist.id, "urn:entity:artist", start, end);
-          audience.trend = r.points.map((p) => ({ date: p.date, percentile: p.percentile, velocity: p.velocity }));
-          const a = r.points[0]?.percentile, b = r.points.at(-1)?.percentile;
-          log({ kind: "qloo", text: `Is ${artist.name}'s audience growing?`, result: a !== undefined && b !== undefined ? `Popularity percentile ${Math.round(a)} → ${Math.round(b)} over ${r.points.length} weeks` : "No trend data came back.", request: describeRequest(r.request), ms: Date.now() - t0 });
-        } catch (e) {
-          log({ kind: "qloo", text: `Is ${artist.name}'s audience growing?`, result: (e as Error).message, failed: true });
-        }
-      })(),
-      (async () => {
-        const t0 = Date.now();
-        try {
-          const r = await recommend({ type: "urn:entity:brand", signals: [artist.id], take: 6 });
-          audience.brands = r.entities.map((e) => ({ id: e.id, name: e.name }));
-          log({ kind: "qloo", text: `Which brands do ${artist.name} fans over-index on (for merch and partners)?`, result: audience.brands.slice(0, 4).map((x) => x.name).join(", ") || "Nothing came back.", request: describeRequest(r.request), ms: Date.now() - t0 });
-        } catch (e) {
-          log({ kind: "qloo", text: `Which brands do ${artist.name} fans over-index on?`, result: (e as Error).message, failed: true });
-        }
-      })(),
-    ]);
+    const audP = buildDossier(artist, log);
 
     const tiles = await heatP;
     const cities: CityScore[] = scoreCities(tiles, region);
     log({ kind: "rule", text: `Heatmap tiles placed in their cities (a market is a city of 50k+ with its suburbs).`, result: cities.length ? `${cities.length} cities; strongest: ${cities.slice(0, 4).map((c) => c.name).join(", ")}` : "No tile fell inside a touring city." });
-    const heat = tiles.map((x) => ({ lat: x.lat, lon: x.lon, affinity: x.affinity, popularity: x.popularity }));
+    // The poster needs the hot spots, not all ~6,000 tiles: keep the strongest 700 (a few KB, not half a MB).
+    const heat = [...tiles]
+      .sort((a, b) => strength(b) - strength(a))
+      .slice(0, 700)
+      .map((x) => ({ lat: +x.lat.toFixed(3), lon: +x.lon.toFixed(3), affinity: +x.affinity.toFixed(4), popularity: x.popularity === undefined ? undefined : +x.popularity.toFixed(4) }));
     ch.push({ t: "plan", plan: { heat, cities } });
     if (cities.length < 2) return fail(`Qloo's heatmap didn't show enough ${REGIONS[region].name} cities for ${artist.name} to route a tour. Try a starting city in another region, or a better-known artist.`);
-    await audP;
+    const audience = await audP;
     ch.push({ t: "plan", plan: { audience } });
 
     // 3. The agent picks cities, rooms and openers.
     const shows = Math.min(input.shows, cities.length);
-    const picked = await planTour({ artist, audience, cities, from, shows, useModel, log });
+    const picked = await planTour({ artist, audience, cities, from, shows, draw: input.draw, useModel, log });
     engine.planned = picked.planned;
     if (picked.model) engine.agent = modelLabel(picked.model);
 
@@ -195,21 +154,23 @@ export async function* runTour(input: { artist: string; from: string; firstDate:
     const plan: Plan = { artist, region, from, firstDate: input.firstDate, lastDate: legs.at(-1)?.date ?? input.firstDate, heat, cities, stops, totalKm, audience };
     ch.push({ t: "plan", plan });
 
-    // 5. Capacity from the web and aftershow spots from Qloo, per stop, in parallel.
-    t = Date.now();
+    // 5. The advance from Qloo, per stop, in parallel: where to put posters up, and where fans go after.
     await Promise.all(
       stops.map(async (s) => {
-        const r = room(s);
-        const [cap, after] = await Promise.all([r ? roomCapacity(r.name, s.city).catch(() => null) : null, lookUpAfter(artist, s.marketId, log)]);
+        const skip = s.rooms.map((x) => x.id);
+        const [after, posters] = await Promise.all([lookUpSpots("after", artist, s.marketId, log, skip), lookUpSpots("posters", artist, s.marketId, log, skip)]);
         s.after = after;
-        if (r && cap) {
-          r.capacity = cap;
-          log({ kind: "web", text: `How many does ${r.name} hold?`, result: `${cap.value.toLocaleString("en-US")}, per ${new URL(cap.source).hostname.replace(/^www\./, "")}` });
-        } else if (r) log({ kind: "web", text: `How many does ${r.name} hold?`, result: "No capacity found on the web; ask the room." });
+        s.posters = posters;
       }),
     );
     for (const s of stops) if (s.why) s.why = checkNumbers(s.why, evidenceLines(plan, s)).text;
     ch.push({ t: "plan", plan });
+
+    const raw = await guessP;
+    if (raw?.stops.length) {
+      plan.guess = await scoreGuess({ artist, region, cities, stops, raw, log });
+      ch.push({ t: "plan", plan });
+    } else if (useModel) log({ kind: "model", text: "The model-alone tour didn't come back, so there's no comparison this time.", failed: true });
 
     // 6. A pitch for every room.
     t = Date.now();

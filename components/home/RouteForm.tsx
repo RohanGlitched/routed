@@ -21,7 +21,7 @@ export function RouteForm({ artist = "", from = "" }: { artist?: string; from?: 
       const r = await fetch("/api/tours", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ artist: f.get("artist"), from: f.get("from"), firstDate: f.get("firstDate"), shows: Number(f.get("shows")) }),
+        body: JSON.stringify({ artist: f.get("artist"), from: f.get("from"), firstDate: f.get("firstDate"), shows: Number(f.get("shows")), draw: Number(f.get("draw")) || undefined }),
       });
       const j = (await r.json().catch(() => ({}))) as { id?: string; error?: string; field?: string };
       if (!r.ok || !j.id) throw Object.assign(new Error(j.error ?? "Couldn't start the routing. Try again."), { field: j.field });
@@ -53,6 +53,17 @@ export function RouteForm({ artist = "", from = "" }: { artist?: string; from?: 
         <select name="shows" defaultValue="10" {...bad("shows")}>
           {Array.from({ length: 14 }, (_, i) => i + 3).map((n) => (
             <option key={n}>{n}</option>
+          ))}
+        </select>
+      </label>
+      <label className={s.draw}>
+        <span>Usual crowd</span>
+        <select name="draw" defaultValue="" {...bad("draw")}>
+          <option value="">Not sure</option>
+          {[150, 300, 600, 1000, 1500, 2500, 4000, 7000, 12000].map((n) => (
+            <option key={n} value={n}>
+              About {n.toLocaleString("en-US")}
+            </option>
           ))}
         </select>
       </label>

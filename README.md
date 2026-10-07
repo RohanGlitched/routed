@@ -5,6 +5,7 @@
   <img alt="Qloo Insights API" src="https://img.shields.io/badge/Qloo-taste%20graph-1747d6?style=flat-square">
   <img alt="NVIDIA Nemotron 3 Ultra" src="https://img.shields.io/badge/agent-Nemotron%203%20Ultra-16151b?style=flat-square">
   <img alt="Next.js 15" src="https://img.shields.io/badge/Next.js-15-16151b?style=flat-square">
+  <a href="https://github.com/RohanGlitched/routed/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/RohanGlitched/routed/actions/workflows/ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-16151b?style=flat-square"></a>
 </p>
 

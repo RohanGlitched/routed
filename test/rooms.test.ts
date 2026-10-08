@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { candidatesBySize, cityArea, isRoom, nearCity, pickArtist, sharesName, venueTier } from "../lib/agent/rooms.ts";
+import { candidatesBySize, cityArea, isMember, isRoom, nearCity, pickArtist, sharesName, venueTier } from "../lib/agent/rooms.ts";
 import { worstLeg } from "../lib/geo/route.ts";
 
 const place = (name: string, ids: string[], extra: Record<string, unknown> = {}) => ({ name, tags: ids.map((id) => ({ id, name: id.split(":").pop()! })), place: { lat: 36.16, lon: -86.78, ...extra } });
@@ -42,6 +42,9 @@ test("an opener can't be the band's own singer or a side project", () => {
   assert.equal(sharesName("Zach Bryan", "Zach Bryan Band"), true);
   assert.equal(sharesName("Sierra Ferrell", "Sierra Hull"), true);
   assert.equal(sharesName("The National", "The War on Drugs"), false, "'the' doesn't count");
+  assert.equal(isMember("Fontaines D.C.", { name: "Grian Chatten", description: "Irish singer, frontman of Fontaines D.C., with a solo album." }), true);
+  assert.equal(isMember("Fontaines D.C.", { name: "The Murder Capital", description: "Irish post-punk band often compared with Fontaines D.C." }), false, "a comparison is not membership");
+  assert.equal(isMember("Big Thief", { name: "Adrianne Lenker" }), false, "no description, no verdict");
 });
 
 test("rooms are measured in a sensible order", () => {

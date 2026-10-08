@@ -22,9 +22,15 @@ export async function wikidataCapacity(venue: string, city: string, near?: { lat
   if (memo.has(key)) return memo.get(key)!;
   let out: WikiCapacity | null = null;
   try {
-    const q = new URLSearchParams({ action: "wbsearchentities", search: venue, language: "en", limit: "4", format: "json", origin: "*" });
-    const s = (await fetch(`${API}/w/api.php?${q}`, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(6000) }).then((r) => r.json())) as { search?: Hit[] };
-    for (const h of s.search ?? []) {
+    const hits: Hit[] = [];
+    // The bare name first; then the name with the city ("Olympia Theatre Dublin") for rooms whose label carries it.
+    for (const search of [venue, `${venue} ${city.split(",")[0]!.trim()}`]) {
+      const q = new URLSearchParams({ action: "wbsearchentities", search, language: "en", limit: "4", format: "json", origin: "*" });
+      const s = (await fetch(`${API}/w/api.php?${q}`, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(6000) }).then((r) => r.json())) as { search?: Hit[] };
+      for (const h of s.search ?? []) if (!hits.some((x) => x.id === h.id)) hits.push(h);
+      if (hits.length) break;
+    }
+    for (const h of hits) {
       const e = (await fetch(`${API}/wiki/Special:EntityData/${h.id}.json`, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(6000) }).then((r) => r.json())) as { entities?: Record<string, { claims?: Claims }> };
       const claims = e.entities?.[h.id]?.claims ?? {};
       const amount = claims.P1083?.[0]?.mainsnak?.datavalue?.value?.amount;

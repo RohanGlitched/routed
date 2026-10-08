@@ -62,6 +62,13 @@ export function sharesName(headliner: string, opener: string): boolean {
   return words(opener).some((w) => h.has(w));
 }
 
+/** Qloo's description names the band a solo act fronts ("Irish singer, frontman of Fontaines D.C."): not an opener. */
+export function isMember(headliner: string, opener: { name: string; description?: string }): boolean {
+  const d = (opener.description ?? "").toLowerCase();
+  const h = headliner.toLowerCase().replace(/^the\s+/, "");
+  return h.length > 3 && d.includes(h) && /\b(member|frontman|frontwoman|front man|singer of|vocalist of|guitarist of|drummer of|bassist of|founder of|leader of|lead singer|side project|solo project|formerly of|best known as)\b/.test(d);
+}
+
 /** The order to measure rooms in: for a big crowd the best-known rooms first (popularity is a size proxy), for a
  *  small one the best-matched; rooms already known to miss the crowd go last. */
 export function candidatesBySize(rooms: Room[], draw: number): Room[] {

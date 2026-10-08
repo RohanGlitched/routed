@@ -1,7 +1,7 @@
 import "server-only";
 import { marketById, type Market } from "../geo/markets";
 import { CHAINS } from "../chains";
-import { cityArea, DEFAULT_VENUE_TAGS, isRoom, nearCity, placeTagIds, sharesName, venueTier } from "./rooms";
+import { cityArea, DEFAULT_VENUE_TAGS, isMember, isRoom, nearCity, placeTagIds, sharesName, venueTier } from "./rooms";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
 import { describeRequest, recommend, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
@@ -99,7 +99,7 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
       }),
     );
     const openers: Opener[] = r.entities
-      .filter((e) => e.id !== artist.id && !sharesName(artist.name, e.name) && (pop === undefined || e.popularity === undefined || e.popularity < pop))
+      .filter((e) => e.id !== artist.id && !sharesName(artist.name, e.name) && !isMember(artist.name, e) && (pop === undefined || e.popularity === undefined || e.popularity < pop))
       .slice(0, 5)
       .map((e) => ({ id: e.id, name: e.name, image: e.image, affinity: e.affinity, popularity: e.popularity, description: e.description, shared: [] }));
     log({ kind: "qloo", text: `Who could open in ${m.name}, for an audience like ${artist.name}'s?`, result: openers.length ? openers.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "No artists came back.", request: describeRequest(r.request), ms });

@@ -37,22 +37,34 @@ for (const a of ARTISTS.slice(SKIP, SKIP + LIMIT)) {
     console.log(a.artist, "not queued:", error);
     continue;
   }
-  const run = await fetch(`${BASE}/api/tours/${id}/run`, { method: "POST" });
   let done = null, fail = null, last = "";
-  for await (const chunk of run.body) {
-    last += Buffer.from(chunk).toString();
-    let i;
-    while ((i = last.indexOf("\n")) >= 0) {
-      const line = last.slice(0, i);
-      last = last.slice(i + 1);
-      try {
-        const e = JSON.parse(line);
-        if (e.t === "done") done = e;
-        if (e.t === "error") fail = e.message;
-      } catch {}
+  try {
+    const run = await fetch(`${BASE}/api/tours/${id}/run`, { method: "POST" });
+    for await (const chunk of run.body) {
+      last += Buffer.from(chunk).toString();
+      let i;
+      while ((i = last.indexOf("\n")) >= 0) {
+        const line = last.slice(0, i);
+        last = last.slice(i + 1);
+        try {
+          const e = JSON.parse(line);
+          if (e.t === "done") done = e;
+          if (e.t === "error") fail = e.message;
+        } catch {}
+      }
     }
+  } catch (e) {
+    // The stream dropped; the server finishes the run anyway, so poll the record instead.
+    console.log(`  stream dropped (${e.message}); polling`);
   }
-  const rec = await (await fetch(`${BASE}/api/tours/${id}`)).json().catch(() => null);
+  let rec = null;
+  for (let i = 0; i < 60; i++) {
+    rec = await (await fetch(`${BASE}/api/tours/${id}`)).json().catch(() => null);
+    if (rec && rec.status !== "running" && rec.status !== "queued") break;
+    await new Promise((r) => setTimeout(r, 5000));
+  }
+  if (rec?.status === "done" && !done) done = { engine: rec.engine };
+  if (rec?.status === "failed") fail = rec.error;
   const g = rec?.plan?.guess;
   console.log(`${a.artist.padEnd(20)} ${id} ${done ? done.engine.planned : "FAILED " + fail} ${Math.round((Date.now() - t0) / 1000)}s  rank routed ${g?.rankMean?.routed?.toFixed(1)} guess ${g?.rankMean?.guess?.toFixed(1)} shared ${g?.shared}`);
   if (done && g && process.env.ADMIN_TOKEN) {

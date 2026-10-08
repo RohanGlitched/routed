@@ -52,7 +52,32 @@ A typical eight-show tour makes about 70 Qloo calls. Every one is listed, with i
 
 Twenty artists, eight shows each, run on the live site. The same model (Nemotron 3 Ultra), starting city and crowd size on both sides; the model alone gets the artist's name, Routed's agent gets Qloo. Each number is the average rank of a tour's cities among every touring city in the region on that artist's heatmap (lower is closer to the fans).
 
-<!-- BENCH -->
+**Routed's cities averaged #7.0. The same model without Qloo averaged #31.4.**
+
+| Artist | Routed | Model alone | Cities in common | Strongest city the model missed | Weakest city it chose |
+|---|---|---|---|---|---|
+| [Tyler Childers](https://routed-tours.vercel.app/tour/kejz64q6yh) | #8.9 | #131.1 | 2 of 8 | Asheville (#2) | Toronto (#329) |
+| [Caamp](https://routed-tours.vercel.app/tour/6tk6n3ddrt) | #9.0 | #51.0 | 2 of 8 | Asheville (#3) | Toronto (#142) |
+| [Parcels](https://routed-tours.vercel.app/tour/fegyjwfdhc) | #6.3 | #46.9 | 5 of 8 | Hamburg (#3) | London (not a touring city) |
+| [Waxahatchee](https://routed-tours.vercel.app/tour/efbjv3pqhm) | #6.6 | #41.9 | 1 of 8 | Portland (#1) | Atlanta (#101) |
+| [Durand Jones & The Indications](https://routed-tours.vercel.app/tour/w3q8mqugw5) | #6.6 | #36.3 | 1 of 8 | Los Angeles (#1) | Indianapolis (#89) |
+| [Ghost](https://routed-tours.vercel.app/tour/i7u3uwtgkp) | #8.6 | #37.8 | 2 of 8 | Kassel (#3) | Oslo (#82) |
+| [MJ Lenderman](https://routed-tours.vercel.app/tour/y2bu9g93km) | #6.4 | #33.3 | 2 of 8 | Chicago (#1) | Vancouver (#136) |
+| [Khruangbin](https://routed-tours.vercel.app/tour/vu73da2rev) | #7.1 | #33.8 | 3 of 8 | San Francisco (#1) | Atlanta (#68) |
+| [Cuco](https://routed-tours.vercel.app/tour/c44m7w2pe5) | #8.0 | #32.5 | 3 of 8 | San Diego (#4) | Toronto (#80) |
+| [Zach Bryan](https://routed-tours.vercel.app/tour/7npvs4s4pa) | #5.3 | #28.5 | 2 of 8 | Knoxville (#2) | Atlanta (#76) |
+| [Clairo](https://routed-tours.vercel.app/tour/hvzihh6xwn) | #6.5 | #27.0 | 3 of 8 | Los Angeles (#1) | Cleveland (#68) |
+| [Turnstile](https://routed-tours.vercel.app/tour/9khhba88dh) | #6.8 | #22.8 | 2 of 8 | Los Angeles (#2) | Montreal (#47) |
+| [Knocked Loose](https://routed-tours.vercel.app/tour/tdba52itrm) | #6.3 | #21.9 | 3 of 8 | Philadelphia (#1) | Minneapolis (#51) |
+| [JPEGMAFIA](https://routed-tours.vercel.app/tour/v2se8avtc7) | #7.4 | #17.3 | 2 of 8 | New York (#1) | Cleveland (#37) |
+| [Jamie xx](https://routed-tours.vercel.app/tour/mh455y4xfv) | #3.8 | #10.9 | 4 of 8 | Edinburgh (#5) | Nottingham (#25) |
+| [Alvvays](https://routed-tours.vercel.app/tour/7pkm7qrf9b) | #7.9 | #14.8 | 4 of 8 | Vancouver (#3) | Detroit (#33) |
+| [Japanese Breakfast](https://routed-tours.vercel.app/tour/9cqy3sbyua) | #7.1 | #12.5 | 4 of 8 | Boston (#4) | Toronto (#32) |
+| [Arlo Parks](https://routed-tours.vercel.app/tour/my7jyevft7) | #7.7 | #10.9 | 3 of 8 | Edinburgh (#6) | Dublin (#27) |
+| [WET LEG](https://routed-tours.vercel.app/tour/eifb8nspyh) | #7.3 | #9.8 | 3 of 8 | Brighton (#2) | Dublin (#32) |
+| [Fontaines D.C.](https://routed-tours.vercel.app/tour/9v92q47kb2) | #6.9 | #8.4 | 4 of 8 | Cork (#5) | Cardiff (#19) |
+
+Qloo earns its keep where an artist's audience doesn't follow the population: the model alone booked Tyler Childers into Toronto (#329 on his map) and Caamp into Toronto too (#142), while Qloo put their strongest fans in Asheville. The gap is smallest in the UK and Ireland, where touring cities are few and the biggest ones are also where the fans are: for Fontaines D.C. the two tours sit a rank and a half apart.
 
 Read this with Qloo's own ruler in mind: Routed chooses from the heatmap ranking it is then scored on, so the number shows how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. The [benchmark page](https://routed-tours.vercel.app/proof) says so, gives the median stop and the share of stops in each artist's top ten (one #202 can't pull those), shows the exact baseline prompt, and names where the model alone keeps up: the UK, where touring cities are few and the biggest ones are also where the fans are. A model-alone city is placed by its name, then by the named room's coordinates on Qloo, then by Qloo's locality search; a stop that resolves to a town with no touring city near it counts last, and one that can't be placed at all is left out rather than counted against the model.
 

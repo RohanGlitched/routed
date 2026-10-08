@@ -1,5 +1,5 @@
 import "server-only";
-import { HOT_KM, hotSpot, localTiles, placeHeat, type LocalTile } from "../geo/local";
+import { HOT_KM, hotSpot, kmBetween, localTiles, placeHeat, type LocalTile } from "../geo/local";
 import { marketById } from "../geo/markets";
 import { describeRequest, sharedTastes, wherePopular } from "../qloo";
 import type { Artist, Local, Opener, Room, Spot } from "../types";
@@ -33,9 +33,12 @@ export async function lookUpLocal(artist: Artist, marketId: string, log: Log): P
 }
 
 /** Names the hot neighbourhood from the places Qloo filed there, and measures the booked room against it. */
-export function placeLocal(local: Local, room: Room | undefined, nearby: Spot[], city: string, log: Log): Local {
+export function placeLocal(local: Local, room: Room | undefined, nearby: Spot[], city: string, log: Log, rooms: Room[] = []): Local {
   const names = new Map<string, number>();
-  for (const s of nearby) if (s.area) names.set(s.area, (names.get(s.area) ?? 0) + 1);
+  // Places within 2 km of the hottest tile name the neighbourhood: the shops and bars found there, then rooms.
+  const close = (p: { lat?: number; lon?: number }) => p.lat !== undefined && p.lon !== undefined && kmBetween(local.hot, { lat: p.lat, lon: p.lon }) <= 2;
+  for (const s of nearby) if (s.area && (s.lat === undefined || close(s))) names.set(s.area, (names.get(s.area) ?? 0) + 1);
+  if (!names.size) for (const r of rooms) if (r.area && close(r)) names.set(r.area, (names.get(r.area) ?? 0) + 1);
   const name = [...names.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
   const trait = nearby.find((s) => s.area === name && s.areaTrait)?.areaTrait;
   const out: Local = { ...local, hot: { ...local.hot, ...(name ? { name } : {}), ...(trait ? { trait } : {}) } };

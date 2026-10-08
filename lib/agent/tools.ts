@@ -48,6 +48,7 @@ const toRoom = (e: Entity): Room => ({
   website: e.place?.website,
   image: e.image,
   tags: e.tags.map((t) => t.name).slice(0, 6),
+  area: e.place?.area,
 });
 
 

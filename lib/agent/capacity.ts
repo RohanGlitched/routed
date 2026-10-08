@@ -24,6 +24,9 @@ export function capacitiesIn(text: string): CapacityHit[] {
       // counts, so "Upstairs: 200. Main room: 900" keeps the 900.
       const before = text.slice(Math.max(0, (m.index ?? 0) - 50), m.index ?? 0).toLowerCase().split(/[.;\n]/).pop() ?? "";
       if (/smaller|second stage|side room|annex|lounge|downstairs|upstairs|patio|rooftop|\bmin(?:imum)?\b\.?\s*$/.test(before)) continue;
+      // "It will seat 2,700, with a full capacity of 4,400": a building that doesn't exist yet isn't the room.
+      const sentence = text.slice(Math.max(0, (m.index ?? 0) - 120), m.index ?? 0).toLowerCase().split(/[.;\n]/).pop() ?? "";
+      if (/\b(will|would|proposed|planned|plans?|future|under construction|to be built|expansion)\b/.test(sentence)) continue;
       const start = Math.max(0, (m.index ?? 0) - 60);
       const end = Math.min(text.length, (m.index ?? 0) + m[0].length + 40);
       hits.push({ value, quote: text.slice(start, end).replace(/\s+/g, " ").trim() });
@@ -36,6 +39,9 @@ export function capacitiesIn(text: string): CapacityHit[] {
  * The capacity most sources agree on; on a tie, the larger (the main room, not a side stage). A page must name the
  * venue (its distinctive words) for its numbers to count.
  */
+/** Social posts and forums say what someone heard, not what the room holds. */
+const NOT_A_SOURCE = /^(https?:\/\/)?([a-z0-9-]+\.)*(facebook|twitter|x|instagram|reddit|tiktok|threads|pinterest)\.com\b/i;
+
 export function pickCapacity(venue: string, pages: { url: string; text: string }[]): { value: number; source: string; quote: string } | null {
   const words = venue
     .toLowerCase()
@@ -46,6 +52,7 @@ export function pickCapacity(venue: string, pages: { url: string; text: string }
   const whole = venue.toLowerCase().trim();
   const tally = new Map<number, { n: number; source: string; quote: string }>();
   for (const p of pages) {
+    if (NOT_A_SOURCE.test(p.url)) continue;
     const lower = p.text.toLowerCase();
     if (words.length ? !words.every((w) => lower.includes(w)) : !lower.includes(whole)) continue;
     for (const h of capacitiesIn(p.text)) {

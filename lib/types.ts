@@ -54,6 +54,8 @@ export type Room = {
   image?: string;
   tags: string[];
   capacity?: Capacity;
+  /** The neighbourhood Qloo files the room under ("Buckman"). */
+  area?: string;
 };
 
 export type Opener = {

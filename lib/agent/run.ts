@@ -176,7 +176,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
         if (local && posters.length < 2) posters = await lookUpSpots("posters", artist, s.marketId, log, skip);
         s.after = after;
         s.posters = posters;
-        if (local) s.local = placeLocal(local, booked, [...posters, ...after], s.city, log);
+        if (local) s.local = placeLocal(local, booked, [...posters, ...after], s.city, log, s.rooms);
         if (chosenOpener) chosenOpener.shared = shared;
         ch.push({ t: "plan", plan });
       }),

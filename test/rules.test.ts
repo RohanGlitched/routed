@@ -25,6 +25,16 @@ test("capacity is read only when tied to the word", () => {
   assert.deepEqual(capacitiesIn("Upstairs capacity: 200. Main room capacity: 900.").map((h) => h.value), [900]);
 });
 
+test("a future building and a social post are not the room's capacity", () => {
+  assert.deepEqual(capacitiesIn("The Station Inn has announced a new hall. It will seat 2,700 in seats, with a full capacity of 4,400."), []);
+  assert.deepEqual(capacitiesIn("The Station Inn has a capacity of 200.").map((h) => h.value), [200]);
+  const pages = [
+    { url: "https://www.facebook.com/tennessean/posts/the-station-inn", text: "The Station Inn: capacity of 4,400." },
+    { url: "https://stationinn.com/about", text: "The Station Inn has a capacity of 200." },
+  ];
+  assert.equal(pickCapacity("The Station Inn", pages)?.value, 200);
+});
+
 test("a venue whose name has no distinctive word must appear whole on the page", () => {
   const pages = [{ url: "https://example.com/f", text: "The Fillmore has a capacity of 1,150." }];
   assert.equal(pickCapacity("9:30 Club", pages), null);

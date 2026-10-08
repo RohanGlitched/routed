@@ -1,6 +1,6 @@
 import "server-only";
-import { get, put } from "@vercel/blob";
 import { pickCapacity } from "./agent/capacity";
+import { storage } from "./storage";
 import { wikidataCapacity } from "./wikidata";
 
 /**
@@ -44,14 +44,14 @@ let loaded: Promise<void> | null = null;
 let dirty = false;
 let flushing: ReturnType<typeof setTimeout> | null = null;
 
-const useBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+const useBlob = () => storage() !== null;
 
 function load(): Promise<void> {
   if (!useBlob()) return Promise.resolve();
   loaded ??= (async () => {
-    const r = await get(INDEX, { access: "private", useCache: false }).catch(() => null);
-    if (!r?.stream) return;
-    const j = JSON.parse(await new Response(r.stream).text()) as Record<string, Cap | null>;
+    const r = await storage()!.read(INDEX).catch(() => null);
+    if (!r) return;
+    const j = JSON.parse(r.text) as Record<string, Cap | null>;
     for (const [k, v] of Object.entries(j)) if (!memo.has(k)) memo.set(k, v);
   })().catch(() => {});
   return loaded;
@@ -66,10 +66,10 @@ function scheduleFlush() {
     if (!dirty) return;
     dirty = false;
     // Merge with what other instances wrote since this one loaded.
-    const r = await get(INDEX, { access: "private", useCache: false }).catch(() => null);
-    const theirs = r?.stream ? (JSON.parse(await new Response(r.stream).text()) as Record<string, Cap | null>) : {};
+    const r = await storage()!.read(INDEX).catch(() => null);
+    const theirs = r ? (JSON.parse(r.text) as Record<string, Cap | null>) : {};
     const all = { ...theirs, ...Object.fromEntries(memo) };
-    await put(INDEX, JSON.stringify(all), { access: "private", contentType: "application/json", addRandomSuffix: false, allowOverwrite: true }).catch((e) => console.error("[tavily] cache write failed", e));
+    await storage()!.write(INDEX, JSON.stringify(all)).catch((e) => console.error("[capacity] cache write failed", e));
   }, 4000);
 }
 

@@ -1,5 +1,5 @@
 import "server-only";
-import { get, put } from "@vercel/blob";
+import { storage } from "./storage";
 
 /**
  * Spend guards for the public demo, so visitors can't run up the model bill or the Qloo quota:
@@ -52,25 +52,21 @@ class Counter {
   }
 
   private async read(d: string): Promise<{ count: number; etag?: string }> {
-    if (!process.env.BLOB_READ_WRITE_TOKEN) return { count: 0 };
-    const r = await get(this.key(d), { access: "private", useCache: false }).catch(() => null);
-    if (!r?.stream) return { count: 0 };
-    const j = JSON.parse(await new Response(r.stream).text()) as { count: number };
-    return { count: j.count ?? 0, etag: r.blob.etag?.replace(/^W\//, "") }; // If-Match needs the strong form
+    const s = storage();
+    if (!s) return { count: 0 };
+    const r = await s.read(this.key(d)).catch(() => null);
+    if (!r) return { count: 0 };
+    const j = JSON.parse(r.text) as { count: number };
+    return { count: j.count ?? 0, etag: r.etag };
   }
 
   private async flush(): Promise<void> {
-    if (!process.env.BLOB_READ_WRITE_TOKEN || this.local === 0) return;
+    const s = storage();
+    if (!s || this.local === 0) return;
     for (let i = 0; i < 3; i++) {
       const cur = await this.read(this.day);
       try {
-        await put(this.key(this.day), JSON.stringify({ count: cur.count + this.local }), {
-          access: "private",
-          contentType: "application/json",
-          addRandomSuffix: false,
-          allowOverwrite: true,
-          ...(cur.etag ? { ifMatch: cur.etag } : {}),
-        });
+        await s.write(this.key(this.day), JSON.stringify({ count: cur.count + this.local }), { ifMatch: cur.etag });
         this.persisted = cur.count + this.local;
         this.local = 0;
         return;

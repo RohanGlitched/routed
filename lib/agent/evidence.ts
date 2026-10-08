@@ -27,7 +27,7 @@ export function fit(r: Room, draw?: number): "fits" | "too small" | "too big" | 
 export const room = (s: Stop): Room | undefined => s.rooms.find((r) => r.id === s.roomId) ?? s.rooms[0];
 export const opener = (s: Stop): Opener | undefined => s.openers.find((o) => o.id === s.openerId) ?? s.openers[0];
 
-export function evidenceLines(plan: Plan, s: Stop): string[] {
+export function evidenceLines(plan: Plan, s: Stop, draw?: number): string[] {
   const r = room(s);
   const o = opener(s);
   const top = topAge(plan.audience.age);
@@ -40,7 +40,15 @@ export function evidenceLines(plan: Plan, s: Stop): string[] {
   if (r) {
     lines.push(`Room: ${r.name}${r.address ? `, ${r.address}` : ""}.`);
     if (r.affinity !== undefined) lines.push(`Qloo affinity between ${plan.artist.name} fans and ${r.name}: ${pct(r.affinity)} out of 100.`);
-    if (r.capacity) lines.push(`${r.name} capacity: ${r.capacity.value} (from ${r.capacity.source}).`);
+    if (r.capacity) {
+      const f = draw ? fit(r, draw) : "unknown";
+      lines.push(`${r.name} capacity: ${r.capacity.value} (from ${r.capacity.source}).${f === "too small" ? ` That is small for the usual crowd of about ${draw}: ask whether a second night or a larger room is possible, and don't call the room a fit.` : f === "too big" ? ` That is large for the usual crowd of about ${draw}: ask about a reduced configuration, and don't call the room a fit.` : f === "fits" ? ` That fits the usual crowd of about ${draw}.` : ""}`);
+    } else if (draw) lines.push(`${r.name}'s capacity isn't confirmed; the usual crowd is about ${draw}. Ask the room what it holds.`);
+  }
+  if (s.local?.hot && r) {
+    const where = s.local.hot.name ? `${s.local.hot.name}${s.local.hot.trait ? `, ${s.local.hot.trait.toLowerCase()}` : ""}` : "one neighbourhood";
+    const km = s.local.roomKm ?? 0;
+    lines.push(km <= 1.5 ? `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}, and ${r.name} sits in it.` : s.local.inHot ? `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}; ${r.name} sits on one of their strongest tiles, ${km} km from it.` : `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}; ${r.name} is ${km} km from it.`);
   }
   if (o) lines.push(`Suggested opener: ${o.name}${o.affinity !== undefined ? `, Qloo audience affinity ${pct(o.affinity)} out of 100 with ${plan.artist.name}` : ""}${o.shared.length ? `; shared tastes: ${o.shared.slice(0, 3).join(", ")}` : ""}.`);
   if (top) lines.push(`Audience: Qloo says ${plan.artist.name} fans over-index most at ages ${AGE_LABEL[top.bucket]}.`);

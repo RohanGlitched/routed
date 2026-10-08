@@ -15,8 +15,20 @@ test("capacity is read only when tied to the word", () => {
   // A side stage or a minimum isn't the room.
   assert.deepEqual(capacitiesIn("The 7th St Entry is a smaller stage (capacity 250) attached to First Avenue").map((h) => h.value), []);
   assert.deepEqual(capacitiesIn("Min Capacity: 200 Max Capacity: 1200").map((h) => h.value), [1200]);
-  // A stadium-sized number isn't a room.
-  assert.deepEqual(capacitiesIn("stadium capacity of 68,000"), []);
+  // A stadium holds a stadium-sized crowd; "100,000" is a hundred thousand, not a hundred.
+  assert.deepEqual(capacitiesIn("stadium capacity of 68,000").map((h) => h.value), [68000]);
+  assert.deepEqual(capacitiesIn("capacity of 100,000").map((h) => h.value), [100000]);
+  // European thousands and words.
+  assert.deepEqual(capacitiesIn("Die Halle hat eine Kapazität von 1.200 Personen.").map((h) => h.value), [1200]);
+  assert.deepEqual(capacitiesIn("Capacité : 1 500 places").map((h) => h.value), [1500]);
+  // The look-back stops at the sentence, so a side room doesn't kill the main one.
+  assert.deepEqual(capacitiesIn("Upstairs capacity: 200. Main room capacity: 900.").map((h) => h.value), [900]);
+});
+
+test("a venue whose name has no distinctive word must appear whole on the page", () => {
+  const pages = [{ url: "https://example.com/f", text: "The Fillmore has a capacity of 1,150." }];
+  assert.equal(pickCapacity("9:30 Club", pages), null);
+  assert.equal(pickCapacity("9:30 Club", [{ url: "https://example.com/930", text: "9:30 Club capacity: 1,200" }])?.value, 1200);
 });
 
 test("a page must name the venue for its capacity to count, and agreement wins", () => {

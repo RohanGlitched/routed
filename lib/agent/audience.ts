@@ -23,6 +23,8 @@ export function doorAdvice(age: Audience["age"]): string | undefined {
   if ((young ?? 0) >= 0.1) return peak && peak.bucket !== "24_and_younger" ? `Fans peak at ${AGE_LABEL[peak.bucket]}, and the under-25s over-index too: ask every room for an all-ages or 18+ show.` : "Fans over-index at 24 and under: ask every room for an all-ages or 18+ show.";
   if ((young ?? 0) > 0) return "Fans lean young: an all-ages or 18+ door keeps the under-21s in.";
   if (older >= 0.15) return "Fans skew 35 and over: 21+ rooms and seated theatres both work; earlier set times help.";
+  if (peak && (peak.bucket === "25_to_29" || peak.bucket === "30_to_34")) return `Fans peak at ${AGE_LABEL[peak.bucket]} and the under-25s under-index: 21+ rooms work, and weeknights are fine.`;
+  if (peak) return `Fans peak at ${AGE_LABEL[peak.bucket]}: 21+ rooms and seated theatres both work.`;
   return "Fans are spread across ages: any door policy works.";
 }
 

@@ -15,7 +15,7 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
   const artist = plan.artist.name;
   const n = g.ranked;
   const ours = plan.stops.map((s) => ({ name: s.city, rank: s.score.rank }));
-  const theirs = g.stops.map((s) => ({ name: s.city, rank: s.rank }));
+  const theirs = g.stops.filter((s) => s.rank || s.outside).map((s) => ({ name: s.city, rank: s.rank }));
   const cap = Math.min(n, Math.max(40, ...ours.map((o) => o.rank), ...theirs.map((t) => t.rank ?? 0)) + 4);
   const missed = plan.stops.filter((s) => !g.stops.some((x) => x.marketId === s.marketId)).sort((a, b) => a.score.rank - b.score.rank);
   const weak = g.stops.filter((x) => !plan.stops.some((s) => s.marketId === x.marketId)).sort((a, b) => (b.rank ?? n + 1) - (a.rank ?? n + 1));
@@ -39,7 +39,7 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
         </div>
         <div className={c.stat}>
           <b>{avg(g.rankMean.guess)}</b>
-          <span>The model alone{g.unscored ? `, with ${g.unscored} cit${g.unscored === 1 ? "y" : "ies"} where Qloo found no fans at all` : ""}</span>
+          <span>The model alone{g.unscored ? `, with ${g.unscored} stop${g.unscored === 1 ? "" : "s"} outside any touring city (counted last)` : ""}</span>
         </div>
         <div className={c.stat}>
           <b>
@@ -82,7 +82,7 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
           )}
           {weak.length > 0 && (
             <p>
-              <b>Chosen by the model instead:</b> {weak.map((s) => `${s.city} (${s.rank ? `#${s.rank}` : "no fan signal"})`).join(", ")}.
+              <b>Chosen by the model instead:</b> {weak.map((s) => `${s.city} (${s.rank ? `#${s.rank}` : s.outside ? "not a touring city" : "not placed"})`).join(", ")}.
             </p>
           )}
           {!better && <p>On this tour the model alone did as well on city rank; the difference is in the rooms and the evidence behind each one.</p>}
@@ -159,7 +159,7 @@ function RankStrip({ ours, theirs, cap }: { ours: { name: string; rank: number }
         <g key={`t${i}`}>
           <line x1={x(t.rank ?? cap)} x2={x(t.rank ?? cap)} y1={60} y2={90} stroke="var(--blue)" strokeWidth="2.5" />
           <circle cx={x(t.rank ?? cap)} cy={93} r={6.5} fill="var(--stock)" stroke="var(--blue)" strokeWidth="2.5">
-            <title>{`${t.name}: ${t.rank ? `#${t.rank}` : "no fan signal"}`}</title>
+            <title>{`${t.name}: ${t.rank ? `#${t.rank}` : "not a touring city"}`}</title>
           </circle>
         </g>
       ))}

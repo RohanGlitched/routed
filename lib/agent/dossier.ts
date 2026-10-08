@@ -57,7 +57,8 @@ export async function buildDossier(artist: Artist, log: Log): Promise<Audience> 
       // Qloo gives the percentile as 0–1.
       audience.trend = r.points.map((p) => ({ date: p.date, percentile: p.percentile === undefined ? undefined : p.percentile * 100, velocity: p.velocity }));
       const a = audience.trend[0]?.percentile, b = audience.trend.at(-1)?.percentile;
-      return { result: a !== undefined && b !== undefined ? `Popularity percentile ${Math.round(a)} → ${Math.round(b)} over ${r.points.length} weeks` : "No trend data came back.", request: describeRequest(r.request) };
+      const moved = a !== undefined && b !== undefined && Math.abs(a - b) >= 1;
+      return { result: a === undefined || b === undefined ? "No trend data came back." : moved ? `Popularity percentile ${Math.round(a)} → ${Math.round(b)} over ${r.points.length} weeks` : `${r.points.length} weekly points, all the same (the hackathon host's trend series is flat), so momentum isn't shown`, request: describeRequest(r.request) };
     }),
     ...Object.entries(TAGS).map(([key, t]) =>
       step(t.ask, async () => {

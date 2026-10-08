@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CONTROL_PROMPT } from "@/lib/agent/guess";
 import { findMarket, marketId } from "@/lib/geo/markets";
 import { shelfTours } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
@@ -72,6 +73,14 @@ export default async function Proof() {
   const homes = r.filter((x) => x.home !== undefined);
   const cap = Math.max(40, ...r.map((x) => Math.ceil(x.guess / 10) * 10));
   const close = r.filter((x) => x.guess - x.routed < 2);
+  // Every stop pooled: the median rank (one #204 can't pull it) and how many stops sat in the artist's top ten.
+  const ranksRouted = tours.flatMap((t) => t.plan?.stops.map((s) => s.score.rank) ?? []);
+  const ranksGuess = tours.flatMap((t) => t.plan?.guess?.stops.filter((x) => x.rank || x.outside).map((x) => x.rank ?? (t.plan?.cities.length ?? 0) + 1) ?? []);
+  const median = (xs: number[]) => {
+    const v = [...xs].sort((a, b) => a - b);
+    return v.length ? (v.length % 2 ? v[(v.length - 1) / 2]! : (v[v.length / 2 - 1]! + v[v.length / 2]!) / 2) : 0;
+  };
+  const top10 = (xs: number[]) => (xs.length ? Math.round((100 * xs.filter((x) => x <= 10).length) / xs.length) : 0);
 
   return (
     <div className={`wrap ${s.page}`}>
@@ -89,11 +98,11 @@ export default async function Proof() {
           <section className={s.stats} aria-label="Totals">
             <div className={`${s.stat} ${s.fire}`}>
               <b>#{Math.round(mean(r.map((x) => x.routed)))}</b>
-              <span>Average rank of Routed&apos;s cities on each artist&apos;s fan map</span>
+              <span>Average rank of Routed&apos;s cities on each artist&apos;s fan map (median stop #{median(ranksRouted)}; {top10(ranksRouted)}% of stops in the artist&apos;s top ten)</span>
             </div>
             <div className={s.stat}>
               <b>#{Math.round(mean(r.map((x) => x.guess)))}</b>
-              <span>The same model alone, on the same tours</span>
+              <span>The same model alone, on the same tours (median stop #{median(ranksGuess)}; {top10(ranksGuess)}% in the top ten)</span>
             </div>
             <div className={s.stat}>
               <b>
@@ -181,7 +190,7 @@ export default async function Proof() {
                         {pct(x.roomRouted)} / {pct(x.roomGuess)}
                       </td>
                       <td>{x.missed ? `${x.missed.city} (#${x.missed.rank})` : "–"}</td>
-                      <td>{x.worst ? `${x.worst.city} (${x.worst.rank ? `#${x.worst.rank}` : "no fans found"})` : "–"}</td>
+                      <td>{x.worst ? `${x.worst.city} (${x.worst.rank ? `#${x.worst.rank}` : "not a touring city"})` : "–"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -198,13 +207,18 @@ export default async function Proof() {
                 Both tours use the same model (NVIDIA Nemotron 3 Ultra), the same number of shows, the same starting city and the same crowd size. The model alone gets the artist&apos;s name and nothing else; Routed&apos;s agent gets Qloo&apos;s heatmap ranking and its per-city lookups.
               </p>
               <p>
-                A city&apos;s rank is its place among every city where Qloo found this artist&apos;s fans, ordered by how far fans over-index there times how much taste signal the place carries. A city with no fan signal at all counts as last. Rooms on both sides are scored in one Qloo call, restricted to exactly those rooms, so they share a scale.
+                A city&apos;s rank is its place among every touring city in the region (a city of 50,000 or more with its suburbs) on this artist&apos;s heatmap, ordered by how far fans over-index there times how much taste signal the place carries, all from one heatmap call so every tile shares one scale. A model-alone city is placed by its name, then by the named room&apos;s coordinates on Qloo, then by Qloo&apos;s locality search; a stop that resolves to a real town with no touring city within 60 km counts last, and one that can&apos;t be placed at all is left out rather than counted against the model. Rooms on both sides are scored in one Qloo call, restricted to exactly those rooms, so they share a scale.
               </p>
+              <details className={s.prompt}>
+                <summary>The exact prompt the model alone gets</summary>
+                <pre>{CONTROL_PROMPT}</pre>
+                <p>followed by the artist&apos;s name, the region, the starting city, the number of shows and the usual crowd.</p>
+              </details>
             </div>
             <div>
               <h2 className={s.h2}>What this does and doesn&apos;t show</h2>
               <p>
-                It shows how much closer the agent gets to where Qloo says the fans are. It can&apos;t show ticket sales: those aren&apos;t public. As an outside check that Qloo&apos;s map matches the world: each benchmark tour starts from the artist&apos;s home base, and Qloo&apos;s heatmap, which knows nothing about that, ranks it here:
+                It measures with Qloo&apos;s own ruler, and says so: Routed chooses from the heatmap ranking it is then scored on, so what the number shows is how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. It can&apos;t show ticket sales: those aren&apos;t public. One outside check is on the page: each benchmark tour starts from the artist&apos;s home base, which the heatmap knows nothing about, and it ranks the home base here:
               </p>
               {homes.length > 0 && (
                 <ul className={s.homes}>

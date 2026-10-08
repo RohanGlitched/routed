@@ -46,7 +46,7 @@ export function RouteForm({ artist = "", from = "" }: { artist?: string; from?: 
       </label>
       <label>
         <span>First show</span>
-        <input name="firstDate" type="date" required defaultValue={plusDays(150)} min={plusDays(1)} {...bad("firstDate")} />
+        <input name="firstDate" type="date" required defaultValue={plusDays(150)} min={plusDays(1)} suppressHydrationWarning {...bad("firstDate")} />
       </label>
       <label className={s.shows}>
         <span>Shows</span>

@@ -6,12 +6,16 @@ import { opener, room } from "./agent/evidence";
 import { HEAT_AREAS, scoreCities, type HeatTile } from "./agent/cities";
 import { buildDossier } from "./agent/dossier";
 import { runTour } from "./agent/run";
-import { takeModelRun } from "./budget";
+import { ipAllowed, QLOO_PER_TOUR, qlooRemaining, takeMcpRun, takeModelRun } from "./budget";
 import { findMarket, REGIONS } from "./geo/markets";
 import { hasKey } from "./nebius";
 import { search, wherePopular } from "./qloo";
+import { hotSpot, localTiles } from "./geo/local";
+import { lookUpSpots } from "./agent/tools";
+import { cityArea } from "./agent/rooms";
 import { SITE_URL } from "./site";
 import { loadTour, saveTour, updateTour } from "./store";
+import { clientIp } from "./visitor";
 import { newTourId, TOUR_ID, type Plan, type TourRecord } from "./types";
 
 /**
@@ -51,7 +55,7 @@ function register(server: McpServer) {
     "fan_map",
     {
       title: "Where an artist's fans over-index",
-      description: "Ranks the cities in a region where the artist's fans over-index on Qloo's heatmap (strongest first). Fast: no model, a few Qloo calls.",
+      description: "Ranks the cities in a region where the artist's fans over-index on Qloo's heatmap (strongest first). No model; one search and one heatmap call, a few seconds.",
       inputSchema: z.object({ artist: z.string().min(1).max(80), region: regionArg, top: z.number().int().min(3).max(40).optional() }),
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
@@ -103,6 +107,38 @@ function register(server: McpServer) {
   );
 
   server.registerTool(
+    "fan_neighbourhoods",
+    {
+      title: "Where in a city an artist's fans are",
+      description: "Qloo's heatmap at street level for one city: the neighbourhood where the artist's fans over-index most, how strong it is, and the record stores, bookshops and cafés there for a poster run. No model; three Qloo calls.",
+      inputSchema: z.object({ artist: z.string().min(1).max(80), city: z.string().min(2).max(80).describe("A touring city, e.g. 'Portland, OR' or 'Manchester, UK'") }),
+      annotations: { readOnlyHint: true, openWorldHint: true },
+    },
+    async ({ artist, city }) => {
+      const m = findMarket(city);
+      if (!m) return text(`Routed doesn't know "${city}" as a city. Try the nearest bigger city.`);
+      const found = await search(artist, "urn:entity:artist", 1);
+      const a = found.entities[0];
+      if (!a) return text(`Qloo has no artist called "${artist}".`);
+      const r = await wherePopular(a.id, cityArea(m), 50);
+      const tiles = localTiles(r.tiles);
+      const hot = hotSpot(tiles);
+      if (!hot) return text(`Qloo's heatmap has no tiles for ${a.name} fans in ${m.name}.`);
+      const art = { id: a.id, name: a.name, genres: [] };
+      const shops = await lookUpSpots("posters", art, [m.ascii, m.cc, m.cc === "US" ? m.state : ""].filter(Boolean).join("-").toLowerCase().replace(/[^a-z0-9]+/g, "-"), () => {}, [], hot);
+      const area = shops.find((s) => s.area)?.area;
+      const strong = tiles.filter((t) => t[2] >= 0.8).length;
+      return text(
+        [
+          `${a.name} fans in ${m.name}: ${r.tiles.length} street-level tiles on Qloo's heatmap; ${strong} of them in the top fifth of the city's strength.`,
+          `Strongest area: ${area ?? "around"} ${hot.lat.toFixed(3)}, ${hot.lon.toFixed(3)}.`,
+          shops.length ? `Poster run there: ${shops.map((s) => `${s.name}${s.kind ? ` (${s.kind.toLowerCase()})` : ""}`).join(", ")}.` : "No shops came back for a poster run.",
+        ].join("\n"),
+      );
+    },
+  );
+
+  server.registerTool(
     "route_tour",
     {
       title: "Route a tour",
@@ -119,7 +155,12 @@ function register(server: McpServer) {
     async ({ artist, from, shows = 8, first_date, draw }) => {
       if (!findMarket(from)) return text(`Routed doesn't know "${from}" as a city. Try the nearest bigger city, like "Portland, OR" or "Leeds, UK".`);
       const firstDate = first_date ?? new Date(Date.now() + 150 * 86_400_000).toISOString().slice(0, 10);
-      if (Date.parse(firstDate) < Date.now()) return text("The first show needs to be in the future.");
+      const parsed = new Date(`${firstDate}T12:00:00Z`);
+      if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== firstDate) return text(`"${firstDate}" isn't a real date.`);
+      if (parsed.getTime() < Date.now()) return text("The first show needs to be in the future.");
+      if (!ipAllowed(`mcp:${await clientIp().catch(() => "unknown")}`)) return text("That's a lot of tours from one place in a few minutes. Try again in ten.");
+      if ((await qlooRemaining()) < QLOO_PER_TOUR) return text("Routed has used today's Qloo allowance; try again tomorrow, or read a finished tour with get_tour.");
+      if (!(await takeMcpRun())) return text("The MCP endpoint has routed its share of tours for today; the site at https://routed-tours.vercel.app still can.");
       const rec: TourRecord = { id: newTourId(), createdAt: new Date().toISOString(), status: "running", startedAt: new Date().toISOString(), input: { artist, from, firstDate, shows, ...(draw ? { draw } : {}) }, log: [] };
       await saveTour(rec);
       const useModel = hasKey() && (await takeModelRun());

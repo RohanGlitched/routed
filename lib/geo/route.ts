@@ -76,6 +76,19 @@ export function orderStops<T extends Point>(from: Point, stops: T[]): T[] {
   return path;
 }
 
+/** The longest leg of the ordered route (road km), with the index of the stop it arrives at; null for one stop or none. */
+export function worstLeg(from: Point, ordered: Point[]): { index: number; km: number } | null {
+  if (ordered.length < 2) return null;
+  let worst = { index: 0, km: -1 };
+  let prev = from;
+  ordered.forEach((s, i) => {
+    const d = roadKm(prev, s);
+    if (i > 0 && d > worst.km) worst = { index: i, km: d };
+    prev = s;
+  });
+  return worst.km < 0 ? null : worst;
+}
+
 export type Leg<T> = {
   stop: T;
   /** ISO date of the show. */

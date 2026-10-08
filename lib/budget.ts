@@ -3,18 +3,18 @@ import { get, put } from "@vercel/blob";
 
 /**
  * Spend guards for the public demo, so visitors can't run up the model bill or the Qloo quota:
- * - per visitor (IP): 6 tours per 10 minutes, kept in memory per server instance;
- * - per day: DAILY_MODEL_CAP agent runs in total (default 200), counted in memory and
- *   flushed to a private blob every 10 runs (every run once 80% is spent) so the cap holds across instances.
- * When the model budget runs out, tours still run on the fixed plan and template pitches. Past the per-visitor
- * limit a new tour is refused with a plain message (each tour makes about 40 Qloo calls).
+ * - per visitor (IP): 6 tours per 10 minutes and 60 a day, kept in memory per server instance;
+ * - per day, across instances: DAILY_MODEL_CAP agent runs (default 200) and QLOO_DAILY_CAP Qloo requests
+ *   (default 2,500, about 35 tours), each counted in memory and flushed to a private blob every few takes
+ *   (every take once 80% is spent) so the cap holds across instances;
+ * - the MCP endpoint has its own small share (MCP_DAILY_CAP tours, default 12) so an outside agent can't spend
+ *   the day's model budget before a visitor on the site does.
+ * When the model budget runs out, tours still run on the fixed plan and template pitches. When the Qloo allowance
+ * runs out, new tours are refused with a plain message and the finished tours on the poster wall still open.
  */
 const IP_WINDOW_MS = 10 * 60_000;
 const IP_LIMIT = 6;
-const DAILY_CAP = Number(process.env.DAILY_MODEL_CAP || 200);
-const FLUSH_EVERY = 10;
-
-const IP_DAY_LIMIT = Number(process.env.IP_DAILY_MODEL_CAP || 60);
+const IP_DAY_LIMIT = Number(process.env.IP_DAILY_TOUR_CAP || process.env.IP_DAILY_MODEL_CAP || 60);
 const ipCalls = new Map<string, number[]>();
 
 export function ipAllowed(ip: string): boolean {
@@ -34,62 +34,92 @@ export function ipAllowed(ip: string): boolean {
   return true;
 }
 
-let day = "";
-let persisted = 0; // count stored in the blob when we last synced
-let local = 0; // calls this instance made since then
-
 const today = () => new Date().toISOString().slice(0, 10);
-const key = (d: string) => `usage/${d}.json`;
 
-async function readCount(d: string): Promise<{ count: number; etag?: string }> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return { count: 0 };
-  const r = await get(key(d), { access: "private", useCache: false }).catch(() => null);
-  if (!r?.stream) return { count: 0 };
-  const j = JSON.parse(await new Response(r.stream).text()) as { count: number };
-  return { count: j.count ?? 0, etag: r.blob.etag?.replace(/^W\//, "") }; // If-Match needs the strong form
-}
+/** One daily counter persisted in a blob, shared by every instance, with a cap. */
+class Counter {
+  private day = "";
+  private persisted = 0; // count stored in the blob when we last synced
+  private local = 0; // takes this instance made since then
+  constructor(
+    readonly name: string,
+    readonly cap: number,
+    readonly flushEvery: number,
+  ) {}
 
-async function flush(): Promise<void> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN || local === 0) return;
-  for (let i = 0; i < 3; i++) {
-    const cur = await readCount(day);
-    try {
-      await put(key(day), JSON.stringify({ count: cur.count + local }), {
-        access: "private",
-        contentType: "application/json",
-        addRandomSuffix: false,
-        allowOverwrite: true,
-        ...(cur.etag ? { ifMatch: cur.etag } : {}),
-      });
-      persisted = cur.count + local;
-      local = 0;
-      return;
-    } catch {
-      /* someone else wrote first: re-read and retry */
+  private key(d: string) {
+    return `usage/${this.name}-${d}.json`;
+  }
+
+  private async read(d: string): Promise<{ count: number; etag?: string }> {
+    if (!process.env.BLOB_READ_WRITE_TOKEN) return { count: 0 };
+    const r = await get(this.key(d), { access: "private", useCache: false }).catch(() => null);
+    if (!r?.stream) return { count: 0 };
+    const j = JSON.parse(await new Response(r.stream).text()) as { count: number };
+    return { count: j.count ?? 0, etag: r.blob.etag?.replace(/^W\//, "") }; // If-Match needs the strong form
+  }
+
+  private async flush(): Promise<void> {
+    if (!process.env.BLOB_READ_WRITE_TOKEN || this.local === 0) return;
+    for (let i = 0; i < 3; i++) {
+      const cur = await this.read(this.day);
+      try {
+        await put(this.key(this.day), JSON.stringify({ count: cur.count + this.local }), {
+          access: "private",
+          contentType: "application/json",
+          addRandomSuffix: false,
+          allowOverwrite: true,
+          ...(cur.etag ? { ifMatch: cur.etag } : {}),
+        });
+        this.persisted = cur.count + this.local;
+        this.local = 0;
+        return;
+      } catch {
+        /* someone else wrote first: re-read and retry */
+      }
     }
+  }
+
+  private async roll(): Promise<void> {
+    const d = today();
+    if (d === this.day) return;
+    const count = (await this.read(d).catch(() => ({ count: 0 }))).count;
+    if (d !== this.day) {
+      this.day = d;
+      this.local = 0;
+      this.persisted = count;
+    }
+  }
+
+  /** Takes `n` from today's allowance; false (and nothing taken) when it would pass the cap. */
+  async take(n = 1): Promise<boolean> {
+    await this.roll();
+    if (this.persisted + this.local + n > this.cap) return false;
+    this.local += n;
+    const near = this.persisted + this.local >= this.cap * 0.8;
+    if (this.local >= this.flushEvery || near) await this.flush().catch(() => {});
+    return true;
+  }
+
+  /** What is left today, as last synced. */
+  async remaining(): Promise<number> {
+    await this.roll();
+    return Math.max(0, this.cap - this.persisted - this.local);
   }
 }
 
-/** Takes one model call from today's budget; false when the day's cap is spent. */
-export async function takeDaily(): Promise<boolean> {
-  const d = today();
-  if (d !== day) {
-    const count = (await readCount(d).catch(() => ({ count: 0 }))).count;
-    if (d !== day) {
-      day = d;
-      local = 0;
-      persisted = count;
-    }
-  }
-  if (persisted + local >= DAILY_CAP) return false;
-  local++;
-  // Sync every 10 calls, and on every call once the day is 80% spent, so instances can't overshoot by much.
-  const near = persisted + local >= DAILY_CAP * 0.8;
-  if (local >= FLUSH_EVERY || near) await flush().catch(() => {});
-  return true;
-}
+const model = new Counter("model", Number(process.env.DAILY_MODEL_CAP || 200), 10);
+const qloo = new Counter("qloo", Number(process.env.QLOO_DAILY_CAP || 2500), 25);
+const mcp = new Counter("mcp", Number(process.env.MCP_DAILY_CAP || 12), 1);
 
 /** Whether today's model budget allows one more agent run. */
-export async function takeModelRun(): Promise<boolean> {
-  return takeDaily();
-}
+export const takeModelRun = () => model.take();
+/** One Qloo request against today's allowance. */
+export const takeQloo = () => qloo.take();
+/** Qloo requests left today. A tour needs about 70. */
+export const qlooRemaining = () => qloo.remaining();
+/** Whether the MCP endpoint may route one more tour today. */
+export const takeMcpRun = () => mcp.take();
+
+/** Qloo requests a tour needs, with margin, for refusing a tour that couldn't finish. */
+export const QLOO_PER_TOUR = 90;

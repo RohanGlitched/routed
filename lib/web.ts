@@ -1,6 +1,7 @@
 import "server-only";
 import { get, put } from "@vercel/blob";
 import { pickCapacity } from "./agent/capacity";
+import { wikidataCapacity } from "./wikidata";
 
 /**
  * Tavily, for the one fact Qloo doesn't carry: how many people a room holds. Search returns page snippets; the
@@ -72,10 +73,17 @@ function scheduleFlush() {
   }, 4000);
 }
 
-export async function roomCapacity(venue: string, city: string): Promise<Cap | null> {
+export async function roomCapacity(venue: string, city: string, near?: { lat: number; lon: number }): Promise<Cap | null> {
   const key = `${venue}|${city}`.toLowerCase();
   await load();
   if (memo.has(key)) return memo.get(key)!;
+  // Wikidata knows most theatres, ballrooms, amphitheatres and arenas, exactly and for free.
+  const wiki = await wikidataCapacity(venue, city, near);
+  if (wiki) {
+    memo.set(key, wiki);
+    scheduleFlush();
+    return wiki;
+  }
   if (!hasTavily() || !takeSearch()) return null;
   const r = await fetch(`${API}/search`, {
     method: "POST",

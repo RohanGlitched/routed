@@ -4,18 +4,15 @@ import type { CityScore } from "../types";
 export type HeatArea = { name: string; within: string };
 
 /**
- * Where to ask Qloo for the heatmap, per region: a locality name Qloo resolves, or a WKT polygon where no name
- * works. ("Europe" resolves to a street in Colombes, near Paris, so the continent is drawn as a polygon.)
+ * Where to ask Qloo for the heatmap: one WKT polygon per region. A tile's affinity and popularity are percentiles
+ * within the response they came in (measured: both run evenly from 0 to 1 in every response), so two countries
+ * asked separately would each have a "1.0" tile and the smaller one's cities would float up the ranking
+ * (Calgary once ranked #1 for Tyler Childers that way). One polygon, one scale. The North America box stops at
+ * 60°N and 130°W, which also keeps Alaska and Hawaii out of a tour routed by van.
  */
 export const HEAT_AREAS: Record<RegionId, HeatArea[]> = {
-  na: [
-    { name: "the United States", within: "United States" },
-    { name: "Canada", within: "Canada" },
-  ],
-  uk: [
-    { name: "the United Kingdom", within: "United Kingdom" },
-    { name: "Ireland", within: "Ireland" },
-  ],
+  na: [{ name: "North America", within: "POLYGON((-130 24, -52 24, -52 60, -130 60, -130 24))" }],
+  uk: [{ name: "the UK and Ireland", within: "POLYGON((-11 49.8, 2 49.8, 2 59, -11 59, -11 49.8))" }],
   eu: [{ name: "mainland Europe", within: "POLYGON((-10 36, 30 36, 30 60, 25 71, 5 62, -10 52, -10 36))" }],
 };
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { fit } from "@/lib/agent/evidence";
 import { independents } from "@/lib/chains";
 import type { Spot, Stop } from "@/lib/types";
+import { LocalMap } from "./LocalMap";
 import s from "./tour.module.css";
 
 const pct = (v?: number) => (v === undefined ? null : Math.round(v * 100));
@@ -54,6 +55,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: S
           {stop.dayOff ? "Day off before. " : stop.travelDays ? `${stop.travelDays} travel day${stop.travelDays > 1 ? "s" : ""} before. ` : ""}
           <span className="num">{stop.fromKm.toLocaleString("en-US")}</span> km from {prev}, about <span className="num">{stop.fromHours}</span> h
         </span>
+        {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} />}
       </div>
 
       <div className={s.what}>
@@ -83,14 +85,18 @@ export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: S
                   {room.capacity ? (
                     <>
                       Holds {room.capacity.value.toLocaleString("en-US")}, per{" "}
-                      <a href={room.capacity.source} target="_blank" rel="noreferrer" title={room.capacity.quote}>
-                        {host(room.capacity.source)}
-                      </a>
+                      {/^https?:\/\//.test(room.capacity.source) ? (
+                        <a href={room.capacity.source} target="_blank" rel="noreferrer" title={room.capacity.quote}>
+                          {host(room.capacity.source)}
+                        </a>
+                      ) : (
+                        <span title={room.capacity.quote}>{room.capacity.source}</span>
+                      )}
                       .
                       {draw && fit(room, draw) !== "fits" && (
                         <span className={s.sizeNote}>
                           {" "}
-                          {fit(room, draw) === "too small" ? "Small" : "Large"} for a usual crowd of {draw.toLocaleString("en-US")}; none of the other rooms these fans go to here was confirmed to fit, so ask about a bigger room or a second night.
+                          {fit(room, draw) === "too small" ? "Small" : "Large"} for a usual crowd of {draw.toLocaleString("en-US")}: no room these fans go to here was confirmed to fit, so the pitch asks about {fit(room, draw) === "too small" ? "a second night or a bigger room" : "a reduced configuration"}.
                         </span>
                       )}
                     </>
@@ -98,7 +104,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: S
                     !pending && "Capacity not found on the web; ask the room."
                   )}
                 </span>
-                {others.length > 0 && <span className={s.alt}>Also fits: {others.map((r) => `${r.name}${r.affinity !== undefined ? ` (${pct(r.affinity)})` : ""}`).join(", ")}</span>}
+                {others.length > 0 && <span className={s.alt}>Other rooms these fans go to: {others.map((r) => `${r.name}${r.capacity ? ` (holds ${r.capacity.value.toLocaleString("en-US")})` : r.affinity !== undefined ? ` (${pct(r.affinity)})` : ""}`).join(", ")}</span>}
               </dd>
             </>
           )}
@@ -161,6 +167,9 @@ export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: S
               >
                 {copied ? "Copied" : "Copy pitch"}
               </button>
+              <a className={s.mail} href={`mailto:?subject=${encodeURIComponent(pitch.subject.replace(/~~[^~]+~~/g, ""))}&body=${encodeURIComponent(pitch.body.replace(/~~[^~]+~~/g, ""))}`}>
+                Open in email
+              </a>
             </div>
           </>
         ) : (

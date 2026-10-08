@@ -24,7 +24,7 @@ export const STEP = 7.2;
 type Box = { lon: [number, number]; lat: [number, number]; parallels: [number, number]; rotate: number };
 
 export const BOXES: Record<RegionId, Box> = {
-  na: { lon: [-125, -64], lat: [25, 50.5], parallels: [33, 45], rotate: 96 },
+  na: { lon: [-127, -60], lat: [25, 56], parallels: [33, 49], rotate: 96 },
   uk: { lon: [-10.6, 1.9], lat: [50, 58.8], parallels: [51, 57], rotate: 4 },
   eu: { lon: [-10, 28], lat: [36, 61], parallels: [43, 57], rotate: -10 },
 };

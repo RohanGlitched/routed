@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   const out: { id: string; artist?: string; before?: number; after?: number }[] = [];
   for (const t of await shelfTours("bench")) {
     const before = t.plan?.guess?.rankMean.guess;
-    const next = t.plan ? rescore(t.plan) : undefined;
+    const next = t.plan ? await rescore(t.plan) : undefined;
     if (!next) continue;
     await updateTour(t.id, (r) => (r.plan ? { ...r, plan: { ...r.plan, guess: next } } : null));
     out.push({ id: t.id, artist: t.plan?.artist.name, before, after: next.rankMean.guess });

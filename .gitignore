@@ -10,7 +10,4 @@ test-results
 .data
 tsconfig.tsbuildinfo
 
-.vercel
-.env*
-!.env.example
 .probe

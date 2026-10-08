@@ -97,6 +97,12 @@ const ALIASES: Record<string, string> = {
   nyc: "new york", "new york city": "new york", brooklyn: "new york", manhattan: "new york", la: "los angeles", sf: "san francisco",
   philly: "philadelphia", dc: "washington", "washington dc": "washington", "washington d c": "washington", nola: "new orleans",
   vegas: "las vegas", atx: "austin", "st paul": "minneapolis", "twin cities": "minneapolis", "quebec city": "quebec", "kansas city mo": "kansas city",
+  // Suburbs folded into the city they play as, and English or local spellings of the list's names.
+  oakland: "san francisco", berkeley: "san francisco", "san jose": "san francisco", salford: "manchester", "the hague": "rotterdam", "den haag": "rotterdam",
+  frankfurt: "frankfurt am main", hanover: "hannover", cologne: "koln", koeln: "koln", ghent: "gent", bruges: "brugge", seville: "sevilla", aarhus: "arhus",
+  newcastle: "newcastle upon tyne", hull: "kingston upon hull", wien: "vienna", praha: "prague", warszawa: "warsaw", lisboa: "lisbon", torino: "turin",
+  milano: "milan", firenze: "florence", napoli: "naples", geneve: "geneva", goteborg: "gothenburg", kobenhavn: "copenhagen", bruxelles: "brussels",
+  antwerpen: "antwerp", nurnberg: "nuremberg", munchen: "munich", "st. petersburg fl": "tampa", "fort worth": "fort worth",
 };
 
 /**

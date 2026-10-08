@@ -11,8 +11,8 @@ const text = Schibsted_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "Routed: tour where your fans already are", template: "%s · Routed" },
-  description: "Name an artist. An agent reads Qloo's taste graph to find the cities, rooms and openers where their fans already are, routes the dates, and drafts a pitch for every venue.",
+  title: { default: "Routed: tour where the fans are dense, not where the cities are big", template: "%s · Routed" },
+  description: "Name an artist. An agent reads Qloo's taste graph for the cities where their fans are unusually dense, the rooms those fans go to and the openers they share, routes the dates, and drafts a checked pitch for every venue.",
   openGraph: { type: "website", siteName: "Routed" },
   twitter: { card: "summary_large_image" },
 };

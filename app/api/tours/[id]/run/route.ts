@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { runTour, type Event } from "@/lib/agent/run";
 import { takeModelRun } from "@/lib/budget";
 import { hasKey } from "@/lib/nebius";
@@ -10,7 +10,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-const STALE_MS = 4 * 60_000;
+/** Longer than maxDuration, so a run that is still alive can't be claimed twice. */
+const STALE_MS = 6 * 60_000;
 
 /**
  * Runs a queued tour and streams its events as NDJSON. Only one caller can claim a tour; anyone else gets 409
@@ -33,9 +34,23 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   const useModel = hasKey() && (await takeModelRun());
   const enc = new TextEncoder();
 
+  // When the visitor closes the tab, the stream is cancelled but the run goes on and the record is still saved,
+  // so the share link shows a finished tour, not one stuck on "running"; `after` keeps the function alive for it.
+  let open = true;
+  let finished: Promise<void> | null = null;
   const stream = new ReadableStream<Uint8Array>({
+    cancel() {
+      open = false;
+    },
     async start(controller) {
-      const send = (e: Event) => controller.enqueue(enc.encode(JSON.stringify(e) + "\n"));
+      const send = (e: Event) => {
+        if (!open) return;
+        try {
+          controller.enqueue(enc.encode(JSON.stringify(e) + "\n"));
+        } catch {
+          open = false;
+        }
+      };
       const acc: Pick<TourRecord, "log"> & Partial<TourRecord> = { log: [] };
       let plan: Partial<Plan> = {};
       let lastSave = 0;
@@ -43,6 +58,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
         const patch = { ...acc, plan: plan as Plan };
         await updateTour(id, (r) => ({ ...r, ...patch })).catch((e) => console.error("[run] save failed", e));
       };
+      let release: () => void = () => {};
+      finished = new Promise<void>((r) => (release = r));
       try {
         let done: Event | null = null;
         for await (const e of runTour(claimed.input, useModel)) {
@@ -70,7 +87,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
         if (!acc.status) acc.status = "failed";
         await save();
         if (done) send(done);
-        controller.close();
+        if (open) controller.close();
+        release();
         return;
       } catch (err) {
         console.error("[run] tour failed", err);
@@ -79,8 +97,12 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
         send({ t: "error", message: acc.error });
       }
       await save();
-      controller.close();
+      if (open) controller.close();
+      release();
     },
+  });
+  after(async () => {
+    if (finished) await finished;
   });
   return new Response(stream, { headers: { "content-type": "application/x-ndjson; charset=utf-8", "cache-control": "no-store", "x-accel-buffering": "no" } });
 }

@@ -1,11 +1,12 @@
 import "server-only";
 import { km } from "../geo/markets";
-import { pickCities, RADIUS_KM } from "../geo/route";
+import { orderStops, pickCities, RADIUS_KM, worstLeg } from "../geo/route";
 import { MODELS, structured } from "../nebius";
 import type { Artist, Audience, CityScore, Opener, Room } from "../types";
 import { roomCapacity } from "../web";
 import { AGE_LABEL, topAge } from "./audience";
 import { fit } from "./evidence";
+import { candidatesBySize } from "./rooms";
 import { lookUpOpeners, lookUpRooms, type Log } from "./tools";
 
 /**
@@ -27,6 +28,11 @@ export type Pick = { marketId: string; rooms: Room[]; roomId?: string; openers: 
 type BookStop = { city_id: string; room_id: string; opener_id: string; why: string };
 
 export type PlanResult = { picks: Pick[]; planned: "model" | "fixed"; model?: string };
+
+/** A leg longer than this means two or more days in the van: the outlier rule looks for a nearer stop. */
+export const MAX_LEG_KM = 1800;
+/** How far from the stops either side a replacement may be. */
+export const REACH_KM = 700;
 
 const SHORTLIST_SCHEMA = {
   type: "object",
@@ -95,7 +101,7 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
   const rooms = new Map<string, Room[]>();
   const openers = new Map<string, Opener[]>();
   const getRooms = async (id: string) => {
-    if (!rooms.has(id)) rooms.set(id, await lookUpRooms(artist, id, log));
+    if (!rooms.has(id)) rooms.set(id, await lookUpRooms(artist, id, log, draw));
     return rooms.get(id)!;
   };
   const getOpeners = async (id: string) => {
@@ -107,12 +113,14 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
   const scout = async (id: string) => {
     await Promise.all([getRooms(id), getOpeners(id)]);
   };
-  /** A room's capacity from the web (each search costs a credit, so only for rooms about to be booked). */
+  /** A room's capacity: Wikidata, then the web (a search costs a credit, so only for rooms about to be booked). */
+  const measured = new Set<string>();
   const measure = async (room: Room, city: string) => {
-    if (room.capacity !== undefined) return;
-    const cap = await roomCapacity(room.name, city).catch(() => null);
+    if (room.capacity !== undefined || measured.has(room.id)) return;
+    measured.add(room.id);
+    const cap = await roomCapacity(room.name, city, room.lat !== undefined && room.lon !== undefined ? { lat: room.lat, lon: room.lon } : undefined).catch(() => null);
     if (cap) room.capacity = cap;
-    log({ kind: "web", text: `How many does ${room.name} hold?`, result: cap ? `${cap.value.toLocaleString("en-US")}, per ${host(cap.source)}` : "Not found on the web; ask the room." });
+    log({ kind: "web", text: `How many does ${room.name} hold?`, result: cap ? `${cap.value.toLocaleString("en-US")}, per ${host(cap.source)}` : "Not found; ask the room." });
   };
 
   let booked: BookStop[] | null = null;
@@ -180,12 +188,13 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
     }
   }
 
-  // Guard the model's answer: real candidates only, no duplicates, radius clause, the right count.
+  // Guard the model's answer: real candidates only, no duplicates, radius clause, rooms to book, the right count.
   const chosen: { score: CityScore; why?: string; roomId?: string; openerId?: string }[] = [];
   for (const s of booked ?? []) {
     const score = byId.get(s.city_id);
     if (!score || chosen.some((c) => c.score.marketId === score.marketId)) continue;
     if (chosen.some((c) => km(c.score, score) < RADIUS_KM)) continue;
+    if (!(await getRooms(score.marketId)).length) continue;
     chosen.push({ score, why: s.why, roomId: s.room_id, openerId: s.opener_id });
     if (chosen.length >= shows) break;
   }
@@ -202,46 +211,85 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
   if (planned === "fixed") log({ kind: "rule", text: `Fixed plan: the ${chosen.length} strongest cities at least ${RADIUS_KM} km apart that have rooms.`, result: chosen.map((c) => c.score.name).join(", ") });
   else if (chosen.length > before) log({ kind: "rule", text: `The agent booked ${before} usable stops; the ranking filled the other ${chosen.length - before}.`, result: chosen.slice(before).map((c) => c.score.name).join(", ") });
 
-  // Every picked city gets its lookups, whatever the model skipped. The booked room's capacity is checked on the
-  // web; with a known crowd, a room that misses it is swapped for the next one that fits (at most two more checks).
+  // The outlier rule: a stop that costs a leg of more than MAX_LEG_KM (two or more days in the van) is swapped for
+  // the strongest unused candidate within REACH_KM of the stops either side of it, when one exists and has rooms.
+  // At most two swaps, so a tour that is spread out on purpose stays that way.
+  for (let swaps = 0; swaps < 2 && chosen.length >= 3; swaps++) {
+    const ordered = orderStops(opts.from, chosen.map((c) => ({ ...c, lat: c.score.lat, lon: c.score.lon })));
+    const worst = worstLeg(opts.from, ordered);
+    if (!worst || worst.km <= MAX_LEG_KM) break;
+    const far = ordered[worst.index]!;
+    const neighbours = [ordered[worst.index - 1] ?? opts.from, ordered[worst.index + 1]].filter((x): x is NonNullable<typeof x> => Boolean(x));
+    let swapped = false;
+    for (const cand of candidates) {
+      if (chosen.some((c) => c.score.marketId === cand.marketId)) continue;
+      if (!neighbours.some((n) => km(n, cand) <= REACH_KM)) continue;
+      if (chosen.some((c) => c.score.marketId !== far.score.marketId && km(c.score, cand) < RADIUS_KM)) continue;
+      if (!(await getRooms(cand.marketId)).length) continue;
+      const i = chosen.findIndex((c) => c.score.marketId === far.score.marketId);
+      chosen.splice(i, 1, { score: cand });
+      log({ kind: "rule", text: `${far.score.name} would cost a ${worst.km.toLocaleString("en-US")} km leg, so ${cand.name} (#${cand.rank} on the fan map) takes its place.`, result: `${cand.name} is ${Math.round(Math.min(...neighbours.map((n) => km(n, cand))))} km from the next stop` });
+      swapped = true;
+      break;
+    }
+    if (!swapped) break;
+  }
+
+  // Every picked city gets its lookups, whatever the model skipped. The booked room's capacity is checked; with a
+  // known crowd, rooms are measured in order (the model's choice, then the city's best-known rooms for a big
+  // crowd or its best-matched ones for a small one) until one fits, up to five checks a city, and a room that
+  // misses the crowd is swapped for the first that fits. Nothing fitting is said plainly, never papered over.
   const picks = await Promise.all(
     chosen.map(async (c): Promise<Pick> => {
       const [r, o] = await Promise.all([getRooms(c.score.marketId), getOpeners(c.score.marketId)]);
       const first = r.find((x) => x.id === c.roomId) ?? r[0];
       if (first) await measure(first, c.score.name);
-      if (draw && first && (fit(first, draw) === "too small" || fit(first, draw) === "too big")) {
-        for (const next of r.filter((x) => x !== first).slice(0, 2)) {
+      if (draw && first && fit(first, draw) !== "fits") {
+        for (const next of candidatesBySize(r.filter((x) => x !== first), draw).slice(0, 6)) {
           await measure(next, c.score.name);
           if (fit(next, draw) === "fits") break;
         }
       }
-      return {
-        marketId: c.score.marketId,
-        rooms: r,
-        roomId: roomFor(r, c.roomId ?? first?.id, draw, log, c.score.name),
-        openers: o,
-        openerId: o.some((x) => x.id === c.openerId) ? c.openerId : undefined,
-        why: c.why,
-      };
+      const roomId = roomFor(r, c.roomId ?? first?.id, draw, log, c.score.name);
+      const openerId = o.some((x) => x.id === c.openerId) ? c.openerId : undefined;
+      // The model's sentence was written for the room and opener it chose; if a rule changed either, it no longer
+      // describes the stop, so a plain rule sentence replaces it rather than a wrong name staying on the page.
+      const changed = (c.roomId && roomId !== c.roomId) || (c.openerId && openerId !== c.openerId);
+      const booked = r.find((x) => x.id === roomId);
+      const why = changed && booked ? `${c.score.name} is ${artist.name}'s #${c.score.rank} city on Qloo${booked.capacity ? `, and ${booked.name} holds ${booked.capacity.value.toLocaleString("en-US")}` : `, and ${booked.name} matches these fans at ${Math.round((booked.affinity ?? 0) * 100)}`}.` : c.why;
+      return { marketId: c.score.marketId, rooms: r, roomId, openers: o, openerId, why };
     }),
   );
   spreadOpeners(picks);
   return { picks, planned, model };
 }
 
-/** The model's room, unless its known capacity misses the crowd and the city has a room that fits (rule beats model). */
+/**
+ * The room to book: the model's choice unless its known capacity misses the crowd and the city has a room that
+ * fits (rule beats model). When nothing measured fits, the nearest size to the crowd among known rooms, so the
+ * pitch can ask about a second night or a bigger room instead of pretending.
+ */
 function roomFor(rooms: Room[], wanted: string | undefined, draw: number | undefined, log: Log, city: string): string | undefined {
   const pick = rooms.find((x) => x.id === wanted);
   if (!pick) return bestRoom(rooms, draw)?.id;
   const f = fit(pick, draw);
   if (f === "too small" || f === "too big") {
-    const better = rooms.find((x) => fit(x, draw) === "fits");
-    if (better) {
-      log({ kind: "rule", text: `${pick.name} holds ${pick.capacity!.value.toLocaleString("en-US")}, ${f} for a crowd of about ${draw!.toLocaleString("en-US")}, so ${city} gets ${better.name}.`, result: `${better.name} holds ${better.capacity!.value.toLocaleString("en-US")}` });
+    const better = rooms.find((x) => fit(x, draw) === "fits") ?? nearestSize(rooms, draw!, pick);
+    if (better && better !== pick) {
+      log({ kind: "rule", text: `${pick.name} holds ${pick.capacity!.value.toLocaleString("en-US")}, ${f} for a crowd of about ${draw!.toLocaleString("en-US")}, so ${city} gets ${better.name}.`, result: `${better.name} holds ${better.capacity!.value.toLocaleString("en-US")}${fit(better, draw) === "fits" ? "" : " (the closest size that could be confirmed)"}` });
       return better.id;
     }
   }
   return pick.id;
+}
+
+/** Among rooms with a known capacity, the one nearest the crowd in log terms (a 900 for 1,500 beats a 250). */
+function nearestSize(rooms: Room[], draw: number, current: Room): Room | undefined {
+  const known = rooms.filter((r) => r.capacity);
+  if (!known.length) return undefined;
+  const gap = (r: Room) => Math.abs(Math.log(r.capacity!.value / draw));
+  const best = known.reduce((a, b) => (gap(b) < gap(a) ? b : a));
+  return current.capacity && gap(current) <= gap(best) ? current : best;
 }
 
 /** Without the model: the strongest affinity among rooms that fit the crowd, when capacities are known. */

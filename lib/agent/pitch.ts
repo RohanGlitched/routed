@@ -30,10 +30,11 @@ Rules:
 - Use only the facts in that stop's evidence. Never invent ticket sales, streams, follower counts, prices, guarantees or past shows.
 - Lead with the date and the ask, then one or two sentences on why this room and city fit, citing Qloo's taste evidence in plain words (for example "ranks 2nd of 31 cities in the region for fan affinity").
 - Mention the suggested opener and, if useful, one thing these fans also love.
+- If the evidence says the room is small or large for the usual crowd, say so and ask the question the evidence suggests (a second night, a larger room, a reduced configuration). Never call a room a fit unless the evidence does.
 - 90 to 140 words, warm and professional, no exclamation marks, no emoji, no placeholders like [Name]. End with "Thanks," on its own line and no name after it.`;
 
-export async function writePitches(plan: Plan, useModel: boolean): Promise<{ pitches: Pitch[]; model?: string }> {
-  const evidence = plan.stops.map((s) => evidenceLines(plan, s));
+export async function writePitches(plan: Plan, useModel: boolean, draw?: number): Promise<{ pitches: Pitch[]; model?: string }> {
+  const evidence = plan.stops.map((s) => evidenceLines(plan, s, draw));
   const fallback = () => plan.stops.map((s) => ({ ...templatePitch(plan, s), struck: [] }));
   if (!useModel) return { pitches: fallback() };
   try {

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { PrefilledForm } from "@/components/home/PrefilledForm";
 import { RouteForm } from "@/components/home/RouteForm";
 import { Poster } from "@/components/poster/Poster";
 import { opener, room } from "@/lib/agent/evidence";
@@ -9,6 +11,8 @@ import { loadTour, shelfTours, showcaseTours } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
 import s from "./home.module.css";
 
+/** The home page reads a few dozen tour records; it is rebuilt every two minutes, not on every visit. */
+export const revalidate = 120;
 
 async function showcase(): Promise<{ hero: TourRecord | null; wall: TourRecord[] }> {
   const wall = await showcaseTours().catch(() => [] as TourRecord[]);
@@ -46,8 +50,7 @@ async function bench(): Promise<{ n: number; routed: number; guess: number } | n
   return { n: tours.length, routed: avg((t) => t.plan!.guess!.rankMean.routed ?? 0), guess: avg((t) => t.plan!.guess!.rankMean.guess ?? 0) };
 }
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ artist?: string; from?: string }> }) {
-  const q = await searchParams;
+export default async function Home() {
   const [{ hero, wall }, b] = await Promise.all([showcase(), bench()]);
   const plan = hero?.plan;
   const poster = plan ? posterFor(plan) : null;
@@ -59,12 +62,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ a
     <>
       <section className={`wrap ${s.hero}`}>
         <div className={s.pitch}>
-          <h1 className={s.h1}>Tour where your fans already are.</h1>
+          <h1 className={s.h1}>Tour where the fans are dense, not where the cities are big.</h1>
           <p className={s.lede}>
-            Name an artist. An agent reads Qloo&apos;s taste graph to find the cities where their fans over-index, the rooms those fans go to and the openers they share, then routes the dates
-            and drafts a pitch for every venue.
+            Name an artist. An agent reads Qloo&apos;s taste graph for the cities where their fans are unusually dense, the rooms those fans go to and the openers they share, then routes the dates,
+            sizes every room to the crowd and drafts a checked pitch for each venue.
           </p>
-          <RouteForm artist={q.artist ?? hero?.input.artist ?? ""} from={q.from ?? hero?.input.from ?? ""} />
+          <Suspense fallback={<RouteForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />}>
+            <PrefilledForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />
+          </Suspense>
         </div>
         <figure className={s.stage}>
           {poster && hero ? (
@@ -176,7 +181,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ a
                 {plan.guess.stops.map((g, i) => (
                   <li key={i} className={g.rank && g.rank <= 25 ? undefined : s.cold}>
                     <span>{g.city}</span>
-                    <b>{g.rank ? `#${g.rank}` : "no fans"}</b>
+                    <b>{g.rank ? `#${g.rank}` : g.outside ? "not a touring city" : "not placed"}</b>
                   </li>
                 ))}
               </ol>

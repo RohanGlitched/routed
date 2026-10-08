@@ -19,6 +19,8 @@ export type Artist = {
   disambiguation?: string;
   popularity?: number;
   genres: string[];
+  /** Other artists Qloo's search returned for the typed name, offered in case the match is wrong. */
+  others?: { name: string; disambiguation?: string }[];
 };
 
 /** A market scored by Qloo's heatmap for this artist. `rank` is 1-based among the candidates. */
@@ -65,7 +67,21 @@ export type Opener = {
   shared: string[];
 };
 
-export type Spot = { id: string; name: string; address?: string; affinity?: number; kind?: string };
+export type Spot = { id: string; name: string; address?: string; affinity?: number; kind?: string; lat?: number; lon?: number; /** The neighbourhood Qloo files the place under ("Buckman"), and how Qloo characterises it ("Creative hub"). */ area?: string; areaTrait?: string };
+
+/**
+ * Inside the city: Qloo's heatmap at street level (tiles about 150 m across, strongest kept, strength 0–1 within
+ * the city), the hottest tile with the neighbourhood Qloo's places there are filed under, and where the booked
+ * room sits against it.
+ */
+export type Local = {
+  tiles: [lat: number, lon: number, strength: number][];
+  hot: { lat: number; lon: number; name?: string; trait?: string };
+  /** Straight-line km from the booked room to the hottest tile. */
+  roomKm?: number;
+  /** The room sits in the fans' strongest area (within 1.5 km of the hottest tile, or on a top-tenth tile). */
+  inHot?: boolean;
+};
 
 export type Pitch = { subject: string; body: string; struck: string[] };
 
@@ -91,6 +107,8 @@ export type Stop = {
   after: Spot[];
   /** Where a street team puts up posters: record stores, bookshops and cafés these fans go to (artist → shops). */
   posters?: Spot[];
+  /** The city at street level: which neighbourhood the fans over-index in, and whether the room is there. */
+  local?: Local;
   pitch?: Pitch;
 };
 
@@ -119,9 +137,11 @@ export type GuessStop = {
   city: string;
   label: string;
   marketId?: string;
-  /** The city's fan affinity on this artist's Qloo heatmap; undefined when the city had no tile at all. */
+  /** The city's fan affinity on this artist's Qloo heatmap; undefined when the city isn't a touring market. */
   affinity?: number;
   rank?: number;
+  /** Resolved to a place, but no touring market (a city of 50k+ with its suburbs) within 60 km of it. */
+  outside?: boolean;
   venue: string;
   venueId?: string;
   venueAffinity?: number;

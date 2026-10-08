@@ -19,6 +19,13 @@ export const ARTISTS = [
   { artist: "Arlo Parks", from: "London, UK", draw: 1500 },
   { artist: "Wet Leg", from: "Southampton, UK", draw: 2000 },
   { artist: "Parcels", from: "Berlin, Germany", draw: 2000 },
+  // Added Oct 8 so the list isn't only indie and Americana: hip-hop, Latin, hardcore, electronic, soul, metal.
+  { artist: "JPEGMAFIA", from: "Baltimore, MD", draw: 1500 },
+  { artist: "Cuco", from: "Los Angeles, CA", draw: 2500 },
+  { artist: "Knocked Loose", from: "Louisville, KY", draw: 2500 },
+  { artist: "Jamie xx", from: "London, UK", draw: 5000 },
+  { artist: "Durand Jones & The Indications", from: "Indianapolis, IN", draw: 1200 },
+  { artist: "Ghost", from: "Stockholm, Sweden", draw: 8000 },
 ];
 const date = new Date(Date.now() + 150 * 86_400_000).toISOString().slice(0, 10);
 

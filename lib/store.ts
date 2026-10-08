@@ -2,6 +2,7 @@ import "server-only";
 import { get, list, put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { cache } from "react";
 import { TOUR_ID, type TourRecord } from "./types";
 
 /**
@@ -44,9 +45,7 @@ async function writeRaw(rec: TourRecord, etag?: string): Promise<void> {
   });
 }
 
-export async function loadTour(id: string): Promise<TourRecord | null> {
-  return (await readRaw(id))?.rec ?? null;
-}
+export const loadTour = cache(async (id: string): Promise<TourRecord | null> => (await readRaw(id))?.rec ?? null);
 
 export async function saveTour(rec: TourRecord): Promise<void> {
   await writeRaw(rec);

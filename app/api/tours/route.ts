@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
-import { ipAllowed } from "@/lib/budget";
+import { ipAllowed, QLOO_PER_TOUR, qlooRemaining } from "@/lib/budget";
 import { findMarket } from "@/lib/geo/markets";
 import { saveTour } from "@/lib/store";
 import { newTourId, type TourRecord } from "@/lib/types";
@@ -33,6 +33,7 @@ export async function POST(req: Request) {
   if (!(shows >= 3 && shows <= 16)) return NextResponse.json({ error: "Choose between 3 and 16 shows.", field: "shows" }, { status: 400 });
   if (draw !== undefined && !(draw >= 50 && draw <= 20_000)) return NextResponse.json({ error: "Pick a crowd size from the list.", field: "draw" }, { status: 400 });
   if (!isAdmin(req) && !ipAllowed(await clientIp())) return NextResponse.json({ error: "That's a lot of tours in a few minutes. Try again in ten." }, { status: 429 });
+  if ((await qlooRemaining()) < QLOO_PER_TOUR) return NextResponse.json({ error: "Routed has used today's Qloo allowance. The finished tours on the poster wall still open; new ones run again tomorrow." }, { status: 503 });
 
   const rec: TourRecord = { id: newTourId(), createdAt: new Date().toISOString(), status: "queued", input: { artist, from, firstDate, shows, ...(draw ? { draw } : {}) }, log: [] };
   await saveTour(rec);

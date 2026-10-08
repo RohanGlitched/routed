@@ -9,6 +9,7 @@ import { Audience } from "./Audience";
 import { CallSheet } from "./CallSheet";
 import { DaySheet } from "./DaySheet";
 import { downloadPoster } from "./download";
+import { tourCalendar } from "@/lib/ics";
 import { Campaign } from "./Campaign";
 import { Control } from "./Control";
 import s from "./tour.module.css";
@@ -34,7 +35,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function stream() {
+  async function stream(): Promise<void> {
     setRec((r) => ({ ...r, status: "running", log: [] }));
     try {
       const res = await fetch(`/api/tours/${initial.id}/run`, { method: "POST" });
@@ -74,14 +75,17 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
     });
   }
 
-  async function poll() {
-    for (let i = 0; i < 120; i++) {
+  async function poll(): Promise<void> {
+    for (let i = 0; i < 160; i++) {
       await new Promise((r) => setTimeout(r, 2500));
       const r = await fetch(`/api/tours/${initial.id}`, { cache: "no-store" }).then((x) => x.json() as Promise<TourRecord>).catch(() => null);
       if (!r) continue;
       setRec(r);
       if (r.status === "done" || r.status === "failed") return;
+      // A run that stopped reporting (its function was killed) is claimed again and streamed from the start.
+      if (r.status === "running" && r.startedAt && Date.now() - Date.parse(r.startedAt) > 6 * 60_000) return stream();
     }
+    setRec((r) => ({ ...r, status: "failed", error: "The routing is taking too long. Run it again in a minute." }));
   }
 
   const plan = rec.plan;
@@ -101,6 +105,12 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
             <div className={s.posterActions}>
               <button type="button" onClick={() => posterRef.current && downloadPoster(posterRef.current, `${title} ${season(plan!.firstDate)}`)}>
                 Download poster
+              </button>
+              <button type="button" onClick={() => saveCalendar(plan!, rec.id, title)}>
+                Add to calendar
+              </button>
+              <button type="button" onClick={() => window.print()}>
+                Print the tour book
               </button>
               <CopyLink />
             </div>
@@ -127,6 +137,19 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
             </p>
           )}
 
+          {plan?.artist?.others?.length ? (
+            <p className={s.others}>
+              Qloo matched <b>{plan.artist.name}</b>{plan.artist.disambiguation ? ` (${plan.artist.disambiguation})` : ""}. Not the one you meant? Route{" "}
+              {plan.artist.others.map((o, i) => (
+                <span key={o.name}>
+                  {i > 0 && (i === plan.artist.others!.length - 1 ? " or " : ", ")}
+                  <Link href={`/?artist=${encodeURIComponent(o.name)}&from=${encodeURIComponent(rec.input.from)}`}>{o.name}</Link>
+                  {o.disambiguation ? ` (${o.disambiguation})` : ""}
+                </span>
+              ))}
+              {" "}instead.
+            </p>
+          ) : null}
           {rec.status === "failed" && (
             <div className={s.failed} role="alert">
               <p>{rec.error ?? "The routing stopped partway."}</p>
@@ -172,6 +195,16 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
       )}
     </div>
   );
+}
+
+/** The tour as an .ics file: every show, travel day and day off, for the band's shared calendar. */
+function saveCalendar(plan: Plan, id: string, title: string) {
+  const ics = tourCalendar(plan, id, location.origin);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+  a.download = `${title.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase()}-tour.ics`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
 
 function CopyLink() {

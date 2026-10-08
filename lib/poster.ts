@@ -31,6 +31,7 @@ export function posterFor(plan: Partial<Plan>): PosterProps | null {
     route: map.route,
     start: map.start,
     stops: stops.map((s) => ({ date: s.date, city: s.city, venue: shortVenue((s.rooms.find((r) => r.id === s.roomId) ?? s.rooms[0])?.name) })),
-    topCity: plan.cities?.[0]?.name,
+    // The stamp names the strongest fan city on this tour, not a city the route skipped.
+    topCity: stops.length ? [...stops].sort((a, b) => a.score.rank - b.score.rank)[0]!.city : plan.cities?.[0]?.name,
   };
 }

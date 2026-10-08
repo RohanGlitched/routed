@@ -6,6 +6,7 @@ import type { LogLine } from "@/lib/types";
 import s from "./how.module.css";
 
 export const metadata: Metadata = { title: "How it works", description: "The agent, every Qloo call it makes, the routing rules, and what Routed doesn't know." };
+export const revalidate = 600;
 
 const CALLS: { match: RegExp; title: string; why: string; endpoint: string }[] = [
   { match: /^Who is/, title: "Find the artist", why: "Resolves the name to a Qloo entity, so every later call is about the right act.", endpoint: "GET /search" },
@@ -21,7 +22,9 @@ const CALLS: { match: RegExp; title: string; why: string; endpoint: string }[] =
   { match: /growing/, title: "Momentum", why: "Weekly popularity percentile for the last six months; shown when it moved.", endpoint: "GET /v2/trending" },
   { match: /^Which rooms/, title: "Rooms in each city", why: "Places tagged live music venue or concert hall inside the city, ranked by affinity to the artist's fans. Chapels, museums, stores and casinos that carry the tag are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
   { match: /^Who could open/, title: "Openers", why: "Artists no bigger than the headliner whose audience matches, weighted to the city's own taste.", endpoint: "GET /v2/insights with filter.type=urn:entity:artist, signal.location.query and filter.popularity.max" },
-  { match: /see a poster/, title: "The poster run", why: "Cross-domain: the record stores, bookshops and cafés these fans go to in each city. Chains are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
+  { match: /fans share\?$/, title: "What the audiences share", why: "Qloo's audience comparison between the headliner and the booked opener: the characteristics, themes and moods both fan bases hold, as the words for the pitch.", endpoint: "GET /v2/analysis/compare with a.signal.interests.entities and b.signal.interests.entities" },
+  { match: /street by street/, title: "Inside the city", why: "The heatmap again, for one city: a few hundred tiles about 150 m across say which neighbourhood the fans over-index in. A rule measures the booked room against it, and the poster run is anchored there.", endpoint: "GET /v2/insights with filter.type=urn:heatmap and filter.location.query=<city>" },
+  { match: /see a poster/, title: "The poster run", why: "Cross-domain: the record stores, bookshops and cafés these fans go to, within 2.5 km of the tile where they over-index most. Chains are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place, filter.tags, filter.location=POINT(…) and filter.location.radius" },
   { match: /go out in/, title: "After the show", why: "Cross-domain again: the bars these fans over-index on in that city.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
   { match: /each room, Routed/, title: "Scoring both tours", why: "Every room from Routed's tour and the model-alone tour, scored against this artist's fans in one call restricted to exactly those rooms, so both sides share a scale.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.results.entities" },
 ];
@@ -110,6 +113,7 @@ export default async function How() {
           <li>The route is the shortest drive from the starting city: nearest neighbour, then 2-opt until no swap helps.</li>
           <li>Room capacity comes from a web search (Tavily) and is read by rule: a number tied to the word capacity, on a page that names the room. The source is linked.</li>
           <li>A pitch may only use figures from its stop&apos;s evidence. Any other figure is struck through on the page.</li>
+          <li>A room is &ldquo;in the fans&apos; neighbourhood&rdquo; when it is within 1.5 km of the city&apos;s hottest heatmap tile, or sits on a tile in the city&apos;s top tenth.</li>
         </ul>
       </section>
 

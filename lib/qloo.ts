@@ -1,4 +1,5 @@
 import "server-only";
+import { takeQloo } from "./budget";
 
 /**
  * The Qloo Insights API (hackathon host, X-Api-Key header). Each function is one of the workflows in Qloo's own
@@ -28,15 +29,18 @@ export class QlooError extends Error {
   }
 }
 
-const memo = new Map<string, { at: number; body: unknown }>();
+const memo = new Map<string, { at: number; body: unknown; bytes: number }>();
 const TTL_MS = 6 * 3600_000;
+/** The cache is bounded by bytes, not entries: a region heatmap is about 2.6 MB and a city one 400 KB. */
+const MEMO_BYTES_MAX = Number(process.env.QLOO_CACHE_MB || 48) * 1_048_576;
+let memoBytes = 0;
 
 /**
  * Qloo's hackathon key is rate limited (a tour's per-stop lookups fired together got 429s, measured Oct 7), so
  * requests go through one gate: at most MAX_IN_FLIGHT at once, starts at least GAP_MS apart.
  */
-const MAX_IN_FLIGHT = Number(process.env.QLOO_CONCURRENCY || 4);
-const GAP_MS = Number(process.env.QLOO_GAP_MS || 110);
+const MAX_IN_FLIGHT = Number(process.env.QLOO_CONCURRENCY || 3);
+const GAP_MS = Number(process.env.QLOO_GAP_MS || 230);
 let inFlight = 0;
 let lastStart = 0;
 const waiting: (() => void)[] = [];
@@ -62,6 +66,7 @@ export async function qlooGet<T>(path: string, query: Query, timeoutMs = 20_000)
   const hit = memo.get(url);
   if (hit && Date.now() - hit.at < TTL_MS) return { body: hit.body as T, request };
   if (!hasQloo()) throw new QlooError("QLOO_API_KEY is not set", 0, request);
+  if (!(await takeQloo())) throw new QlooError("Routed has used today's Qloo allowance; finished tours still open, and new ones run again tomorrow.", 0, request);
 
   let last: QlooError | null = null;
   for (let attempt = 0; attempt < 4; attempt++) {
@@ -77,9 +82,15 @@ export async function qlooGet<T>(path: string, query: Query, timeoutMs = 20_000)
     }
     release();
     if (r.ok) {
-      const body = (await r.json()) as T;
-      memo.set(url, { at: Date.now(), body });
-      if (memo.size > 2000) memo.delete(memo.keys().next().value!);
+      const text = await r.text();
+      const body = JSON.parse(text) as T;
+      memo.set(url, { at: Date.now(), body, bytes: text.length });
+      memoBytes += text.length;
+      while (memoBytes > MEMO_BYTES_MAX && memo.size) {
+        const [k, v] = memo.entries().next().value!;
+        memo.delete(k);
+        memoBytes -= v.bytes;
+      }
       return { body, request };
     }
     const text = (await r.text()).slice(0, 300);
@@ -118,7 +129,7 @@ export type Entity = {
   disambiguation?: string;
   tags: { id: string; name: string; type?: string }[];
   /** Place fields when present. */
-  place?: { address?: string; city?: string; region?: string; country?: string; lat?: number; lon?: number; rating?: number; priceLevel?: number; website?: string; phone?: string; isClosed?: boolean };
+  place?: { address?: string; city?: string; region?: string; country?: string; lat?: number; lon?: number; rating?: number; priceLevel?: number; website?: string; phone?: string; isClosed?: boolean; /** The neighbourhood Qloo files the place under ("Buckman"). */ area?: string };
   /** Short description when Qloo has one. */
   description?: string;
   /** For artists: where they're from, which helps with "local opener". */
@@ -180,6 +191,7 @@ export function toEntity(e: RawEntity): Entity {
           place: {
             address: str(p.address ?? flat.address),
             city: str(g.city ?? p.city ?? flat.city),
+            area: str(g.name) && str(g.name) !== str(g.city) ? str(g.name) : undefined,
             region: str(g.admin1_region ?? p.admin1_region ?? flat.admin1_region),
             country: str(g.country_code ?? g.country ?? flat.country_code),
             lat,
@@ -219,12 +231,12 @@ export async function search(query: string, type = "urn:entity:artist", take = 5
 export type Tile = { lat: number; lon: number; geohash?: string; affinity: number; rank?: number; popularity?: number };
 
 /** where_popular: geohash tiles where the entity's fans over-index, inside `within` (a place name or WKT). */
-export async function wherePopular(entityId: string, within: string, take = 50) {
-  const isWkt = /^(POINT|POLYGON|MULTIPOLYGON)\s*\(/i.test(within);
+export async function wherePopular(entityId: string, within: string | { lat: number; lon: number; radiusM: number }, take = 50) {
+  const isWkt = typeof within === "string" && /^(POINT|POLYGON|MULTIPOLYGON)\s*\(/i.test(within);
   const { body, request } = await qlooGet("/v2/insights", {
     "filter.type": "urn:heatmap",
     "signal.interests.entities": entityId,
-    ...(isWkt ? { "filter.location": within } : { "filter.location.query": within }),
+    ...(typeof within !== "string" ? { "filter.location": `POINT(${within.lon} ${within.lat})`, "filter.location.radius": within.radiusM } : isWkt ? { "filter.location": within } : { "filter.location.query": within }),
     take,
   });
   const raw = ((body as { results?: { heatmap?: unknown[] } })?.results?.heatmap ?? []) as {
@@ -250,6 +262,8 @@ export async function recommend(opts: {
   signals?: string[];
   signalLocation?: string;
   filterLocation?: string;
+  /** A point and radius instead of a named place: "the shops within 2.5 km of the fans' hottest tile". */
+  near?: { lat: number; lon: number; radiusM: number };
   tags?: string[];
   excludeTags?: string[];
   exclude?: string[];
@@ -260,7 +274,9 @@ export async function recommend(opts: {
     "filter.type": opts.type,
     "signal.interests.entities": opts.signals?.join(","),
     "signal.location.query": opts.signalLocation,
-    "filter.location.query": opts.filterLocation,
+    "filter.location.query": opts.near ? undefined : opts.filterLocation,
+    "filter.location": opts.near ? `POINT(${opts.near.lon} ${opts.near.lat})` : undefined,
+    "filter.location.radius": opts.near?.radiusM,
     "filter.tags": opts.tags?.join(","),
     "filter.exclude.tags": opts.excludeTags?.join(","),
     "filter.exclude.entities": opts.exclude?.join(","),
@@ -320,6 +336,19 @@ export async function compareAudiences(a: string[], b: string[], opts: { type?: 
     take: opts.take ?? 10,
   });
   return { body, request };
+}
+
+export type SharedTag = { id: string; name: string; type?: string; score?: number };
+
+/**
+ * compare_audiences, read: the tags both audiences share, each with Qloo's score for the overlap. The body also
+ * carries what is distinctive to each side (`a`, `b`); the shared list is what a pitch needs.
+ */
+export async function sharedTastes(a: string, b: string, take = 40): Promise<{ tags: SharedTag[]; request: QlooRequest }> {
+  const { body, request } = await compareAudiences([a], [b], { take });
+  const raw = ((body as { results?: { tags?: unknown[] } })?.results?.tags ?? []) as { tag_id?: string; id?: string; name?: string; subtype?: string; type?: string; query?: { score?: number } }[];
+  const tags = raw.map((t) => ({ id: String(t.tag_id ?? t.id ?? ""), name: String(t.name ?? ""), type: t.subtype ?? t.type, score: num(t.query?.score) })).filter((t) => t.id && t.name);
+  return { tags, request };
 }
 
 /** find_tags: tag URNs for a natural-language concept ("music venue"). */

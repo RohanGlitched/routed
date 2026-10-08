@@ -57,3 +57,8 @@
   .axis div { grid-column: 1; }
   .homes { grid-template-columns: 1fr; }
 }
+
+.prompt { margin: 14px 0 0; font-size: 14px; }
+.prompt summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.prompt pre { white-space: pre-wrap; font-size: 13px; line-height: 1.5; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; margin: 6px 0; }
+.prompt p { margin: 0; color: var(--mute); font-size: 13px; }

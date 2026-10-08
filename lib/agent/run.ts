@@ -10,6 +10,8 @@ import { checkNumbers, evidenceLines, room } from "./evidence";
 import { writePitches } from "./pitch";
 import { askWithoutQloo, scoreGuess } from "./guess";
 import { planTour } from "./plan";
+import { lookUpLocal, lookUpShared, placeLocal } from "./local";
+import { pickArtist } from "./rooms";
 import { lookUpSpots } from "./tools";
 
 /**
@@ -75,10 +77,11 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
     let t = Date.now();
     const found = await search(input.artist, "urn:entity:artist", 5).catch((e: Error) => fail(`Qloo search failed: ${e.message}`));
     if (!found) return;
-    const best = found.entities[0];
-    log({ kind: "qloo", text: `Who is “${input.artist}” on Qloo?`, result: best ? `${best.name}${best.disambiguation ? ` (${best.disambiguation})` : ""}` : "No artist by that name.", request: describeRequest(found.request), ms: Date.now() - t });
+    const { pick: best, others } = pickArtist(input.artist, found.entities);
+    log({ kind: "qloo", text: `Who is “${input.artist}” on Qloo?`, result: best ? `${best.name}${best.disambiguation ? ` (${best.disambiguation})` : ""}${others.length ? `; also found ${others.map((o) => o.name).join(", ")}` : ""}` : "No artist by that name.", request: describeRequest(found.request), ms: Date.now() - t });
     if (!best) return fail(`Qloo has no artist called “${input.artist}”. Check the spelling, or try the name as it appears on streaming services.`);
     const artist = toArtist(best);
+    if (others.length) artist.others = others.map((o) => ({ name: o.name, ...(o.disambiguation ? { disambiguation: o.disambiguation } : {}) }));
     const from = { marketId: marketId(home), label: marketLabel(home), lat: home.lat, lon: home.lon };
     ch.push({ t: "plan", plan: { artist, region, from, firstDate: input.firstDate } });
 
@@ -154,16 +157,31 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
     const plan: Plan = { artist, region, from, firstDate: input.firstDate, lastDate: legs.at(-1)?.date ?? input.firstDate, heat, cities, stops, totalKm, audience };
     ch.push({ t: "plan", plan });
 
-    // 5. The advance from Qloo, per stop, in parallel: where to put posters up, and where fans go after.
+    // 5. The advance from Qloo, per stop, in parallel: the city at street level (which neighbourhood the fans
+    //    over-index in, and whether the booked room is there), the poster run anchored on that neighbourhood,
+    //    where fans go after, and what the headliner's and the opener's audiences share.
+    const sharedMemo = new Map<string, Promise<string[]>>();
     await Promise.all(
       stops.map(async (s) => {
         const skip = s.rooms.map((x) => x.id);
-        const [after, posters] = await Promise.all([lookUpSpots("after", artist, s.marketId, log, skip), lookUpSpots("posters", artist, s.marketId, log, skip)]);
+        const booked = room(s);
+        const chosenOpener = s.openers.find((o) => o.id === s.openerId) ?? s.openers[0];
+        const [local, after, shared] = await Promise.all([
+          lookUpLocal(artist, s.marketId, log),
+          lookUpSpots("after", artist, s.marketId, log, skip),
+          chosenOpener ? (sharedMemo.get(chosenOpener.id) ?? sharedMemo.set(chosenOpener.id, lookUpShared(artist, chosenOpener, log)).get(chosenOpener.id)!) : Promise.resolve([] as string[]),
+        ]);
+        // Posters go up near the hottest tile when the city has one; the whole city otherwise.
+        let posters = await lookUpSpots("posters", artist, s.marketId, log, skip, local?.hot);
+        if (local && posters.length < 2) posters = await lookUpSpots("posters", artist, s.marketId, log, skip);
         s.after = after;
         s.posters = posters;
+        if (local) s.local = placeLocal(local, booked, [...posters, ...after], s.city, log);
+        if (chosenOpener) chosenOpener.shared = shared;
+        ch.push({ t: "plan", plan });
       }),
     );
-    for (const s of stops) if (s.why) s.why = checkNumbers(s.why, evidenceLines(plan, s)).text;
+    for (const s of stops) if (s.why) s.why = checkNumbers(s.why, evidenceLines(plan, s, input.draw)).text;
     ch.push({ t: "plan", plan });
 
     const raw = await guessP;
@@ -174,7 +192,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
 
     // 6. A pitch for every room.
     t = Date.now();
-    const pitched = await writePitches(plan, useModel && picked.planned === "model");
+    const pitched = await writePitches(plan, useModel && picked.planned === "model", input.draw);
     if (pitched.model) engine.writer = modelLabel(pitched.model);
     stops.forEach((s, i) => (s.pitch = pitched.pitches[i]));
     const struck = pitched.pitches.reduce((n, p) => n + p.struck.length, 0);

@@ -224,18 +224,18 @@ export default async function Proof() {
               <p className={s.note}>
                 A ruler Qloo didn&apos;t make. For {realRows.length} of the artists, the cities of one recent headline tour they announced and played (from Wikipedia tour articles, press listings and label releases; festivals, support slots and in-stores left out), placed on the same touring cities. For each tour below: how many of the cities it booked did the artist really play? Suburbs and venue towns count as the touring city within 60 km (Morrison is Denver; Wolverhampton is Birmingham).
               </p>
-              <div className={s.stats}>
+              <div className={s.stats} data-part="outside-stats">
                 <div className={`${s.stat} ${s.fire}`}>
-                  <b>
-                    {pctOf(outsideTotals.routed)}%<small> ({outsideTotals.routed.hits} of {outsideTotals.routed.of})</small>
-                  </b>
-                  <span>of Routed&apos;s cities were on the artist&apos;s real tour</span>
+                  <b>{pctOf(outsideTotals.routed)}%</b>
+                  <span>
+                    of Routed&apos;s cities were on the artist&apos;s real tour ({outsideTotals.routed.hits} of {outsideTotals.routed.of})
+                  </span>
                 </div>
                 <div className={s.stat}>
-                  <b>
-                    {pctOf(outsideTotals.guess)}%<small> ({outsideTotals.guess.hits} of {outsideTotals.guess.of})</small>
-                  </b>
-                  <span>of the model alone&apos;s cities were</span>
+                  <b>{pctOf(outsideTotals.guess)}%</b>
+                  <span>
+                    of the model alone&apos;s cities were ({outsideTotals.guess.hits} of {outsideTotals.guess.of})
+                  </span>
                 </div>
                 <div className={s.stat}>
                   <b>

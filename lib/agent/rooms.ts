@@ -66,12 +66,20 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
   if (e.place?.isClosed) return false;
   const ids = placeTagIds(e);
   if (ids.some((id) => NOT_A_ROOM_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id) && !/stadium/.test(id))) return false;
-  if (NOT_A_ROOM_NAME.test(e.name) || NOT_A_ROOM_EVER.test(e.name)) return false;
-  if (draw && draw >= 700 && SMALL_ART_ROOM.test(e.name) && !/performing arts/i.test(e.name)) return false;
-  if (draw && draw >= BIG_ROOM_DRAW && SMALL_NAME.test(e.name)) return false;
-  if (draw && draw >= 1000 && BAR_NAME.test(e.name)) return false;
+  if (!roomNameOk(e.name, draw)) return false;
   if (draw && draw >= 3000 && ids.some((id) => BAR_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id))) return false;
-  if (!(draw && draw >= STADIUM_MIN_DRAW) && (ids.some((id) => /stadium/.test(id)) || /\b(stadium|stadion|ballpark|field)\b/i.test(e.name))) return false;
+  if (!(draw && draw >= STADIUM_MIN_DRAW) && ids.some((id) => /stadium/.test(id))) return false;
+  return true;
+}
+
+/** The rules a room's name alone can settle (so they apply to stored tours too): fairs, housing, galleries for
+ *  big crowds, bars and cafés, stadiums. */
+export function roomNameOk(name: string, draw?: number): boolean {
+  if (NOT_A_ROOM_NAME.test(name) || NOT_A_ROOM_EVER.test(name)) return false;
+  if (draw && draw >= 700 && SMALL_ART_ROOM.test(name) && !/performing arts/i.test(name)) return false;
+  if (draw && draw >= BIG_ROOM_DRAW && SMALL_NAME.test(name)) return false;
+  if (draw && draw >= 1000 && BAR_NAME.test(name)) return false;
+  if (!(draw && draw >= STADIUM_MIN_DRAW) && /\b(stadium|stadion|ballpark|field)\b/i.test(name)) return false;
   return true;
 }
 

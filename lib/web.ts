@@ -69,8 +69,9 @@ function load(): Promise<void> {
     const r = await storage()!.read(INDEX).catch(() => null);
     if (!r) return;
     const j = JSON.parse(r.text) as Record<string, Cap | null>;
-    // The stored answer is the truth for every room it covers (first writer wins).
-    for (const [k, v] of Object.entries(j)) if (v || !memo.get(k)) memo.set(k, distrusted(v) ? null : v);
+    // A stored number is the truth for its room (first writer wins). A stored "not found" is ignored: it may have
+    // been a lookup that failed, and the room is asked again.
+    for (const [k, v] of Object.entries(j)) if (v && !distrusted(v)) memo.set(k, v);
   })().catch(() => {});
   return loaded;
 }
@@ -88,8 +89,9 @@ function scheduleFlush() {
     const theirs = r ? (JSON.parse(r.text) as Record<string, Cap | null>) : {};
     // Keep what another instance already stored for a room, unless it found nothing and this one did.
     const all = mergeCapacities(Object.fromEntries(memo), theirs);
-    for (const [k, v] of Object.entries(all)) memo.set(k, v);
-    await storage()!.write(INDEX, JSON.stringify(all)).catch((e) => console.error("[capacity] cache write failed", e));
+    for (const [k, v] of Object.entries(all)) if (v) memo.set(k, v);
+    const found = Object.fromEntries(Object.entries(all).filter(([, v]) => v));
+    await storage()!.write(INDEX, JSON.stringify(found)).catch((e) => console.error("[capacity] cache write failed", e));
   }, 4000);
 }
 
@@ -114,12 +116,17 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
     return wiki;
   }
   if (!hasTavily() || !takeSearch()) return null;
-  const r = await fetch(`${API}/search`, {
-    method: "POST",
-    headers: USE_KEY ? { authorization: `Bearer ${process.env.TAVILY_API_KEY}`, "content-type": "application/json" } : { "x-tavily-access-mode": "keyless", "content-type": "application/json" },
-    body: JSON.stringify({ query: `${venue} ${city} venue capacity`, search_depth: "basic", max_results: 5, include_answer: false }),
-    signal: AbortSignal.timeout(12_000),
-  });
+  let r: Response;
+  try {
+    r = await fetch(`${API}/search`, {
+      method: "POST",
+      headers: USE_KEY ? { authorization: `Bearer ${process.env.TAVILY_API_KEY}`, "content-type": "application/json" } : { "x-tavily-access-mode": "keyless", "content-type": "application/json" },
+      body: JSON.stringify({ query: `${venue} ${city} venue capacity`, search_depth: "basic", max_results: 5, include_answer: false }),
+      signal: AbortSignal.timeout(12_000),
+    });
+  } catch {
+    return null;
+  }
   if (!r.ok) {
     console.error(`[tavily] HTTP ${r.status}`);
     return null;
@@ -127,7 +134,8 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
   const j = (await r.json()) as { results?: { url: string; title: string; content: string }[] };
   const pages = (j.results ?? []).map((x) => ({ url: x.url, text: `${x.title}\n${x.content}` }));
   const cap = pickCapacity(venue, pages);
-  memo.set(key, cap);
-  scheduleFlush();
+  // "Not found" is remembered in this instance only when both sources really answered.
+  if (cap || wiki === null) memo.set(key, cap);
+  if (cap) scheduleFlush();
   return cap;
 }

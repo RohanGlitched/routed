@@ -39,7 +39,8 @@ export function tourCalendar(plan: Plan, tourId: string, siteUrl: string): strin
     const notes = [
       `Fan city #${s.score.rank} of ${plan.cities.length} on ${plan.artist.name}'s Qloo heatmap.`,
       room ? `Room: ${room.name}${room.capacity ? ` (holds ${room.capacity.value.toLocaleString("en-US")})` : ""}.` : "",
-      opener ? `Opener: ${opener.name}.` : "",
+      opener ? `Support: ${opener.name}.` : "",
+      (s.nights ?? 1) > 1 ? "Two nights in this room." : "",
       `${s.fromKm.toLocaleString("en-US")} km from ${prev}, about ${s.fromHours} h.`,
       `Tour book: ${siteUrl}/tour/${tourId}`,
     ].filter(Boolean);
@@ -61,6 +62,11 @@ export function tourCalendar(plan: Plan, tourId: string, siteUrl: string): strin
       `DESCRIPTION:${esc(notes.join("\n"))}`,
       `URL:${siteUrl}/tour/${tourId}`,
     ]);
+    // The second night of a two-night stand is its own show on the calendar.
+    for (let n = 1; n < (s.nights ?? 1); n++) {
+      const d = addDays(s.date, n);
+      events.push([`UID:${tourId}-${d}@routed`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${day(d)}`, `DTEND;VALUE=DATE:${day(addDays(d, 1))}`, `SUMMARY:${esc(`${plan.artist.name}: ${s.city}${room ? ` at ${room.name}` : ""} (night ${n + 1})`)}`, `LOCATION:${esc(room ? `${room.name}${room.address ? `, ${room.address}` : ""}` : s.label)}`, `URL:${siteUrl}/tour/${tourId}`]);
+    }
   });
   const lines = [
     "BEGIN:VCALENDAR",

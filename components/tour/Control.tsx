@@ -1,3 +1,4 @@
+import { unrankedLabel } from "@/lib/geo/markets";
 import type { Plan } from "@/lib/types";
 import c from "./control.module.css";
 
@@ -82,7 +83,7 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
           )}
           {weak.length > 0 && (
             <p>
-              <b>Chosen by the model instead:</b> {weak.map((s) => `${s.city} (${s.rank ? `#${s.rank}` : s.outside ? "not a touring city" : "not placed"})`).join(", ")}.
+              <b>Chosen by the model instead:</b> {weak.map((s) => `${s.city} (${s.rank ? `#${s.rank}` : s.outside ? unrankedLabel(s, plan.region) : "not placed"})`).join(", ")}.
             </p>
           )}
           {!better && <p>On this tour the model alone did as well on city rank; the difference is in the rooms and the evidence behind each one.</p>}

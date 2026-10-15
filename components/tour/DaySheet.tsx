@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { fit } from "@/lib/agent/evidence";
+import { twoNights } from "@/lib/agent/rooms";
+import { addDays, MAX_LEG_KM } from "@/lib/geo/route";
 import { independents } from "@/lib/chains";
 import type { Spot, Stop } from "@/lib/types";
 import { LocalMap } from "./LocalMap";
@@ -35,14 +37,18 @@ function Checked({ text }: { text: string }) {
 }
 
 /** One stop, laid out like a tour manager's day sheet. */
-export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number }) {
+export function DaySheet({ stop, prev, total, artist, pending, draw, first = false }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number; first?: boolean }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const d = new Date(`${stop.date}T12:00:00Z`);
   const room = stop.rooms.find((r) => r.id === stop.roomId) ?? stop.rooms[0];
   const others = stop.rooms.filter((r) => r !== room).slice(0, 2);
   const opener = stop.openers.find((o) => o.id === stop.openerId) ?? stop.openers[0];
+  const locals = stop.openers.filter((o) => o !== opener).slice(0, 3);
   const pitch = stop.pitch;
+  const nights = stop.nights ?? 1;
+  const last = new Date(`${addDays(stop.date, nights - 1)}T12:00:00Z`);
+  const long = !first && stop.fromKm > MAX_LEG_KM;
 
   return (
     <li className={s.day}>
@@ -50,10 +56,25 @@ export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: S
         <span className={s.dow}>{d.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })}</span>
         <time dateTime={stop.date} className={s.date}>
           {d.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" })} {d.getUTCDate()}
+          {nights > 1 && <>–{last.getUTCDate()}</>}
         </time>
         <span className={s.drive}>
-          {stop.dayOff ? "Day off before. " : stop.travelDays ? `${stop.travelDays} travel day${stop.travelDays > 1 ? "s" : ""} before. ` : ""}
-          <span className="num">{stop.fromKm.toLocaleString("en-US")}</span> km from {prev}, about <span className="num">{stop.fromHours}</span> h
+          {nights > 1 && <b>Two nights. </b>}
+          {first ? (
+            stop.fromKm < 1 ? (
+              "Opening night."
+            ) : (
+              <>
+                Opening night, <span className="num">{stop.fromKm.toLocaleString("en-US")}</span> km from {prev}.
+              </>
+            )
+          ) : (
+            <>
+              {stop.dayOff ? "Day off before. " : stop.travelDays ? `${stop.travelDays} travel day${stop.travelDays > 1 ? "s" : ""} before. ` : ""}
+              <span className="num">{stop.fromKm.toLocaleString("en-US")}</span> km from {prev}, about <span className="num">{stop.fromHours}</span> h
+            </>
+          )}
+          {long && <span className={s.sizeNote}> A long jump: no city with rooms within reach could break it up.</span>}
         </span>
         {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} />}
       </div>
@@ -93,11 +114,18 @@ export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: S
                         <span title={room.capacity.quote}>{room.capacity.source}</span>
                       )}
                       .
-                      {draw && fit(room, draw) !== "fits" && (
-                        <span className={s.sizeNote}>
-                          {" "}
-                          {fit(room, draw) === "too small" ? "Small" : "Large"} for a usual crowd of {draw.toLocaleString("en-US")}: no room these fans go to here was confirmed to fit, so the pitch asks about {fit(room, draw) === "too small" ? "a second night or a bigger room" : "a reduced configuration"}.
+                      {draw && nights > 1 && twoNights(room, draw) ? (
+                        <span className={s.alt}>
+                          Two nights cover a usual crowd of {draw.toLocaleString("en-US")} ({(room.capacity.value * 2).toLocaleString("en-US")} across both): no room these fans go to here was confirmed to fit it in one.
                         </span>
+                      ) : (
+                        draw &&
+                        fit(room, draw) !== "fits" && (
+                          <span className={s.sizeNote}>
+                            {" "}
+                            {fit(room, draw) === "too small" ? "Small" : "Large"} for a usual crowd of {draw.toLocaleString("en-US")}: no room these fans go to here was confirmed to fit, so the pitch asks about {fit(room, draw) === "too small" ? "a second night or a bigger room" : "a reduced configuration"}.
+                          </span>
+                        )
                       )}
                     </>
                   ) : (
@@ -110,11 +138,15 @@ export function DaySheet({ stop, prev, total, artist, pending, draw }: { stop: S
           )}
           {opener && (
             <>
-              <dt>Opener</dt>
+              <dt>Support</dt>
               <dd>
                 <b>{opener.name}</b>
-                {opener.affinity !== undefined && <span className={s.meta}><span className={s.aff}>Audience affinity {pct(opener.affinity)}.</span></span>}
-                {opener.shared.length > 0 && <span className={s.alt}>Shared tastes: {opener.shared.slice(0, 3).join(", ")}</span>}
+                <span className={s.meta}>
+                  {opener.affinity !== undefined && <span className={s.aff}>Audience affinity {pct(opener.affinity)}. </span>}
+                  {opener.genres?.length ? `${opener.genres.slice(0, 2).join(", ")}. ` : ""}
+                </span>
+                {opener.shared.length > 0 && <span className={s.alt}>What both audiences share: {opener.shared.slice(0, 3).join(", ")}</span>}
+                {locals.length > 0 && <span className={s.alt}>Local options here: {locals.map((o) => o.name).join(", ")}</span>}
               </dd>
             </>
           )}

@@ -122,7 +122,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           <h1 className={s.title}>{title}</h1>
           {stops.length > 0 ? (
             <p className={s.summary}>
-              <span className="num">{stops.length}</span> shows, {short(stops[0]!.date)} to {short(stops.at(-1)!.date)}, starting from {plan!.from.label}. About <span className="num">{plan!.totalKm.toLocaleString("en-US")}</span> km of road
+              <span className="num">{stops.reduce((n, x) => n + (x.nights ?? 1), 0)}</span> shows{stops.some((x) => (x.nights ?? 1) > 1) ? ` in ${stops.length} cities` : ""}, {short(stops[0]!.date)} to {short(plan!.lastDate ?? stops.at(-1)!.date)}, starting from {plan!.from.label}. About <span className="num">{plan!.totalKm.toLocaleString("en-US")}</span> km of road
               {plan!.cities?.length ? (
                 <>
                   , chosen from <span className="num">{plan!.cities.length}</span> cities where Qloo found fans.
@@ -162,7 +162,11 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           {rec.engine && !running && (
             <p className={s.engine}>
               {rec.engine.planned === "model" ? `Planned by ${rec.engine.agent ?? "the agent"}` : "Planned by the fixed plan (the agent model was unavailable)"}
-              {rec.engine.writer ? `; pitches by ${rec.engine.writer}` : "; template pitches"}. Every Qloo call is listed at the end of the tour book.
+              {rec.engine.writer ? `; pitches by ${rec.engine.writer}` : "; template pitches"}.
+              {rec.engine.usage
+                ? ` This run cost ${rec.engine.usage.qloo} Qloo requests${rec.engine.usage.qlooCached ? ` (and ${rec.engine.usage.qlooCached} answered from the cache)` : ""}, ${rec.engine.usage.modelCalls} model calls and ${(rec.engine.usage.tokensIn + rec.engine.usage.tokensOut).toLocaleString("en-US")} tokens.`
+                : ""}{" "}
+              Every Qloo call is listed at the end of the tour book.
             </p>
           )}
         </div>
@@ -176,7 +180,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           {plan!.audience?.advice && <p className={s.advice}>{plan!.audience.advice}</p>}
           <ol className={s.sheets}>
             {stops.map((st, i) => (
-              <DaySheet key={st.marketId} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} />
+              <DaySheet key={st.marketId} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} />
             ))}
           </ol>
         </section>

@@ -1,3 +1,4 @@
+import { unrankedLabel } from "@/lib/geo/markets";
 import Link from "next/link";
 import { Suspense } from "react";
 import { PrefilledForm } from "@/components/home/PrefilledForm";
@@ -136,7 +137,7 @@ export default async function Home() {
                   </li>
                 ))}
               </ul>
-              {opener(stop) && <p className={s.small}>Opener: {opener(stop)!.name}</p>}
+              {opener(stop) && <p className={s.small}>Support: {opener(stop)!.name}</p>}
             </li>
             <li className={s.step}>
               <h3>Route and date it by rule</h3>
@@ -181,7 +182,7 @@ export default async function Home() {
                 {plan.guess.stops.map((g, i) => (
                   <li key={i} className={g.rank && g.rank <= 25 ? undefined : s.cold}>
                     <span>{g.city}</span>
-                    <b>{g.rank ? `#${g.rank}` : g.outside ? "not a touring city" : "not placed"}</b>
+                    <b>{g.rank ? `#${g.rank}` : g.outside ? unrankedLabel(g, plan.region) : "not placed"}</b>
                   </li>
                 ))}
               </ol>
@@ -230,10 +231,10 @@ export default async function Home() {
               <dt>Approach these brands</dt>
               <dd>{plan.audience.brands.slice(0, 3).map((x) => x.name).join(", ")}</dd>
             </div>
-            {plan.audience.taste?.themes?.length ? (
+            {plan.audience.media?.podcasts?.length ? (
               <div>
-                <dt>Write to these themes</dt>
-                <dd>{plan.audience.taste.themes.slice(0, 3).map((x) => x.name).join(", ")}</dd>
+                <dt>Pitch these podcasts</dt>
+                <dd>{plan.audience.media.podcasts.slice(0, 3).map((x) => x.name).join(", ")}</dd>
               </div>
             ) : null}
             {independents(plan.stops[0]?.posters).length ? (

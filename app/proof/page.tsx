@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CONTROL_PROMPT } from "@/lib/agent/guess";
-import { findMarket, marketId } from "@/lib/geo/markets";
+import { controlPrompt } from "@/lib/agent/guess";
+import { RADIUS_BY_REGION } from "@/lib/geo/route";
+import { findMarket, marketId, unrankedLabel } from "@/lib/geo/markets";
 import { shelfTours } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
 import s from "./proof.module.css";
@@ -26,7 +27,7 @@ type Row = {
   /** Rank of the artist's home city on their own heatmap: an outside check that the map reflects the world. */
   home?: number;
   /** The guessed city ranked lowest, and the strongest city the model missed. */
-  worst?: { city: string; rank?: number };
+  worst?: { city: string; rank?: number; why?: string };
   missed?: { city: string; rank: number };
   outside: number;
 };
@@ -54,7 +55,7 @@ function rows(tours: TourRecord[]): Row[] {
         roomRouted: g.roomMean.routed,
         roomGuess: g.roomMean.guess,
         home: homeScore?.rank,
-        worst: worst ? { city: worst.city, rank: worst.rank } : undefined,
+        worst: worst ? { city: worst.city, rank: worst.rank, why: worst.rank ? undefined : unrankedLabel(worst, p.region) } : undefined,
         missed: missed ? { city: missed.city, rank: missed.score.rank } : undefined,
         outside: g.stops.filter((x) => !x.rank || x.rank > 25).length,
       };
@@ -190,7 +191,7 @@ export default async function Proof() {
                         {pct(x.roomRouted)} / {pct(x.roomGuess)}
                       </td>
                       <td>{x.missed ? `${x.missed.city} (#${x.missed.rank})` : "–"}</td>
-                      <td>{x.worst ? `${x.worst.city} (${x.worst.rank ? `#${x.worst.rank}` : "not a touring city"})` : "–"}</td>
+                      <td>{x.worst ? `${x.worst.city} (${x.worst.rank ? `#${x.worst.rank}` : x.worst.why})` : "–"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -211,8 +212,8 @@ export default async function Proof() {
               </p>
               <details className={s.prompt}>
                 <summary>The exact prompt the model alone gets</summary>
-                <pre>{CONTROL_PROMPT}</pre>
-                <p>followed by the artist&apos;s name, the region, the starting city, the number of shows and the usual crowd.</p>
+                <pre>{controlPrompt(RADIUS_BY_REGION.na)}</pre>
+                <p>followed by the artist&apos;s name, the region, the starting city, the number of shows and the usual crowd. The radius is the region&apos;s ({RADIUS_BY_REGION.na} km in North America, {RADIUS_BY_REGION.eu} km in mainland Europe, {RADIUS_BY_REGION.uk} km in the UK and Ireland), the same one Routed&apos;s tour is held to.</p>
               </details>
             </div>
             <div>

@@ -21,6 +21,8 @@ export type PosterProps = {
   start: [number, number] | null;
   stops: PosterStop[];
   topCity?: string;
+  /** The support act on every date, printed under the rule; older tours had one per city. */
+  support?: string;
   /** Print on first view. */
   print?: boolean;
   /** Smaller type for the wall. */
@@ -55,7 +57,7 @@ const fmt = (iso: string) => {
   return `${Number(m)}/${Number(d)}`;
 };
 
-export function Poster({ artist, season, region, dots, route, start, stops, topCity, print = false, compact = false, label }: PosterProps) {
+export function Poster({ artist, season, region, dots, route, start, stops, topCity, support, print = false, compact = false, label }: PosterProps) {
   const ref = useRef<SVGSVGElement>(null);
   const [state, setState] = useState<"idle" | "printing" | "printed">(print ? "idle" : "printed");
 
@@ -108,8 +110,8 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
           {region.toUpperCase()}
         </text>
         <rect x={32} y={260} width={W - 64} height={3} />
-        <text x={W / 2} y={285} textAnchor="middle" className={s.band}>
-          WITH SPECIAL GUESTS IN EVERY CITY
+        <text x={W / 2} y={285} textAnchor="middle" className={s.band} {...(support && support.length > 28 ? { textLength: W - 80, lengthAdjust: "spacingAndGlyphs" as const } : {})}>
+          {support ? `WITH ${support.toUpperCase()}` : "WITH SPECIAL GUESTS IN EVERY CITY"}
         </text>
         <rect x={32} y={294} width={W - 64} height={3} />
         <g transform={`translate(0 ${MAP_Y})`}>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MAX_SHOWS_IN_A_ROW, RADIUS_KM, ROAD_FACTOR, SHOW_DAY_DRIVE_H, TRAVEL_DAY_DRIVE_H, VAN_KMH } from "@/lib/geo/route";
+import { REDUCED_MAX, STADIUM_MIN_DRAW } from "@/lib/agent/rooms";
+import { ANCHOR_RANK, MAJOR_POP, MAX_LEG_KM, MAX_SHOWS_IN_A_ROW, RADIUS_BY_REGION, ROAD_FACTOR, SHOW_DAY_DRIVE_H, TRAVEL_DAY_DRIVE_H, VAN_KMH } from "@/lib/geo/route";
 import { loadTour, showcaseTours } from "@/lib/store";
 import type { LogLine } from "@/lib/types";
 import s from "./how.module.css";
@@ -14,16 +15,14 @@ const CALLS: { match: RegExp; title: string; why: string; endpoint: string }[] =
   { match: /by age and gender/, title: "Who the fans are", why: "Signed over- and under-index by age and gender. A young skew means asking rooms for all-ages shows.", endpoint: "GET /v2/insights with filter.type=urn:demographics" },
   { match: /listen to\?/, title: "The sound", why: "Taste analysis restricted to music genres: how to describe the night to a talent buyer.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:genre:music" },
   { match: /describe the music/, title: "The mood", why: "The words this audience's favourite music is tagged with (Sensitive, Dreamy, Anthemic): tone for the poster and the ads.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:artist:qloo" },
-  { match: /themes/, title: "The themes", why: "Themes this audience connects with across books, film and music: the creative brief.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:theme:qloo" },
-  { match: /dishes/, title: "The food", why: "Dishes these fans seek out at restaurants: a pre-show pop-up partner or the rider.", endpoint: "GET /v2/insights with filter.type=urn:tag and filter.tag.types=urn:tag:specialty_dish:place" },
   { match: /podcasts/, title: "Press", why: "Cross-domain: the podcasts this audience over-indexes on, to pitch first.", endpoint: "GET /v2/insights with filter.type=urn:entity:podcast" },
   { match: /brands/, title: "Merch and partners", why: "Cross-domain: brands these fans over-index on.", endpoint: "GET /v2/insights with filter.type=urn:entity:brand" },
   { match: /films/, title: "Films, TV and books", why: "Cross-domain: what this audience watches and reads, for content and tie-ins.", endpoint: "GET /v2/insights with filter.type=urn:entity:movie, tv_show and book" },
   { match: /growing/, title: "Momentum", why: "Weekly popularity percentile for the last six months; shown when it moved.", endpoint: "GET /v2/trending" },
-  { match: /^Which rooms/, title: "Rooms in each city", why: "Places tagged live music venue or concert hall inside the city, ranked by affinity to the artist's fans. Chapels, museums, stores and casinos that carry the tag are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
-  { match: /^Who could open/, title: "Openers", why: "Artists no bigger than the headliner whose audience matches, weighted to the city's own taste.", endpoint: "GET /v2/insights with filter.type=urn:entity:artist, signal.location.query and filter.popularity.max" },
-  { match: /fans share\?$/, title: "What the audiences share", why: "Qloo's audience comparison between the headliner and the booked opener: the characteristics, themes and moods both fan bases hold, as the words for the pitch.", endpoint: "GET /v2/analysis/compare with a.signal.interests.entities and b.signal.interests.entities" },
-  { match: /street by street/, title: "Inside the city", why: "The heatmap again, for one city: a few hundred tiles about 150 m across say which neighbourhood the fans over-index in. A rule measures the booked room against it, and the poster run is anchored there.", endpoint: "GET /v2/insights with filter.type=urn:heatmap and filter.location.query=<city>" },
+  { match: /^Which (clubs|halls|theatres|arenas)/, title: "Rooms in each city", why: "Places of the kind the crowd needs (clubs and halls; halls, ballrooms and theatres; theatres, amphitheatres and arenas; arenas and amphitheatres), inside the city's radius, ranked by affinity to the artist's fans. For a crowd of 3,000 or more the arenas and amphitheatres are asked for on their own too. Chapels, museums, fairs, stadiums, housing, and (for big crowds) cafés, bars and clubs that carry the tag are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place, filter.tags, filter.location=POINT(…) and filter.location.radius" },
+  { match: /^Who could open/, title: "Support acts", why: "Artists clearly smaller than the headliner whose audience matches, weighted to the city's own taste. A rule rules out the headliner's own members and members of other bands (by Qloo's description), a shared name, and any act with no genre in common. The agent then picks one support act for the whole run.", endpoint: "GET /v2/insights with filter.type=urn:entity:artist, signal.location, filter.popularity.max and .min" },
+  { match: /fans share\?$/, title: "What the audiences share", why: "Qloo's audience comparison between the headliner and the support act: the style, genre and mood both fan bases hold, as the words for the pitch. Words every pair shares (Engaging, Passionate) are left out.", endpoint: "GET /v2/analysis/compare with a.signal.interests.entities and b.signal.interests.entities" },
+  { match: /street by street/, title: "Inside the city", why: "The heatmap again, for one city: a few hundred tiles about 150 m across say which neighbourhood the fans over-index in. A rule measures the booked room against it, and the poster run is anchored there.", endpoint: "GET /v2/insights with filter.type=urn:heatmap, filter.location=POINT(<city>) and filter.location.radius" },
   { match: /see a poster/, title: "The poster run", why: "Cross-domain: the record stores, bookshops and cafés these fans go to, within 2.5 km of the tile where they over-index most. Chains are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place, filter.tags, filter.location=POINT(…) and filter.location.radius" },
   { match: /go out in/, title: "After the show", why: "Cross-domain again: the bars these fans over-index on in that city.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.tags" },
   { match: /each room, Routed/, title: "Scoring both tours", why: "Every room from Routed's tour and the model-alone tour, scored against this artist's fans in one call restricted to exactly those rooms, so both sides share a scale.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.results.entities" },
@@ -49,10 +48,10 @@ export default async function How() {
       <section className={s.sec}>
         <h2 className={s.h2}>The agent</h2>
         <p>
-          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does, in three moves. It <b>shortlists</b> cities from Qloo&apos;s ranked heatmap, weighing fan strength against geography, with a few alternates. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room and one opener per city, swapping in an alternate when a city&apos;s rooms don&apos;t fit, and writes one sentence on why.
+          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does, in three moves. It <b>shortlists</b> cities from Qloo&apos;s ranked heatmap, weighing fan strength against geography, with a few alternates. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room per city and one support act for the whole run, swapping in an alternate when a city&apos;s rooms don&apos;t fit, and writes one sentence on why.
         </p>
         <p>
-          Rules hold it in. Cities must come from Qloo&apos;s candidates; the radius clause is enforced; the booked room&apos;s capacity is checked on the web, and with a known crowd size a room that misses it is swapped for one that fits; gaps are filled from the ranking. If the model is down or the day&apos;s budget is spent, the same steps run as a fixed plan, and the tour book says which one ran.
+          Rules hold it in, and every rule that changes the agent&apos;s answer says so on the call sheet. Cities must come from Qloo&apos;s candidates; the radius clause is enforced; a major market in the artist&apos;s top ten stays on the tour; no leg between shows runs over {MAX_LEG_KM.toLocaleString("en-US")} km where a city with rooms can close it; rooms are measured and sized to the crowd; one support act plays every date; gaps are filled from the ranking. If the model is down or the day&apos;s budget is spent, the same steps run as a fixed plan, and the tour book says which one ran.
         </p>
         <p>
           A free-running tool loop came first. Nemotron repeated lookups and ran out of turns on most tours, so the moves are fixed and the choices are the model&apos;s. Every model call returns strict JSON with reasoning off, which took a booking from about a minute to a few seconds.
@@ -62,14 +61,14 @@ export default async function How() {
       <section className={s.sec}>
         <h2 className={s.h2} id="mcp">Use it from your own agent</h2>
         <p>
-          Routed is also an MCP server. Add <code>https://routed-tours.vercel.app/api/mcp</code> to any assistant that supports remote MCP servers (Claude, ChatGPT, VS Code) and it gets four tools: <b>fan_map</b> (where an artist&apos;s fans over-index), <b>fan_profile</b> (who they are and what else they love), <b>route_tour</b> (a whole tour in about a minute, with a link to its tour book) and <b>get_tour</b>.
+          Routed is also an MCP server. Add <code>https://routed-tours.vercel.app/api/mcp</code> to any assistant that supports remote MCP servers (Claude, ChatGPT, VS Code) and it gets five tools: <b>fan_map</b> (where an artist&apos;s fans over-index), <b>fan_neighbourhoods</b> (where inside one city, with the record stores and cafés there for a poster run), <b>fan_profile</b> (who they are and what else they love), <b>route_tour</b> (a whole tour in about a minute, with a link to its tour book) and <b>get_tour</b>.
         </p>
       </section>
 
       <section className={s.sec}>
         <h2 className={s.h2}>The control group</h2>
         <p>
-          Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for fourteen artists.
+          Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for twenty artists, and checks both tours against the cities each artist actually played on a recent tour, which Qloo knows nothing about.
         </p>
       </section>
 
@@ -109,9 +108,18 @@ export default async function How() {
             A show day allows up to {SHOW_DAY_DRIVE_H} hours of driving; longer jumps add travel days of up to {TRAVEL_DAY_DRIVE_H} hours.
           </li>
           <li>After {MAX_SHOWS_IN_A_ROW} shows in a row the band gets a day off.</li>
-          <li>No two shows within {RADIUS_KM} km of each other (the radius clause most rooms put in their offers).</li>
+          <li>
+            The radius clause: no two shows closer than {RADIUS_BY_REGION.na} km in North America, {RADIUS_BY_REGION.eu} km in mainland Europe or {RADIUS_BY_REGION.uk} km in the UK and Ireland (where a real tour plays London and Brighton), unless both cities are major markets of {(MAJOR_POP / 1e6).toFixed(1)} million or more (New York and Philadelphia each carry a show).
+          </li>
+          <li>A major market of {(MAJOR_POP / 1e6).toFixed(1)} million or more in the artist&apos;s top {ANCHOR_RANK} is always on the tour when the route can reach it: no UK tour skips London. The smaller city inside its radius gives way.</li>
+          <li>
+            No leg between two shows longer than {MAX_LEG_KM.toLocaleString("en-US")} km of road (two days in the van). A tour split across two coasts keeps the group with the artist&apos;s strongest cities and replaces the rest with cities that join it; a long leg left over is broken by a swap. One that no city with rooms can close stays, and its day sheet says so.
+          </li>
           <li>The route is the shortest drive from the starting city: nearest neighbour, then 2-opt until no swap helps.</li>
-          <li>Room capacity comes from a web search (Tavily) and is read by rule: a number tied to the word capacity, on a page that names the room. The source is linked.</li>
+          <li>
+            Rooms are sized to the usual crowd. Capacities come from Wikidata&apos;s maximum-capacity property (the item must be the room itself, not a hall inside it), then from a web page that names the room, read by rule with the source linked; one number per room, everywhere. A room that holds 60–250% of the crowd is booked for one night. Failing that, one that holds 30–60% is booked for two nights; then one up to {REDUCED_MAX} times the crowd in a reduced configuration; then a room whose capacity couldn&apos;t be found (the sheet says to ask). A room known to miss by more is booked only when nothing else is left. No stadium below a {STADIUM_MIN_DRAW.toLocaleString("en-US")} crowd.
+          </li>
+          <li>One support act for the whole run, as on a real tour: never the headliner&apos;s own member or a member of another band, clearly smaller than the headliner, and sharing a genre with them. The other artists each city suggested are listed as local options.</li>
           <li>A pitch may only use figures from its stop&apos;s evidence. Any other figure is struck through on the page.</li>
           <li>A room is &ldquo;in the fans&apos; neighbourhood&rdquo; when it is within 1.5 km of the city&apos;s hottest heatmap tile, or sits on a tile in the city&apos;s top tenth.</li>
         </ul>

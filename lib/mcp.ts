@@ -41,7 +41,7 @@ function summary(rec: TourRecord): string {
     ...p.stops.map((s, i) => {
       const r = room(s);
       const o = opener(s);
-      return `${i + 1}. ${s.date} ${s.label} (fan city #${s.score.rank} of ${p.cities.length}): ${r?.name ?? "room to confirm"}${r?.capacity ? `, holds ${r.capacity.value.toLocaleString("en-US")}` : ""}${o ? `; opener ${o.name}` : ""}`;
+      return `${i + 1}. ${s.date} ${s.label} (fan city #${s.score.rank} of ${p.cities.length}): ${r?.name ?? "room to confirm"}${r?.capacity ? `, holds ${r.capacity.value.toLocaleString("en-US")}` : ""}${(s.nights ?? 1) > 1 ? ", two nights" : ""}${o ? `; support ${o.name}` : ""}`;
     }),
   ];
   if (p.guess) lines.push(`Without Qloo, the same model's cities averaged #${Math.round(p.guess.rankMean.guess ?? 0)} on ${p.artist.name}'s fan map; Routed's averaged #${Math.round(p.guess.rankMean.routed ?? 0)}.`);
@@ -76,7 +76,7 @@ function register(server: McpServer) {
     "fan_profile",
     {
       title: "Who an artist's fans are",
-      description: "Qloo's profile of an artist's audience: age skew and door advice, the sound and mood they love, themes, dishes, and the podcasts, brands, films, TV and books they over-index on.",
+      description: "Qloo's profile of an artist's audience: age skew and door advice, the sound and mood they love, and the podcasts, brands, films, TV and books they over-index on.",
       inputSchema: z.object({ artist: z.string().min(1).max(80) }),
       annotations: { readOnlyHint: true, openWorldHint: true },
     },
@@ -92,8 +92,6 @@ function register(server: McpServer) {
           d.advice ?? null,
           list("Sound", d.taste?.music),
           list("Mood", d.taste?.vibe),
-          list("Themes", d.taste?.themes),
-          list("Dishes", d.taste?.food),
           list("Podcasts (press)", d.media?.podcasts),
           list("Brands (merch and partners)", d.brands),
           list("Films", d.media?.films),

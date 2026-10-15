@@ -211,3 +211,18 @@ test("a market is named the way a booker writes it, not after a census place", (
   assert.equal(findMarket("Meads, KY"), null);
   assert.equal(nearestMarket({ lat: 51.37, lon: 1.42 }, "uk")?.name, "Margate");
 });
+
+/* ───────────── the outside check ───────────── */
+
+test("the outside check counts a tour's cities against the ones the artist really played", async () => {
+  const { outsideRow, realMarkets, realTourFor, REAL_TOURS } = await import("../lib/outside.ts");
+  const fdc = realTourFor("Fontaines D.C.")!;
+  assert.ok(fdc, "Fontaines D.C. has a researched tour");
+  const played = realMarkets(fdc);
+  // Wolverhampton is placed on the nearest touring market by its coordinates.
+  assert.ok(played.size >= 8, String(played.size));
+  const row = outsideRow(fdc, [{ marketId: [...played][0]!, city: "a" }, { marketId: "nowhere-xx", city: "b" }], [{ city: "unplaced" }, { marketId: [...played][1]!, city: "c" }]);
+  assert.deepEqual([row.routed.hits, row.routed.of, row.guess.hits, row.guess.of], [1, 2, 1, 1], "an unplaced model-alone stop is left out, not counted as a miss");
+  for (const t of REAL_TOURS.filter((x) => x.found)) assert.ok(t.sources.length > 0, `${t.artist} has a source`);
+  assert.equal(realTourFor("Jamie xx"), undefined, "no researched tour, no row");
+});

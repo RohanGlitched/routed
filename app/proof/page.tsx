@@ -3,6 +3,7 @@ import Link from "next/link";
 import { controlPrompt } from "@/lib/agent/guess";
 import { RADIUS_BY_REGION } from "@/lib/geo/route";
 import { findMarket, marketId, unrankedLabel } from "@/lib/geo/markets";
+import { outsideRow, REAL_TOURS, realTourFor } from "@/lib/outside";
 import { shelfTours } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
 import s from "./proof.module.css";
@@ -82,6 +83,22 @@ export default async function Proof() {
     return v.length ? (v.length % 2 ? v[(v.length - 1) / 2]! : (v[v.length / 2 - 1]! + v[v.length / 2]!) / 2) : 0;
   };
   const top10 = (xs: number[]) => (xs.length ? Math.round((100 * xs.filter((x) => x <= 10).length) / xs.length) : 0);
+  // The outside check: each tour's cities against the artist's real recent tour.
+  const realRows = tours
+    .map((t) => {
+      const real = t.plan?.guess ? realTourFor(t.plan.artist.name) : undefined;
+      if (!real || real.region !== t.plan!.region) return null;
+      return { id: t.id, row: outsideRow(real, t.plan!.stops, t.plan!.guess!.stops) };
+    })
+    .filter((x): x is NonNullable<typeof x> => Boolean(x))
+    .sort((a, b) => a.row.artist.localeCompare(b.row.artist));
+  const sum = (k: "routed" | "guess") => ({ hits: realRows.reduce((n, o) => n + o.row[k].hits, 0), of: realRows.reduce((n, o) => n + o.row[k].of, 0) });
+  const outsideTotals = { routed: sum("routed"), guess: sum("guess") };
+  const share = (x: { hits: number; of: number }) => (x.of ? x.hits / x.of : 0);
+  const outsideWins = {
+    routed: realRows.filter((o) => share(o.row.routed) > share(o.row.guess)).length,
+    guess: realRows.filter((o) => share(o.row.guess) > share(o.row.routed)).length,
+  };
 
   return (
     <div className={`wrap ${s.page}`}>
@@ -199,6 +216,83 @@ export default async function Proof() {
             </div>
           </section>
 
+          {realRows.length > 0 && (
+            <section className={s.sec} aria-labelledby="outside-title">
+              <h2 id="outside-title" className={s.h2}>
+                An outside check: the cities they actually played
+              </h2>
+              <p className={s.note}>
+                A ruler Qloo didn&apos;t make. For {realRows.length} of the artists, the cities of one recent headline tour they announced and played (from Wikipedia tour articles, press listings and label releases; festivals, support slots and in-stores left out), placed on the same touring cities. For each tour below: how many of the cities it booked did the artist really play? Suburbs and venue towns count as the touring city within 60 km (Morrison is Denver; Wolverhampton is Birmingham).
+              </p>
+              <div className={s.stats}>
+                <div className={`${s.stat} ${s.fire}`}>
+                  <b>
+                    {pctOf(outsideTotals.routed)}%<small> ({outsideTotals.routed.hits} of {outsideTotals.routed.of})</small>
+                  </b>
+                  <span>of Routed&apos;s cities were on the artist&apos;s real tour</span>
+                </div>
+                <div className={s.stat}>
+                  <b>
+                    {pctOf(outsideTotals.guess)}%<small> ({outsideTotals.guess.hits} of {outsideTotals.guess.of})</small>
+                  </b>
+                  <span>of the model alone&apos;s cities were</span>
+                </div>
+                <div className={s.stat}>
+                  <b>
+                    {outsideWins.routed}
+                    <small> to {outsideWins.guess}</small>
+                  </b>
+                  <span>artists where Routed matched more of the real tour, against the model alone ({realRows.length - outsideWins.routed - outsideWins.guess} tied)</span>
+                </div>
+              </div>
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead>
+                    <tr>
+                      <th scope="col">Artist</th>
+                      <th scope="col">Real tour</th>
+                      <th scope="col">Routed&apos;s cities played</th>
+                      <th scope="col">Model alone&apos;s cities played</th>
+                      <th scope="col">Source</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {realRows.map((o) => (
+                      <tr key={o.id}>
+                        <th scope="row">
+                          <Link href={`/tour/${o.id}`}>{o.row.artist}</Link>
+                        </th>
+                        <td>
+                          {o.row.tour}
+                          {o.row.year ? `, ${o.row.year}` : ""} ({o.row.played} cities)
+                        </td>
+                        <td title={o.row.routed.cities.join(", ")}>
+                          {o.row.routed.hits} of {o.row.routed.of}
+                        </td>
+                        <td title={o.row.guess.cities.join(", ")}>
+                          {o.row.guess.hits} of {o.row.guess.of}
+                        </td>
+                        <td>
+                          {o.row.sources.slice(0, 2).map((u, i) => (
+                            <span key={u}>
+                              {i > 0 && ", "}
+                              <a href={u.replace(/&action=raw$/, "").replace("/w/index.php?title=", "/wiki/")} target="_blank" rel="noreferrer">
+                                {hostOf(u)}
+                              </a>
+                            </span>
+                          ))}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className={s.note}>
+                Read it for what it is. A past tour is one booker&apos;s answer, made with ticket data neither side has, and a big act&apos;s tour plays twenty to forty cities, so eight good guesses can all be on it. The model alone may also have read these very announcements, which favours it. No real tour could be found for {REAL_TOURS.filter((t) => !t.found).map((t) => t.artist).join(", ") || "every artist"}{REAL_TOURS.some((t) => !t.found) ? ", so it has no row" : ""}. The lists and their sources are in the repository (data/real-tours.json).
+              </p>
+            </section>
+          )}
+
           <section className={`${s.sec} ${s.cols}`} aria-labelledby="method-title">
             <div>
               <h2 id="method-title" className={s.h2}>
@@ -219,7 +313,7 @@ export default async function Proof() {
             <div>
               <h2 className={s.h2}>What this does and doesn&apos;t show</h2>
               <p>
-                It measures with Qloo&apos;s own ruler, and says so: Routed chooses from the heatmap ranking it is then scored on, so what the number shows is how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. It can&apos;t show ticket sales: those aren&apos;t public. One outside check is on the page: each benchmark tour starts from the artist&apos;s home base, which the heatmap knows nothing about, and it ranks the home base here:
+                It measures with Qloo&apos;s own ruler, and says so: Routed chooses from the heatmap ranking it is then scored on, so what the number shows is how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. It can&apos;t show ticket sales: those aren&apos;t public. Two outside checks are on the page: the cities each artist actually played on a recent tour (above), and the home base each benchmark tour starts from, which the heatmap knows nothing about; it ranks the home base here:
               </p>
               {homes.length > 0 && (
                 <ul className={s.homes}>
@@ -239,6 +333,14 @@ export default async function Proof() {
 }
 
 const pct = (v?: number) => (v === undefined ? "–" : String(Math.round(v * 100)));
+const pctOf = (x: { hits: number; of: number }) => (x.of ? Math.round((100 * x.hits) / x.of) : 0);
+const hostOf = (u: string) => {
+  try {
+    return new URL(u).hostname.replace(/^www[.]/, "");
+  } catch {
+    return u;
+  }
+};
 
 function pos(rank: number, cap: number): number {
   return 10 + ((Math.min(rank, cap) - 1) / Math.max(1, cap - 1)) * 580;

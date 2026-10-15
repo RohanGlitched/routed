@@ -1,0 +1,1011 @@
+[
+ {
+  "artist": "Japanese Breakfast",
+  "region": "na",
+  "found": true,
+  "tour": "The Melancholy Tour (spring 2025 North American leg)",
+  "year": "2025",
+  "cities": [
+   "Austin, TX",
+   "Dallas, TX",
+   "Atlanta, GA",
+   "Charlotte, NC",
+   "Nashville, TN",
+   "Chicago, IL",
+   "Detroit, MI",
+   "Toronto, ON",
+   "Boston, MA",
+   "New York, NY",
+   "Philadelphia, PA"
+  ],
+  "sources": [
+   "https://en.wikipedia.org/w/index.php?title=The_Melancholy_Tour&action=raw",
+   "https://avclub.com/japanese-breakfast-new-album-melancholy-brunettes",
+   "https://liveforlivemusic.com/news/japanese-breakfast-melancholy-tour-2025"
+  ],
+  "note": "Excluded Coachella (Indio). New York = Brooklyn Paramount. Chicago is in AV Club and Wikipedia but missing from the Live for Live Music list. Wikipedia's date table is flagged unreferenced, so the leg was checked against the two press lists."
+ },
+ {
+  "artist": "MJ Lenderman",
+  "region": "na",
+  "found": true,
+  "tour": "Manning Fireworks tour, winter 2025 North American leg (with Wild Pink)",
+  "year": "2025",
+  "cities": [
+   "Carrboro, NC",
+   "Athens, GA",
+   "Birmingham, AL",
+   "Oxford, MS",
+   "New Orleans, LA",
+   "Houston, TX",
+   "Austin, TX",
+   "Oklahoma City, OK",
+   "Santa Fe, NM",
+   "Tucson, AZ",
+   "Los Angeles, CA",
+   "Santa Cruz, CA",
+   "San Francisco, CA",
+   "Portland, OR",
+   "Vancouver, BC",
+   "Seattle, WA",
+   "Boise, ID",
+   "Salt Lake City, UT",
+   "Fort Collins, CO",
+   "Boulder, CO",
+   "Denver, CO",
+   "Colorado Springs, CO",
+   "Lawrence, KS",
+   "Urbana, IL",
+   "Lexington, KY"
+  ],
+  "at": {
+   "Carrboro, NC": [
+    35.91,
+    -79.08
+   ],
+   "Oxford, MS": [
+    34.37,
+    -89.52
+   ],
+   "Urbana, IL": [
+    40.11,
+    -88.21
+   ]
+  },
+  "sources": [
+   "https://consequence.net/2024/10/mj-lenderman-new-2025-tour-dates"
+  ],
+  "note": "Covers only the Jan 29 to Mar 7, 2025 leg. The fall 2024 leg is left out because the source lists it only from Oct 16. These are the announced dates; I did not confirm that each show went ahead."
+ },
+ {
+  "artist": "Zach Bryan",
+  "region": "na",
+  "found": true,
+  "tour": "The Quittin Time Tour",
+  "year": "2024",
+  "cities": [
+   "Chicago, IL",
+   "Pittsburgh, PA",
+   "Buffalo, NY",
+   "State College, PA",
+   "Newark, NJ",
+   "Toronto, ON",
+   "Milwaukee, WI",
+   "Birmingham, AL",
+   "Washington, DC",
+   "New York, NY",
+   "Elmont, NY",
+   "Des Moines, IA",
+   "Omaha, NE",
+   "St. Louis, MO",
+   "Greenville, SC",
+   "Knoxville, TN",
+   "North Little Rock, AR",
+   "Oklahoma City, OK",
+   "Oakland, CA",
+   "Los Angeles, CA",
+   "Las Vegas, NV",
+   "Denver, CO",
+   "Detroit, MI",
+   "Foxborough, MA",
+   "Nashville, TN",
+   "Orlando, FL",
+   "Sunrise, FL",
+   "New Orleans, LA",
+   "Houston, TX",
+   "San Antonio, TX",
+   "Greensboro, NC",
+   "Philadelphia, PA",
+   "Atlanta, GA",
+   "Tampa, FL",
+   "Arlington, TX",
+   "Kansas City, MO",
+   "Minneapolis, MN",
+   "Grand Forks, ND",
+   "Edmonton, AB",
+   "Vancouver, BC",
+   "Tacoma, WA",
+   "Portland, OR",
+   "Sacramento, CA",
+   "Glendale, AZ",
+   "Salt Lake City, UT",
+   "Tulsa, OK"
+  ],
+  "at": {
+   "State College, PA": [
+    40.79,
+    -77.86
+   ],
+   "Newark, NJ": [
+    40.74,
+    -74.17
+   ],
+   "Elmont, NY": [
+    40.7,
+    -73.71
+   ],
+   "North Little Rock, AR": [
+    34.77,
+    -92.27
+   ],
+   "Foxborough, MA": [
+    42.07,
+    -71.25
+   ],
+   "Sunrise, FL": [
+    26.13,
+    -80.11
+   ],
+   "Arlington, TX": [
+    32.74,
+    -97.11
+   ],
+   "Glendale, AZ": [
+    33.54,
+    -112.19
+   ]
+  },
+  "sources": [
+   "https://www.rollingstone.com/music/music-country/zach-bryan-2024-tour-dates-1234813749/"
+  ],
+  "note": "Excluded Buckeye Country Superfest (Columbus, a festival). New York = Brooklyn (Barclays). Elmont = UBS Arena, which the source lists as 'Belmont Park, NY'. Oakland is kept as its own city. This is the announced schedule from an article that was updated over time, so I did not confirm whether any show was cancelled or postponed."
+ },
+ {
+  "artist": "Khruangbin",
+  "region": "na",
+  "found": true,
+  "tour": "A La Sala Tour 2024 (North American dates)",
+  "year": "2024",
+  "cities": [
+   "San Luis Obispo, CA",
+   "Las Vegas, NV",
+   "Albuquerque, NM",
+   "Philadelphia, PA",
+   "Saratoga Springs, NY",
+   "Buffalo, NY",
+   "Cleveland, OH",
+   "Toronto, ON",
+   "Detroit, MI",
+   "Chicago, IL",
+   "Raleigh, NC",
+   "Berkeley, CA",
+   "Troutdale, OR",
+   "Bonner, MT",
+   "Salt Lake City, UT",
+   "Morrison, CO",
+   "New York, NY",
+   "Washington, DC",
+   "Chesterfield, MO",
+   "New Orleans, LA"
+  ],
+  "at": {
+   "San Luis Obispo, CA": [
+    35.28,
+    -120.66
+   ],
+   "Saratoga Springs, NY": [
+    43.08,
+    -73.78
+   ],
+   "Troutdale, OR": [
+    45.54,
+    -122.39
+   ],
+   "Bonner, MT": [
+    46.88,
+    -113.88
+   ],
+   "Morrison, CO": [
+    39.65,
+    -105.19
+   ],
+   "Chesterfield, MO": [
+    38.66,
+    -90.58
+   ]
+  },
+  "sources": [
+   "https://pitchfork.com/news/khruangbin-announce-a-la-sala-tour-dates/"
+  ],
+  "note": "Excluded Coachella, Boston Calling, Bonnaroo and all European festivals. New York = Forest Hills Stadium (Queens). Suburban venues are kept as listed: Troutdale is near Portland, Morrison near Denver, Chesterfield near St. Louis. These are the announced dates."
+ },
+ {
+  "artist": "Turnstile",
+  "region": "na",
+  "found": true,
+  "tour": "Never Enough Tour (fall 2025 North American leg)",
+  "year": "2025",
+  "cities": [
+   "Nashville, TN",
+   "Asheville, NC",
+   "Philadelphia, PA",
+   "Boston, MA",
+   "Buffalo, NY",
+   "Columbus, OH",
+   "Richmond, VA",
+   "Chicago, IL",
+   "Minneapolis, MN",
+   "Des Moines, IA",
+   "Denver, CO",
+   "Los Angeles, CA",
+   "San Francisco, CA",
+   "Seattle, WA",
+   "Portland, OR",
+   "San Diego, CA",
+   "Mesa, AZ",
+   "Austin, TX",
+   "Houston, TX",
+   "Fort Worth, TX",
+   "Orlando, FL"
+  ],
+  "at": {
+   "Mesa, AZ": [
+    33.42,
+    -111.83
+   ]
+  },
+  "sources": [
+   "https://en.wikipedia.org/w/index.php?title=Never_Enough_Tour&action=raw"
+  ],
+  "note": "Covers Sep 15 to Oct 19, 2025. Excluded Aftershock Festival (Sacramento). The 2026 US dates are a separate leg, mostly festivals, and are not included."
+ },
+ {
+  "artist": "Waxahatchee",
+  "region": "na",
+  "found": true,
+  "tour": "Tigers Blood Tour 2024",
+  "year": "2024",
+  "cities": [
+   "Kansas City, MO",
+   "St. Paul, MN",
+   "Chicago, IL",
+   "Detroit, MI",
+   "Toronto, ON",
+   "New Haven, CT",
+   "Boston, MA",
+   "New York, NY",
+   "Richmond, VA",
+   "Asheville, NC",
+   "Nashville, TN",
+   "St. Petersburg, FL",
+   "Orlando, FL",
+   "Birmingham, AL",
+   "Tulsa, OK",
+   "Fort Worth, TX",
+   "Houston, TX",
+   "Austin, TX",
+   "Phoenix, AZ",
+   "San Diego, CA",
+   "Los Angeles, CA",
+   "Paso Robles, CA",
+   "Oakland, CA",
+   "Sonoma, CA",
+   "Salt Lake City, UT",
+   "Denver, CO",
+   "Boise, ID",
+   "Fort Collins, CO",
+   "St. Louis, MO",
+   "Madison, WI",
+   "Kalamazoo, MI",
+   "Pittsburgh, PA",
+   "South Deerfield, MA",
+   "Portland, ME",
+   "Accord, NY",
+   "Asbury Park, NJ",
+   "Vienna, VA",
+   "Philadelphia, PA"
+  ],
+  "at": {
+   "New Haven, CT": [
+    41.31,
+    -72.92
+   ],
+   "St. Petersburg, FL": [
+    27.77,
+    -82.64
+   ],
+   "Paso Robles, CA": [
+    35.63,
+    -120.69
+   ],
+   "Sonoma, CA": [
+    38.29,
+    -122.46
+   ],
+   "South Deerfield, MA": [
+    42.48,
+    -72.61
+   ],
+   "Accord, NY": [
+    41.79,
+    -74.24
+   ],
+   "Asbury Park, NJ": [
+    40.22,
+    -74.01
+   ],
+   "Vienna, VA": [
+    38.9,
+    -77.27
+   ]
+  },
+  "sources": [
+   "https://www.scenepointblank.com/news/records/2024/01/10/waxahatchee-prepares-us-tigers-blood/",
+   "https://www.thepinknews.com/2024/01/10/waxahatchee-tour-dates-tickets-presale/"
+  ],
+  "note": "Excluded Shaky Knees (Atlanta). New York covers Brooklyn Paramount and the Beacon Theatre. Oakland is kept as its own city. Boise is the Treefort Music Hall venue, not the festival. These are the announced dates."
+ },
+ {
+  "artist": "Alvvays",
+  "region": "na",
+  "found": true,
+  "tour": "Blue Rev tour, spring 2024 North American leg",
+  "year": "2024",
+  "cities": [
+   "Cleveland, OH",
+   "Cincinnati, OH",
+   "Columbus, OH",
+   "Milwaukee, WI",
+   "Madison, WI",
+   "Kansas City, MO",
+   "Tampa, FL",
+   "Orlando, FL",
+   "Athens, GA",
+   "Charlotte, NC",
+   "Louisville, KY",
+   "St. Louis, MO",
+   "Fort Collins, CO",
+   "Las Vegas, NV",
+   "Sacramento, CA",
+   "Phoenix, AZ",
+   "Tucson, AZ"
+  ],
+  "sources": [
+   "https://www.treblezine.com/alvvays-announce-2024-tour-dates/",
+   "https://www.rollingstone.com/music/music-news/alvvays-2024-tour-1234911259/"
+  ],
+  "note": "Covers Apr 18 to May 17, 2024. Excluded Kilby Block Party (Salt Lake City), the Riviera Maya resort event and the Honolulu 2023 date. The later summer dates with The Beths are not included."
+ },
+ {
+  "artist": "Tyler Childers",
+  "region": "na",
+  "found": true,
+  "tour": "Mule Pull '24 Tour (North American dates)",
+  "year": "2024",
+  "cities": [
+   "Thackerville, OK",
+   "San Diego, CA",
+   "Inglewood, CA",
+   "Tulsa, OK",
+   "Austin, TX",
+   "Fort Worth, TX",
+   "Birmingham, AL",
+   "Knoxville, TN",
+   "Nashville, TN",
+   "Baltimore, MD",
+   "New York, NY",
+   "Virginia Beach, VA",
+   "Tampa, FL",
+   "Alpharetta, GA",
+   "Clarkston, MI",
+   "Chicago, IL",
+   "Noblesville, IN",
+   "Burgettstown, PA",
+   "Saratoga Springs, NY",
+   "Bangor, ME",
+   "Toronto, ON",
+   "Calgary, AB",
+   "Vancouver, BC",
+   "Bend, OR",
+   "Mountain View, CA",
+   "Boulder, CO",
+   "West Valley City, UT",
+   "Nampa, ID",
+   "George, WA",
+   "Missoula, MT"
+  ],
+  "at": {
+   "Thackerville, OK": [
+    33.79,
+    -97.14
+   ],
+   "Inglewood, CA": [
+    33.96,
+    -118.35
+   ],
+   "Alpharetta, GA": [
+    34.08,
+    -84.29
+   ],
+   "Clarkston, MI": [
+    42.74,
+    -83.42
+   ],
+   "Burgettstown, PA": [
+    40.38,
+    -80.39
+   ],
+   "Saratoga Springs, NY": [
+    43.08,
+    -73.78
+   ],
+   "Bangor, ME": [
+    44.8,
+    -68.77
+   ],
+   "Mountain View, CA": [
+    37.39,
+    -122.08
+   ],
+   "West Valley City, UT": [
+    40.69,
+    -112
+   ],
+   "George, WA": [
+    47.08,
+    -119.86
+   ]
+  },
+  "sources": [
+   "https://savingcountrymusic.com/tyler-childers-extends-sold-out-mule-pull-24-tour/",
+   "https://relix.com/news/detail/tyler-childers-delivers-2024-mule-pull-tour-dates"
+  ],
+  "note": "Excluded Summerfest (Milwaukee), Cavendish Beach Music Festival (PEI), Rock the Park (London, ON), the Dec 2023 New Year's shows in Lexington and the European leg. Inglewood = Kia Forum in the LA area. These are the announced dates."
+ },
+ {
+  "artist": "Caamp",
+  "region": "na",
+  "found": true,
+  "tour": "Copper Changes Color tour (2025 US tour)",
+  "year": "2025",
+  "cities": [
+   "Austin, TX",
+   "Houston, TX",
+   "Dallas, TX",
+   "St. Louis, MO",
+   "Chicago, IL",
+   "Minneapolis, MN",
+   "Cleveland, OH",
+   "Boston, MA",
+   "New Haven, CT",
+   "Washington, DC",
+   "Los Angeles, CA",
+   "Santa Barbara, CA",
+   "Berkeley, CA",
+   "Nampa, ID",
+   "Salt Lake City, UT",
+   "Greenwood Village, CO",
+   "Missoula, MT",
+   "Tacoma, WA",
+   "Bend, OR",
+   "St. Augustine, FL",
+   "Asheville, NC",
+   "Raleigh, NC",
+   "Wilmington, NC",
+   "Nashville, TN",
+   "Atlanta, GA",
+   "Charlotte, NC",
+   "Philadelphia, PA",
+   "New York, NY"
+  ],
+  "at": {
+   "New Haven, CT": [
+    41.31,
+    -72.92
+   ],
+   "Greenwood Village, CO": [
+    39.62,
+    -104.95
+   ],
+   "St. Augustine, FL": [
+    29.9,
+    -81.31
+   ]
+  },
+  "sources": [
+   "https://shorefire.com/releases/entry/caamp-announces-new-album-copper-changes-color-out-june-6-via-mompop-music"
+  ],
+  "note": "Covers May 29 to Sep 13, 2025, from the label press release. Greenwood Village = Fiddler's Green in the Denver area. The Aug 24 Cincinnati one-off is not in the list. These are the announced dates."
+ },
+ {
+  "artist": "Clairo",
+  "region": "na",
+  "found": true,
+  "tour": "Charm Tour (2024 North American leg)",
+  "year": "2024",
+  "cities": [
+   "Los Angeles, CA",
+   "New York, NY",
+   "Dallas, TX",
+   "Houston, TX",
+   "Austin, TX",
+   "Mesa, AZ",
+   "San Diego, CA",
+   "Stanford, CA",
+   "Santa Barbara, CA",
+   "Portland, OR",
+   "Seattle, WA",
+   "Magna, UT",
+   "Denver, CO",
+   "Chicago, IL",
+   "Columbus, OH",
+   "Washington, DC",
+   "Boston, MA",
+   "Philadelphia, PA",
+   "Nashville, TN",
+   "Charlotte, NC",
+   "Atlanta, GA",
+   "Toronto, ON"
+  ],
+  "at": {
+   "Mesa, AZ": [
+    33.42,
+    -111.83
+   ],
+   "Stanford, CA": [
+    37.43,
+    -122.17
+   ],
+   "Magna, UT": [
+    40.71,
+    -112.1
+   ]
+  },
+  "sources": [
+   "https://en.wikipedia.org/w/index.php?title=Charm_Tour&action=raw"
+  ],
+  "note": "Excluded Corona Capital (Mexico City, a festival outside NA). Toronto was moved from Oct 23-25 to Dec 16-18, 2024. Magna = The Great Saltair near Salt Lake City; Portland = McMenamins Edgefield (Troutdale)."
+ },
+ {
+  "artist": "Fontaines D.C.",
+  "region": "uk",
+  "found": true,
+  "tour": "Romance tour, UK and Ireland leg",
+  "year": "2024",
+  "cities": [
+   "Wolverhampton, UK",
+   "London, UK",
+   "Cardiff, UK",
+   "Plymouth, UK",
+   "Nottingham, UK",
+   "Manchester, UK",
+   "Leeds, UK",
+   "Glasgow, UK",
+   "Dublin, Ireland"
+  ],
+  "at": {
+   "Wolverhampton, UK": [
+    52.59,
+    -2.13
+   ]
+  },
+  "sources": [
+   "https://radiox.co.uk/news/music/fontaines-d-c-2024-uk-dates-buy-tickets",
+   "https://diymag.com/news/fontaines-dc-uk-ireland-headline-tour",
+   "https://thepinknews.com/2024/04/29/fontaines-dc-tour-dates-tickets"
+  ],
+  "note": "Covers Nov 20 to Dec 7, 2024. Excluded the summer 2024 festivals (Glastonbury, Reading, Leeds) and the European leg. The second Dublin date (Dec 7) appears only in Radio X."
+ },
+ {
+  "artist": "Arlo Parks",
+  "region": "uk",
+  "found": true,
+  "tour": "Ambiguous Desire world tour, opening UK album-launch run (April 2026)",
+  "year": "2026",
+  "cities": [
+   "London, UK",
+   "Leeds, UK",
+   "Nottingham, UK",
+   "Brighton, UK",
+   "Oxford, UK",
+   "Southampton, UK"
+  ],
+  "sources": [
+   "https://faroutmagazine.co.uk/arlo-parks-announces-huge-world-tour/"
+  ],
+  "note": "Doubtful. This is a short album-launch run (Apr 2-12, 2026). Kingston (Circuit) is folded into London, and the Rough Trade East in-store is excluded. The Oct 2026 UK/IE leg (Dublin, London, Glasgow, Bristol, Manchester) starts Oct 17 and has not been played yet, so it is excluded. The 2023 My Soft Machine UK dates were only Dublin and London. Her 2021 UK dates were rescheduled during COVID and the sources disagree on them."
+ },
+ {
+  "artist": "Wet Leg",
+  "region": "uk",
+  "found": true,
+  "tour": "moisturizer tour, autumn 2025 UK and Ireland leg",
+  "year": "2025",
+  "cities": [
+   "London, UK",
+   "Liverpool, UK",
+   "Nottingham, UK",
+   "Norwich, UK",
+   "Portsmouth, UK",
+   "Cardiff, UK",
+   "Dublin, Ireland",
+   "Belfast, UK"
+  ],
+  "at": {
+   "Portsmouth, UK": [
+    50.82,
+    -1.09
+   ]
+  },
+  "sources": [
+   "https://www.radiox.co.uk/artists/wet-leg/2025-uk-tour-dates-buy-tickets/",
+   "https://readdork.com/news/wet-leg-moisturizer-uk-tour"
+  ],
+  "note": "Covers Nov 13-27, 2025. Excluded the July 2025 outstore and record-shop shows (London, Brighton, Coventry, Sheffield) and the festivals (TRNSMT, Wilderness, Boardmasters, Green Man, All Together Now). The May 2025 UK run is not included."
+ },
+ {
+  "artist": "Parcels",
+  "region": "eu",
+  "found": true,
+  "tour": "2025 European arena tour (LOVED era)",
+  "year": "2025",
+  "cities": [
+   "Düsseldorf, Germany",
+   "Amsterdam, Netherlands",
+   "Berlin, Germany",
+   "Brussels, Belgium",
+   "Paris, France"
+  ],
+  "sources": [
+   "https://readdork.com/news/parcels-wembley-arena-tour"
+  ],
+  "note": "Short six-date arena run (Sep 25 to Oct 8, 2025). London Wembley is excluded as UK. I could not get a fuller list for the 2022 Day/Night European tour."
+ },
+ {
+  "artist": "JPEGMAFIA",
+  "region": "na",
+  "found": true,
+  "tour": "Lay Down My Life Tour (2024 North American leg)",
+  "year": "2024",
+  "cities": [
+   "Pomona, CA",
+   "Las Vegas, NV",
+   "Denver, CO",
+   "Salt Lake City, UT",
+   "Eugene, OR",
+   "Seattle, WA",
+   "Portland, OR",
+   "Vancouver, BC",
+   "Reno, NV",
+   "San Francisco, CA",
+   "Los Angeles, CA",
+   "Tempe, AZ",
+   "Oklahoma City, OK",
+   "Dallas, TX",
+   "Austin, TX",
+   "Houston, TX",
+   "Fort Lauderdale, FL",
+   "Atlanta, GA",
+   "Orlando, FL",
+   "Norfolk, VA",
+   "Silver Spring, MD",
+   "Philadelphia, PA",
+   "New York, NY",
+   "Boston, MA",
+   "Providence, RI",
+   "Toronto, ON",
+   "Columbus, OH",
+   "Chicago, IL"
+  ],
+  "at": {
+   "Tempe, AZ": [
+    33.43,
+    -111.94
+   ],
+   "Norfolk, VA": [
+    36.85,
+    -76.29
+   ],
+   "Silver Spring, MD": [
+    38.99,
+    -77.03
+   ]
+  },
+  "sources": [
+   "https://consequence.net/2024/06/jpegmafia-2024-tour-dates"
+  ],
+  "note": "Covers Aug 7 to Sep 21, 2024. Excluded Hopscotch Music Festival (Raleigh) and the European festivals (Outbreak, Couleur Café). These are the announced dates."
+ },
+ {
+  "artist": "Cuco",
+  "region": "na",
+  "found": true,
+  "tour": "Ridin' Tour (2025 North American leg)",
+  "year": "2025",
+  "cities": [
+   "Oakland, CA",
+   "Sacramento, CA",
+   "Las Vegas, NV",
+   "Los Angeles, CA",
+   "San Diego, CA",
+   "Phoenix, AZ",
+   "El Paso, TX",
+   "Albuquerque, NM",
+   "Denver, CO",
+   "Tulsa, OK",
+   "Houston, TX",
+   "Austin, TX",
+   "Dallas, TX",
+   "Nashville, TN",
+   "Atlanta, GA",
+   "Charlotte, NC",
+   "Washington, DC",
+   "Philadelphia, PA",
+   "Boston, MA",
+   "Detroit, MI",
+   "Chicago, IL",
+   "Milwaukee, WI",
+   "Minneapolis, MN",
+   "Kansas City, MO",
+   "Indianapolis, IN",
+   "Columbus, OH",
+   "New Haven, CT",
+   "New York, NY"
+  ],
+  "at": {
+   "New Haven, CT": [
+    41.31,
+    -72.92
+   ]
+  },
+  "sources": [
+   "https://www.rollingstone.com/music/music-latin/cuco-ridin-tour-dates-1235348673/"
+  ],
+  "note": "Covers Sep 10 to Oct 31, 2025. New York = Kings Theatre, Brooklyn. Oakland is kept as its own city. Excluded the 2026 Madrid, London and Paris dates. Some outlets later said there were 35 dates, more than the 28 listed here, so dates added later may be missing."
+ },
+ {
+  "artist": "Knocked Loose",
+  "region": "na",
+  "found": true,
+  "tour": "Fall 2024 North American headline tour",
+  "year": "2024",
+  "cities": [
+   "Columbus, OH",
+   "Buffalo, NY",
+   "Asbury Park, NJ",
+   "Asheville, NC",
+   "Atlanta, GA",
+   "Orlando, FL",
+   "Houston, TX",
+   "San Antonio, TX",
+   "Albuquerque, NM",
+   "Tucson, AZ",
+   "Wheatland, CA",
+   "Santa Ana, CA",
+   "San Jose, CA",
+   "Wichita, KS",
+   "Chicago, IL",
+   "Milwaukee, WI",
+   "Indianapolis, IN",
+   "Grand Rapids, MI",
+   "Wallingford, CT",
+   "Washington, DC"
+  ],
+  "at": {
+   "Asbury Park, NJ": [
+    40.22,
+    -74.01
+   ],
+   "Wheatland, CA": [
+    39.01,
+    -121.42
+   ],
+   "Santa Ana, CA": [
+    33.75,
+    -117.87
+   ],
+   "Wallingford, CT": [
+    41.46,
+    -72.82
+   ]
+  },
+  "sources": [
+   "https://blabbermouth.net/news/knocked-loose-announces-fall-2024-north-american-tour-blabbermouth-net-presale",
+   "https://musicpressbox.antimusic.com/24/0813knocked_loose_announce_north_american_headline_tour.shtml"
+  ],
+  "note": "Excluded the Aug-Sep 2024 Slipknot support dates, Knotfest, and the Oct 18 Las Vegas Pure Noise anniversary show (a separate event). Minneapolis (Nov 5) appears only in the Antimusic list, while Blabbermouth has a second Chicago date there instead, so it is left out."
+ },
+ {
+  "artist": "Jamie xx",
+  "region": "uk",
+  "found": false,
+  "cities": [],
+  "sources": [
+   "https://news.pollstar.com/2024/10/01/jamie-xx-to-embark-on-in-waves-world-tour/"
+  ],
+  "note": "No UK headline leg from 2019 on. The In Waves tour (2024-25) played only two nights at Alexandra Palace, London, in the UK. The other UK dates I found were from the 2015 In Colour tour, which is too old."
+ },
+ {
+  "artist": "Durand Jones & The Indications",
+  "region": "na",
+  "found": true,
+  "tour": "Flowers Tour 2025 (fall North American tour)",
+  "year": "2025",
+  "cities": [
+   "Phoenix, AZ",
+   "Flagstaff, AZ",
+   "San Antonio, TX",
+   "Austin, TX",
+   "Atlanta, GA",
+   "Nashville, TN",
+   "Washington, DC",
+   "Philadelphia, PA",
+   "Boston, MA",
+   "New York, NY",
+   "Indianapolis, IN",
+   "Chicago, IL",
+   "Englewood, CO",
+   "Fort Collins, CO",
+   "Salt Lake City, UT",
+   "Oakland, CA",
+   "Los Angeles, CA",
+   "Las Vegas, NV",
+   "Del Mar, CA",
+   "Sacramento, CA",
+   "Portland, OR",
+   "Vancouver, BC",
+   "Seattle, WA",
+   "Boise, ID",
+   "Bozeman, MT",
+   "Minneapolis, MN",
+   "Milwaukee, WI",
+   "Detroit, MI",
+   "Toronto, ON",
+   "Montreal, QC",
+   "South Burlington, VT",
+   "Columbus, OH",
+   "Asheville, NC",
+   "New Orleans, LA",
+   "Houston, TX",
+   "Dallas, TX"
+  ],
+  "at": {
+   "Englewood, CO": [
+    39.65,
+    -104.99
+   ],
+   "Del Mar, CA": [
+    32.96,
+    -117.27
+   ],
+   "Bozeman, MT": [
+    45.68,
+    -111.04
+   ],
+   "South Burlington, VT": [
+    44.47,
+    -73.17
+   ]
+  },
+  "sources": [
+   "https://spillmagazine.com/96719"
+  ],
+  "note": "Covers Sep 11 to Nov 16, 2025. Excluded the European festivals and the Abiquiú, NM 'Blossoms & Bones' event, which other outlets mention but this list does not. Englewood = Gothic Theatre near Denver. Oakland is kept as its own city. The Fire Note also lists a Sep 10 Tucson date that I did not include."
+ },
+ {
+  "artist": "Ghost",
+  "region": "eu",
+  "found": true,
+  "tour": "Skeletour World Tour (2025 European leg)",
+  "year": "2025",
+  "cities": [
+   "Antwerp, Belgium",
+   "Frankfurt, Germany",
+   "Munich, Germany",
+   "Lyon, France",
+   "Toulouse, France",
+   "Lisbon, Portugal",
+   "Zurich, Switzerland",
+   "Milan, Italy",
+   "Berlin, Germany",
+   "Amsterdam, Netherlands",
+   "Łódź, Poland",
+   "Prague, Czech Republic",
+   "Paris, France",
+   "Oberhausen, Germany",
+   "Hanover, Germany",
+   "Copenhagen, Denmark",
+   "Tampere, Finland",
+   "Linköping, Sweden",
+   "Sandviken, Sweden",
+   "Oslo, Norway"
+  ],
+  "at": {
+   "Oberhausen, Germany": [
+    51.47,
+    6.86
+   ],
+   "Sandviken, Sweden": [
+    60.62,
+    16.78
+   ]
+  },
+  "sources": [
+   "https://en.wikipedia.org/w/index.php?title=Skeletour&action=raw"
+  ],
+  "note": "Covers Apr 22 to May 24, 2025. Excluded the UK dates (Manchester, Glasgow, London, Birmingham). Madrid (Apr 30) was cancelled because of production issues and is not included."
+ },
+ {
+  "artist": "Sierra Ferrell",
+  "region": "na",
+  "found": true,
+  "tour": "Shoot For The Moon Tour",
+  "year": "2024",
+  "cities": [
+   "West Des Moines, IA",
+   "Omaha, NE",
+   "Aspen, CO",
+   "Monterey, CA",
+   "San Francisco, CA",
+   "Del Mar, CA",
+   "Santa Barbara, CA",
+   "Nashville, TN",
+   "Los Angeles, CA",
+   "Kansas City, MO",
+   "Oklahoma City, OK",
+   "Fayetteville, AR",
+   "Chicago, IL",
+   "Minneapolis, MN",
+   "Milwaukee, WI",
+   "St. Louis, MO",
+   "Atlanta, GA",
+   "Charleston, SC",
+   "Raleigh, NC",
+   "Charlotte, NC",
+   "Philadelphia, PA",
+   "New York, NY",
+   "Washington, DC",
+   "Vancouver, BC",
+   "Seattle, WA",
+   "Portland, OR",
+   "Boise, ID",
+   "Denver, CO",
+   "Santa Fe, NM",
+   "Toronto, ON"
+  ],
+  "at": {
+   "West Des Moines, IA": [
+    41.58,
+    -93.71
+   ],
+   "Aspen, CO": [
+    39.19,
+    -106.82
+   ],
+   "Monterey, CA": [
+    36.6,
+    -121.89
+   ],
+   "Del Mar, CA": [
+    32.96,
+    -117.27
+   ]
+  },
+  "sources": [
+   "https://shorefire.com/releases/print/sierra-ferrell-releases-i-could-drive-you-crazy",
+   "https://shorefire.com/releases/entry/sierra-ferrell-new-single-american-dreaming",
+   "https://liveforlivemusic.com/news/sierra-ferrell-i-could-drive-you-crazy/"
+  ],
+  "note": "Headline dates only, Mar to Sep 2024. Excluded the festivals (WinterWonderGrass x2, Two Step Inn, DelFest, Forest Desolation, Telluride, Blue Ox, Under the Big Sky, FloydFest, Newport Folk, Sea.Hear.Now, Bourbon & Beyond), the Avett Brothers dates, the Zach Bryan stadium support dates, the Mitski date at Merriweather and Avett at the Beach in Mexico."
+ }
+]

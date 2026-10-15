@@ -45,5 +45,6 @@ export function posterFor(plan: Partial<Plan>): PosterProps | null {
     })(),
     // The stamp names the strongest fan city on this tour, not a city the route skipped.
     topCity: stops.length ? [...stops].sort((a, b) => a.score.rank - b.score.rank)[0]!.city : plan.cities?.[0]?.name,
+    topRank: stops.length ? Math.min(...stops.map((s) => s.score.rank)) : 1,
   };
 }

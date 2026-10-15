@@ -21,6 +21,8 @@ export type PosterProps = {
   start: [number, number] | null;
   stops: PosterStop[];
   topCity?: string;
+  /** The stamped city's rank on the artist's fan map (the strongest city on this tour isn't always #1). */
+  topRank?: number;
   /** The support act on every date, printed under the rule; older tours had one per city. */
   support?: string;
   /** Print on first view. */
@@ -57,7 +59,7 @@ const fmt = (iso: string) => {
   return `${Number(m)}/${Number(d)}`;
 };
 
-export function Poster({ artist, season, region, dots, route, start, stops, topCity, support, print = false, compact = false, label }: PosterProps) {
+export function Poster({ artist, season, region, dots, route, start, stops, topCity, topRank = 1, support, print = false, compact = false, label }: PosterProps) {
   const ref = useRef<SVGSVGElement>(null);
   const [state, setState] = useState<"idle" | "printing" | "printed">(print ? "idle" : "printed");
 
@@ -178,7 +180,7 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
               FAN CITY
             </text>
             <text y={13} textAnchor="middle" className={s.stampBig}>
-              NO.1
+              NO.{topRank}
             </text>
             <text y={31} textAnchor="middle" className={s.stampSmall} textLength={topCity.length > 9 ? 70 : undefined} lengthAdjust="spacingAndGlyphs">
               {topCity.toUpperCase()}

@@ -22,8 +22,10 @@ export type WikiCapacity = { value: number; source: string; quote: string };
 
 const memo = new Map<string, WikiCapacity | null>();
 
-const MAX_IN_FLIGHT = 2;
+const MAX_IN_FLIGHT = 1;
+const GAP_MS = 250;
 let inFlight = 0;
+let lastStart = 0;
 const waiting: (() => void)[] = [];
 
 async function getJson<T>(url: string): Promise<T> {
@@ -32,11 +34,16 @@ async function getJson<T>(url: string): Promise<T> {
     if (attempt) await new Promise((r) => setTimeout(r, 600 * 2 ** (attempt - 1) + Math.random() * 300));
     while (inFlight >= MAX_IN_FLIGHT) await new Promise<void>((r) => waiting.push(r));
     inFlight++;
+    const wait = lastStart + GAP_MS - Date.now();
+    lastStart = Math.max(Date.now(), lastStart + GAP_MS);
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
     let status = 0;
+    let retryAfter = 0;
     try {
       const r = await fetch(url, { headers: { "user-agent": UA, accept: "application/json" }, signal: AbortSignal.timeout(8000) });
       if (r.ok) return (await r.json()) as T;
       status = r.status;
+      retryAfter = Math.min(5, Number(r.headers.get("retry-after")) || 0);
       last = new Error(`HTTP ${r.status}`);
     } catch (e) {
       last = e as Error;
@@ -45,6 +52,7 @@ async function getJson<T>(url: string): Promise<T> {
       waiting.shift()?.();
     }
     if (status && status !== 429 && status < 500) break;
+    if (retryAfter) await new Promise((r) => setTimeout(r, retryAfter * 1000));
   }
   throw last;
 }
@@ -63,9 +71,10 @@ export async function wikidataCapacity(venue: string, city: string, near?: { lat
       for (const h of s.search ?? []) if (!hits.some((x) => x.id === h.id)) hits.push(h);
       if (hits.length) break;
     }
-    for (const h of hits) {
-      if (!sameVenue(venue, h.label, h.description)) continue;
-      const e = await getJson<{ entities?: Record<string, { claims?: Claims }> }>(`${API}/wiki/Special:EntityData/${h.id}.json`);
+    const likely = hits.filter((h) => sameVenue(venue, h.label, h.description));
+    // One request for every likely item's claims, not one per item.
+    const e = likely.length ? await getJson<{ entities?: Record<string, { claims?: Claims }> }>(`${API}/w/api.php?${new URLSearchParams({ action: "wbgetentities", ids: likely.map((h) => h.id).join("|"), props: "claims", format: "json", origin: "*" })}`) : { entities: {} };
+    for (const h of likely) {
       const claims = e.entities?.[h.id]?.claims ?? {};
       const amount = claims.P1083?.[0]?.mainsnak?.datavalue?.value?.amount;
       if (!amount) continue;

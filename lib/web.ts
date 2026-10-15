@@ -115,7 +115,7 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
   const old = `${venue}|${city.split(",")[0]!.trim()}`.toLowerCase();
   await load();
   if (memo.has(key)) return memo.get(key)!;
-  const kept = legacy.get(old);
+  const kept = legacy.get(key) ?? legacy.get(old);
   if (kept && stillTrusted(kept, venue)) {
     memo.set(key, kept);
     scheduleFlush();

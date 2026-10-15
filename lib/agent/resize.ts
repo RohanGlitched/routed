@@ -5,6 +5,7 @@ import { describeRequest, qlooGet } from "../qloo";
 import { newUsage, withUsage } from "../usage";
 import { roomCapacity } from "../web";
 import type { LogLine, Room, TourRecord, Usage } from "../types";
+import { sameVenue } from "./capacity";
 import { checkNumbers, evidenceLines, fit } from "./evidence";
 import { writePitches } from "./pitch";
 import { candidatesBySize, chooseRoom, orchestraHallFor, reducedHouse, roomNameOk, twoNights } from "./rooms";
@@ -18,6 +19,13 @@ import { candidatesBySize, chooseRoom, orchestraHallFor, reducedHouse, roomNameO
  * night count changed. The one Qloo call is the room-affinity score for any newly booked room, so the comparison
  * with the model alone stays on one scale. What changed is appended to the call sheet.
  */
+/** A Wikidata answer whose item is still this room by the current check ("Label: description; maximum capacity …"). */
+function trustedWikidata(c: { source: string; quote: string }, venue: string): boolean {
+  if (!c.source.includes("wikidata.org")) return false;
+  const [label, ...rest] = (c.quote.split("; maximum capacity")[0] ?? "").split(": ");
+  return sameVenue(venue, label ?? "", rest.join(": "));
+}
+
 export async function resizeTour(rec: TourRecord): Promise<{ rec: TourRecord; changed: string[] }> {
   const usage: Usage = newUsage();
   return withUsage(usage, async () => {
@@ -39,11 +47,19 @@ export async function resizeTour(rec: TourRecord): Promise<{ rec: TourRecord; ch
           if (measured.has(r)) return;
           measured.add(r);
           const cap = await roomCapacity(r, s.label).catch(() => null);
+          const before = stored.get(r);
           if (cap) r.capacity = cap;
+          else if (before && trustedWikidata(before, r.name)) r.capacity = before;
           else delete r.capacity;
         };
         const measured = new Set<Room>();
-        for (const r of s.rooms) if (!measured.has(r)) delete r.capacity;
+        // A stored Wikidata number that still checks out survives a failed lookup (Wikidata rate-limits shared
+        // serverless addresses); any other stored number is only kept if the index backs it.
+        const stored = new Map(s.rooms.filter((r) => r.capacity).map((r) => [r, r.capacity!] as const));
+        for (const r of s.rooms) {
+          if (r.capacity && trustedWikidata(r.capacity, r.name)) continue;
+          delete r.capacity;
+        }
         const current = pool.find((r) => r.id === s.roomId);
         if (current) await measure(current);
         if (draw && !(current && fit(current, draw) === "fits")) {
@@ -64,7 +80,7 @@ export async function resizeTour(rec: TourRecord): Promise<{ rec: TourRecord; ch
           changed.push(s.city);
         }
         if ((s.nights ?? 1) !== nights) {
-          if (room.id === was?.id) log.push({ at: at(), kind: "rule", text: `Re-sized under the Oct 15 room rules: ${room.name} holds ${room.capacity!.value.toLocaleString("en-US")}, under the usual crowd of about ${draw!.toLocaleString("en-US")}, and nothing in ${s.city} was confirmed to fit, so it's two nights.`, result: `${(room.capacity!.value * 2).toLocaleString("en-US")} across both nights` });
+          if (room.id === was?.id && nights === 2 && room.capacity) log.push({ at: at(), kind: "rule", text: `Re-sized under the Oct 15 room rules: ${room.name} holds ${room.capacity!.value.toLocaleString("en-US")}, under the usual crowd of about ${draw!.toLocaleString("en-US")}, and nothing in ${s.city} was confirmed to fit, so it's two nights.`, result: `${(room.capacity!.value * 2).toLocaleString("en-US")} across both nights` });
           if (nights > 1) s.nights = nights;
           else delete s.nights;
           if (!changed.includes(s.city)) changed.push(s.city);

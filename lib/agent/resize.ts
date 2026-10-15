@@ -33,11 +33,17 @@ export async function resizeTour(rec: TourRecord): Promise<{ rec: TourRecord; ch
         const ok = (r: Room) => roomNameOk(r.name, draw) && !orchestraHallFor(r.name, genres);
         const pool = s.rooms.filter(ok);
         if (!pool.length) return;
+        // Every room is measured again from the shared index (one number per room, from the current reader), and
+        // a stored number the index no longer backs is dropped.
         const measure = async (r: Room) => {
-          if (r.capacity) return;
+          if (measured.has(r)) return;
+          measured.add(r);
           const cap = await roomCapacity(r, s.label).catch(() => null);
           if (cap) r.capacity = cap;
+          else delete r.capacity;
         };
+        const measured = new Set<Room>();
+        for (const r of s.rooms) if (!measured.has(r)) delete r.capacity;
         const current = pool.find((r) => r.id === s.roomId);
         if (current) await measure(current);
         if (draw && !(current && fit(current, draw) === "fits")) {

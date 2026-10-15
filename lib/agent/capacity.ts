@@ -11,7 +11,7 @@ const PATTERNS = [
   new RegExp(String.raw`\b(?:holds|accommodates|fits|seats)\s+(?:about|around|approximately|up\s+to|nearly|over)?\s*${N}\s+(?:people|guests|fans|patrons|standing)`, "gi"),
 ];
 
-export type CapacityHit = { value: number; quote: string };
+export type CapacityHit = { value: number; quote: string; at?: number };
 
 type Stored = { value: number; source: string; quote: string } | null;
 
@@ -52,13 +52,13 @@ export function capacitiesIn(text: string): CapacityHit[] {
       // "a smaller stage (capacity 250)", "Min capacity: 200": not the main room's number. Only the same sentence
       // counts, so "Upstairs: 200. Main room: 900" keeps the 900.
       const before = text.slice(Math.max(0, (m.index ?? 0) - 50), m.index ?? 0).toLowerCase().split(/[.;\n]/).pop() ?? "";
-      if (/smaller|second stage|side room|annex|lounge|downstairs|upstairs|patio|rooftop|\bmin(?:imum)?\b\.?\s*$/.test(before)) continue;
+      if (/smaller|second stage|side room|annex|lounge|downstairs|upstairs|patio|rooftop|studio|recital|occasionally|\bmin(?:imum)?\b\.?\s*$/.test(before)) continue;
       // "It will seat 2,700, with a full capacity of 4,400": a building that doesn't exist yet isn't the room.
       const sentence = text.slice(Math.max(0, (m.index ?? 0) - 120), m.index ?? 0).toLowerCase().split(/[.;\n]/).pop() ?? "";
       if (/\b(will|would|proposed|planned|plans?|future|under construction|to be built|expansion)\b/.test(sentence)) continue;
       const start = Math.max(0, (m.index ?? 0) - 60);
       const end = Math.min(text.length, (m.index ?? 0) + m[0].length + 40);
-      hits.push({ value, quote: text.slice(start, end).replace(/\s+/g, " ").trim() });
+      hits.push({ value, quote: text.slice(start, end).replace(/\s+/g, " ").trim(), at: m.index ?? 0 });
     }
   }
   return hits;
@@ -71,20 +71,26 @@ export function capacitiesIn(text: string): CapacityHit[] {
 /** Social posts and forums say what someone heard, not what the room holds. */
 export const NOT_A_SOURCE = /^(https?:\/\/)?([a-z0-9-]+\.)*(facebook|twitter|x|instagram|reddit|tiktok|threads|pinterest|linkedin|youtube|quora|medium)\.com\b/i;
 
-export function pickCapacity(venue: string, pages: { url: string; text: string }[]): { value: number; source: string; quote: string } | null {
-  const words = venue
-    .toLowerCase()
-    .replace(/[^a-z0-9 ]/g, " ")
-    .split(/\s+/)
+export function pickCapacity(venue: string, pages: { url: string; text: string }[], city?: string): { value: number; source: string; quote: string } | null {
+  const fold = (s: string) => ` ${s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()} `;
+  const distinct = fold(venue)
+    .trim()
+    .split(" ")
     .filter((w) => w.length > 2 && !["the", "and", "club", "hall", "theatre", "theater", "room", "bar", "music", "venue"].includes(w));
-  // A name with no distinctive word ("9:30 Club") must appear whole, or any page would do.
-  const whole = venue.toLowerCase().trim();
+  // Whole words only ("The Ark" is not in "Docklands"); a name with no distinctive word ("9:30 Club") must appear whole.
+  const names = (text: string) => (distinct.length ? distinct.every((w) => text.includes(` ${w} `)) : text.includes(fold(venue)));
+  const town = city ? fold(city.split(",")[0]!) : null;
   const tally = new Map<number, { n: number; source: string; quote: string }>();
   for (const p of pages) {
     if (NOT_A_SOURCE.test(p.url) || /planned|proposed|new-venue|will-open/i.test(p.url)) continue;
-    const lower = p.text.toLowerCase();
-    if (words.length ? !words.every((w) => lower.includes(w)) : !lower.includes(whole)) continue;
+    const page = fold(p.text);
+    if (!names(page)) continue;
+    // Komedia Bath is not Komedia Bristol: the page or its address must name the city.
+    if (town && !page.includes(town) && !fold(p.url).includes(town)) continue;
     for (const h of capacitiesIn(p.text)) {
+      // On a page listing many venues the number must sit next to this one's name (within 250 characters).
+      const near = fold(p.text.slice(Math.max(0, (h.at ?? 0) - 250), (h.at ?? 0) + 120));
+      if (!names(near)) continue;
       const cur = tally.get(h.value);
       if (cur) cur.n++;
       else tally.set(h.value, { n: 1, source: p.url, quote: h.quote });

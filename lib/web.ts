@@ -38,10 +38,15 @@ type Cap = { value: number; source: string; quote: string };
  * One number per room, everywhere: every answer, found or not, is remembered under the room's Qloo id, in memory
  * and in one private index in storage that every instance re-reads every couple of minutes. The first answer
  * stored for a room wins, so two tours never show the same room with two capacities (Wonder Ballroom once read
- * 778 on one tour and 3,000 on another). Older answers stored by name and city are still read.
+ * 778 on one tour and 3,000 on another). The index was started again on Oct 15 when the page reader got
+ * stricter; of the older index (answers stored by name and city) only Wikidata answers re-checked against the
+ * room are still read.
  */
 const memo = new Map<string, Cap | null>();
-const INDEX = "capacity/index.json";
+const INDEX = "capacity/rooms-v2.json";
+const LEGACY_INDEX = "capacity/index.json";
+const legacy = new Map<string, Cap>();
+let legacyLoaded: Promise<void> | null = null;
 const RELOAD_MS = 120_000;
 let loaded: Promise<void> | null = null;
 let loadedAt = 0;
@@ -63,6 +68,11 @@ function stillTrusted(c: Cap, venue: string): boolean {
 
 function load(): Promise<void> {
   if (!useBlob()) return Promise.resolve();
+  legacyLoaded ??= (async () => {
+    const r = await storage()!.read(LEGACY_INDEX).catch(() => null);
+    if (!r) return;
+    for (const [k, v] of Object.entries(JSON.parse(r.text) as Record<string, Cap | null>)) if (v && v.source.includes("wikidata.org")) legacy.set(k, v);
+  })().catch(() => {});
   if (loaded && Date.now() - loadedAt < RELOAD_MS) return loaded;
   loadedAt = Date.now();
   loaded = (async () => {
@@ -73,7 +83,7 @@ function load(): Promise<void> {
     // been a lookup that failed, and the room is asked again.
     for (const [k, v] of Object.entries(j)) if (v && !distrusted(v)) memo.set(k, v);
   })().catch(() => {});
-  return loaded;
+  return Promise.all([loaded, legacyLoaded]).then(() => {});
 }
 
 function scheduleFlush() {
@@ -100,13 +110,14 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
   const venue = room.name;
   const near = room.lat !== undefined && room.lon !== undefined ? { lat: room.lat, lon: room.lon } : undefined;
   const key = `id:${room.id}`;
-  const legacy = `${venue}|${city.split(",")[0]!.trim()}`.toLowerCase();
+  const old = `${venue}|${city.split(",")[0]!.trim()}`.toLowerCase();
   await load();
   if (memo.has(key)) return memo.get(key)!;
-  if (memo.get(legacy) && stillTrusted(memo.get(legacy)!, venue)) {
-    memo.set(key, memo.get(legacy)!);
+  const kept = legacy.get(old);
+  if (kept && stillTrusted(kept, venue)) {
+    memo.set(key, kept);
     scheduleFlush();
-    return memo.get(key)!;
+    return kept;
   }
   // Wikidata knows most theatres, ballrooms, amphitheatres and arenas, exactly and for free.
   const wiki = await wikidataCapacity(venue, city, near);
@@ -133,7 +144,7 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
   }
   const j = (await r.json()) as { results?: { url: string; title: string; content: string }[] };
   const pages = (j.results ?? []).map((x) => ({ url: x.url, text: `${x.title}\n${x.content}` }));
-  const cap = pickCapacity(venue, pages);
+  const cap = pickCapacity(venue, pages, city);
   // "Not found" is remembered in this instance only when both sources really answered.
   if (cap || wiki === null) memo.set(key, cap);
   if (cap) scheduleFlush();

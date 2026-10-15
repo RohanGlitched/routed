@@ -144,6 +144,21 @@ test("a Wikidata item counts only when it is the room, not a room inside it", ()
   assert.equal(sameVenue("Wonder Ballroom", "Crystal Ballroom", "ballroom in Portland, Oregon"), false, "a namesake shares only the generic word");
 });
 
+test("a web page's number counts only for this room, in this city, next to its name", async () => {
+  const { pickCapacity } = await import("../lib/agent/capacity.ts");
+  // "The Ark" is not in "Docklands": whole words only.
+  assert.equal(pickCapacity("The Ark", [{ url: "https://en.wikipedia.org/wiki/Point_Theatre", text: "The Point Theatre in the Dublin Docklands had a seated capacity of 6,300." }], "Dublin"), null);
+  // Komedia Bath is not Komedia Bristol.
+  assert.equal(pickCapacity("Komedia", [{ url: "https://musiciansunion.org.uk/venue/komedia-bath", text: "Komedia in Bath has a capacity of 2,124 in the main auditorium." }], "Bristol, UK"), null);
+  // A listing page: the 4,500 belongs to another venue far from this name.
+  const listing = `Theatre Royal Brighton is a Grade II listed theatre.${" Lorem ipsum dolor sit amet.".repeat(12)} The Brighton Centre has a capacity of 4,500 seated.`;
+  assert.equal(pickCapacity("Theatre Royal Brighton", [{ url: "https://theatreinbrighton.co.uk/venues", text: listing }], "Brighton, UK"), null);
+  // A recital room on the same page isn't the hall.
+  assert.equal(pickCapacity("National Concert Hall", [{ url: "https://x.example/nch-dublin", text: "At the National Concert Hall in Dublin, the recital room, occasionally used for performances, has a capacity of 100." }], "Dublin"), null);
+  // The right number still comes through.
+  assert.equal(pickCapacity("O2 Academy Bristol", [{ url: "https://news.pollstar.com/o2-academy-bristol", text: "The acoustic transformation at the 1,600-capacity O2 Academy Bristol is the latest." }], "Bristol, UK")?.value, 1600);
+});
+
 test("venue names are cleaned for the poster", () => {
   assert.equal(cleanName("Think Tank?"), "Think Tank");
   assert.equal(cleanName("  The  Fillmore "), "The Fillmore");

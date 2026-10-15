@@ -67,7 +67,7 @@ export default async function Home() {
         <div className={s.pitch}>
           <h1 className={s.h1}>Tour where the fans are dense, not where the cities are big.</h1>
           <p className={s.lede}>
-            Name an artist. An agent reads Qloo&apos;s taste graph for the cities where their fans are unusually dense, the rooms those fans go to and the openers they share, then routes the dates,
+            Name an artist. An agent reads Qloo&apos;s taste graph for the cities where their fans are unusually dense and the rooms those fans go to, picks one support act whose audience overlaps for the whole run, then routes the dates,
             sizes every room to the crowd and drafts a checked pitch for each venue.
           </p>
           <Suspense fallback={<RouteForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />}>
@@ -126,9 +126,9 @@ export default async function Home() {
               </div>
             </li>
             <li className={s.step}>
-              <h3>Pick the rooms and openers</h3>
+              <h3>Pick the rooms and the support act</h3>
               <p>
-                For each city the agent asks Qloo which music venues these fans already go to, and which smaller artists share the audience. In {stop.city}:
+                For each city the agent asks Qloo which music venues these fans already go to, and which smaller artists share the audience; one of them supports every date. In {stop.city}:
               </p>
               <ul className={s.bars}>
                 {stop.rooms.slice(0, 3).map((r) => (
@@ -139,7 +139,7 @@ export default async function Home() {
                   </li>
                 ))}
               </ul>
-              {opener(stop) && <p className={s.small}>Support: {opener(stop)!.name}</p>}
+              {opener(stop) && <p className={s.small}>Support on every date: {opener(stop)!.name}</p>}
             </li>
             <li className={s.step}>
               <h3>Route and date it by rule</h3>

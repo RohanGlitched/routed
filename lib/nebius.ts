@@ -11,7 +11,7 @@ const BASE = process.env.NEBIUS_BASE_URL || "https://api.tokenfactory.nebius.com
 const list = (v: string | undefined, d: string[]) => (v ? v.split(",").map((s) => s.trim()).filter(Boolean) : d);
 
 export const MODELS = {
-  /** Plans the tour: which cities to look at, which rooms and openers to pick from Qloo's candidates. */
+  /** Plans the tour: which cities to look at, which rooms and which support act to pick from Qloo's candidates. */
   agent: list(process.env.NEBIUS_AGENT_MODELS, ["nvidia/Nemotron-3-Ultra-550b-a55b", "nvidia/nemotron-3-super-120b-a12b"]),
   /** Writes the venue pitches as strict JSON; every figure in them is checked against the evidence afterwards. */
   writer: list(process.env.NEBIUS_WRITER_MODELS, ["nvidia/Nemotron-3-Ultra-550b-a55b", "nvidia/nemotron-3-super-120b-a12b"]),

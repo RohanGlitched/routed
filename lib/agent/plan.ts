@@ -17,7 +17,7 @@ import { lookUpOpeners, lookUpRooms, type Log } from "./tools";
  *     weighing fan strength against geography.
  *  2. Scout (tools): for every shortlisted city, ask Qloo for the rooms these fans go to and the openers who
  *     share the audience, and check the favoured rooms' capacity on the web when the crowd size is known.
- *  3. Book (model): pick the final cities, one room and one opener each, swapping in an alternate wherever a
+ *  3. Book (model): pick the final cities, one room each and one support act for the run, swapping in an alternate wherever a
  *     city's rooms don't fit, with a one-sentence reason that cites the evidence.
  * A free-running tool loop was tried first: Nemotron repeated lookups and ran out of turns on most tours
  * (measured Oct 7), so the moves are fixed and the choices are the model's. Rules hold it in (Playbook L1/L2):
@@ -190,7 +190,7 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
       model = book.model;
       booked = book.data.stops ?? [];
       if (process.env.ROUTED_DEBUG) console.log("[plan] book", JSON.stringify(booked).slice(0, 1200));
-      log({ kind: "model", text: `Booked ${booked.length} stops: a room and an opener in each.`, result: booked.map((s) => byId.get(s.city_id)?.name ?? s.city_id).join(", "), ms: Date.now() - t3 });
+      log({ kind: "model", text: `Booked ${booked.length} stops: a room in each, and one support act for the run.`, result: booked.map((s) => byId.get(s.city_id)?.name ?? s.city_id).join(", "), ms: Date.now() - t3 });
     } catch (e) {
       console.error("[plan] model failed, using the fixed plan", e);
       log({ kind: "model", text: "The agent model didn't answer in time, so the fixed plan takes over.", failed: true });

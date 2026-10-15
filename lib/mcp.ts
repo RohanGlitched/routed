@@ -24,7 +24,7 @@ import { newTourId, TOUR_ID, type Plan, type TourRecord } from "./types";
  * Tools return the short version as text and link the full tour book; nothing here needs an account.
  */
 
-export const SERVER_INSTRUCTIONS = `Routed routes concert tours for independent artists from Qloo's taste graph: the cities where an artist's fans over-index, the rooms those fans go to, the openers who share the audience, dated by touring rules, with a checked pitch per venue.
+export const SERVER_INSTRUCTIONS = `Routed routes concert tours for independent artists from Qloo's taste graph: the cities where an artist's fans over-index, the rooms those fans go to, one support act for the whole run who shares the audience, dated by touring rules, with a checked pitch per venue.
 Use fan_map for "where are this artist's fans", fan_profile for "who are the fans / what else do they like / who to pitch", and route_tour to plan a whole tour (it takes about a minute and returns a link to the full tour book with the poster). get_tour reads back a tour book by its link or id.
 Qloo affinity says where fans over-index, not ticket sales; say so if asked for sales forecasts.`;
 
@@ -140,7 +140,7 @@ function register(server: McpServer) {
     "route_tour",
     {
       title: "Route a tour",
-      description: "Plans a whole tour: Qloo finds the fan cities, rooms and openers, an agent picks them, rules route and date it, and each room gets a checked pitch. Takes about a minute. Returns the dates, rooms and openers and a link to the full tour book.",
+      description: "Plans a whole tour: Qloo finds the fan cities, rooms and possible support acts, an agent picks the cities, a room in each and one support act for the run, rules route and date it, and each room gets a checked pitch. Takes about a minute. Returns the dates, rooms, the support act and a link to the full tour book.",
       inputSchema: z.object({
         artist: z.string().min(1).max(80),
         from: z.string().min(2).max(80).describe("Starting city, e.g. 'Portland, OR', 'Leeds, UK', 'Berlin'"),
@@ -186,7 +186,7 @@ function register(server: McpServer) {
     "get_tour",
     {
       title: "Read a tour book",
-      description: "Reads back a Routed tour book by its link or id: dates, rooms, openers, the comparison with the model alone, and the link.",
+      description: "Reads back a Routed tour book by its link or id: dates, rooms, the support act, the comparison with the model alone, and the link.",
       inputSchema: z.object({ tour: z.string().min(10).max(200).describe("The tour book link or its 10-character id") }),
       annotations: { readOnlyHint: true, openWorldHint: false },
     },

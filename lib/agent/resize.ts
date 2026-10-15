@@ -6,7 +6,7 @@ import { newUsage, withUsage } from "../usage";
 import { roomCapacity } from "../web";
 import type { LogLine, Room, TourRecord, Usage } from "../types";
 import { sameVenue } from "./capacity";
-import { checkNumbers, evidenceLines, fit } from "./evidence";
+import { checkWhy, fit, ruleWhy } from "./evidence";
 import { writePitches } from "./pitch";
 import { candidatesBySize, chooseRoom, orchestraHallFor, reducedHouse, roomNameOk, twoNights } from "./rooms";
 
@@ -76,7 +76,7 @@ export async function resizeTour(rec: TourRecord): Promise<{ rec: TourRecord; ch
           const why = !was ? "wasn't a room" : !ok(was) ? "isn't the kind of room for this act and crowd" : was.capacity ? `holds ${was.capacity.value.toLocaleString("en-US")}, ${fit(was, draw)} for a crowd of about ${draw?.toLocaleString("en-US")}` : "couldn't be confirmed for the crowd";
           log.push({ at: at(), kind: "rule", text: `Re-sized under the Oct 15 room rules: ${was?.name ?? "the room"} ${why}, so ${s.city} gets ${room.name}.`, result: room.capacity ? `${room.name} holds ${room.capacity.value.toLocaleString("en-US")}${nights === 2 ? ": two nights" : reducedHouse(room, draw) ? ", in a reduced configuration" : ""}` : `${room.name}: capacity not found, ask the room` });
           s.roomId = room.id;
-          s.why = `${s.city} is ${plan.artist.name}'s #${s.score.rank} city on Qloo${room.capacity ? `, and ${room.name} holds ${room.capacity.value.toLocaleString("en-US")}${nights === 2 ? " a night over two nights" : ""}` : `, and ${room.name} matches these fans at ${Math.round((room.affinity ?? 0) * 100)}`}.`;
+          s.why = ruleWhy(plan.artist.name, { ...s, nights }, room);
           changed.push(s.city);
         }
         if ((s.nights ?? 1) !== nights) {
@@ -105,7 +105,7 @@ export async function resizeTour(rec: TourRecord): Promise<{ rec: TourRecord; ch
         s.dayOff = l.dayOff;
       });
       plan.lastDate = addDays(legs.at(-1)!.date, legs.at(-1)!.nights - 1);
-      for (const s of plan.stops) if (s.why) s.why = checkNumbers(s.why, evidenceLines(plan, s, draw)).text;
+      for (const s of plan.stops) if (s.why) s.why = checkWhy(plan, s, draw);
 
       // Score any newly booked room in one Qloo call, so both tours' rooms stay on one scale.
       const g = plan.guess;

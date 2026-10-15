@@ -6,7 +6,7 @@ import { describeRequest, search, wherePopular, type Entity } from "../qloo";
 import type { Artist, CityScore, Engine, LogLine, Plan, Stop, TourInput } from "../types";
 import { buildDossier } from "./dossier";
 import { HEAT_AREAS, scoreCities, strength, type HeatTile } from "./cities";
-import { checkNumbers, evidenceLines, room } from "./evidence";
+import { checkWhy, room } from "./evidence";
 import { writePitches } from "./pitch";
 import { askWithoutQloo, scoreGuess } from "./guess";
 import { planTour } from "./plan";
@@ -19,7 +19,7 @@ import { addDays } from "../geo/route";
 /**
  * One routing run, as a stream of events the page renders as they arrive:
  * find the artist → where their fans over-index (heatmap) + who they are (demographics, taste, trend) →
- * the agent picks cities, rooms and openers → rules route and date it → capacities from the web → pitches.
+ * the agent picks cities, rooms and one support act → rules route and date it → capacities from the web → pitches.
  */
 export type Event = { t: "log"; line: LogLine } | { t: "plan"; plan: Partial<Plan> } | { t: "done"; at: string; engine: Engine } | { t: "error"; message: string };
 
@@ -186,7 +186,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
         ch.push({ t: "plan", plan });
       }),
     );
-    for (const s of stops) if (s.why) s.why = checkNumbers(s.why, evidenceLines(plan, s, input.draw)).text;
+    for (const s of stops) if (s.why) s.why = checkWhy(plan, s, input.draw);
     ch.push({ t: "plan", plan });
 
     const raw = await guessP;

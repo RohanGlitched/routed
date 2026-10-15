@@ -2,6 +2,7 @@
 
 <p align="center">
   <a href="https://routed-tours.vercel.app"><img alt="Live demo" src="https://img.shields.io/badge/live-routed--tours.vercel.app-ff3b7a?style=flat-square"></a>
+  <a href="https://youtu.be/UpdV5WY_UaM"><img alt="Demo video" src="https://img.shields.io/badge/demo-video-ff3b7a?style=flat-square"></a>
   <img alt="Qloo Insights API" src="https://img.shields.io/badge/Qloo-taste%20graph-1747d6?style=flat-square">
   <img alt="NVIDIA Nemotron 3 Ultra" src="https://img.shields.io/badge/agent-Nemotron%203%20Ultra-16151b?style=flat-square">
   <img alt="Next.js 15" src="https://img.shields.io/badge/Next.js-15-16151b?style=flat-square">
@@ -163,7 +164,7 @@ flowchart LR
 
 - **The agent (NVIDIA Nemotron 3 Ultra on Nebius Token Factory)** works in three moves: it shortlists cities from the ranked heatmap with a few alternates, Routed scouts each one through Qloo, and the model books a room per city and one support act for the run. Every call returns strict JSON with reasoning off.
 - **Rules decide what must be exact** (above). When a rule changes the room the model chose, the model's sentence about the stop is replaced by a rule's, so a wrong name never stays on the page.
-- **Pitches are checked**: Nemotron writes each hold request from that stop's evidence lines only; every number in it must appear in the evidence or it is struck through on the page.
+- **Pitches are checked**: Nemotron writes each hold request from that stop's evidence lines only; every number in it must appear in the evidence (a two-night stand names both dates) or it is struck through on the page. A stop's one-line reason is checked against what the booking agent was shown for that city.
 - **City strength** is a tile's Qloo affinity times its popularity, both from one heatmap call per region. Affinity and popularity are percentiles within the response they came in (measured: both run evenly from 0 to 1 in every response), so two countries asked separately would each have a "1.0" tile; one polygon, one scale.
 - **The artist someone typed wins** over Qloo's first guess ("Wednesday" is not "Wednesday Campanella"), and the other matches are offered on the tour book.
 - **Fallbacks**: with no model key, a spent daily budget or a model error, the same steps run as a fixed plan with template pitches, and the tour book says which ran. A run survives a closed tab; the record is saved as it goes.
@@ -175,7 +176,7 @@ git clone https://github.com/RohanGlitched/routed && cd routed
 npm install
 cp .env.example .env.local   # then fill in the keys
 npm run dev                  # http://localhost:3000
-npm test                     # 49 unit tests: every booking rule, scoring, capacity parsing, evidence checks, the outside check, the city map, the calendar file
+npm test                     # 55 unit tests: every booking rule, scoring, capacity parsing, evidence checks (both nights of a two-night stand), the outside check, the city map, the calendar file
 ```
 
 | Variable | Needed for |

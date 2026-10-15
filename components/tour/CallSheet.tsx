@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { readLine } from "@/lib/log";
 import type { LogLine } from "@/lib/types";
 import s from "./tour.module.css";
 
@@ -20,7 +21,7 @@ export function CallSheet({ log, running, full = false }: { log: LogLine[]; runn
 
   return (
     <ol className={`${s.sheet} ${full ? s.sheetFull : ""}`} aria-live={running ? "polite" : undefined} aria-label="Agent call sheet">
-      {log.map((l, i) => (
+      {log.map(readLine).map((l, i) => (
         <li key={i} className={`${s.call} ${s[l.kind]} ${l.failed ? s.callFailed : ""}`}>
           <span className={s.kind}>{KIND[l.kind]}</span>
           <div className={s.callBody}>

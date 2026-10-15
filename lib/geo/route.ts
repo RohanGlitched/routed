@@ -250,7 +250,9 @@ export async function repairLegs<T extends Candidate>(opts: {
         if (b.n < now.n || (b.n === now.n && b.worst < now.worst - 1)) options.push({ end, c, ...b });
       }
     }
-    options.sort((a, b) => a.n - b.n || a.c.rank - b.c.rank || a.worst - b.worst);
+    // Fewest long legs first; then the swap that gives up the least fan strength (never trade the artist's #1 for
+    // #8 when swapping the other end costs less); then the shorter worst leg.
+    options.sort((a, b) => a.n - b.n || a.c.rank - a.end.rank - (b.c.rank - b.end.rank) || a.worst - b.worst);
     let done = false;
     for (const o of options.slice(0, maxTries)) {
       if (!(await usable(o.c))) continue;

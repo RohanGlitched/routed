@@ -51,6 +51,17 @@ test("the leg rule only books a city that has rooms, and flags what it can't fix
   assert.ok(longLegs(from, orderStops(from, stuck.stops))[0]!.km > MAX_LEG_KM);
 });
 
+test("breaking a long leg never trades the artist's #1 city when the other end costs less", async () => {
+  // One group (Portland to Denver is under 1,800 km), but the route jumps from Asheville to Denver.
+  const from = city("Asheville", 0);
+  const stops = [city("Asheville", 1), city("Nashville", 2), city("Denver", 12), city("Portland, OR", 13)];
+  const pool = [...stops, city("Knoxville", 8), city("Memphis", 14), city("St. Louis", 15), city("Kansas City", 16)].sort((a, b) => a.rank - b.rank);
+  const { stops: fixed } = await repairLegs({ from, stops, pool, usable: yes, weight: (c) => 1 / Math.sqrt(c.rank), maxSwaps: 4 });
+  const names = fixed.map((s) => s.name);
+  assert.ok(names.includes("Asheville"), names.join(", "));
+  assert.deepEqual(longLegs(from, orderStops(from, fixed)), [], names.join(", "));
+});
+
 test("the shortest drive is found (Nashville, Asheville, Lexington, Memphis beats doubling back)", () => {
   const from = city("Nashville", 0);
   const stops = [city("Nashville", 2), city("Lexington", 9), city("Asheville", 1), city("Memphis", 18)];

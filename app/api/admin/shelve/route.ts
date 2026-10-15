@@ -5,14 +5,14 @@ import { TOUR_ID } from "@/lib/types";
 
 export const runtime = "nodejs";
 
-/** Puts a finished tour on the poster wall or the benchmark. Needs ADMIN_TOKEN; without it the route doesn't exist. */
+/** Puts a finished tour on the poster wall or the benchmark ({off: true} takes it off). Needs ADMIN_TOKEN; without it the route doesn't exist. */
 export async function POST(req: Request) {
   const token = process.env.ADMIN_TOKEN;
   const given = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
   if (!token || given.length !== token.length || !timingSafeEqual(Buffer.from(given), Buffer.from(token))) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  const body = (await req.json().catch(() => null)) as { id?: string; shelf?: string } | null;
+  const body = (await req.json().catch(() => null)) as { id?: string; shelf?: string; off?: boolean } | null;
   const shelf = body?.shelf as Shelf;
   if (!body?.id || !TOUR_ID.test(body.id) || (shelf !== "showcase" && shelf !== "bench")) return NextResponse.json({ error: "Send {id, shelf: showcase|bench}." }, { status: 400 });
-  await shelve(body.id, shelf);
+  await shelve(body.id, shelf, !body.off);
   return NextResponse.json({ ok: true });
 }

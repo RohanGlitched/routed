@@ -80,8 +80,9 @@ export async function shelfTours(shelf: Shelf): Promise<TourRecord[]> {
 
 export const showcaseTours = () => shelfTours("showcase");
 
-/** Puts a tour on a shelf (an empty marker blob, so listing stays cheap). */
-export async function shelve(id: string, shelf: Shelf): Promise<void> {
-  await updateTour(id, (r) => ({ ...r, [shelf]: true }));
-  if (useBlob()) await storage()!.write(`${shelf}/${id}.json`, "{}");
+/** Puts a tour on a shelf (an empty marker blob, so listing stays cheap), or takes it off: the record's flag decides,
+ *  so a marker left behind lists nothing. */
+export async function shelve(id: string, shelf: Shelf, on = true): Promise<void> {
+  await updateTour(id, (r) => ({ ...r, [shelf]: on }));
+  if (on && useBlob()) await storage()!.write(`${shelf}/${id}.json`, "{}");
 }

@@ -27,7 +27,8 @@ export const ARTISTS = [
   { artist: "Durand Jones & The Indications", from: "Indianapolis, IN", draw: 1200 },
   { artist: "Ghost", from: "Stockholm, Sweden", draw: 8000 },
 ];
-const date = new Date(Date.now() + 150 * 86_400_000).toISOString().slice(0, 10);
+// A fixed first date, so a re-run routes the same calendar (a Thursday in May: no SXSW, no Coachella weekend).
+const date = process.env.BENCH_DATE ?? "2027-05-06";
 
 for (const a of ARTISTS.slice(SKIP, SKIP + LIMIT)) {
   const t0 = Date.now();
@@ -66,7 +67,7 @@ for (const a of ARTISTS.slice(SKIP, SKIP + LIMIT)) {
   if (rec?.status === "done" && !done) done = { engine: rec.engine };
   if (rec?.status === "failed") fail = rec.error;
   const g = rec?.plan?.guess;
-  console.log(`${a.artist.padEnd(20)} ${id} ${done ? done.engine.planned : "FAILED " + fail} ${Math.round((Date.now() - t0) / 1000)}s  rank routed ${g?.rankMean?.routed?.toFixed(1)} guess ${g?.rankMean?.guess?.toFixed(1)} shared ${g?.shared}`);
+  console.log(`${a.artist.padEnd(20)} ${id} ${done ? done.engine.planned : "FAILED " + fail} ${Math.round((Date.now() - t0) / 1000)}s  rank routed ${g?.rankMean?.routed?.toFixed(1)} guess ${g?.rankMean?.guess?.toFixed(1)} shared ${g?.shared} qloo ${rec?.engine?.usage?.qloo ?? "?"} tokens ${rec?.engine?.usage ? rec.engine.usage.tokensIn + rec.engine.usage.tokensOut : "?"}`);
   if (done && g && process.env.ADMIN_TOKEN) {
     await fetch(`${BASE}/api/admin/shelve`, { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${process.env.ADMIN_TOKEN}` }, body: JSON.stringify({ id, shelf: "bench" }) });
   }

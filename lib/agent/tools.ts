@@ -1,7 +1,7 @@
 import "server-only";
 import { marketById, type Market } from "../geo/markets";
 import { CHAINS } from "../chains";
-import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isRoom, nearCity, openerProblem, placeTagIds, venueTier } from "./rooms";
+import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isRoom, nearCity, openerProblem, orchestraHallFor, placeTagIds, venueTier } from "./rooms";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
 import { describeRequest, recommend, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
@@ -63,14 +63,15 @@ export async function lookUpRooms(artist: Artist, marketId: string, log: Log, dr
   const tier = venueTier(draw);
   try {
     const [r, ms] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), near: cityArea(m), tags: tier.tags, take: 25 }));
-    const rooms = r.entities.filter((e) => nearCity(e, m) && isRoom(e, draw)).map(toRoom).slice(0, 14);
+    const genres = artist.genreKeys ?? artist.genres;
+    const rooms = r.entities.filter((e) => nearCity(e, m) && isRoom(e, draw) && !orchestraHallFor(e.name, genres)).map(toRoom).slice(0, 14);
     log({ kind: "qloo", text: `Which ${tier.name} in ${m.name} do ${artist.name} fans go to?`, result: rooms.length ? rooms.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "No rooms of that size came back.", request: describeRequest(r.request), ms });
     // Qloo tags a 200-cap club "concert hall" too, so for a crowd of 3,000 to 9,000 the big rooms are asked for on
     // their own (arenas and amphitheatres) and put first in line to be measured.
     if (draw && draw >= BIG_ROOM_DRAW && !tier.tags.every((t) => BIG_ROOM_TAGS.includes(t))) {
       try {
         const [b, ms2] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), near: cityArea(m), tags: BIG_ROOM_TAGS, take: 15 }));
-        const big = b.entities.filter((e) => nearCity(e, m) && isRoom(e, draw) && !rooms.some((x) => x.id === e.id)).map(toRoom).slice(0, 6);
+        const big = b.entities.filter((e) => nearCity(e, m) && isRoom(e, draw) && !orchestraHallFor(e.name, genres) && !rooms.some((x) => x.id === e.id)).map(toRoom).slice(0, 6);
         log({ kind: "qloo", text: `Which arenas and amphitheatres in ${m.name} do ${artist.name} fans go to?`, result: big.length ? big.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "None came back.", request: describeRequest(b.request), ms: ms2 });
         return [...rooms, ...big];
       } catch {

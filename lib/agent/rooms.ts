@@ -25,6 +25,18 @@ export const BIG_ROOM_DRAW = 3000;
 export const BIG_ROOM_TAGS = ["urn:tag:genre:place:arena", "urn:tag:genre:place:amphitheater"];
 /** A café, bar, pub or club by name is not the room for a crowd of 3,000 (Olympic Café came back for 8,000). */
 const SMALL_NAME = /\b(caf[eé]|bar|pub|tavern|lounge|club|jazz|kneipe|bistro|brasserie|taproom|saloon)(?![a-z])/i;
+/** An orchestra's own hall: booked for orchestras, not for a rock, pop or hip-hop tour. */
+const ORCHESTRA_HALL = /\b(symphony|philharmoni[ce]|orchestra hall|walt disney concert hall|benaroya hall|meyerhoff|davies symphony|severance hall|carnegie hall|heinz hall|boettcher|kimmel center|segerstrom concert hall|roy thomson hall|jack singer|royal festival hall|elbphilharmonie|concertgebouw)\b/i;
+/** Genres whose acts do play orchestra halls. */
+const HALL_GENRES = /classical|orchestral|chamber|choral|opera|jazz|neo ?classical|ambient|contemporary classical/;
+
+/** Whether a room is an orchestra's home hall that this act wouldn't be booked into. */
+export function orchestraHallFor(name: string, genres: string[]): boolean {
+  return ORCHESTRA_HALL.test(name) && !genres.some((g) => HALL_GENRES.test(g.toLowerCase()));
+}
+
+/** A pub, bar or tavern by name is not the room for 1,000 either (O'Briens Pub came back for 2,500). */
+const BAR_NAME = /\b(caf[eé]|bar|pub|tavern|lounge|bistro|brasserie|taproom|saloon|kneipe)(?![a-z])/i;
 /** Below this draw a stadium is never the room, whatever its tags (Nissan Stadium once came back for 15,000). */
 export const STADIUM_MIN_DRAW = 30_000;
 /** A room that holds this share of the crowd or more, but less than a one-night fit, is booked for two nights. */
@@ -57,6 +69,7 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
   if (NOT_A_ROOM_NAME.test(e.name) || NOT_A_ROOM_EVER.test(e.name)) return false;
   if (draw && draw >= 700 && SMALL_ART_ROOM.test(e.name) && !/performing arts/i.test(e.name)) return false;
   if (draw && draw >= BIG_ROOM_DRAW && SMALL_NAME.test(e.name)) return false;
+  if (draw && draw >= 1000 && BAR_NAME.test(e.name)) return false;
   if (draw && draw >= 3000 && ids.some((id) => BAR_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id))) return false;
   if (!(draw && draw >= STADIUM_MIN_DRAW) && (ids.some((id) => /stadium/.test(id)) || /\b(stadium|stadion|ballpark|field)\b/i.test(e.name))) return false;
   return true;

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { candidatesBySize, cityArea, isMember, isRoom, nearCity, pickArtist, sharesName, venueTier } from "../lib/agent/rooms.ts";
+import { candidatesBySize, cityArea, isMember, isRoom, nearCity, orchestraHallFor, pickArtist, sharesName, venueTier } from "../lib/agent/rooms.ts";
 import { worstLeg } from "../lib/geo/route.ts";
 
 const place = (name: string, ids: string[], extra: Record<string, unknown> = {}) => ({ name, tags: ids.map((id) => ({ id, name: id.split(":").pop()! })), place: { lat: 36.16, lon: -86.78, ...extra } });
@@ -26,6 +26,11 @@ test("rooms are filtered by what they are and who the crowd is", () => {
   assert.equal(isRoom(place("Lensic Performing Arts Center", ["urn:tag:genre:place:performing_arts_theater"]), 1500), true);
   assert.equal(isRoom(place("Olympic Café", ["urn:tag:genre:place:concert_hall"]), 8000), false, "a café isn't the room for 8,000");
   assert.equal(isRoom(place("Olympic Café", ["urn:tag:genre:place:concert_hall"]), 300), true, "it can be for 300");
+  assert.equal(isRoom(place("O'Briens Pub", ["urn:tag:genre:place:live_music_venue"]), 2500), false, "a pub isn't the room for 2,500");
+  assert.equal(orchestraHallFor("Walt Disney Concert Hall", ["psychedelic rock", "funk"]), true, "the LA Phil's hall isn't a Khruangbin room");
+  assert.equal(orchestraHallFor("Walt Disney Concert Hall", ["contemporary classical"]), false);
+  assert.equal(orchestraHallFor("Moore Theatre", ["indie rock"]), false);
+  assert.equal(isRoom(place("9:30 Club", ["urn:tag:genre:place:live_music_venue"]), 1200), true, "a club can be, below 3,000");
   assert.equal(isRoom({ ...club, place: { ...club.place, isClosed: true } }), false);
 });
 

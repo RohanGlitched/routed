@@ -36,7 +36,7 @@ export function orchestraHallFor(name: string, genres: string[]): boolean {
 }
 
 /** A pub, bar or tavern by name is not the room for 1,000 either (O'Briens Pub came back for 2,500). */
-const BAR_NAME = /\b(caf[eé]|bar|pub|tavern|lounge|bistro|brasserie|taproom|saloon|kneipe)(?![a-z])/i;
+const BAR_NAME = /\b(caf[eé]|bar|pub|tavern|lounge|bistro|brasserie|taproom|saloon|kneipe|food carts?|craft beer|beer garden|biergarten|backyard)(?![a-z])/i;
 /** Below this draw a stadium is never the room, whatever its tags (Nissan Stadium once came back for 15,000). */
 export const STADIUM_MIN_DRAW = 30_000;
 /** A room that holds this share of the crowd or more, but less than a one-night fit, is booked for two nights. */

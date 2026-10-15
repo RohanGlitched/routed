@@ -92,10 +92,17 @@ function scheduleFlush() {
   if (!useBlob()) return;
   dirty = true;
   if (flushing) return;
-  flushing = setTimeout(async () => {
+  flushing = setTimeout(() => {
     flushing = null;
     if (!dirty) return;
     dirty = false;
+    void flushNow();
+  }, 4000);
+}
+
+async function flushNow(): Promise<void> {
+  if (!useBlob()) return;
+  {
     // Merge with what other instances wrote since this one loaded.
     const r = await storage()!.read(INDEX).catch(() => null);
     const theirs = r ? (JSON.parse(r.text) as Record<string, Cap | null>) : {};
@@ -104,7 +111,26 @@ function scheduleFlush() {
     for (const [k, v] of Object.entries(all)) if (v) memo.set(k, v);
     const found = Object.fromEntries(Object.entries(all).filter(([, v]) => v));
     await storage()!.write(INDEX, JSON.stringify(found)).catch((e) => console.error("[capacity] cache write failed", e));
-  }, 4000);
+  }
+}
+
+/**
+ * Adds answers measured elsewhere (the same reader, run from an address Wikidata doesn't throttle) to the shared
+ * index, for rooms it has no number for yet; a room that already has one keeps it. Returns how many were added.
+ */
+export async function addCapacities(entries: Record<string, Cap>): Promise<number> {
+  await load();
+  let n = 0;
+  for (const [id, c] of Object.entries(entries)) {
+    if (!(typeof c?.value === "number" && c.value >= 50 && c.value <= 120_000 && c.source.startsWith("https://") && typeof c.quote === "string")) continue;
+    if (distrusted(c)) continue;
+    const key = `id:${id}`;
+    if (memo.get(key)) continue;
+    memo.set(key, { value: Math.round(c.value), source: c.source, quote: c.quote.slice(0, 400) });
+    n++;
+  }
+  if (n) await flushNow();
+  return n;
 }
 
 /** How many a room holds: `city` is the label ("Portland, OR"), so two Portlands never share an answer. */

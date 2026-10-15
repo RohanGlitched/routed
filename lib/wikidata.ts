@@ -1,4 +1,5 @@
 import "server-only";
+import { sameVenue } from "./agent/capacity";
 import { kmBetween } from "./geo/local";
 
 /**
@@ -34,7 +35,7 @@ export async function wikidataCapacity(venue: string, city: string, near?: { lat
       const e = (await fetch(`${API}/wiki/Special:EntityData/${h.id}.json`, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(6000) }).then((r) => r.json())) as { entities?: Record<string, { claims?: Claims }> };
       const claims = e.entities?.[h.id]?.claims ?? {};
       const amount = claims.P1083?.[0]?.mainsnak?.datavalue?.value?.amount;
-      if (!amount) continue;
+      if (!amount || !sameVenue(venue, h.label, h.description)) continue;
       const value = Math.round(Number(amount));
       if (!(value >= 50 && value <= 120_000)) continue;
       const c = claims.P625?.[0]?.mainsnak?.datavalue?.value;

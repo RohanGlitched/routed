@@ -1,6 +1,6 @@
 import "server-only";
 import { findMarket, marketId, marketLabel, nearestMarket, REGIONS, type Market, type RegionId } from "../geo/markets";
-import { RADIUS_KM } from "../geo/route";
+import { radiusFor } from "../geo/route";
 import { MODELS, structured } from "../nebius";
 import { describeRequest, qlooGet, search } from "../qloo";
 import type { Artist, CityScore, Guess, GuessStop, Plan, Stop } from "../types";
@@ -30,8 +30,9 @@ const SCHEMA = {
   required: ["stops"],
 };
 
-export const CONTROL_PROMPT = `You are an experienced booking agent. Plan a headline tour for an artist using only your own knowledge of the artist, the cities and the rooms.
-Rules: exactly the number of shows asked for, one per city, no two cities within ${RADIUS_KM} km of each other, all in the region given. For each show give the city, its state, province or country, and the venue you would book for this artist's audience size.
+/** The control group's instructions; the radius is the region's, the same rule Routed's own tour is held to. */
+export const controlPrompt = (radius: number) => `You are an experienced booking agent. Plan a headline tour for an artist using only your own knowledge of the artist, the cities and the rooms.
+Rules: exactly the number of shows asked for, one per city, no two cities within ${radius} km of each other, all in the region given. For each show give the city, its state, province or country, and the venue you would book for this artist's audience size.
 Reply as JSON only.`;
 
 /** Asks the model alone for a tour. Starts as soon as the artist is known, in parallel with the real run. */
@@ -43,7 +44,7 @@ export async function askWithoutQloo(artist: Artist, from: string, region: Regio
       maxTokens: 1500,
       timeoutMs: 60_000,
       messages: [
-        { role: "system", content: CONTROL_PROMPT },
+        { role: "system", content: controlPrompt(radiusFor(region)) },
         { role: "user", content: `Artist: ${artist.name}${artist.disambiguation ? ` (${artist.disambiguation})` : ""}.\nRegion: ${REGIONS[region].name}.\nStarting from: ${from}.\nShows: ${shows}.${draw ? `\nUsual crowd: about ${draw}.` : ""}` },
       ],
     });

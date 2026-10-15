@@ -16,8 +16,16 @@ test("rooms are filtered by what they are and who the crowd is", () => {
   assert.equal(isRoom(ryman, 2000), true, "a theatre with a gift shop is still a theatre");
   assert.equal(isRoom(fair, 2000), false, "a fair is never a room");
   assert.equal(isRoom(stadium, 2000), false, "a stadium is not a room for 2,000");
-  assert.equal(isRoom(stadium, 15000), true, "a stadium is a room for 15,000");
+  assert.equal(isRoom(stadium, 15000), false, "a stadium is not a room for 15,000 either");
+  assert.equal(isRoom(stadium, 40000), true, "a stadium is a room for 40,000");
+  assert.equal(isRoom(place("Ladd-Peebles Stadium", ["urn:tag:genre:place:amphitheater"]), 15000), false, "a stadium by name, whatever its tags");
   assert.equal(isRoom(club), true);
+  assert.equal(isRoom(place("Westbeth Artists Housing", ["urn:tag:genre:place:live_music_venue"]), 300), false, "housing is never a room");
+  assert.equal(isRoom(place("Walker Art Center", ["urn:tag:genre:place:concert_hall"]), 1500), false, "an art centre isn't a room for 1,500");
+  assert.equal(isRoom(place("SPACE Gallery", ["urn:tag:genre:place:live_music_venue"]), 200), true, "a gallery can be the room for 200");
+  assert.equal(isRoom(place("Lensic Performing Arts Center", ["urn:tag:genre:place:performing_arts_theater"]), 1500), true);
+  assert.equal(isRoom(place("Olympic Café", ["urn:tag:genre:place:concert_hall"]), 8000), false, "a café isn't the room for 8,000");
+  assert.equal(isRoom(place("Olympic Café", ["urn:tag:genre:place:concert_hall"]), 300), true, "it can be for 300");
   assert.equal(isRoom({ ...club, place: { ...club.place, isClosed: true } }), false);
 });
 
@@ -25,7 +33,10 @@ test("venue tiers follow the crowd", () => {
   assert.match(venueTier(300).name, /clubs/);
   assert.match(venueTier(1500).name, /ballrooms/);
   assert.match(venueTier(5000).name, /amphitheatres/);
-  assert.match(venueTier(15000).name, /stadiums/);
+  assert.match(venueTier(15000).name, /arenas/);
+  assert.doesNotMatch(venueTier(15000).name, /stadiums/);
+  assert.ok(!venueTier(15000).tags.some((t) => t.endsWith(":stadium")));
+  assert.match(venueTier(40000).name, /stadiums/);
   assert.equal(venueTier().name, "rooms");
 });
 

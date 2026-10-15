@@ -11,8 +11,10 @@ import { writePitches } from "./pitch";
 import { askWithoutQloo, scoreGuess } from "./guess";
 import { planTour } from "./plan";
 import { lookUpLocal, lookUpShared, placeLocal } from "./local";
-import { pickArtist } from "./rooms";
+import { genresOf, pickArtist } from "./rooms";
 import { lookUpSpots } from "./tools";
+import { newUsage, withUsage } from "../usage";
+import { addDays } from "../geo/route";
 
 /**
  * One routing run, as a stream of events the page renders as they arrive:
@@ -58,18 +60,20 @@ const toArtist = (e: Entity): Artist => ({
   disambiguation: e.disambiguation,
   popularity: e.popularity,
   genres: e.tags.filter((t) => /genre/.test(t.type ?? t.id)).map((t) => t.name).slice(0, 5),
+  genreKeys: genresOf(e.tags),
 });
 
 export async function* runTour(input: TourInput, useModel: boolean): AsyncGenerator<Event> {
   const ch = channel<Event>();
-  const engine: Engine = { planned: useModel ? "model" : "fixed" };
+  const usage = newUsage();
+  const engine: Engine = { planned: useModel ? "model" : "fixed", usage };
   const log = (l: Omit<LogLine, "at">) => ch.push({ t: "log", line: { at: now(), ...l } });
   const fail = (message: string) => {
     ch.push({ t: "error", message });
     ch.close();
   };
 
-  (async () => {
+  withUsage(usage, async () => {
     // 1. Who and from where.
     const home = findMarket(input.from);
     if (!home) return fail(`Routed doesn't know “${input.from}” as a city yet. Try a nearby bigger city, like “Portland, OR” or “Manchester, UK”.`);
@@ -121,7 +125,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
 
     // 3. The agent picks cities, rooms and openers.
     const shows = Math.min(input.shows, cities.length);
-    const picked = await planTour({ artist, audience, cities, from, shows, draw: input.draw, useModel, log });
+    const picked = await planTour({ artist, audience, cities, from, region, shows, draw: input.draw, useModel, log });
     engine.planned = picked.planned;
     if (picked.model) engine.agent = modelLabel(picked.model);
 
@@ -130,7 +134,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
     const pts = picked.picks.map((p) => ({ ...p, lat: byId.get(p.marketId)!.lat, lon: byId.get(p.marketId)!.lon }));
     const legs = schedule(from, orderStops(from, pts), input.firstDate);
     const totalKm = legs.reduce((s, l) => s + l.fromKm, 0);
-    log({ kind: "rule", text: "Routed the shortest drive from the starting city and put it on the calendar.", result: `${legs.length} shows, ${legs[0]?.date} to ${legs.at(-1)?.date}, about ${totalKm.toLocaleString("en-US")} km of road` });
+    log({ kind: "rule", text: "Routed the shortest drive from the starting city and put it on the calendar.", result: `${legs.reduce((n, l) => n + l.nights, 0)} shows in ${legs.length} cities, ${legs[0]?.date} to ${legs.length ? addDays(legs.at(-1)!.date, legs.at(-1)!.nights - 1) : ""}, about ${totalKm.toLocaleString("en-US")} km of road` });
 
     const stops: Stop[] = legs.map((l) => {
       const score = byId.get(l.stop.marketId)!;
@@ -141,6 +145,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
         lat: score.lat,
         lon: score.lon,
         date: l.date,
+        ...(l.nights > 1 ? { nights: l.nights } : {}),
         fromKm: l.fromKm,
         fromHours: l.fromHours,
         travelDays: l.travelDays,
@@ -154,7 +159,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
         after: [],
       };
     });
-    const plan: Plan = { artist, region, from, firstDate: input.firstDate, lastDate: legs.at(-1)?.date ?? input.firstDate, heat, cities, stops, totalKm, audience };
+    const plan: Plan = { artist, region, from, firstDate: input.firstDate, lastDate: legs.length ? addDays(legs.at(-1)!.date, legs.at(-1)!.nights - 1) : input.firstDate, heat, cities, stops, totalKm, audience };
     ch.push({ t: "plan", plan });
 
     // 5. The advance from Qloo, per stop, in parallel: the city at street level (which neighbourhood the fans
@@ -200,7 +205,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
     ch.push({ t: "plan", plan });
     ch.push({ t: "done", at: now(), engine });
     ch.close();
-  })().catch((e) => {
+  }).catch((e) => {
     console.error("[run] failed", e);
     fail("The routing stopped partway. Run it again in a minute.");
   });

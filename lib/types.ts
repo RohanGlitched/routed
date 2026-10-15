@@ -19,6 +19,8 @@ export type Artist = {
   disambiguation?: string;
   popularity?: number;
   genres: string[];
+  /** Every genre and subgenre Qloo files the artist under, folded, for matching a support act. */
+  genreKeys?: string[];
   /** Other artists Qloo's search returned for the typed name, offered in case the match is wrong. */
   others?: { name: string; disambiguation?: string }[];
 };
@@ -65,6 +67,8 @@ export type Opener = {
   affinity?: number;
   popularity?: number;
   description?: string;
+  /** Genres Qloo files the opener under (folded), checked against the headliner's. */
+  genres?: string[];
   /** Concepts both audiences share, from Qloo's audience comparison, when it gives them. */
   shared: string[];
 };
@@ -94,6 +98,8 @@ export type Stop = {
   lat: number;
   lon: number;
   date: string;
+  /** 2 for a two-night stand (the room holds less than the crowd and nothing bigger fits); one night otherwise. */
+  nights?: number;
   fromKm: number;
   fromHours: number;
   travelDays: number;
@@ -196,7 +202,10 @@ export type LogLine = {
   failed?: boolean;
 };
 
-export type Engine = { agent?: string; writer?: string; planned: "model" | "fixed" };
+/** What a run cost: Qloo requests over the network and from the six-hour cache, model calls and tokens. */
+export type Usage = { qloo: number; qlooCached: number; modelCalls: number; tokensIn: number; tokensOut: number };
+
+export type Engine = { agent?: string; writer?: string; planned: "model" | "fixed"; usage?: Usage };
 
 export type TourStatus = "queued" | "running" | "done" | "failed";
 

@@ -47,8 +47,11 @@ const markets = [];
 for (const c of rows) if (!markets.some((m) => km(m, c) < 30)) markets.push(c);
 
 // Display names a booking agent would use.
-const RENAME = { "New York City": "New York" };
-const out = markets.map((m) => [RENAME[m.name] ?? m.name, m.ascii, m.cc, m.state, +m.lat.toFixed(4), +m.lon.toFixed(4), m.pop, m.r]);
+// GeoNames sometimes files a metro under a census place or parish ("Meads, KY" is Ashland; "Saint Peters" is
+// Thanet's Margate): those get the name on the venue's address.
+const RENAME = { "New York City": "New York", "Meads|US": "Ashland", "Saint Peters|GB": "Margate", "East Pensacola Heights|US": "Pensacola", "Indio|US": "Palm Springs" };
+const named = (m) => RENAME[`${m.name}|${m.cc}`] ?? RENAME[m.name] ?? m.name;
+const out = markets.map((m) => [named(m), RENAME[`${m.name}|${m.cc}`] ?? m.ascii, m.cc, m.state, +m.lat.toFixed(4), +m.lon.toFixed(4), m.pop, m.r]);
 writeFileSync(new URL("../lib/geo/cities.json", import.meta.url), JSON.stringify(out));
 const by = (r) => out.filter((m) => m[7] === r).length;
 console.log(`${out.length} markets (na ${by("na")}, uk ${by("uk")}, eu ${by("eu")}) from ${rows.length} cities`);

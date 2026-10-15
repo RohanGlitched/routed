@@ -1,5 +1,6 @@
 import "server-only";
 import { takeQloo } from "./budget";
+import { countQloo } from "./usage";
 
 /**
  * The Qloo Insights API (hackathon host, X-Api-Key header). Each function is one of the workflows in Qloo's own
@@ -64,7 +65,10 @@ export async function qlooGet<T>(path: string, query: Query, timeoutMs = 20_000)
   const request = { path, query: q };
   const url = `${BASE}${path}?${new URLSearchParams(q).toString()}`;
   const hit = memo.get(url);
-  if (hit && Date.now() - hit.at < TTL_MS) return { body: hit.body as T, request };
+  if (hit && Date.now() - hit.at < TTL_MS) {
+    countQloo(true);
+    return { body: hit.body as T, request };
+  }
   if (!hasQloo()) throw new QlooError("QLOO_API_KEY is not set", 0, request);
   if (!(await takeQloo())) throw new QlooError("Routed has used today's Qloo allowance; finished tours still open, and new ones run again tomorrow.", 0, request);
 
@@ -73,6 +77,7 @@ export async function qlooGet<T>(path: string, query: Query, timeoutMs = 20_000)
     if (attempt) await new Promise((r) => setTimeout(r, 700 * 2 ** (attempt - 1) + Math.random() * 300));
     let r: Response;
     const release = await gate();
+    countQloo(false);
     try {
       r = await fetch(url, { headers: { "X-Api-Key": process.env.QLOO_API_KEY!, accept: "application/json" }, signal: AbortSignal.timeout(timeoutMs) });
     } catch (e) {

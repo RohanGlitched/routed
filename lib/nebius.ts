@@ -1,4 +1,5 @@
 import "server-only";
+import { countModel } from "./usage";
 
 /**
  * The language model behind the agent: NVIDIA Nemotron on Nebius Token Factory (OpenAI-compatible). Each role
@@ -53,6 +54,7 @@ async function once(model: string, body: Record<string, unknown>, timeoutMs: num
     throw new Error(`HTTP ${r.status}`);
   }
   const j = (await r.json()) as { choices: { message: { content: string | null; tool_calls?: ToolCall[] }; finish_reason?: string }[]; usage?: ChatResult["usage"] };
+  countModel(j.usage);
   const m = j.choices?.[0]?.message;
   if (!m) throw new Error("empty response");
   return { model, content: (m.content ?? "").trim(), toolCalls: m.tool_calls ?? [], finish: j.choices[0]?.finish_reason, usage: j.usage };

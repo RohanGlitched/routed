@@ -1,12 +1,14 @@
 import "server-only";
-import { km } from "../geo/markets";
-import { orderStops, pickCities, RADIUS_KM, worstLeg } from "../geo/route";
+import { km, marketById } from "../geo/markets";
+import { ANCHOR_RANK, keepAnchors, longLegs, MAX_LEG_KM, orderStops, radiusFor, repairLegs, tooClose } from "../geo/route";
+import type { RegionId } from "../geo/markets";
+
 import { MODELS, structured } from "../nebius";
 import type { Artist, Audience, CityScore, Opener, Room } from "../types";
 import { roomCapacity } from "../web";
 import { AGE_LABEL, topAge } from "./audience";
 import { fit } from "./evidence";
-import { candidatesBySize } from "./rooms";
+import { candidatesBySize, chooseRoom, pickSupport, REDUCED_MAX, reducedHouse, twoNights } from "./rooms";
 import { lookUpOpeners, lookUpRooms, type Log } from "./tools";
 
 /**
@@ -19,20 +21,26 @@ import { lookUpOpeners, lookUpRooms, type Log } from "./tools";
  *     city's rooms don't fit, with a one-sentence reason that cites the evidence.
  * A free-running tool loop was tried first: Nemotron repeated lookups and ran out of turns on most tours
  * (measured Oct 7), so the moves are fixed and the choices are the model's. Rules hold it in (Playbook L1/L2):
- * cities must come from the candidates, the radius clause is enforced, and gaps are filled from the ranking.
- * Without the model (no key, budget spent, or it fails) the same steps run as a fixed plan.
+ * cities must come from the candidates, the radius clause is enforced, a major market in the top ten stays, no
+ * leg between shows runs over MAX_LEG_KM where a city could close it, rooms are sized to the crowd, and one
+ * support act plays the whole run. Without the model (no key, budget spent, or it fails) the same steps run as a
+ * fixed plan.
  */
 
-export type Pick = { marketId: string; rooms: Room[]; roomId?: string; openers: Opener[]; openerId?: string; why?: string };
+export type Pick = { marketId: string; rooms: Room[]; roomId?: string; openers: Opener[]; openerId?: string; why?: string; nights?: number; modelRoomId?: string; modelOpenerId?: string };
 
 type BookStop = { city_id: string; room_id: string; opener_id: string; why: string };
 
 export type PlanResult = { picks: Pick[]; planned: "model" | "fixed"; model?: string };
 
-/** A leg longer than this means two or more days in the van: the outlier rule looks for a nearer stop. */
-export const MAX_LEG_KM = 1800;
-/** How far from the stops either side a replacement may be. */
-export const REACH_KM = 700;
+export { MAX_LEG_KM };
+export { ANCHOR_RANK };
+/** How deep in the ranking the leg rule may look for a city that closes a long leg. */
+export const POOL_SIZE = 60;
+/** Rooms measured per city, after the agent's choice, until one fits the crowd. */
+export const MEASURE_PER_CITY = 8;
+
+const popOf = (id: string) => marketById(id)?.pop ?? 0;
 
 const SHORTLIST_SCHEMA = {
   type: "object",
@@ -64,10 +72,11 @@ const BOOK_SCHEMA = {
 const role = (artist: string) =>
   `You are a booking agent routing a tour for ${artist}. Your evidence is Qloo's taste graph for ${artist}'s fans: a heatmap ranking of cities, and per-city lists of the rooms those fans go to and the artists (possible openers) who share the audience. Openers are other artists, never ${artist}. Use only numbers from the evidence.`;
 
-function table(cities: CityScore[], from: { lat: number; lon: number }): string {
+function table(cities: CityScore[], from: { lat: number; lon: number }, RADIUS_KM: number): string {
   const rows = cities.map((c) => `${c.marketId} | ${c.label} | #${c.rank} | affinity ${Math.round(c.affinity * 100)}${c.popularity !== undefined ? ` | signal ${Math.round(c.popularity * 100)}` : ""} | ${Math.round(km(from, c))} km from start`);
   const close: string[] = [];
-  for (let i = 0; i < cities.length; i++) for (let j = i + 1; j < cities.length; j++) if (km(cities[i]!, cities[j]!) < RADIUS_KM) close.push(`${cities[i]!.marketId} ~ ${cities[j]!.marketId}`);
+  const at = (c: CityScore) => ({ lat: c.lat, lon: c.lon, pop: popOf(c.marketId) });
+  for (let i = 0; i < cities.length; i++) for (let j = i + 1; j < cities.length; j++) if (tooClose(at(cities[i]!), at(cities[j]!), RADIUS_KM)) close.push(`${cities[i]!.marketId} ~ ${cities[j]!.marketId}`);
   return `city_id | city | strength rank | fan affinity (0-100) | taste signal (0-100) | distance\n${rows.join("\n")}${close.length ? `\n\nToo close to pair (radius clause, ${RADIUS_KM} km): ${close.join("; ")}` : ""}`;
 }
 
@@ -84,7 +93,7 @@ function brief(artist: Artist, audience: Audience): string {
 
 const p100 = (v?: number) => (v === undefined ? null : Math.round(v * 100));
 const compactRooms = (rooms: Room[], draw?: number) => rooms.map((r) => ({ id: r.id, name: r.name, affinity: p100(r.affinity), popularity: p100(r.popularity), kind: r.tags.slice(0, 3).join(", ") || null, capacity: r.capacity?.value ?? null, ...(draw ? { size: fit(r, draw) } : {}) }));
-const compactOpeners = (o: Opener[]) => o.map((x) => ({ id: x.id, name: x.name, affinity: p100(x.affinity) }));
+const compactOpeners = (o: Opener[]) => o.map((x) => ({ id: x.id, name: x.name, affinity: p100(x.affinity), ...(x.genres?.length ? { genres: x.genres.slice(0, 3) } : {}) }));
 
 const host = (u: string) => {
   try {
@@ -94,10 +103,12 @@ const host = (u: string) => {
   }
 };
 
-export async function planTour(opts: { artist: Artist; audience: Audience; cities: CityScore[]; from: { lat: number; lon: number; label: string }; shows: number; draw?: number; useModel: boolean; log: Log }): Promise<PlanResult> {
+export async function planTour(opts: { artist: Artist; audience: Audience; cities: CityScore[]; from: { lat: number; lon: number; label: string }; region?: RegionId; shows: number; draw?: number; useModel: boolean; log: Log }): Promise<PlanResult> {
   const { artist, cities, shows, log, draw } = opts;
+  const RADIUS_KM = radiusFor(opts.region);
   const candidates = cities.slice(0, Math.max(shows * 2 + 4, 16));
   const byId = new Map(candidates.map((c) => [c.marketId, c]));
+  const allById = new Map(cities.map((c) => [c.marketId, c]));
   const rooms = new Map<string, Room[]>();
   const openers = new Map<string, Opener[]>();
   const getRooms = async (id: string) => {
@@ -118,7 +129,7 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
   const measure = async (room: Room, city: string) => {
     if (room.capacity !== undefined || measured.has(room.id)) return;
     measured.add(room.id);
-    const cap = await roomCapacity(room.name, city, room.lat !== undefined && room.lon !== undefined ? { lat: room.lat, lon: room.lon } : undefined).catch(() => null);
+    const cap = await roomCapacity(room, city).catch(() => null);
     if (cap) room.capacity = cap;
     log({ kind: "web", text: `How many does ${room.name} hold?`, result: cap ? `${cap.value.toLocaleString("en-US")}, per ${host(cap.source)}` : "Not found; ask the room." });
   };
@@ -139,7 +150,7 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
           { role: "system", content: role(artist.name) },
           {
             role: "user",
-            content: `${brief(artist, opts.audience)}\nStarting from ${opts.from.label}. Shows wanted: ${shows}.${draw ? ` Usual crowd: about ${draw}.` : ""}\n\nCandidate cities from Qloo's heatmap for ${artist.name}, strongest first:\n${table(candidates, opts.from)}\n\nShortlist exactly ${shows} cities for the tour (no two closer than ${RADIUS_KM} km; prefer stronger cities, but skip a lone far-off city unless it is clearly stronger than nearer ones), each with a short reason, plus up to 3 alternate city_ids in case a city has no room that fits.`,
+            content: `${brief(artist, opts.audience)}\nStarting from ${opts.from.label}. Shows wanted: ${shows}.${draw ? ` Usual crowd: about ${draw}.` : ""}\n\nCandidate cities from Qloo's heatmap for ${artist.name}, strongest first:\n${table(candidates, opts.from, RADIUS_KM)}\n\nShortlist exactly ${shows} cities for the tour (none of the pairs marked too close; keep every leg between shows under ${MAX_LEG_KM} km of road, so choose one part of the region rather than both coasts; never skip a major market such as London, New York or Paris when it is in the top ten), preferring stronger cities, each with a short reason, plus up to 3 alternate city_ids in case a city has no room that fits.`,
           },
         ],
       });
@@ -172,7 +183,7 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
           { role: "system", content: role(artist.name) },
           {
             role: "user",
-            content: `${brief(artist, opts.audience)}\nShows wanted: ${shows}.${draw ? ` Usual crowd: about ${draw}. Capacities are checked on the web after you book; a room's popularity is a rough guide to its size, so prefer well-known rooms over tiny ones for a crowd this size.` : " Crowd size unknown: a room's popularity is a rough guide to its size."}\n\nScouting results (rooms and openers from Qloo for ${artist.name}'s fans):\n${JSON.stringify(evidence)}\n\nBook exactly ${shows} stops. For each: city_id, room_id from that city's rooms (a real music room: club, hall or theatre, not a festival, gallery or restaurant), opener_id from that city's openers (a different opener in each city where possible), and "why": one natural sentence a manager would read, on why this city and this room, citing one or two figures (for example "Seattle is ${artist.name}'s #2 city on Qloo, and Barboza's crowd matches these fans at 84"). Don't list every field. Use an alternate city only when a shortlisted city has no room that fits.`,
+            content: `${brief(artist, opts.audience)}\nShows wanted: ${shows}.${draw ? ` Usual crowd: about ${draw}. Capacities are checked on the web after you book; a room's popularity is a rough guide to its size, so prefer well-known rooms over tiny ones for a crowd this size.` : " Crowd size unknown: a room's popularity is a rough guide to its size."}\n\nScouting results (rooms and openers from Qloo for ${artist.name}'s fans):\n${JSON.stringify(evidence)}\n\nBook exactly ${shows} stops. For each: city_id, room_id from that city's rooms (a real music room: club, hall or theatre, not a festival, gallery or restaurant), opener_id: one support act for the whole run (it travels with the tour, as on a real tour), so use the same opener_id on every stop, choosing an artist that appears in several cities' openers and fits ${artist.name}'s genre, and "why": one natural sentence a manager would read, on why this city and this room, citing one or two figures (for example "Seattle is ${artist.name}'s #2 city on Qloo, and Barboza's crowd matches these fans at 84"). Don't list every field. Use an alternate city only when a shortlisted city has no room that fits.`,
           },
         ],
       });
@@ -189,127 +200,123 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
   }
 
   // Guard the model's answer: real candidates only, no duplicates, radius clause, rooms to book, the right count.
-  const chosen: { score: CityScore; why?: string; roomId?: string; openerId?: string }[] = [];
+  type Chosen = { score: CityScore; why?: string; roomId?: string; openerId?: string };
+  const placed = (c: CityScore) => ({ lat: c.lat, lon: c.lon, pop: popOf(c.marketId) });
+  const clash = (a: CityScore, b: CityScore) => tooClose(placed(a), placed(b), RADIUS_KM);
+  const chosen: Chosen[] = [];
   for (const s of booked ?? []) {
     const score = byId.get(s.city_id);
     if (!score || chosen.some((c) => c.score.marketId === score.marketId)) continue;
-    if (chosen.some((c) => km(c.score, score) < RADIUS_KM)) continue;
+    if (chosen.some((c) => clash(c.score, score))) continue;
     if (!(await getRooms(score.marketId)).length) continue;
     chosen.push({ score, why: s.why, roomId: s.room_id, openerId: s.opener_id });
     if (chosen.length >= shows) break;
   }
   const planned = chosen.length ? "model" : "fixed";
 
-  // Fill from the ranking (the whole plan when there's no model), skipping cities with no rooms at all.
+  // Fill from the ranking (the whole plan when there's no model), skipping cities with no rooms at all. In a
+  // small region the radius clause can use up the first candidates, so the fill looks down to POOL_SIZE.
   const before = chosen.length;
-  for (const c of pickCities(candidates.map((score) => ({ market: score, score })), candidates.length)) {
+  const deep = cities.slice(0, Math.max(candidates.length, POOL_SIZE));
+  for (const score of deep) {
     if (chosen.length >= shows) break;
-    if (chosen.some((x) => x.score.marketId === c.score.marketId || km(x.score, c.score) < RADIUS_KM)) continue;
-    if (!(await getRooms(c.score.marketId)).length) continue;
-    chosen.push({ score: c.score });
+    if (chosen.some((x) => x.score.marketId === score.marketId || clash(x.score, score))) continue;
+    if (!(await getRooms(score.marketId)).length) continue;
+    chosen.push({ score });
   }
-  if (planned === "fixed") log({ kind: "rule", text: `Fixed plan: the ${chosen.length} strongest cities at least ${RADIUS_KM} km apart that have rooms.`, result: chosen.map((c) => c.score.name).join(", ") });
+  if (planned === "fixed") log({ kind: "rule", text: `Fixed plan: the ${chosen.length} strongest cities that clear the ${RADIUS_KM} km radius clause and have rooms.`, result: chosen.map((c) => c.score.name).join(", ") });
   else if (chosen.length > before) log({ kind: "rule", text: `The agent booked ${before} usable stops; the ranking filled the other ${chosen.length - before}.`, result: chosen.slice(before).map((c) => c.score.name).join(", ") });
 
-  // The outlier rule: a stop that costs a leg of more than MAX_LEG_KM (two or more days in the van) is swapped for
-  // the strongest unused candidate within REACH_KM of the stops either side of it, when one exists and has rooms.
-  // At most two swaps, so a tour that is spread out on purpose stays that way.
-  for (let swaps = 0; swaps < 2 && chosen.length >= 3; swaps++) {
-    const ordered = orderStops(opts.from, chosen.map((c) => ({ ...c, lat: c.score.lat, lon: c.score.lon })));
-    const worst = worstLeg(opts.from, ordered);
-    if (!worst || worst.km <= MAX_LEG_KM) break;
-    const far = ordered[worst.index]!;
-    const neighbours = [ordered[worst.index - 1] ?? opts.from, ordered[worst.index + 1]].filter((x): x is NonNullable<typeof x> => Boolean(x));
-    let swapped = false;
-    for (const cand of candidates) {
-      if (chosen.some((c) => c.score.marketId === cand.marketId)) continue;
-      if (!neighbours.some((n) => km(n, cand) <= REACH_KM)) continue;
-      if (chosen.some((c) => c.score.marketId !== far.score.marketId && km(c.score, cand) < RADIUS_KM)) continue;
-      if (!(await getRooms(cand.marketId)).length) continue;
-      const i = chosen.findIndex((c) => c.score.marketId === far.score.marketId);
-      chosen.splice(i, 1, { score: cand });
-      log({ kind: "rule", text: `${far.score.name} would cost a ${worst.km.toLocaleString("en-US")} km leg, so ${cand.name} (#${cand.rank} on the fan map) takes its place.`, result: `${cand.name} is ${Math.round(Math.min(...neighbours.map((n) => km(n, cand))))} km from the next stop` });
-      swapped = true;
-      break;
-    }
-    if (!swapped) break;
-  }
+  const asStop = (c: CityScore) => ({ ...c, id: c.marketId, pop: popOf(c.marketId) });
+  const usable = async (c: { id: string }) => (await getRooms(c.id)).length > 0;
+  const pool = cities.slice(0, POOL_SIZE);
 
-  // Every picked city gets its lookups, whatever the model skipped. The booked room's capacity is checked; with a
-  // known crowd, rooms are measured in order (the model's choice, then the city's best-known rooms for a big
-  // crowd or its best-matched ones for a small one) until one fits, up to five checks a city, and a room that
-  // misses the crowd is swapped for the first that fits. Nothing fitting is said plainly, never papered over.
+  // The leg rule: no leg between two shows longer than MAX_LEG_KM of road. Groups of stops that can't reach each
+  // other are pulled into the strongest group (by fan strength, so a tour keeps the artist's best cities, plus a
+  // little for the group the starting city can reach), then any long leg left is broken by a swap.
+  const legPass = async () => {
+    const legs = await repairLegs({ from: opts.from, stops: chosen.map((c) => asStop(c.score)), pool: pool.map(asStop), usable, weight: (c) => 1 / Math.sqrt(c.rank), radius: RADIUS_KM });
+    for (const sw of legs.swaps) {
+      const i = chosen.findIndex((c) => c.score.marketId === sw.out.id);
+      if (i < 0) continue;
+      chosen.splice(i, 1, { score: allById.get(sw.in.id)! });
+      log({ kind: "rule", text: `${sw.out.name} would cost a ${sw.km.toLocaleString("en-US")} km leg with no show, so ${sw.in.name} (#${sw.in.rank} on the fan map) takes its place.`, result: `No leg between shows over ${MAX_LEG_KM.toLocaleString("en-US")} km where a city with rooms can close it` });
+    }
+  };
+  await legPass();
+
+  // The anchor rule: a major market (1.5 million or more) in the artist's top ten is always on the tour when the
+  // route can reach it. No UK tour skips London because Brighton was booked first: the smaller city inside the
+  // radius gives way, and when the tour is full the weakest stop that isn't an anchor does.
+  const anchored = await keepAnchors(chosen.map((c) => asStop(c.score)), deep.map(asStop), shows, usable, RADIUS_KM);
+  for (const { anchor, out } of anchored.added) {
+    log({ kind: "rule", text: `${anchor.name} is a major market and #${anchor.rank} on ${artist.name}'s fan map, so it stays on the tour${out.length ? ` and ${out.map((o) => o.name).join(" and ")} give${out.length === 1 ? "s" : ""} way` : ""}.`, result: out.some((o) => tooClose(o, anchor, RADIUS_KM)) ? `${out.map((o) => o.name).join(" and ")} ${out.length === 1 ? "is" : "are"} inside the ${RADIUS_KM} km radius of ${anchor.name}` : `${anchor.name} added` });
+  }
+  if (anchored.added.length) {
+    const keep = new Map(chosen.map((c) => [c.score.marketId, c]));
+    chosen.splice(0, chosen.length, ...anchored.stops.map((st) => keep.get(st.id) ?? { score: allById.get(st.id)! }));
+    await legPass();
+  }
+  const leftover = longLegs(opts.from, orderStops(opts.from, chosen.map((c) => c.score)));
+  if (leftover.length) log({ kind: "rule", text: `${leftover.length === 1 ? "One leg is" : `${leftover.length} legs are`} still over ${MAX_LEG_KM.toLocaleString("en-US")} km: no city with rooms within reach could close ${leftover.length === 1 ? "it" : "them"}, so the day sheet flags ${leftover.length === 1 ? "it" : "them"}.`, failed: true });
+
+  // Every picked city gets its lookups, whatever the model skipped. With a known crowd the booked room's capacity
+  // is checked, then the city's other rooms in order (best-known first for a big crowd, best-matched for a small
+  // one) until one fits, up to eight checks a city. The room is then chosen by rule: a known fit for one night,
+  // else a known two-night stand, else a room whose capacity couldn't be found, and a known misfit only when
+  // nothing else is left (and the sheet says so).
   const picks = await Promise.all(
     chosen.map(async (c): Promise<Pick> => {
       const [r, o] = await Promise.all([getRooms(c.score.marketId), getOpeners(c.score.marketId)]);
+      const city = c.score.label;
       const first = r.find((x) => x.id === c.roomId) ?? r[0];
-      if (first) await measure(first, c.score.name);
+      if (first) await measure(first, city);
       if (draw && first && fit(first, draw) !== "fits") {
-        for (const next of candidatesBySize(r.filter((x) => x !== first), draw).slice(0, 6)) {
-          await measure(next, c.score.name);
+        for (const next of candidatesBySize(r.filter((x) => x !== first), draw).slice(0, MEASURE_PER_CITY)) {
+          await measure(next, city);
           if (fit(next, draw) === "fits") break;
         }
       }
-      const roomId = roomFor(r, c.roomId ?? first?.id, draw, log, c.score.name);
-      const openerId = o.some((x) => x.id === c.openerId) ? c.openerId : undefined;
-      // The model's sentence was written for the room and opener it chose; if a rule changed either, it no longer
-      // describes the stop, so a plain rule sentence replaces it rather than a wrong name staying on the page.
-      const changed = (c.roomId && roomId !== c.roomId) || (c.openerId && openerId !== c.openerId);
-      const booked = r.find((x) => x.id === roomId);
-      const why = changed && booked ? `${c.score.name} is ${artist.name}'s #${c.score.rank} city on Qloo${booked.capacity ? `, and ${booked.name} holds ${booked.capacity.value.toLocaleString("en-US")}` : `, and ${booked.name} matches these fans at ${Math.round((booked.affinity ?? 0) * 100)}`}.` : c.why;
-      return { marketId: c.score.marketId, rooms: r, roomId, openers: o, openerId, why };
+      const room = chooseRoom(r, c.roomId ?? first?.id, draw);
+      const nights = room && twoNights(room, draw) && !r.some((x) => fit(x, draw) === "fits") ? 2 : 1;
+      if (room && c.roomId && room.id !== c.roomId) {
+        const was = r.find((x) => x.id === c.roomId);
+        log({ kind: "rule", text: `${was?.name ?? "The agent's room"} ${was?.capacity ? `holds ${was.capacity.value.toLocaleString("en-US")}, ${fit(was, draw)} for a crowd of about ${draw!.toLocaleString("en-US")}` : "couldn't be confirmed for the crowd"}, so ${c.score.name} gets ${room.name}.`, result: room.capacity ? `${room.name} holds ${room.capacity.value.toLocaleString("en-US")}${nights === 2 ? ": two nights" : fit(room, draw) === "fits" ? "" : " (the nearest size that could be confirmed)"}` : `${room.name}: capacity not found, ask the room` });
+      } else if (room && reducedHouse(room, draw) && !r.some((x) => fit(x, draw) === "fits")) {
+        log({ kind: "rule", text: `${room.name} holds ${room.capacity!.value.toLocaleString("en-US")}, more than the usual crowd of about ${draw!.toLocaleString("en-US")}, and no room in ${c.score.name} was confirmed to fit, so the pitch asks for a reduced configuration.`, result: `Up to ${REDUCED_MAX} times the crowd can be booked that way` });
+      } else if (nights === 2 && room) {
+        log({ kind: "rule", text: `${room.name} holds ${room.capacity!.value.toLocaleString("en-US")}, under the usual crowd of about ${draw!.toLocaleString("en-US")}, and no room in ${c.score.name} was confirmed to fit, so it's two nights.`, result: `${(room.capacity!.value * 2).toLocaleString("en-US")} across both nights` });
+      }
+      return { marketId: c.score.marketId, rooms: r, roomId: room?.id, openers: o, openerId: o.some((x) => x.id === c.openerId) ? c.openerId : undefined, why: c.why, nights, modelRoomId: c.roomId, modelOpenerId: c.openerId };
     }),
   );
-  spreadOpeners(picks);
-  return { picks, planned, model };
-}
 
-/**
- * The room to book: the model's choice unless its known capacity misses the crowd and the city has a room that
- * fits (rule beats model). When nothing measured fits, the nearest size to the crowd among known rooms, so the
- * pitch can ask about a second night or a bigger room instead of pretending.
- */
-function roomFor(rooms: Room[], wanted: string | undefined, draw: number | undefined, log: Log, city: string): string | undefined {
-  const pick = rooms.find((x) => x.id === wanted);
-  if (!pick) return bestRoom(rooms, draw)?.id;
-  const f = fit(pick, draw);
-  if (f === "too small" || f === "too big") {
-    const better = rooms.find((x) => fit(x, draw) === "fits") ?? nearestSize(rooms, draw!, pick);
-    if (better && better !== pick) {
-      log({ kind: "rule", text: `${pick.name} holds ${pick.capacity!.value.toLocaleString("en-US")}, ${f} for a crowd of about ${draw!.toLocaleString("en-US")}, so ${city} gets ${better.name}.`, result: `${better.name} holds ${better.capacity!.value.toLocaleString("en-US")}${fit(better, draw) === "fits" ? "" : " (the closest size that could be confirmed)"}` });
-      return better.id;
+  // One support act for the whole run, travelling with the tour: the opener the agent picked most often.
+  const support = pickSupport(picks);
+  if (support) {
+    for (const p of picks) {
+      if (!p.openers.some((o) => o.id === support.id)) p.openers = [support, ...p.openers];
+      p.openerId = support.id;
     }
+    const votes = picks.filter((p) => p.modelOpenerId === support.id).length;
+    log({ kind: "rule", text: `One support act for the whole run: ${support.name}${votes ? `, the agent's pick in ${votes} of ${picks.length} cities` : ", the artist that turned up in the most cities' lookups"}.`, result: "The other artists each city suggested are listed on its day sheet as local options" });
   }
-  return pick.id;
-}
 
-/** Among rooms with a known capacity, the one nearest the crowd in log terms (a 900 for 1,500 beats a 250). */
-function nearestSize(rooms: Room[], draw: number, current: Room): Room | undefined {
-  const known = rooms.filter((r) => r.capacity);
-  if (!known.length) return undefined;
-  const gap = (r: Room) => Math.abs(Math.log(r.capacity!.value / draw));
-  const best = known.reduce((a, b) => (gap(b) < gap(a) ? b : a));
-  return current.capacity && gap(current) <= gap(best) ? current : best;
+  // The model's sentence was written for the room it chose; if a rule changed the room (or the sentence names an
+  // opener who is no longer on the bill), it no longer describes the stop, so a plain rule sentence replaces it.
+  for (const p of picks) {
+    const score = allById.get(p.marketId)!;
+    const room = p.rooms.find((x) => x.id === p.roomId);
+    const oldOpener = p.openers.find((o) => o.id === p.modelOpenerId);
+    const stale = (p.modelRoomId && p.roomId !== p.modelRoomId) || (oldOpener && oldOpener.id !== p.openerId && p.why?.includes(oldOpener.name));
+    if ((stale || !p.why) && room) p.why = `${score.name} is ${artist.name}'s #${score.rank} city on Qloo${room.capacity ? `, and ${room.name} holds ${room.capacity.value.toLocaleString("en-US")}${p.nights === 2 ? " a night over two nights" : ""}` : `, and ${room.name} matches these fans at ${Math.round((room.affinity ?? 0) * 100)}`}.`;
+    delete p.modelRoomId;
+    delete p.modelOpenerId;
+  }
+  return { picks, planned, model };
 }
 
 /** Without the model: the strongest affinity among rooms that fit the crowd, when capacities are known. */
 export function bestRoom(rooms: Room[], draw?: number): Room | undefined {
-  if (draw) {
-    const ok = rooms.find((r) => fit(r, draw) === "fits");
-    if (ok) return ok;
-  }
-  return rooms[0];
-}
-
-/** One opener per stop where possible: keep the model's choice, else the best one not already used. */
-function spreadOpeners(picks: Pick[]) {
-  const used = new Set(picks.map((p) => p.openerId).filter(Boolean));
-  for (const p of picks) {
-    if (p.openerId) continue;
-    const next = p.openers.find((o) => !used.has(o.id)) ?? p.openers[0];
-    if (next) {
-      p.openerId = next.id;
-      used.add(next.id);
-    }
-  }
+  return chooseRoom(rooms, undefined, draw);
 }

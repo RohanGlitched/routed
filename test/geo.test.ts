@@ -46,8 +46,9 @@ test("a heatmap tile belongs to the city it sits in, not a satellite", () => {
 test("picking cities respects the radius clause", () => {
   const ranked = ["New York", "Philadelphia", "Boston", "Washington DC", "Baltimore", "Chicago"].map((s) => ({ market: m(s) }));
   const picked = pickCities(ranked, 4).map((p) => p.market.name);
-  // Philadelphia is ~130 km from New York and Baltimore ~55 km from Washington: both skipped.
-  assert.deepEqual(picked, ["New York", "Boston", "Washington", "Chicago"]);
+  // Baltimore is ~55 km from Washington: skipped. Philadelphia is ~130 km from New York, but both are major
+  // markets (1.5 million or more), so each carries its own show.
+  assert.deepEqual(picked, ["New York", "Philadelphia", "Boston", "Washington"]);
 });
 
 test("ordering finds a sensible route and never a longer one than nearest-neighbour", () => {

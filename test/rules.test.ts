@@ -69,14 +69,14 @@ test("heatmap tiles become ranked cities; a city scores its strongest tile (affi
     { lat: 41.88, lon: -87.63, affinity: 0.71, popularity: 0.9 }, // Chicago
     { lat: 41.95, lon: -87.65, affinity: 0.93, popularity: 0.8 }, // Chicago (Lakeview): 0.744
     { lat: 45.52, lon: -122.68, affinity: 0.88, popularity: 0.7 }, // Portland: 0.616
-    { lat: 33.72, lon: -116.22, affinity: 0.99, popularity: 0.3 }, // Indio: hot but thin, 0.297
+    { lat: 33.72, lon: -116.22, affinity: 0.99, popularity: 0.3 }, // Coachella Valley (Palm Springs): hot but thin, 0.297
     { lat: 35.0, lon: -60.0, affinity: 0.99 }, // Atlantic: no city
   ];
   const cities = scoreCities(tiles, "na");
   assert.deepEqual(cities.map((c) => [c.name, c.affinity, c.tiles, c.rank]), [
     ["Chicago", 0.93, 2, 1],
     ["Portland", 0.88, 1, 2],
-    ["Indio", 0.99, 1, 3],
+    ["Palm Springs", 0.99, 1, 3],
   ]);
   assert.equal(cities[0]!.marketId, "chicago-us-il");
 });

@@ -13,6 +13,35 @@ const PATTERNS = [
 
 export type CapacityHit = { value: number; quote: string };
 
+type Stored = { value: number; source: string; quote: string } | null;
+
+const GENERIC = new Set(["the", "and", "club", "hall", "theatre", "theater", "room", "bar", "music", "venue", "center", "centre", "arts", "performing", "auditorium", "house", "ballroom", "arena", "amphitheater", "amphitheatre", "live", "concert", "stage", "at", "of"]);
+const words = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/&/g, " and ").split(/[^a-z0-9]+/).filter((w) => w.length > 1);
+
+/**
+ * Whether a Wikidata item is this room and not a part of it or a namesake: the venue's distinctive words must be
+ * in the item's label ("Lensic Theater" is the Lensic Performing Arts Center), and an item that is "part of"
+ * something else is a smaller room inside it (Nordstrom Recital Hall, 536, is part of Benaroya Hall).
+ */
+export function sameVenue(venue: string, label: string, description = ""): boolean {
+  if (/\bpart of\b|\bwithin\b|\binside\b|\bsecond stage\b|\bstudio theat/i.test(description)) return false;
+  const distinct = words(venue).filter((w) => !GENERIC.has(w));
+  const have = new Set(words(label));
+  if (!distinct.length) return words(venue).every((w) => have.has(w));
+  return distinct.some((w) => have.has(w)) && distinct.filter((w) => have.has(w)).length >= Math.min(2, distinct.length) - (distinct.length > 2 ? 1 : 0);
+}
+
+/**
+ * Merges this instance's capacity answers into the shared index so a room has one number everywhere: what the
+ * index already holds for a room wins (the first answer published), except that a found number replaces a
+ * "not found".
+ */
+export function mergeCapacities(ours: Record<string, Stored>, theirs: Record<string, Stored>): Record<string, Stored> {
+  const all: Record<string, Stored> = { ...ours };
+  for (const [k, v] of Object.entries(theirs)) if (v || !all[k]) all[k] = v;
+  return all;
+}
+
 export function capacitiesIn(text: string): CapacityHit[] {
   const hits: CapacityHit[] = [];
   for (const re of PATTERNS) {
@@ -40,7 +69,7 @@ export function capacitiesIn(text: string): CapacityHit[] {
  * venue (its distinctive words) for its numbers to count.
  */
 /** Social posts and forums say what someone heard, not what the room holds. */
-const NOT_A_SOURCE = /^(https?:\/\/)?([a-z0-9-]+\.)*(facebook|twitter|x|instagram|reddit|tiktok|threads|pinterest)\.com\b/i;
+export const NOT_A_SOURCE = /^(https?:\/\/)?([a-z0-9-]+\.)*(facebook|twitter|x|instagram|reddit|tiktok|threads|pinterest|linkedin|youtube|quora|medium)\.com\b/i;
 
 export function pickCapacity(venue: string, pages: { url: string; text: string }[]): { value: number; source: string; quote: string } | null {
   const words = venue
@@ -52,7 +81,7 @@ export function pickCapacity(venue: string, pages: { url: string; text: string }
   const whole = venue.toLowerCase().trim();
   const tally = new Map<number, { n: number; source: string; quote: string }>();
   for (const p of pages) {
-    if (NOT_A_SOURCE.test(p.url)) continue;
+    if (NOT_A_SOURCE.test(p.url) || /planned|proposed|new-venue|will-open/i.test(p.url)) continue;
     const lower = p.text.toLowerCase();
     if (words.length ? !words.every((w) => lower.includes(w)) : !lower.includes(whole)) continue;
     for (const h of capacitiesIn(p.text)) {

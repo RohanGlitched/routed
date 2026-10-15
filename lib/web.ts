@@ -1,5 +1,5 @@
 import "server-only";
-import { pickCapacity } from "./agent/capacity";
+import { mergeCapacities, NOT_A_SOURCE, pickCapacity, sameVenue } from "./agent/capacity";
 import { storage } from "./storage";
 import { wikidataCapacity } from "./wikidata";
 
@@ -35,24 +35,42 @@ function takeSearch(): boolean {
 type Cap = { value: number; source: string; quote: string };
 
 /**
- * Searches cost credits (1,000 a month on the free plan), so every answer, found or not, is remembered: in
- * memory, and in one private blob read once per server instance, so a room is searched once, not once a tour.
+ * One number per room, everywhere: every answer, found or not, is remembered under the room's Qloo id, in memory
+ * and in one private index in storage that every instance re-reads every couple of minutes. The first answer
+ * stored for a room wins, so two tours never show the same room with two capacities (Wonder Ballroom once read
+ * 778 on one tour and 3,000 on another). Older answers stored by name and city are still read.
  */
 const memo = new Map<string, Cap | null>();
 const INDEX = "capacity/index.json";
+const RELOAD_MS = 120_000;
 let loaded: Promise<void> | null = null;
+let loadedAt = 0;
 let dirty = false;
 let flushing: ReturnType<typeof setTimeout> | null = null;
 
 const useBlob = () => storage() !== null;
 
+/** A stored answer from a source Routed no longer trusts (social posts, an article about a planned building). */
+const distrusted = (c: Cap | null | undefined) => Boolean(c && (NOT_A_SOURCE.test(c.source) || /planned|proposed|new-venue|will-open/i.test(c.source)));
+/** An older Wikidata answer, re-checked against the venue: its quote is "Label: description; maximum capacity …". */
+function stillTrusted(c: Cap, venue: string): boolean {
+  if (distrusted(c)) return false;
+  if (!c.source.includes("wikidata.org")) return true;
+  const head = c.quote.split("; maximum capacity")[0] ?? "";
+  const [label, ...rest] = head.split(": ");
+  return sameVenue(venue, label ?? "", rest.join(": "));
+}
+
 function load(): Promise<void> {
   if (!useBlob()) return Promise.resolve();
-  loaded ??= (async () => {
+  if (loaded && Date.now() - loadedAt < RELOAD_MS) return loaded;
+  loadedAt = Date.now();
+  loaded = (async () => {
     const r = await storage()!.read(INDEX).catch(() => null);
     if (!r) return;
     const j = JSON.parse(r.text) as Record<string, Cap | null>;
-    for (const [k, v] of Object.entries(j)) if (!memo.has(k)) memo.set(k, v);
+    // The stored answer is the truth for every room it covers (first writer wins).
+    for (const [k, v] of Object.entries(j)) if (v || !memo.get(k)) memo.set(k, distrusted(v) ? null : v);
   })().catch(() => {});
   return loaded;
 }
@@ -68,15 +86,26 @@ function scheduleFlush() {
     // Merge with what other instances wrote since this one loaded.
     const r = await storage()!.read(INDEX).catch(() => null);
     const theirs = r ? (JSON.parse(r.text) as Record<string, Cap | null>) : {};
-    const all = { ...theirs, ...Object.fromEntries(memo) };
+    // Keep what another instance already stored for a room, unless it found nothing and this one did.
+    const all = mergeCapacities(Object.fromEntries(memo), theirs);
+    for (const [k, v] of Object.entries(all)) memo.set(k, v);
     await storage()!.write(INDEX, JSON.stringify(all)).catch((e) => console.error("[capacity] cache write failed", e));
   }, 4000);
 }
 
-export async function roomCapacity(venue: string, city: string, near?: { lat: number; lon: number }): Promise<Cap | null> {
-  const key = `${venue}|${city}`.toLowerCase();
+/** How many a room holds: `city` is the label ("Portland, OR"), so two Portlands never share an answer. */
+export async function roomCapacity(room: { id: string; name: string; lat?: number; lon?: number }, city: string): Promise<Cap | null> {
+  const venue = room.name;
+  const near = room.lat !== undefined && room.lon !== undefined ? { lat: room.lat, lon: room.lon } : undefined;
+  const key = `id:${room.id}`;
+  const legacy = `${venue}|${city.split(",")[0]!.trim()}`.toLowerCase();
   await load();
   if (memo.has(key)) return memo.get(key)!;
+  if (memo.get(legacy) && stillTrusted(memo.get(legacy)!, venue)) {
+    memo.set(key, memo.get(legacy)!);
+    scheduleFlush();
+    return memo.get(key)!;
+  }
   // Wikidata knows most theatres, ballrooms, amphitheatres and arenas, exactly and for free.
   const wiki = await wikidataCapacity(venue, city, near);
   if (wiki) {

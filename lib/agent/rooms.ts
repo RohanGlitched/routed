@@ -16,8 +16,19 @@ export const VENUE_TIERS: { max: number; tags: string[]; name: string }[] = [
   { max: 700, name: "clubs and halls", tags: ["urn:tag:genre:place:live_music_venue", "urn:tag:genre:place:concert_hall", "urn:tag:genre:place:rock_music_club", "urn:tag:genre:place:musical_club"] },
   { max: 3000, name: "halls, ballrooms and theatres", tags: ["urn:tag:genre:place:concert_hall", "urn:tag:genre:place:live_music_venue", "urn:tag:genre:place:ballroom", "urn:tag:genre:place:performing_arts_theater"] },
   { max: 9000, name: "theatres, amphitheatres and arenas", tags: ["urn:tag:genre:place:concert_hall", "urn:tag:genre:place:performing_arts_theater", "urn:tag:genre:place:amphitheater", "urn:tag:genre:place:arena"] },
+  // A crowd of 10,000+ fills an arena or an amphitheatre; concert halls and theatres only brought back 1,000-cap rooms.
+  { max: 29_999, name: "arenas and amphitheatres", tags: ["urn:tag:genre:place:arena", "urn:tag:genre:place:amphitheater"] },
   { max: Infinity, name: "arenas, amphitheatres and stadiums", tags: ["urn:tag:genre:place:arena", "urn:tag:genre:place:amphitheater", "urn:tag:genre:place:stadium", "urn:tag:genre:place:concert_hall"] },
 ];
+/** From this draw up, arenas and amphitheatres are looked up on their own as well. */
+export const BIG_ROOM_DRAW = 3000;
+export const BIG_ROOM_TAGS = ["urn:tag:genre:place:arena", "urn:tag:genre:place:amphitheater"];
+/** A café, bar, pub or club by name is not the room for a crowd of 3,000 (Olympic Café came back for 8,000). */
+const SMALL_NAME = /\b(caf[eé]|bar|pub|tavern|lounge|club|jazz|kneipe|bistro|brasserie|taproom|saloon)(?![a-z])/i;
+/** Below this draw a stadium is never the room, whatever its tags (Nissan Stadium once came back for 15,000). */
+export const STADIUM_MIN_DRAW = 30_000;
+/** A room that holds this share of the crowd or more, but less than a one-night fit, is booked for two nights. */
+export const TWO_NIGHT_MIN = 0.3;
 export const DEFAULT_VENUE_TAGS = ["urn:tag:genre:place:live_music_venue", "urn:tag:genre:place:concert_hall", "urn:tag:genre:place:ballroom", "urn:tag:genre:place:performing_arts_theater"];
 
 export function venueTier(draw?: number, defaults = DEFAULT_VENUE_TAGS) {
@@ -28,6 +39,10 @@ export function venueTier(draw?: number, defaults = DEFAULT_VENUE_TAGS) {
 const NOT_A_ROOM_TAG = /church|chapel|cathedral|place_of_worship|museum|casino|hotel|amusement|school|university|record_store|music_store|clothing_store|book_store|winery|baseball|football|soccer|hockey|golf|video_arcade|bowling|skatepark|convention_center|brewery|coffee_shop|gift_shop$|recording_studio|cafe$/;
 /** Fairs, racetracks and the like carry a venue tag because concerts happen there once a year. */
 const NOT_A_ROOM_NAME = /\b(fair|fairgrounds?|speedway|raceway|racetrack|motor|expo|convention|zoo|aquarium|casino|church|cabaret|gentlemen|strip|resort|hall of fame|museum|brewing|brewery|golf|country club|farm|vineyard|winery)\b/i;
+/** Places that host the odd performance but aren't where a touring band plays (Westbeth Artists Housing). */
+const NOT_A_ROOM_EVER = /\b(housing|apartments?|residences?|lofts|condos?|hostel)\b/i;
+/** A gallery or an art centre can be a 200-cap room; for a crowd of 700 or more it isn't. */
+const SMALL_ART_ROOM = /\b(gallery|galerie|art center|art centre|arts centre|art museum|artist run)\b/i;
 /** For a crowd of 3,000 or more a bar, pub or restaurant isn't the room, however the fans love it. */
 const BAR_TAG = /restaurant|\bbar$|live_music_bar|pub$|night_club|cocktail/;
 const BIG_ROOM_TAG = /concert_hall|amphitheater|arena|stadium|performing_arts_theater|ballroom/;
@@ -39,10 +54,149 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
   if (e.place?.isClosed) return false;
   const ids = placeTagIds(e);
   if (ids.some((id) => NOT_A_ROOM_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id) && !/stadium/.test(id))) return false;
-  if (NOT_A_ROOM_NAME.test(e.name)) return false;
+  if (NOT_A_ROOM_NAME.test(e.name) || NOT_A_ROOM_EVER.test(e.name)) return false;
+  if (draw && draw >= 700 && SMALL_ART_ROOM.test(e.name) && !/performing arts/i.test(e.name)) return false;
+  if (draw && draw >= BIG_ROOM_DRAW && SMALL_NAME.test(e.name)) return false;
   if (draw && draw >= 3000 && ids.some((id) => BAR_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id))) return false;
-  if (!(draw && draw >= 9000) && ids.some((id) => /stadium/.test(id))) return false;
+  if (!(draw && draw >= STADIUM_MIN_DRAW) && (ids.some((id) => /stadium/.test(id)) || /\b(stadium|stadion|ballpark|field)\b/i.test(e.name))) return false;
   return true;
+}
+
+/** A venue name as a poster prints it: no stray question marks, quotes or doubled spaces from the listing. */
+export function cleanName(name: string): string {
+  return name
+    .replace(/\s+/g, " ")
+    .replace(/^["'“”‘’\s]+|["'“”‘’\s?¿]+$/g, "")
+    .replace(/\s+([,.;:])/g, "$1")
+    .trim();
+}
+
+/* ───────────────────────── rooms by size ───────────────────────── */
+
+/** Two nights cover the crowd: the room holds 30–60% of it (one night would turn half the fans away). */
+export function twoNights(r: Room, draw?: number): boolean {
+  if (!draw || !r.capacity) return false;
+  const share = r.capacity.value / draw;
+  return share >= TWO_NIGHT_MIN && share < 0.6;
+}
+
+/** A room up to this many times the crowd can be booked in a reduced configuration (balcony closed, half house). */
+export const REDUCED_MAX = 4;
+
+/** Too big, but a reduced configuration covers it: the pitch asks for one. */
+export function reducedHouse(r: Room, draw?: number): boolean {
+  return Boolean(draw && r.capacity && r.capacity.value > draw * 2.5 && r.capacity.value <= draw * REDUCED_MAX);
+}
+
+/**
+ * How good a room is for this crowd, lower is better: 0 a known fit (60–250% of the draw, one night); 1 a known
+ * two-night stand (30–60%); 1.5 a known room up to four times the crowd, in a reduced configuration; then a room
+ * whose capacity couldn't be found (2 for a crowd under 3,000, where clubs are rarely on Wikidata; 2.5 from 3,000
+ * up, where an unmeasured room is nearly always a small one); then rooms known to miss by how far they miss.
+ */
+export function roomGrade(r: Room, draw?: number): number {
+  if (!draw) return 0;
+  const f = fit(r, draw);
+  if (f === "fits") return 0;
+  if (twoNights(r, draw)) return 1;
+  if (reducedHouse(r, draw)) return 1.5;
+  if (f === "unknown") return draw >= BIG_ROOM_DRAW ? 2.5 : 2;
+  return 3 + Math.abs(Math.log(r.capacity!.value / draw));
+}
+
+/** The room to book: the best grade; among equals the agent's choice, then Qloo's order (fan affinity). */
+export function chooseRoom(rooms: Room[], wanted: string | undefined, draw?: number): Room | undefined {
+  if (!rooms.length) return undefined;
+  const order = [...rooms].sort((a, b) => roomGrade(a, draw) - roomGrade(b, draw) || Number(b.id === wanted) - Number(a.id === wanted) || rooms.indexOf(a) - rooms.indexOf(b));
+  return order[0];
+}
+
+/* ───────────────────────── openers ───────────────────────── */
+
+/** Nationalities and catch-alls that Qloo files as genres; sharing one says nothing about a bill. */
+const NOT_A_GENRE = /^(usa|us|american|irish|british|english|scottish|welsh|uk|australian|canadian|swedish|german|french|norwegian|danish|dutch|spanish|italian|mexican|singer (&|and) songwriter|singer songwriter|acoustic|experimental|instrumental|vocal|vocals|female vocalists|male vocalists|seen live)$/;
+
+export const foldGenre = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9&]+/g, " ").trim();
+
+/** The genres in a Qloo tag list (genre and subgenre tags), folded so "Post-Punk" meets "Post Punk". */
+export function genresOf(tags: { id: string; name: string; type?: string }[]): string[] {
+  const out = new Set<string>();
+  for (const t of tags) if (/(^|:)(sub)?genre(:|$)/.test(t.type ?? "") || /:(sub)?genre:/.test(t.id)) {
+    const g = foldGenre(t.name);
+    if (g && !NOT_A_GENRE.test(g) && !/:place:/.test(t.id)) out.add(g);
+  }
+  return [...out];
+}
+
+/** Umbrella genres: sharing one ("rock", "indie rock") puts an Americana act under a post-punk band, so it takes two. */
+const BROAD = /^(rock|pop|alternative|alternative rock|indie|indie rock|indie pop|pop rock|folk|electronic|dance|soul|punk|metal|rap|hip hop|country|blues|jazz|world|r&b|rnb)$/;
+
+/**
+ * Whether two acts share a genre: one specific genre in common (post-punk, Americana, metalcore), or two
+ * umbrella ones. When either side has no genres on Qloo, nothing can be said, so it passes.
+ */
+export function sharesGenre(headliner: string[], opener: string[]): boolean {
+  const h = new Set(headliner.map(foldGenre).filter((g) => g && !NOT_A_GENRE.test(g)));
+  const o = [...new Set(opener.map(foldGenre).filter((g) => g && !NOT_A_GENRE.test(g)))];
+  if (!h.size || !o.length) return true;
+  const shared = o.filter((g) => h.has(g));
+  return shared.some((g) => !BROAD.test(g)) || shared.length >= 2;
+}
+
+/** "best known as the lead guitarist of the heavy metal band Metallica": a member of another band, not a support act. */
+const SIDE_MEMBER = [
+  /\bbest known\b[^.]{0,80}?\b(of|for|in|with)\b[^.]{0,60}?\b(band|group|duo|trio|quartet|supergroup|collective)\b/i,
+  /\b(frontman|frontwoman|front man|front woman)\s+(of|for)\b/i,
+  /\b(is|was)\s+(a|an|the)\s+(former\s+|founding\s+|current\s+|longtime\s+)?(member|co-?founder)\s+of\b/i,
+  /\blead\s+(vocalist|singer|guitarist)\b[^.]{0,30}?\b(of|for|in)\b[^.]{0,60}?\b(band|group)\b/i,
+];
+
+/** A band's own description names its singer ("fronted by vocalist…"); only a person who is in another band counts. */
+const IS_A_BAND = /^[^.]{0,120}?\b(is|are|was|were)\s+(an?|the)\s+([\w&'-]+,?\s+){0,5}(band|group|duo|trio|quartet|quintet|collective|ensemble|project|supergroup)\b/i;
+
+export function isSideMember(description?: string): boolean {
+  if (!description) return false;
+  if (IS_A_BAND.test(description)) return false;
+  return SIDE_MEMBER.some((re) => re.test(description));
+}
+
+/**
+ * Why an artist Qloo suggests can't open for this headliner, or null when they can: the headliner themselves,
+ * a shared name word (a solo member or side project), a member of the headliner or of another band (Grian
+ * Chatten fronts Fontaines D.C.; Kirk Hammett plays in Metallica), not clearly smaller than the headliner, or no
+ * genre in common (bluegrass under post-punk, country under disco-funk).
+ */
+export function openerProblem(headliner: { id?: string; name: string; popularity?: number; genres: string[] }, cand: { id?: string; name: string; description?: string; popularity?: number; genres: string[] }): string | null {
+  if (cand.id && cand.id === headliner.id) return "the headliner";
+  if (foldName(cand.name) === foldName(headliner.name)) return "the headliner";
+  if (sharesName(headliner.name, cand.name)) return "shares the headliner's name";
+  if (isMember(headliner.name, cand)) return `a member of ${headliner.name}`;
+  if (isSideMember(cand.description)) return "a member of another band";
+  if (headliner.popularity !== undefined && cand.popularity !== undefined && cand.popularity >= headliner.popularity) return "not smaller than the headliner";
+  if (!sharesGenre(headliner.genres, cand.genres)) return "no genre in common";
+  return null;
+}
+
+/**
+ * One support act for the whole run (it travels with the tour, as on a real tour): the opener the agent picked
+ * most often; ties go to the one that turned up in the most cities' lookups, then to the higher summed affinity.
+ * Returns undefined when no city has an opener.
+ */
+export function pickSupport<O extends { id: string; affinity?: number }>(stops: { openers: O[]; openerId?: string }[]): O | undefined {
+  const tally = new Map<string, { o: O; votes: number; seen: number; aff: number }>();
+  for (const s of stops) {
+    for (const o of s.openers) {
+      const t = tally.get(o.id) ?? { o, votes: 0, seen: 0, aff: 0 };
+      t.seen++;
+      t.aff += o.affinity ?? 0;
+      tally.set(o.id, t);
+    }
+    if (s.openerId) {
+      const t = tally.get(s.openerId);
+      if (t) t.votes++;
+    }
+  }
+  return [...tally.values()].sort((a, b) => b.votes - a.votes || b.seen - a.seen || b.aff - a.aff)[0]?.o;
 }
 
 /** The city as a point and a radius that grows with the metro: 18 km for a town, 40 km for a metropolis. */

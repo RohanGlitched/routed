@@ -1,7 +1,7 @@
 import "server-only";
 import { marketById, type Market } from "../geo/markets";
 import { CHAINS } from "../chains";
-import { cityArea, DEFAULT_VENUE_TAGS, isMember, isRoom, nearCity, placeTagIds, sharesName, venueTier } from "./rooms";
+import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isRoom, nearCity, openerProblem, placeTagIds, venueTier } from "./rooms";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
 import { describeRequest, recommend, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
@@ -38,7 +38,7 @@ async function timed<T>(fn: () => Promise<T>): Promise<[T, number]> {
 
 const toRoom = (e: Entity): Room => ({
   id: e.id,
-  name: e.name,
+  name: cleanName(e.name),
   address: e.place?.address ?? e.disambiguation,
   lat: e.place?.lat,
   lon: e.place?.lon,
@@ -65,6 +65,18 @@ export async function lookUpRooms(artist: Artist, marketId: string, log: Log, dr
     const [r, ms] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), near: cityArea(m), tags: tier.tags, take: 25 }));
     const rooms = r.entities.filter((e) => nearCity(e, m) && isRoom(e, draw)).map(toRoom).slice(0, 14);
     log({ kind: "qloo", text: `Which ${tier.name} in ${m.name} do ${artist.name} fans go to?`, result: rooms.length ? rooms.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "No rooms of that size came back.", request: describeRequest(r.request), ms });
+    // Qloo tags a 200-cap club "concert hall" too, so for a crowd of 3,000 to 9,000 the big rooms are asked for on
+    // their own (arenas and amphitheatres) and put first in line to be measured.
+    if (draw && draw >= BIG_ROOM_DRAW && !tier.tags.every((t) => BIG_ROOM_TAGS.includes(t))) {
+      try {
+        const [b, ms2] = await timed(() => recommend({ type: "urn:entity:place", signals: [artist.id], filterLocation: placeQuery(m), near: cityArea(m), tags: BIG_ROOM_TAGS, take: 15 }));
+        const big = b.entities.filter((e) => nearCity(e, m) && isRoom(e, draw) && !rooms.some((x) => x.id === e.id)).map(toRoom).slice(0, 6);
+        log({ kind: "qloo", text: `Which arenas and amphitheatres in ${m.name} do ${artist.name} fans go to?`, result: big.length ? big.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "None came back.", request: describeRequest(b.request), ms: ms2 });
+        return [...rooms, ...big];
+      } catch {
+        return rooms;
+      }
+    }
     return rooms;
   } catch (e) {
     log({ kind: "qloo", text: `Which ${tier.name} in ${m.name} do ${artist.name} fans go to?`, result: (e as Error).message, failed: true });
@@ -94,15 +106,21 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
         signals: [artist.id],
         signalLocation: placeQuery(m),
         exclude: [artist.id],
-        take: 10,
+        take: 15,
         extra: { ...extra, "signal.location": `POINT(${m.lon} ${m.lat})` },
       }),
     );
+    const headliner = { id: artist.id, name: artist.name, popularity: pop, genres: artist.genreKeys ?? artist.genres };
+    const ruledOut: string[] = [];
     const openers: Opener[] = r.entities
-      .filter((e) => e.id !== artist.id && !sharesName(artist.name, e.name) && !isMember(artist.name, e) && (pop === undefined || e.popularity === undefined || e.popularity < pop))
+      .filter((e) => {
+        const why = openerProblem(headliner, { id: e.id, name: e.name, description: e.description, popularity: e.popularity, genres: genresOf(e.tags) });
+        if (why && why !== "the headliner") ruledOut.push(`${e.name} (${why})`);
+        return !why;
+      })
       .slice(0, 5)
-      .map((e) => ({ id: e.id, name: e.name, image: e.image, affinity: e.affinity, popularity: e.popularity, description: e.description, shared: [] }));
-    log({ kind: "qloo", text: `Who could open in ${m.name}, for an audience like ${artist.name}'s?`, result: openers.length ? openers.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "No artists came back.", request: describeRequest(r.request), ms });
+      .map((e) => ({ id: e.id, name: cleanName(e.name), image: e.image, affinity: e.affinity, popularity: e.popularity, description: e.description, genres: genresOf(e.tags).slice(0, 4), shared: [] }));
+    log({ kind: "qloo", text: `Who could open in ${m.name}, for an audience like ${artist.name}'s?`, result: `${openers.length ? openers.slice(0, 3).map((x) => `${x.name}${pct(x.affinity)}`).join(", ") : "No artists came back."}${ruledOut.length ? `; ruled out ${ruledOut.slice(0, 3).join(", ")}` : ""}`, request: describeRequest(r.request), ms });
     return openers;
   } catch (e) {
     log({ kind: "qloo", text: `Who could open in ${m.name}?`, result: (e as Error).message, failed: true });
@@ -130,7 +148,7 @@ export async function lookUpSpots(kind: keyof typeof SPOTS, artist: Artist, mark
     const spots = r.entities
       .filter((e) => !e.place?.isClosed && nearCity(e, m) && !skip.includes(e.id) && !CHAINS.test(e.name) && !NOT_AN_AFTERSHOW.test(e.name) && !placeTagIds(e).some((id) => VENUE_TAGS.includes(id) || /live_music_venue|concert_hall/.test(id)))
       .slice(0, 3)
-      .map((e) => ({ id: e.id, name: e.name, address: e.place?.address ?? e.disambiguation, affinity: e.affinity, kind: spotKind(placeTagIds(e)), lat: e.place?.lat, lon: e.place?.lon, area: e.place?.area, areaTrait: e.tags.find((t) => t.id.startsWith("urn:tag:neighborhood_characteristic:"))?.name }));
+      .map((e) => ({ id: e.id, name: cleanName(e.name), address: e.place?.address ?? e.disambiguation, affinity: e.affinity, kind: spotKind(placeTagIds(e)), lat: e.place?.lat, lon: e.place?.lon, area: e.place?.area, areaTrait: e.tags.find((t) => t.id.startsWith("urn:tag:neighborhood_characteristic:"))?.name }));
     log({ kind: "qloo", text: question, result: spots.map((x) => x.name).join(", ") || "Nothing came back.", request: describeRequest(r.request), ms });
     return spots;
   } catch (e) {

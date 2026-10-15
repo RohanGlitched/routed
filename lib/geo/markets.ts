@@ -102,7 +102,7 @@ const ALIASES: Record<string, string> = {
   frankfurt: "frankfurt am main", hanover: "hannover", cologne: "koln", koeln: "koln", ghent: "gent", bruges: "brugge", seville: "sevilla", aarhus: "arhus",
   newcastle: "newcastle upon tyne", hull: "kingston upon hull", wien: "vienna", praha: "prague", warszawa: "warsaw", lisboa: "lisbon", torino: "turin",
   milano: "milan", firenze: "florence", napoli: "naples", geneve: "geneva", goteborg: "gothenburg", kobenhavn: "copenhagen", bruxelles: "brussels",
-  antwerpen: "antwerp", nurnberg: "nuremberg", munchen: "munich", "st. petersburg fl": "tampa", "fort worth": "fort worth",
+  indio: "palm springs", "palm desert": "palm springs", "cathedral city": "palm springs", antwerpen: "antwerp", nurnberg: "nuremberg", munchen: "munich", "st. petersburg fl": "tampa", "fort worth": "fort worth",
 };
 
 /**
@@ -139,6 +139,16 @@ export function findMarket(text: string, region?: RegionId): Market | null {
     else if (isPlaceName(qualifier)) return null;
   }
   return candidates.sort((a, b) => b.pop - a.pop)[0] ?? null;
+}
+
+/**
+ * Why a model-alone stop has no rank: a touring city of another region ("London" on a mainland-Europe tour) is
+ * outside the region; anything else is a town too small to be a touring city.
+ */
+export function unrankedLabel(stop: { city: string; label: string }, region: RegionId): string {
+  const m = findMarket(stop.label) ?? findMarket(stop.city);
+  if (m && m.region !== region) return `outside ${region === "eu" ? "mainland Europe" : REGIONS[region].name}`;
+  return "not a touring city";
 }
 
 const US_STATES: Record<string, string> = {

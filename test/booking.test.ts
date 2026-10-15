@@ -153,6 +153,8 @@ test("a web page's number counts only for this room, in this city, next to its n
   // A listing page: the 4,500 belongs to another venue far from this name.
   const listing = `Theatre Royal Brighton is a Grade II listed theatre.${" Lorem ipsum dolor sit amet.".repeat(12)} The Brighton Centre has a capacity of 4,500 seated.`;
   assert.equal(pickCapacity("Theatre Royal Brighton", [{ url: "https://theatreinbrighton.co.uk/venues", text: listing }], "Brighton, UK"), null);
+  // Snippet pieces joined with "[...]" don't lend each other a name.
+  assert.equal(pickCapacity("Theatre Royal Brighton", [{ url: "https://theatreinbrighton.co.uk/venues", text: "Theatre Royal Brighton has no lift due to its Grade II listed status. [...] ### Capacity Up to 4,500 seated or 5,000 standing" }], "Brighton, UK"), null);
   // A recital room on the same page isn't the hall.
   assert.equal(pickCapacity("National Concert Hall", [{ url: "https://x.example/nch-dublin", text: "At the National Concert Hall in Dublin, the recital room, occasionally used for performances, has a capacity of 100." }], "Dublin"), null);
   // The right number still comes through.

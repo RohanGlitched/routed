@@ -43,7 +43,9 @@ type Cap = { value: number; source: string; quote: string };
  * room are still read.
  */
 const memo = new Map<string, Cap | null>();
-const INDEX = "capacity/rooms-v2.json";
+/** Bumped whenever the page reader changes, so answers read by an older reader are never trusted again. */
+export const READER_VERSION = 3;
+const INDEX = `capacity/rooms-v${READER_VERSION}.json`;
 const LEGACY_INDEX = "capacity/index.json";
 const legacy = new Map<string, Cap>();
 let legacyLoaded: Promise<void> | null = null;

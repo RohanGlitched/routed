@@ -87,9 +87,12 @@ export function pickCapacity(venue: string, pages: { url: string; text: string }
     if (!names(page)) continue;
     // Komedia Bath is not Komedia Bristol: the page or its address must name the city.
     if (town && !page.includes(town) && !fold(p.url).includes(town)) continue;
-    for (const h of capacitiesIn(p.text)) {
+    // Search snippets join pieces of a page with "[...]": each piece stands alone, so a number is never read
+    // next to a name from another part of the page.
+    const pieces = p.text.split("[...]");
+    for (const h of pieces.flatMap((piece) => capacitiesIn(piece).map((x) => ({ ...x, piece })))) {
       // On a page listing many venues the number must sit next to this one's name (within 250 characters).
-      const near = fold(p.text.slice(Math.max(0, (h.at ?? 0) - 250), (h.at ?? 0) + 120));
+      const near = fold(h.piece.slice(Math.max(0, (h.at ?? 0) - 250), (h.at ?? 0) + 120));
       if (!names(near)) continue;
       const cur = tally.get(h.value);
       if (cur) cur.n++;

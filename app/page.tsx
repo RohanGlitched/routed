@@ -18,7 +18,9 @@ export const revalidate = 120;
 async function showcase(): Promise<{ hero: TourRecord | null; wall: TourRecord[] }> {
   const wall = await showcaseTours().catch(() => [] as TourRecord[]);
   const pinned = process.env.SHOWCASE_ID ? await loadTour(process.env.SHOWCASE_ID).catch(() => null) : null;
-  const hero = pinned?.status === "done" ? pinned : (wall[0] ?? null);
+  // The pin holds only while that tour is on the poster wall; a tour taken off it (re-routed under newer rules)
+  // gives way to the newest one there.
+  const hero = pinned?.status === "done" && pinned.showcase ? pinned : (wall[0] ?? null);
   return { hero, wall: wall.filter((t) => t.plan?.stops?.length) };
 }
 

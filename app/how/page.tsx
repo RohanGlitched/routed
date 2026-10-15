@@ -30,7 +30,8 @@ const CALLS: { match: RegExp; title: string; why: string; endpoint: string }[] =
 
 async function example(): Promise<{ id: string; artist: string; log: LogLine[] } | null> {
   const id = process.env.SHOWCASE_ID;
-  const t = (id ? await loadTour(id).catch(() => null) : null) ?? (await showcaseTours().catch(() => []))[0];
+  const pinned = id ? await loadTour(id).catch(() => null) : null;
+  const t = (pinned?.showcase ? pinned : null) ?? (await showcaseTours().catch(() => []))[0];
   return t?.status === "done" ? { id: t.id, artist: t.plan?.artist.name ?? t.input.artist, log: t.log } : null;
 }
 

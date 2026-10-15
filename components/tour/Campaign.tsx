@@ -3,7 +3,7 @@ import c from "./campaign.module.css";
 
 /**
  * Beyond the room: what the rest of Qloo's graph says about this audience, turned into the jobs around a tour.
- * Each block is one Qloo ranking (podcasts, brands, themes, dishes, films, TV, books) with what it's for; the
+ * Each block is one Qloo ranking (podcasts, brands, mood, films, TV, books, genres) with what it's for; the
  * lists are Qloo's, in Qloo's order, never written by the model.
  */
 export function Campaign({ plan }: { plan: Plan }) {
@@ -14,8 +14,7 @@ export function Campaign({ plan }: { plan: Plan }) {
   const blocks: { key: string; title: string; use: string; items: Named[]; wide?: boolean }[] = [
     { key: "press", title: "Press", use: `Podcasts ${artist} fans over-index on: pitch an interview or a tour episode to these first.`, items: m.podcasts ?? [] },
     { key: "partners", title: "Partners and merch", use: "Brands this audience over-indexes on: co-branded merch, a sponsored night, or a giveaway at the door.", items: a.brands },
-    { key: "brief", title: "Creative brief", use: "Themes these fans connect with and the words they use for music they love: the tone for the poster, the ads and the setlist talk.", items: [...(t.themes ?? []).slice(0, 5), ...(t.vibe ?? []).slice(0, 4)] },
-    { key: "food", title: "Pre-show and hospitality", use: "Dishes these fans seek out: a pre-show pop-up partner near the room, or what's on the rider.", items: t.food ?? [] },
+    { key: "brief", title: "Creative brief", use: "The words these fans use for the music they love: the tone for the poster, the ads and the setlist talk.", items: (t.vibe ?? []).slice(0, 8) },
     { key: "screen", title: "Watch and read", use: "Films, TV and books this audience loves: references for content, playlists between sets and screening tie-ins.", items: [...(m.films ?? []).slice(0, 3), ...(m.tv ?? []).slice(0, 3), ...(m.books ?? []).slice(0, 2)] },
     { key: "sound", title: "The sound", use: "Genres this audience over-indexes on: how to describe the night to a talent buyer and which local acts to add.", items: t.music ?? [] },
   ].filter((b) => b.items.length > 0);
@@ -28,7 +27,7 @@ export function Campaign({ plan }: { plan: Plan }) {
           Beyond the room
         </h2>
         <p className={c.lede}>
-          The same audience across the rest of Qloo&apos;s graph: what {artist} fans listen to, buy, eat, watch and read, ranked by how much more they love it than the average Qloo user. Each list is Qloo&apos;s own ranking.
+          The same audience across the rest of Qloo&apos;s graph: what {artist} fans listen to, buy, watch and read, ranked by how much more they love it than the average Qloo user. Each list is Qloo&apos;s own ranking.
         </p>
       </div>
       <div className={c.grid}>

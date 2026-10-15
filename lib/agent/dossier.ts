@@ -6,16 +6,16 @@ import type { Log } from "./tools";
 
 /**
  * Who the fans are, from Qloo, in the shape a tour needs it: door policy (age skew), the sound and mood to
- * pitch rooms and openers with, the themes and dishes and films they love (copy, catering, aftershow), the
+ * pitch rooms and openers with, the films, TV and books they love (content and tie-ins), the
  * podcasts to pitch for press, and the brands to approach for merch and partners. Every list is Qloo's own
  * ranking for this artist's audience; nothing here is written by the model.
  */
 
+// Themes and dishes were asked too, and dropped (Oct 15): for most artists they came back generic ("Celebrity
+// Life", "Chicken Caesar Salad"), which tells a booker nothing. Sound and mood are what a pitch uses.
 const TAGS = {
   music: { type: "urn:tag:genre:music", ask: "What do these fans listen to?" },
   vibe: { type: "urn:tag:artist:qloo", ask: "How do these fans describe the music they love?" },
-  themes: { type: "urn:tag:theme:qloo", ask: "Which themes do these fans connect with?" },
-  food: { type: "urn:tag:specialty_dish:place", ask: "Which dishes do these fans seek out?" },
 } as const;
 
 const MEDIA = {

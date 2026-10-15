@@ -57,10 +57,11 @@ export function placeLocal(local: Local, room: Room | undefined, nearby: Spot[],
   return out;
 }
 
-/** The tag kinds worth a sentence in a pitch, best first; regions and instruments are left out. */
-const SHARED_KINDS = ["urn:tag:style:qloo", "urn:tag:theme:qloo", "urn:tag:audience:qloo", "urn:tag:music:qloo", "urn:tag:artist:qloo", "urn:tag:genre:music", "urn:tag:characteristic:music"];
+/** The tag kinds worth a word in a pitch, best first: style, genre and mood. Audience and theme tags ("Engaging",
+ *  "Love", "Passionate") came back for nearly every pair, so they say nothing about this one. */
+const SHARED_KINDS = ["urn:tag:style:qloo", "urn:tag:genre:music", "urn:tag:music:qloo", "urn:tag:artist:qloo"];
 /** Words every audience shares, which say nothing about this pair. */
-const BLAND = /^(straightforward|simple chord progressions|moderate|melodic|simple|steady|electric|acoustic|drums|guitar|vocals)$/i;
+const BLAND = /^(straightforward|simple chord progressions|moderate|melodic|simple|steady|electric|acoustic|drums|guitar|vocals|engaging|love|passionate|loyal|energetic|emotional|catchy|dynamic|expressive|intimate|upbeat|fun|powerful|authentic|relatable|engaged|devoted|enthusiastic|dedicated)$/i;
 
 /** What the headliner's fans and an opener's fans share, from Qloo's audience comparison, as three plain words. */
 export async function lookUpShared(artist: Artist, opener: Opener, log: Log): Promise<string[]> {

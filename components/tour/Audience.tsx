@@ -8,9 +8,9 @@ export function Audience({ plan }: { plan: Plan }) {
   const ages = AGE_ORDER.filter((b) => a.age[b] !== undefined);
   const max = Math.max(0.05, ...ages.map((b) => Math.abs(a.age[b]!)));
   const trend = a.trend.filter((p) => p.percentile !== undefined);
-  // A flat line says nothing: show the trend only when it moved; otherwise the themes these fans connect with.
+  // A flat line says nothing: show the trend only when it moved; otherwise the podcasts to pitch for press.
   const moved = trend.length > 2 && Math.abs(trend.at(-1)!.percentile! - trend[0]!.percentile!) >= 1;
-  const themes = a.taste?.themes ?? [];
+  const podcasts = a.media?.podcasts ?? [];
   return (
     <div className={s.audience}>
       {ages.length > 0 && (
@@ -45,14 +45,10 @@ export function Audience({ plan }: { plan: Plan }) {
       {moved ? (
         <Trend points={trend as { date: string; percentile: number }[]} />
       ) : (
-        themes.length > 0 && (
+        podcasts.length > 0 && (
           <figure className={s.panel}>
-            <figcaption>Themes these fans connect with</figcaption>
-            <ul className={s.chips}>
-              {themes.slice(0, 7).map((t) => (
-                <li key={t.id}>{t.name}</li>
-              ))}
-            </ul>
+            <figcaption>Podcasts they over-index on, to pitch for press</figcaption>
+            <p className={s.brands}>{podcasts.slice(0, 5).map((p) => p.name).join(", ")}</p>
           </figure>
         )
       )}

@@ -42,7 +42,7 @@ export const MEASURE_PER_CITY = 8;
 
 const popOf = (id: string) => marketById(id)?.pop ?? 0;
 
-const SHORTLIST_SCHEMA = {
+export const SHORTLIST_SCHEMA = {
   type: "object",
   additionalProperties: false,
   properties: {
@@ -69,10 +69,10 @@ const BOOK_SCHEMA = {
   required: ["stops"],
 };
 
-const role = (artist: string) =>
+export const role = (artist: string) =>
   `You are a booking agent routing a tour for ${artist}. Your evidence is Qloo's taste graph for ${artist}'s fans: a heatmap ranking of cities, and per-city lists of the rooms those fans go to and the artists (possible openers) who share the audience. Openers are other artists, never ${artist}. Use only numbers from the evidence.`;
 
-function table(cities: CityScore[], from: { lat: number; lon: number }, RADIUS_KM: number): string {
+export function table(cities: CityScore[], from: { lat: number; lon: number }, RADIUS_KM: number): string {
   const rows = cities.map((c) => `${c.marketId} | ${c.label} | #${c.rank} | affinity ${Math.round(c.affinity * 100)}${c.popularity !== undefined ? ` | signal ${Math.round(c.popularity * 100)}` : ""} | ${Math.round(km(from, c))} km from start`);
   const close: string[] = [];
   const at = (c: CityScore) => ({ lat: c.lat, lon: c.lon, pop: popOf(c.marketId) });
@@ -80,7 +80,15 @@ function table(cities: CityScore[], from: { lat: number; lon: number }, RADIUS_K
   return `city_id | city | strength rank | fan affinity (0-100) | taste signal (0-100) | distance\n${rows.join("\n")}${close.length ? `\n\nToo close to pair (radius clause, ${RADIUS_KM} km): ${close.join("; ")}` : ""}`;
 }
 
-function brief(artist: Artist, audience: Audience): string {
+/**
+ * The shortlist question. The head-to-head (scripts/head-to-head.ts) asks it twice, once with Qloo's table and
+ * once with a table of the region's biggest cities, so the only difference between its two arms is the evidence.
+ */
+export function shortlistPrompt(o: { brief: string; from: { label: string }; shows: number; draw?: number; source: string; table: string; prefer: string }): string {
+  return `${o.brief}\nStarting from ${o.from.label}. Shows wanted: ${o.shows}.${o.draw ? ` Usual crowd: about ${o.draw}.` : ""}\n\n${o.source}:\n${o.table}\n\nShortlist exactly ${o.shows} cities for the tour (none of the pairs marked too close; keep every leg between shows under ${MAX_LEG_KM} km of road, so choose one part of the region rather than both coasts; never skip a major market such as London, New York or Paris when it is in the top ten), ${o.prefer}, each with a short reason, plus up to 3 alternate city_ids in case a city has no room that fits.`;
+}
+
+export function brief(artist: Artist, audience: Audience): string {
   const top = topAge(audience.age);
   return [
     `Artist: ${artist.name}${artist.genres.length ? ` (${artist.genres.slice(0, 4).join(", ")})` : ""}.`,
@@ -150,7 +158,7 @@ export async function planTour(opts: { artist: Artist; audience: Audience; citie
           { role: "system", content: role(artist.name) },
           {
             role: "user",
-            content: `${brief(artist, opts.audience)}\nStarting from ${opts.from.label}. Shows wanted: ${shows}.${draw ? ` Usual crowd: about ${draw}.` : ""}\n\nCandidate cities from Qloo's heatmap for ${artist.name}, strongest first:\n${table(candidates, opts.from, RADIUS_KM)}\n\nShortlist exactly ${shows} cities for the tour (none of the pairs marked too close; keep every leg between shows under ${MAX_LEG_KM} km of road, so choose one part of the region rather than both coasts; never skip a major market such as London, New York or Paris when it is in the top ten), preferring stronger cities, each with a short reason, plus up to 3 alternate city_ids in case a city has no room that fits.`,
+            content: shortlistPrompt({ brief: brief(artist, opts.audience), from: opts.from, shows, draw, source: `Candidate cities from Qloo's heatmap for ${artist.name}, strongest first`, table: table(candidates, opts.from, RADIUS_KM), prefer: "preferring stronger cities" }),
           },
         ],
       });

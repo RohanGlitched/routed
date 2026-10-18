@@ -38,11 +38,16 @@
 //   own shortlist step (lib/agent/plan.ts shortlistPrompt, same model, same schema) and the same city rules
 //   (radius clause, fill from the ranking, the leg rule, major markets kept), run in two arms that differ only in
 //   the evidence: arm Q gets Qloo's table and Qloo's audience line, exactly as Routed does; arm P gets the region's
-//   biggest cities by population and the artist's name. Three runs per arm. Rooms aren't looked up in either arm
+//   biggest cities by population and the artist's name. Three runs per arm (two: see the change below). Rooms aren't looked up in either arm
 //   (every city counts as having a room), so this isolates the choice of cities. Also, with no model: the fixed
 //   plan (strongest cities that clear the rules) on each ranking.
 //   Metric: the share of the 8 cities on the artist's real tour (the outside check's measure). Primary contrast:
-//   arm Q vs arm P, per artist averaged over the three runs.
+//   arm Q vs arm P, per artist averaged over the runs.
+//
+// One change, made Oct 18 after Test 1's model calls had started and before any ablation call ran: the owner cut
+// the model budget for this work to $1, so the ablation runs two times per arm, not three, and the run stops before
+// any call that would take the estimated spend (Token Factory list price for Nemotron 3 Ultra, $1 in and $3 out
+// per million tokens) past $0.95. Nothing had been scored when this changed.
 //
 // Statistics, for every contrast: per-artist differences, wins / losses / ties, an exact two-sided sign test,
 // and the mean difference with a 95% bootstrap interval (10,000 resamples, seed 20261018). Results are published
@@ -72,7 +77,10 @@ const DATA = "data/head-to-head";
 const CACHE = ".probe/h2h";
 const HELD_OUT_SIZE = 30;
 const MIN_MARKETS = 8;
-const RUNS = 3;
+const RUNS = 2;
+/** Token Factory list price for Nemotron 3 Ultra, dollars per token, and the cap for this work. */
+const PRICE = { in: 1e-6, out: 3e-6 };
+const CAP_USD = 0.95;
 const SHOWS = 8;
 const LIVE = "https://routed-tours.vercel.app";
 const UA = "RoutedHeadToHead/1.0 (https://github.com/RohanGlitched/routed)";
@@ -216,7 +224,17 @@ function subjects(): Subject[] {
   return out;
 }
 
-const benchTour = (id: string) => cached<TourRecord>(`${CACHE}/bench/${id}.json`, async () => (await fetch(`${LIVE}/api/tours/${id}`)).json() as Promise<TourRecord>);
+const benchTour = (id: string) =>
+  cached<TourRecord>(`${CACHE}/bench/${id}.json`, async () => {
+    for (let i = 0; ; i++) {
+      try {
+        return (await (await fetch(`${LIVE}/api/tours/${id}`)).json()) as TourRecord;
+      } catch (e) {
+        if (i >= 3) throw e;
+        await sleep(2000 * (i + 1));
+      }
+    }
+  });
 
 async function qlooRanking(s: Subject): Promise<{ ids: string[]; cities: CityScore[] }> {
   return cached(`${CACHE}/qloo/${slug(s.artist)}.json`, async () => {
@@ -358,6 +376,12 @@ async function ablationArm(s: Subject, arm: "qloo" | "pop", run: number): Promis
 
 async function run() {
   const usage = newUsage();
+  // The first attempt (Oct 18) stopped on a dropped connection after 10 model calls and 9,022 tokens; counted here.
+  if (!existsSync(`${CACHE}/usage.json`)) writeJson(`${CACHE}/usage.json`, { ...newUsage(), modelCalls: 10, tokensIn: 0, tokensOut: 9022 });
+  const prev = readJson<typeof usage>(`${CACHE}/usage.json`);
+  const save = () => writeJson(`${CACHE}/usage.json`, { qloo: prev.qloo + usage.qloo, qlooCached: prev.qlooCached + usage.qlooCached, modelCalls: prev.modelCalls + usage.modelCalls, tokensIn: prev.tokensIn + usage.tokensIn, tokensOut: prev.tokensOut + usage.tokensOut });
+  const timer = setInterval(save, 15_000);
+  try {
   await withUsage(usage, async () => {
     const all = subjects();
     for (const s of all) {
@@ -365,15 +389,25 @@ async function run() {
       const m = await modelRanking(s).catch((e) => (console.error(`  ${s.artist} model ranking failed: ${(e as Error).message}`), null));
       console.log(`${s.artist.padEnd(32)} ${s.set.padEnd(8)} ${s.region} R=${s.truth.length} qloo ${q.ids.length} model ${m ? m.ids.filter(Boolean).length : "-"} | qloo calls ${usage.qloo}, model calls ${usage.modelCalls}, tokens ${usage.tokensIn + usage.tokensOut}`);
     }
+    const spent = () => (prev.tokensIn + usage.tokensIn) * PRICE.in + (prev.tokensOut + usage.tokensOut) * PRICE.out;
     for (const s of all.filter((x) => x.set === "bench")) {
-      for (let r = 1; r <= RUNS; r++) for (const arm of ["qloo", "pop"] as const) await ablationArm(s, arm, r);
-      console.log(`ablation ${s.artist} done | model calls ${usage.modelCalls}, tokens ${usage.tokensIn + usage.tokensOut}`);
+      for (let r = 1; r <= RUNS; r++)
+        for (const arm of ["qloo", "pop"] as const) {
+          // About 3,000 tokens in and 800 out per shortlist call: stop before one that would cross the cap.
+          if (spent() + 3500 * PRICE.in + 1200 * PRICE.out > CAP_USD) {
+            console.log(`budget: stopping before ${s.artist} ${arm} ${r}, $${spent().toFixed(3)} spent`);
+            return;
+          }
+          await ablationArm(s, arm, r);
+        }
+      console.log(`ablation ${s.artist} done | model calls ${usage.modelCalls}, tokens ${usage.tokensIn + usage.tokensOut}, about $${spent().toFixed(3)} so far`);
     }
   });
-  const prev = existsSync(`${CACHE}/usage.json`) ? readJson<typeof usage>(`${CACHE}/usage.json`) : newUsage();
-  const total = { qloo: prev.qloo + usage.qloo, qlooCached: prev.qlooCached + usage.qlooCached, modelCalls: prev.modelCalls + usage.modelCalls, tokensIn: prev.tokensIn + usage.tokensIn, tokensOut: prev.tokensOut + usage.tokensOut };
-  writeJson(`${CACHE}/usage.json`, total);
-  console.log("this run", usage, "all runs", total);
+  } finally {
+    clearInterval(timer);
+    save();
+  }
+  console.log("this run", usage, "all runs", readJson(`${CACHE}/usage.json`));
 }
 
 /* ───────────────────────── score ───────────────────────── */

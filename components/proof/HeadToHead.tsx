@@ -131,7 +131,7 @@ export function HeadToHead() {
       <H2HReading />
 
       <ContrastTable rows={[...all.primary, ...all.secondary, ...all.exploratory]} caption={`All ${all.n} artists. Score: share of the real tour's cities found when picking as many as the artist played (R-precision), averaged per artist. Intervals: 10,000 bootstrap resamples of the artists. The first two rows are the comparisons fixed before the run; the last (the model and Qloo averaged) was added after the results and is weaker evidence.`} />
-      <ContrastTable rows={[...test1.bench.primary, ...test1.heldOut.primary]} caption={`The two primary comparisons, split: the ${test1.bench.n} benchmark artists (mid-size, chosen Oct 8 for range), then the ${test1.heldOut.n} held-out artists (mostly arena acts, the kind Wikipedia writes tour articles about).`} />
+      <ContrastTable rows={[...test1.bench.primary.map((c) => ({ ...c, name: `Benchmark: ${c.name}` })), ...test1.heldOut.primary.map((c) => ({ ...c, name: `Held out: ${c.name}` }))]} caption={`The two primary comparisons, split: the ${test1.bench.n} benchmark artists (mid-size, chosen Oct 8 for range), then the ${test1.heldOut.n} held-out artists (mostly arena acts, the kind Wikipedia writes tour articles about).`} />
 
       <h3 className={s.h3}>Artist by artist</h3>
       <p className={s.note}>

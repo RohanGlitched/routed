@@ -49,6 +49,16 @@
 // any call that would take the estimated spend (Token Factory list price for Nemotron 3 Ultra, $1 in and $3 out
 // per million tokens) past $0.95. Nothing had been scored when this changed.
 //
+// A second change, made after Test 1 was first scored and in the model's favour: the model often names cities the
+// market list folds into a bigger neighbour (Wolverhampton is Birmingham, Bochum is the Ruhr's market), and matching
+// by name alone dropped them, filling its list with population instead. Names that don't match are now placed by
+// their Wikipedia coordinates (nearest touring market within 60 km), as the real tours' towns are. Qloo's side is
+// unchanged. The first scoring is kept in data/head-to-head/results-name-match-only.json.
+//
+// Added after the results, and reported whatever it showed (so weaker evidence than the tests above): the model's
+// ranking and Qloo's averaged the same way, against the model alone. Test 1 says Qloo adds to population; this asks
+// whether it adds to the model.
+//
 // Statistics, for every contrast: per-artist differences, wins / losses / ties, an exact two-sided sign test,
 // and the mean difference with a 95% bootstrap interval (10,000 resamples, seed 20261018). Results are published
 // whichever way they come out, every artist listed. Nothing is re-run to change an answer; a run that fails is
@@ -63,9 +73,9 @@ import { dirname } from "node:path";
 import { brief, POOL_SIZE, role, shortlistPrompt, SHORTLIST_SCHEMA, table } from "../lib/agent/plan.ts";
 import { pickArtist } from "../lib/agent/rooms.ts";
 import { HEAT_AREAS, scoreCities } from "../lib/agent/cities.ts";
-import { findMarket, km, marketById, marketLabel, REGIONS, type RegionId } from "../lib/geo/markets.ts";
+import { CA_ABBR, findMarket, km, marketById, marketId, marketLabel, nearestMarket, REGIONS, US_STATES, type RegionId } from "../lib/geo/markets.ts";
 import { keepAnchors, radiusFor, repairLegs, tooClose } from "../lib/geo/route.ts";
-import { beyondBiggest, blendRanking, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest, avg, type Hit } from "../lib/headtohead.ts";
+import { beyondBiggest, blendRanking, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest, avg, type Hit } from "../lib/headtohead.ts";
 import { MODELS, structured } from "../lib/nebius.ts";
 import { realMarkets, realTourFor } from "../lib/outside.ts";
 import { search, wherePopular } from "../lib/qloo.ts";
@@ -74,6 +84,8 @@ import { infoboxArtist, marketsByRegion, showRows, regionOfCountry } from "../li
 import type { CityScore, TourRecord } from "../lib/types.ts";
 
 const DATA = "data/head-to-head";
+/** Score with the first, name-only matching of the model's cities (kept for the record). */
+const NAME_ONLY = process.argv.includes("--name-only");
 const CACHE = ".probe/h2h";
 const HELD_OUT_SIZE = 30;
 const MIN_MARKETS = 8;
@@ -280,6 +292,31 @@ async function modelRanking(s: Subject): Promise<{ named: { city: string; area: 
     return { named, ids, model };
   });
 }
+/**
+ * The model's cities placed on touring markets: by name, else by the Wikipedia coordinates of "City, State" (North
+ * America) or "City" and then "City, Area" (the UK and Europe), nearest market within 60 km. A town with no market
+ * near it, or a name Wikipedia can't place in the region, is dropped.
+ */
+async function placeModelCities(named: { city: string; area: string }[], region: RegionId): Promise<(string | null)[]> {
+  const byName = named.map((c) => findMarket(`${c.city}, ${c.area}`, region) ?? findMarket(c.city, region));
+  const titles = (c: { city: string; area: string }) => {
+    const a = c.area.trim();
+    const full = US_STATES[a.toUpperCase()] ? US_STATES[a.toUpperCase()]!.replace(/(^|\s)\w/g, (x) => x.toUpperCase()) : Object.entries(CA_ABBR).find(([, v]) => v === a.toUpperCase())?.[0] ?? a;
+    return region === "na" ? [`${c.city}, ${full}`, c.city] : [c.city, `${c.city}, ${a}`];
+  };
+  const want = [...new Set(named.filter((_, i) => !byName[i]).flatMap(titles))];
+  const at = await coordinates(want);
+  return named.map((c, i) => {
+    if (byName[i]) return marketId(byName[i]!);
+    for (const t of titles(c)) {
+      const p = at[t];
+      const m = p ? nearestMarket({ lat: p[0], lon: p[1] }, region, 60) : null;
+      if (m) return marketId(m);
+    }
+    return null;
+  });
+}
+
 const marketIdOf = (m: { ascii: string; cc: string; state: string }) => [m.ascii, m.cc, m.cc === "US" ? m.state : ""].filter(Boolean).join("-").toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
 /* The ablation's two arms. */
@@ -431,7 +468,8 @@ async function score() {
   for (const s of all) {
     const truth = new Set(s.truth);
     const q = await qlooRanking(s);
-    const m = existsSync(`${CACHE}/model/${slug(s.artist)}.json`) ? await modelRanking(s) : null;
+    const m0 = existsSync(`${CACHE}/model/${slug(s.artist)}.json`) ? await modelRanking(s) : null;
+    const m = m0 ? { ...m0, ids: NAME_ONLY ? m0.ids : await placeModelCities(m0.named, s.region) } : null;
     const P = populationRanking(s.region);
     const Q = completeRanking(q.ids, s.region);
     const M = m ? completeRanking(m.ids, s.region) : null;
@@ -445,12 +483,12 @@ async function score() {
       source: s.source,
       R: truth.size,
       modelUnplaced: m ? m.ids.filter((x) => !x).length : null,
-      rp: { population: pack(rPrecision(P, truth)), model: M ? pack(rPrecision(M, truth)) : null, qloo: pack(rPrecision(Q, truth)), blend: pack(rPrecision(B, truth)) },
+      rp: { population: pack(rPrecision(P, truth)), model: M ? pack(rPrecision(M, truth)) : null, qloo: pack(rPrecision(Q, truth)), blend: pack(rPrecision(B, truth)), modelQloo: M ? pack(rPrecision(blendTwo(M, q.ids, s.region), truth)) : null },
       beyond: { model: M ? pack(beyondBiggest(M, truth, s.region)) : null, qloo: pack(beyondBiggest(Q, truth, s.region)), blend: pack(beyondBiggest(B, truth, s.region)) },
     });
   }
   const ok = rows.filter((r) => r.rp.model);
-  const v = (k: "population" | "model" | "qloo" | "blend", xs = ok) => xs.map((r) => share(r.rp[k]!));
+  const v = (k: "population" | "model" | "qloo" | "blend" | "modelQloo", xs = ok) => xs.map((r) => share(r.rp[k]!));
   const sets = { all: ok, bench: ok.filter((r) => r.set === "bench"), heldOut: ok.filter((r) => r.set === "held-out") };
   const test1 = Object.fromEntries(
     Object.entries(sets).map(([k, xs]) => [
@@ -463,7 +501,8 @@ async function score() {
           contrast("The model alone vs population", v("model", xs), v("population", xs)),
           contrast("Qloo + population vs the model alone", v("blend", xs), v("model", xs)),
         ],
-        pooled: Object.fromEntries((["population", "model", "qloo", "blend"] as const).map((key) => [key, pool(xs.map((r) => r.rp[key]!))])),
+        exploratory: [contrast("The model + Qloo vs the model alone", v("modelQloo", xs), v("model", xs))],
+        pooled: Object.fromEntries((["population", "model", "qloo", "blend", "modelQloo"] as const).map((key) => [key, pool(xs.map((r) => r.rp[key]!))])),
         beyond: Object.fromEntries((["model", "qloo", "blend"] as const).map((key) => [key, pool(xs.map((r) => r.beyond[key]!))])),
       },
     ]),
@@ -500,17 +539,32 @@ async function score() {
   const full = abl.filter((a) => a.qloo.length === RUNS && a.pop.length === RUNS);
   const test2 = {
     n: full.length,
+    runs: RUNS,
     primary: contrast("Agent with Qloo vs agent with population", full.map((a) => a.qlooShare), full.map((a) => a.popShare)),
     secondary: [
       contrast("Fixed plan on Qloo vs fixed plan on population", full.map((a) => a.fixedQloo / SHOWS), full.map((a) => a.fixedPop / SHOWS)),
       contrast("Stored Routed tour vs stored model-alone tour (the Oct 15 outside check)", full.map((a) => share(a.routed)), full.map((a) => share(a.alone))),
     ],
   };
-  const usage = existsSync(`${CACHE}/usage.json`) ? readJson(`${CACHE}/usage.json`) : null;
-  writeJson(`${DATA}/results.json`, { scored: new Date().toISOString(), protocol: "scripts/head-to-head.ts", model: "nvidia/Nemotron-3-Ultra-550b-a55b", usage, test1, test1Rows: rows, test2, test2Rows: abl });
+  // The model's answers are published (Qloo's responses are not: they stay in the gitignored cache).
+  const runs = all.map((s) => ({
+    artist: s.artist,
+    ranking: existsSync(`${CACHE}/model/${slug(s.artist)}.json`) ? readJson<{ named: unknown[] }>(`${CACHE}/model/${slug(s.artist)}.json`).named : null,
+    ablation:
+      s.set === "bench"
+        ? Object.fromEntries((["qloo", "pop"] as const).map((arm) => [arm, Array.from({ length: RUNS }, (_, i) => `${CACHE}/ablation/${slug(s.artist)}-${arm}-${i + 1}.json`).filter(existsSync).map((f) => readJson<{ shortlist: string[]; cities: string[] }>(f))]))
+        : undefined,
+  }));
+  if (!NAME_ONLY) writeJson(`${DATA}/model-runs.json`, { prompt: rankPrompt, runs });
+  // The sample stage's Qloo searches (one per page that reached the exact-name check) ran outside the usage tally.
+  const ho = readJson<{ taken: unknown[]; skipped: { reason: string }[] }>(`${DATA}/held-out.json`);
+  const searches = ho.taken.length + ho.skipped.filter((x) => /on Qloo/.test(x.reason)).length;
+  const u = existsSync(`${CACHE}/usage.json`) ? readJson<ReturnType<typeof newUsage>>(`${CACHE}/usage.json`) : null;
+  const usage = u ? { ...u, qlooSearches: searches, dollars: Math.round((u.tokensIn * PRICE.in + u.tokensOut * PRICE.out) * 1000) / 1000 } : null;
+  writeJson(`${DATA}/${NAME_ONLY ? "results-name-match-only" : "results"}.json`, { scored: new Date().toISOString(), protocol: "scripts/head-to-head.ts", model: "nvidia/Nemotron-3-Ultra-550b-a55b", usage, test1, test1Rows: rows, test2, test2Rows: abl });
   for (const [k, t] of Object.entries(test1)) {
     console.log(`\nTest 1, ${k} (n=${(t as any).n})`, JSON.stringify((t as any).pooled));
-    for (const c of [...(t as any).primary, ...(t as any).secondary]) console.log(fmt(c));
+    for (const c of [...(t as any).primary, ...(t as any).secondary, ...(t as any).exploratory]) console.log(fmt(c));
   }
   console.log(`\nTest 2 (n=${test2.n})`);
   for (const c of [test2.primary, ...test2.secondary]) console.log(fmt(c));

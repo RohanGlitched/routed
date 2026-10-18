@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { beyondBiggest, blendRanking, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
+import { beyondBiggest, blendRanking, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
 import { infoboxArtist, marketsByRegion, showRows } from "../lib/wikitours.ts";
 import { marketById } from "../lib/geo/markets.ts";
 
@@ -36,6 +36,15 @@ test("Qloo + population averages the two places, with no weight to tune", () => 
   assert.ok(at("asheville-us-nc", b) < at("asheville-us-nc", pop), "Qloo lifts Asheville");
   assert.ok(at("knoxville-us-tn", b) < at("knoxville-us-tn", pop), "and Knoxville");
   assert.equal(new Set(b).size, pop.length);
+});
+
+test("any two rankings blend the same way, and blending with population is the Qloo + population ranking", () => {
+  const q = ["asheville-us-nc", "nashville-us-tn", "knoxville-us-tn"];
+  assert.deepEqual(blendTwo(q, populationRanking("na"), "na"), blendRanking(q, "na"));
+  const m = ["nashville-us-tn", "atlanta-us-ga"];
+  const b = blendTwo(m, q, "na");
+  assert.equal(b[0], "nashville-us-tn", "first on one list and second on the other");
+  assert.equal(new Set(b).size, populationRanking("na").length);
 });
 
 test("R-precision: of a ranking's top R, how many the artist really played", () => {

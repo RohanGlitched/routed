@@ -44,10 +44,16 @@ export function completeRanking(ids: (string | undefined | null)[], region: Regi
  * by population are averaged, and the averages sorted (ties go to the bigger city).
  */
 export function blendRanking(qloo: string[], region: RegionId): string[] {
+  return blendTwo(qloo, populationRanking(region), region);
+}
+
+/** Any two rankings averaged the same way (the exploratory model + Qloo blend uses it); ties go to the bigger city. */
+export function blendTwo(a: string[], b: string[], region: RegionId): string[] {
   const pop = populationRanking(region);
-  const q = new Map(completeRanking(qloo, region).map((id, i) => [id, i]));
+  const x = new Map(completeRanking(a, region).map((id, i) => [id, i]));
+  const y = new Map(completeRanking(b, region).map((id, i) => [id, i]));
   const p = new Map(pop.map((id, i) => [id, i]));
-  return [...pop].sort((a, b) => q.get(a)! + p.get(a)! - (q.get(b)! + p.get(b)!) || p.get(a)! - p.get(b)!);
+  return [...pop].sort((m, n) => x.get(m)! + y.get(m)! - (x.get(n)! + y.get(n)!) || p.get(m)! - p.get(n)!);
 }
 
 export type Hit = { hits: number; of: number; ids: string[] };

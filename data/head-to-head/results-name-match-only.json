@@ -1,0 +1,8019 @@
+{
+ "scored": "2026-10-18T12:11:11.530Z",
+ "protocol": "scripts/head-to-head.ts",
+ "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+ "usage": {
+  "qloo": 30,
+  "qlooCached": 0,
+  "modelCalls": 125,
+  "tokensIn": 84922,
+  "tokensOut": 70970,
+  "qlooSearches": 31,
+  "dollars": 0.298
+ },
+ "test1": {
+  "all": {
+   "n": 49,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 49,
+     "meanA": 0.540941763994681,
+     "meanB": 0.4667740561944611,
+     "diff": 0.07416770780021972,
+     "lo": 0.04878548339330809,
+     "hi": 0.0989371446181219,
+     "wins": 36,
+     "losses": 7,
+     "ties": 6,
+     "p": 0.000008963039363152348
+    },
+    {
+     "name": "Qloo vs the model alone",
+     "n": 49,
+     "meanA": 0.4533595756864275,
+     "meanB": 0.5815467177086218,
+     "diff": -0.12818714202219436,
+     "lo": -0.17183731912051625,
+     "hi": -0.08674863000797299,
+     "wins": 7,
+     "losses": 36,
+     "ties": 6,
+     "p": 0.000008963039363152348
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs population",
+     "n": 49,
+     "meanA": 0.4533595756864275,
+     "meanB": 0.4667740561944611,
+     "diff": -0.01341448050803372,
+     "lo": -0.05398462127587683,
+     "hi": 0.02664105832943796,
+     "wins": 22,
+     "losses": 20,
+     "ties": 7,
+     "p": 0.8776143287523155
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 49,
+     "meanA": 0.5815467177086218,
+     "meanB": 0.4667740561944611,
+     "diff": 0.11477266151416063,
+     "lo": 0.07906828822958786,
+     "hi": 0.15102872651321742,
+     "wins": 37,
+     "losses": 8,
+     "ties": 4,
+     "p": 0.000015374090196473844
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 49,
+     "meanA": 0.540941763994681,
+     "meanB": 0.5815467177086218,
+     "diff": -0.04060495371394088,
+     "lo": -0.0728035720198687,
+     "hi": -0.007261196245658544,
+     "wins": 13,
+     "losses": 30,
+     "ties": 6,
+     "p": 0.0137181850586785
+    }
+   ],
+   "exploratory": [
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 49,
+     "meanA": 0.5727266700707846,
+     "meanB": 0.5815467177086218,
+     "diff": -0.008820047637837187,
+     "lo": -0.032813834016991714,
+     "hi": 0.015172445182249208,
+     "wins": 13,
+     "losses": 20,
+     "ties": 16,
+     "p": 0.296206368599087
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 628,
+     "of": 1271,
+     "share": 0.4940991345397325
+    },
+    "model": {
+     "hits": 756,
+     "of": 1271,
+     "share": 0.5948072383949646
+    },
+    "qloo": {
+     "hits": 605,
+     "of": 1271,
+     "share": 0.4760031471282455
+    },
+    "blend": {
+     "hits": 737,
+     "of": 1271,
+     "share": 0.5798583792289536
+    },
+    "modelQloo": {
+     "hits": 763,
+     "of": 1271,
+     "share": 0.6003147128245476
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 253,
+     "of": 643,
+     "share": 0.39346811819595645
+    },
+    "qloo": {
+     "hits": 214,
+     "of": 643,
+     "share": 0.3328149300155521
+    },
+    "blend": {
+     "hits": 195,
+     "of": 643,
+     "share": 0.30326594090202175
+    }
+   }
+  },
+  "bench": {
+   "n": 19,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 19,
+     "meanA": 0.4406240949662286,
+     "meanB": 0.3954981555408436,
+     "diff": 0.04512593942538503,
+     "lo": 0.0035669238455616173,
+     "hi": 0.0854380610842559,
+     "wins": 11,
+     "losses": 3,
+     "ties": 5,
+     "p": 0.057373046875
+    },
+    {
+     "name": "Qloo vs the model alone",
+     "n": 19,
+     "meanA": 0.38628735130519953,
+     "meanB": 0.46347961059556,
+     "diff": -0.0771922592903604,
+     "lo": -0.12778727120832387,
+     "hi": -0.025716310058993212,
+     "wins": 3,
+     "losses": 11,
+     "ties": 5,
+     "p": 0.057373046875
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs population",
+     "n": 19,
+     "meanA": 0.38628735130519953,
+     "meanB": 0.3954981555408436,
+     "diff": -0.009210804235644033,
+     "lo": -0.067873727140053,
+     "hi": 0.05033852716191258,
+     "wins": 8,
+     "losses": 7,
+     "ties": 4,
+     "p": 1
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 19,
+     "meanA": 0.46347961059556,
+     "meanB": 0.3954981555408436,
+     "diff": 0.06798145505471637,
+     "lo": 0.011569707852453388,
+     "hi": 0.12512379900960796,
+     "wins": 11,
+     "losses": 5,
+     "ties": 3,
+     "p": 0.210113525390625
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 19,
+     "meanA": 0.4406240949662286,
+     "meanB": 0.46347961059556,
+     "diff": -0.02285551562933134,
+     "lo": -0.06701922269789307,
+     "hi": 0.02295067809427904,
+     "wins": 4,
+     "losses": 10,
+     "ties": 5,
+     "p": 0.1795654296875
+    }
+   ],
+   "exploratory": [
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 19,
+     "meanA": 0.4743009789346155,
+     "meanB": 0.46347961059556,
+     "diff": 0.010821368339055564,
+     "lo": -0.015910789733504415,
+     "hi": 0.04220805057893097,
+     "wins": 4,
+     "losses": 7,
+     "ties": 8,
+     "p": 0.548828125
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 172,
+     "of": 406,
+     "share": 0.4236453201970443
+    },
+    "model": {
+     "hits": 193,
+     "of": 406,
+     "share": 0.4753694581280788
+    },
+    "qloo": {
+     "hits": 161,
+     "of": 406,
+     "share": 0.39655172413793105
+    },
+    "blend": {
+     "hits": 194,
+     "of": 406,
+     "share": 0.47783251231527096
+    },
+    "modelQloo": {
+     "hits": 199,
+     "of": 406,
+     "share": 0.49014778325123154
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 73,
+     "of": 234,
+     "share": 0.31196581196581197
+    },
+    "qloo": {
+     "hits": 68,
+     "of": 234,
+     "share": 0.2905982905982906
+    },
+    "blend": {
+     "hits": 59,
+     "of": 234,
+     "share": 0.25213675213675213
+    }
+   }
+  },
+  "heldOut": {
+   "n": 30,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 30,
+     "meanA": 0.6044762877127007,
+     "meanB": 0.5119154599417524,
+     "diff": 0.09256082777094843,
+     "lo": 0.06270685805150288,
+     "hi": 0.1221058857621051,
+     "wins": 25,
+     "losses": 4,
+     "ties": 1,
+     "p": 0.00010371580719947815
+    },
+    {
+     "name": "Qloo vs the model alone",
+     "n": 30,
+     "meanA": 0.49583865112787173,
+     "meanB": 0.6563225522135611,
+     "diff": -0.16048390108568925,
+     "lo": -0.21983493596089254,
+     "hi": -0.10443875552431647,
+     "wins": 4,
+     "losses": 25,
+     "ties": 1,
+     "p": 0.00010371580719947815
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs population",
+     "n": 30,
+     "meanA": 0.49583865112787173,
+     "meanB": 0.5119154599417524,
+     "diff": -0.016076808813880523,
+     "lo": -0.07136190335610143,
+     "hi": 0.035469900306625536,
+     "wins": 14,
+     "losses": 13,
+     "ties": 3,
+     "p": 1
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 30,
+     "meanA": 0.6563225522135611,
+     "meanB": 0.5119154599417524,
+     "diff": 0.14440709227180867,
+     "lo": 0.10147505674181999,
+     "hi": 0.18543419107605436,
+     "wins": 26,
+     "losses": 3,
+     "ties": 1,
+     "p": 0.000015236437320709229
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 30,
+     "meanA": 0.6044762877127007,
+     "meanB": 0.6563225522135611,
+     "diff": -0.05184626450086026,
+     "lo": -0.09419793348171335,
+     "hi": -0.005325181850723334,
+     "wins": 9,
+     "losses": 20,
+     "ties": 1,
+     "p": 0.06142834573984146
+    }
+   ],
+   "exploratory": [
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 30,
+     "meanA": 0.6350629411236917,
+     "meanB": 0.6563225522135611,
+     "diff": -0.021259611089869252,
+     "lo": -0.055368107432575184,
+     "hi": 0.012436201188788687,
+     "wins": 9,
+     "losses": 13,
+     "ties": 8,
+     "p": 0.5234670639038086
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 456,
+     "of": 865,
+     "share": 0.5271676300578034
+    },
+    "model": {
+     "hits": 563,
+     "of": 865,
+     "share": 0.6508670520231213
+    },
+    "qloo": {
+     "hits": 444,
+     "of": 865,
+     "share": 0.5132947976878612
+    },
+    "blend": {
+     "hits": 543,
+     "of": 865,
+     "share": 0.6277456647398844
+    },
+    "modelQloo": {
+     "hits": 564,
+     "of": 865,
+     "share": 0.6520231213872832
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 180,
+     "of": 409,
+     "share": 0.4400977995110024
+    },
+    "qloo": {
+     "hits": 146,
+     "of": 409,
+     "share": 0.3569682151589242
+    },
+    "blend": {
+     "hits": 136,
+     "of": 409,
+     "share": 0.33251833740831294
+    }
+   }
+  }
+ },
+ "test1Rows": [
+  {
+   "artist": "Zach Bryan",
+   "set": "bench",
+   "region": "na",
+   "tour": "The Quittin Time Tour, 2024",
+   "source": "https://www.rollingstone.com/music/music-country/zach-bryan-2024-tour-dates-1234813749/",
+   "R": 43,
+   "modelUnplaced": 3,
+   "rp": {
+    "population": {
+     "hits": 20,
+     "of": 43,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "Edmonton",
+      "Fort Worth",
+      "San Francisco",
+      "Denver",
+      "Washington",
+      "Nashville",
+      "Oklahoma City",
+      "Vancouver",
+      "Portland",
+      "Detroit",
+      "Las Vegas",
+      "Milwaukee"
+     ]
+    },
+    "model": {
+     "hits": 16,
+     "of": 43,
+     "cities": [
+      "Nashville",
+      "Oklahoma City",
+      "Tulsa",
+      "Houston",
+      "Fort Worth",
+      "San Antonio",
+      "Atlanta",
+      "Greensboro",
+      "Knoxville",
+      "Little Rock",
+      "Kansas City",
+      "St. Louis",
+      "Omaha",
+      "Des Moines",
+      "Birmingham",
+      "Greenville"
+     ]
+    },
+    "qloo": {
+     "hits": 13,
+     "of": 43,
+     "cities": [
+      "Nashville",
+      "Knoxville",
+      "Oklahoma City",
+      "Tulsa",
+      "Fort Worth",
+      "Denver",
+      "Kansas City",
+      "Pittsburgh",
+      "St. Louis",
+      "Omaha",
+      "Phoenix",
+      "San Antonio",
+      "Des Moines"
+     ]
+    },
+    "blend": {
+     "hits": 22,
+     "of": 43,
+     "cities": [
+      "Fort Worth",
+      "Nashville",
+      "Oklahoma City",
+      "Phoenix",
+      "Denver",
+      "San Antonio",
+      "Tulsa",
+      "Kansas City",
+      "Omaha",
+      "Chicago",
+      "Pittsburgh",
+      "Houston",
+      "St. Louis",
+      "Knoxville",
+      "Minneapolis",
+      "Las Vegas",
+      "Atlanta",
+      "New Orleans",
+      "Milwaukee",
+      "Orlando",
+      "Washington",
+      "Philadelphia"
+     ]
+    },
+    "modelQloo": {
+     "hits": 19,
+     "of": 43,
+     "cities": [
+      "Nashville",
+      "Oklahoma City",
+      "Tulsa",
+      "Fort Worth",
+      "Knoxville",
+      "Kansas City",
+      "St. Louis",
+      "San Antonio",
+      "Omaha",
+      "Des Moines",
+      "Little Rock",
+      "Denver",
+      "Phoenix",
+      "Atlanta",
+      "Greenville",
+      "Houston",
+      "Birmingham",
+      "Pittsburgh",
+      "Chicago"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 11,
+     "of": 23,
+     "cities": [
+      "Birmingham",
+      "Des Moines",
+      "Omaha",
+      "St. Louis",
+      "Greenville",
+      "Knoxville",
+      "Little Rock",
+      "Greensboro",
+      "Atlanta",
+      "Kansas City",
+      "Tulsa"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 23,
+     "cities": [
+      "Pittsburgh",
+      "Des Moines",
+      "Omaha",
+      "St. Louis",
+      "Knoxville",
+      "Kansas City",
+      "Tulsa"
+     ]
+    },
+    "blend": {
+     "hits": 10,
+     "of": 23,
+     "cities": [
+      "Pittsburgh",
+      "Omaha",
+      "St. Louis",
+      "Knoxville",
+      "Orlando",
+      "New Orleans",
+      "Atlanta",
+      "Kansas City",
+      "Minneapolis",
+      "Tulsa"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Tyler Childers",
+   "set": "bench",
+   "region": "na",
+   "tour": "Mule Pull '24 Tour (North American dates), 2024",
+   "source": "https://savingcountrymusic.com/tyler-childers-extends-sold-out-mule-pull-24-tour/",
+   "R": 27,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 10,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "San Diego",
+      "Calgary",
+      "Fort Worth",
+      "San Jose",
+      "Austin",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 7,
+     "of": 27,
+     "cities": [
+      "Nashville",
+      "Austin",
+      "Fort Worth",
+      "Tulsa",
+      "Birmingham",
+      "Tampa",
+      "Virginia Beach"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 27,
+     "cities": [
+      "Knoxville",
+      "Nashville",
+      "Boulder",
+      "Austin",
+      "Missoula",
+      "Bend",
+      "Tulsa"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 27,
+     "cities": [
+      "Nashville",
+      "Austin",
+      "Fort Worth",
+      "Tulsa",
+      "Pittsburgh",
+      "Knoxville"
+     ]
+    },
+    "modelQloo": {
+     "hits": 6,
+     "of": 27,
+     "cities": [
+      "Nashville",
+      "Austin",
+      "Tulsa",
+      "Fort Worth",
+      "Birmingham",
+      "Salt Lake City"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 4,
+     "of": 17,
+     "cities": [
+      "Tulsa",
+      "Birmingham",
+      "Virginia Beach",
+      "Tampa"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 17,
+     "cities": [
+      "Tulsa",
+      "Knoxville",
+      "Bend",
+      "Boulder",
+      "Missoula"
+     ]
+    },
+    "blend": {
+     "hits": 3,
+     "of": 17,
+     "cities": [
+      "Tulsa",
+      "Knoxville",
+      "Pittsburgh"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Caamp",
+   "set": "bench",
+   "region": "na",
+   "tour": "Copper Changes Color tour (2025 US tour), 2025",
+   "source": "https://shorefire.com/releases/entry/caamp-announces-new-album-copper-changes-color-out-june-6-via-mompop-music",
+   "R": 28,
+   "modelUnplaced": 1,
+   "rp": {
+    "population": {
+     "hits": 12,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Houston",
+      "Philadelphia",
+      "Dallas",
+      "Austin",
+      "Charlotte",
+      "San Francisco",
+      "Denver",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 15,
+     "of": 28,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Atlanta",
+      "Houston",
+      "Dallas",
+      "San Francisco",
+      "Denver",
+      "Philadelphia",
+      "Washington",
+      "Boston",
+      "Minneapolis",
+      "Nashville",
+      "Austin",
+      "St. Louis"
+     ]
+    },
+    "qloo": {
+     "hits": 9,
+     "of": 28,
+     "cities": [
+      "Asheville",
+      "Denver",
+      "Cleveland",
+      "Salt Lake City",
+      "Boston",
+      "Missoula",
+      "Bend",
+      "Nashville",
+      "Minneapolis"
+     ]
+    },
+    "blend": {
+     "hits": 13,
+     "of": 28,
+     "cities": [
+      "Denver",
+      "Chicago",
+      "Boston",
+      "Nashville",
+      "Austin",
+      "Cleveland",
+      "Charlotte",
+      "Washington",
+      "San Francisco",
+      "New York",
+      "Philadelphia",
+      "Minneapolis",
+      "Raleigh"
+     ]
+    },
+    "modelQloo": {
+     "hits": 15,
+     "of": 28,
+     "cities": [
+      "Denver",
+      "Boston",
+      "Chicago",
+      "Cleveland",
+      "Nashville",
+      "Minneapolis",
+      "Washington",
+      "Austin",
+      "San Francisco",
+      "Raleigh",
+      "New York",
+      "Charlotte",
+      "St. Louis",
+      "Philadelphia",
+      "Atlanta"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 4,
+     "of": 16,
+     "cities": [
+      "St. Louis",
+      "Minneapolis",
+      "Boston",
+      "Atlanta"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 16,
+     "cities": [
+      "Minneapolis",
+      "Cleveland",
+      "Boston",
+      "Salt Lake City",
+      "Missoula",
+      "Bend",
+      "Asheville"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 16,
+     "cities": [
+      "Minneapolis",
+      "Cleveland",
+      "Boston",
+      "Raleigh"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Waxahatchee",
+   "set": "bench",
+   "region": "na",
+   "tour": "Tigers Blood Tour 2024, 2024",
+   "source": "https://www.scenepointblank.com/news/records/2024/01/10/waxahatchee-prepares-us-tigers-blood/",
+   "R": 36,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 16,
+     "of": 36,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Fort Worth",
+      "Austin",
+      "San Francisco",
+      "Denver",
+      "Washington",
+      "Nashville",
+      "Boston",
+      "Detroit"
+     ]
+    },
+    "model": {
+     "hits": 21,
+     "of": 36,
+     "cities": [
+      "Nashville",
+      "Birmingham",
+      "Austin",
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Philadelphia",
+      "Washington",
+      "Boston",
+      "Denver",
+      "Minneapolis",
+      "San Francisco",
+      "Houston",
+      "Richmond",
+      "Pittsburgh",
+      "Detroit",
+      "St. Louis",
+      "Kansas City",
+      "Phoenix",
+      "San Diego",
+      "Salt Lake City"
+     ]
+    },
+    "qloo": {
+     "hits": 18,
+     "of": 36,
+     "cities": [
+      "Boston",
+      "Portland",
+      "Austin",
+      "Asheville",
+      "San Francisco",
+      "Philadelphia",
+      "Chicago",
+      "Minneapolis",
+      "Pittsburgh",
+      "Kansas City",
+      "Madison",
+      "Washington",
+      "Springfield",
+      "New York",
+      "Denver",
+      "Nashville",
+      "Novato",
+      "Richmond"
+     ]
+    },
+    "blend": {
+     "hits": 20,
+     "of": 36,
+     "cities": [
+      "Chicago",
+      "Philadelphia",
+      "New York",
+      "Austin",
+      "San Francisco",
+      "Boston",
+      "Washington",
+      "Los Angeles",
+      "Denver",
+      "Nashville",
+      "Kansas City",
+      "Minneapolis",
+      "Toronto",
+      "Detroit",
+      "Pittsburgh",
+      "Madison",
+      "San Diego",
+      "Phoenix",
+      "St. Louis",
+      "Richmond"
+     ]
+    },
+    "modelQloo": {
+     "hits": 20,
+     "of": 36,
+     "cities": [
+      "Austin",
+      "Boston",
+      "Chicago",
+      "Philadelphia",
+      "San Francisco",
+      "New York",
+      "Minneapolis",
+      "Washington",
+      "Nashville",
+      "Pittsburgh",
+      "Denver",
+      "Kansas City",
+      "Birmingham",
+      "Richmond",
+      "Los Angeles",
+      "Detroit",
+      "St. Louis",
+      "Madison",
+      "Salt Lake City",
+      "Toronto"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 7,
+     "of": 20,
+     "cities": [
+      "Kansas City",
+      "Minneapolis",
+      "Richmond",
+      "Birmingham",
+      "Salt Lake City",
+      "St. Louis",
+      "Pittsburgh"
+     ]
+    },
+    "qloo": {
+     "hits": 9,
+     "of": 20,
+     "cities": [
+      "Kansas City",
+      "Minneapolis",
+      "Richmond",
+      "Asheville",
+      "Novato",
+      "Madison",
+      "Pittsburgh",
+      "Springfield",
+      "Portland"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 20,
+     "cities": [
+      "Kansas City",
+      "Minneapolis",
+      "Richmond",
+      "St. Louis",
+      "Madison",
+      "Pittsburgh"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Khruangbin",
+   "set": "bench",
+   "region": "na",
+   "tour": "A La Sala Tour 2024 (North American dates), 2024",
+   "source": "https://pitchfork.com/news/khruangbin-announce-a-la-sala-tour-dates/",
+   "R": 20,
+   "modelUnplaced": 1,
+   "rp": {
+    "population": {
+     "hits": 4,
+     "of": 20,
+     "cities": [
+      "New York",
+      "Toronto",
+      "Chicago",
+      "Philadelphia"
+     ]
+    },
+    "model": {
+     "hits": 8,
+     "of": 20,
+     "cities": [
+      "New York",
+      "San Francisco",
+      "Portland",
+      "Chicago",
+      "Denver",
+      "Washington",
+      "Philadelphia",
+      "Toronto"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 20,
+     "cities": [
+      "San Francisco",
+      "Portland",
+      "Denver",
+      "New York",
+      "Chicago"
+     ]
+    },
+    "blend": {
+     "hits": 8,
+     "of": 20,
+     "cities": [
+      "New York",
+      "Chicago",
+      "San Francisco",
+      "Denver",
+      "Portland",
+      "Toronto",
+      "Philadelphia",
+      "Washington"
+     ]
+    },
+    "modelQloo": {
+     "hits": 8,
+     "of": 20,
+     "cities": [
+      "San Francisco",
+      "Portland",
+      "Denver",
+      "New York",
+      "Chicago",
+      "Washington",
+      "Philadelphia",
+      "Toronto"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 4,
+     "of": 16,
+     "cities": [
+      "San Francisco",
+      "Portland",
+      "Denver",
+      "Washington"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 16,
+     "cities": [
+      "San Francisco",
+      "Portland",
+      "Denver"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 16,
+     "cities": [
+      "San Francisco",
+      "Portland",
+      "Denver",
+      "Washington"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Durand Jones & The Indications",
+   "set": "bench",
+   "region": "na",
+   "tour": "Flowers Tour 2025 (fall North American tour), 2025",
+   "source": "https://spillmagazine.com/96719",
+   "R": 34,
+   "modelUnplaced": 2,
+   "rp": {
+    "population": {
+     "hits": 24,
+     "of": 34,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "Indianapolis",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Nashville",
+      "Vancouver",
+      "Boston",
+      "Portland",
+      "Detroit",
+      "Las Vegas"
+     ]
+    },
+    "model": {
+     "hits": 20,
+     "of": 34,
+     "cities": [
+      "Chicago",
+      "New York",
+      "Los Angeles",
+      "San Francisco",
+      "Seattle",
+      "Portland",
+      "Minneapolis",
+      "Denver",
+      "Austin",
+      "Washington",
+      "Boston",
+      "Philadelphia",
+      "Nashville",
+      "Atlanta",
+      "Detroit",
+      "Milwaukee",
+      "Columbus",
+      "Asheville",
+      "Indianapolis",
+      "Dallas"
+     ]
+    },
+    "qloo": {
+     "hits": 24,
+     "of": 34,
+     "cities": [
+      "Los Angeles",
+      "San Francisco",
+      "New York",
+      "Chicago",
+      "Austin",
+      "Washington",
+      "New Orleans",
+      "San Diego",
+      "Seattle",
+      "Portland",
+      "Philadelphia",
+      "Boston",
+      "Toronto",
+      "Montréal",
+      "Sacramento",
+      "Las Vegas",
+      "Denver",
+      "Vancouver",
+      "Nashville",
+      "Atlanta",
+      "Minneapolis",
+      "Detroit",
+      "Houston",
+      "Phoenix"
+     ]
+    },
+    "blend": {
+     "hits": 27,
+     "of": 34,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Toronto",
+      "San Diego",
+      "Philadelphia",
+      "Montréal",
+      "Austin",
+      "San Francisco",
+      "Washington",
+      "Seattle",
+      "Houston",
+      "Phoenix",
+      "Portland",
+      "Denver",
+      "Boston",
+      "Dallas",
+      "Vancouver",
+      "Nashville",
+      "Las Vegas",
+      "San Antonio",
+      "Sacramento",
+      "Detroit",
+      "New Orleans",
+      "Atlanta",
+      "Minneapolis",
+      "Columbus"
+     ]
+    },
+    "modelQloo": {
+     "hits": 27,
+     "of": 34,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "San Francisco",
+      "Austin",
+      "Seattle",
+      "Washington",
+      "Portland",
+      "Philadelphia",
+      "Boston",
+      "Denver",
+      "Minneapolis",
+      "Nashville",
+      "Atlanta",
+      "Detroit",
+      "San Diego",
+      "Toronto",
+      "Montréal",
+      "Houston",
+      "Vancouver",
+      "Dallas",
+      "Phoenix",
+      "Asheville",
+      "Milwaukee",
+      "Las Vegas",
+      "Sacramento",
+      "New Orleans"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 4,
+     "of": 10,
+     "cities": [
+      "Atlanta",
+      "Minneapolis",
+      "Milwaukee",
+      "Asheville"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 10,
+     "cities": [
+      "Atlanta",
+      "Sacramento",
+      "Minneapolis",
+      "New Orleans"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 10,
+     "cities": [
+      "Atlanta",
+      "Sacramento",
+      "Minneapolis",
+      "New Orleans"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Ghost",
+   "set": "bench",
+   "region": "eu",
+   "tour": "Skeletour World Tour (2025 European leg), 2025",
+   "source": "https://en.wikipedia.org/w/index.php?title=Skeletour&action=raw",
+   "R": 19,
+   "modelUnplaced": 7,
+   "rp": {
+    "population": {
+     "hits": 7,
+     "of": 19,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Munich",
+      "Milan",
+      "Prague",
+      "Copenhagen",
+      "Oslo"
+     ]
+    },
+    "model": {
+     "hits": 10,
+     "of": 19,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Amsterdam",
+      "Munich",
+      "Copenhagen",
+      "Oslo",
+      "Prague",
+      "Zürich",
+      "Antwerp",
+      "Milan"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 19,
+     "cities": [
+      "Paris",
+      "Amsterdam",
+      "Berlin",
+      "Frankfurt am Main",
+      "Milan",
+      "Hannover",
+      "Munich"
+     ]
+    },
+    "blend": {
+     "hits": 7,
+     "of": 19,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Milan",
+      "Munich",
+      "Amsterdam",
+      "Frankfurt am Main",
+      "Prague"
+     ]
+    },
+    "modelQloo": {
+     "hits": 9,
+     "of": 19,
+     "cities": [
+      "Paris",
+      "Berlin",
+      "Amsterdam",
+      "Munich",
+      "Milan",
+      "Frankfurt am Main",
+      "Antwerp",
+      "Lyon",
+      "Hannover"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 3,
+     "of": 12,
+     "cities": [
+      "Antwerp",
+      "Zürich",
+      "Amsterdam"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 12,
+     "cities": [
+      "Frankfurt am Main",
+      "Amsterdam",
+      "Hannover"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 12,
+     "cities": [
+      "Frankfurt am Main",
+      "Amsterdam"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Knocked Loose",
+   "set": "bench",
+   "region": "na",
+   "tour": "Fall 2024 North American headline tour, 2024",
+   "source": "https://blabbermouth.net/news/knocked-loose-announces-fall-2024-north-american-tour-blabbermouth-net-presale",
+   "R": 20,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 4,
+     "of": 20,
+     "cities": [
+      "Chicago",
+      "Houston",
+      "San Antonio",
+      "Columbus"
+     ]
+    },
+    "model": {
+     "hits": 4,
+     "of": 20,
+     "cities": [
+      "Chicago",
+      "San Francisco",
+      "Washington",
+      "Houston"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 20,
+     "cities": [
+      "Chicago",
+      "Columbus",
+      "Irvine",
+      "San Antonio",
+      "Buffalo"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 20,
+     "cities": [
+      "Chicago",
+      "Columbus",
+      "San Antonio",
+      "Indianapolis"
+     ]
+    },
+    "modelQloo": {
+     "hits": 3,
+     "of": 20,
+     "cities": [
+      "Chicago",
+      "Columbus",
+      "San Antonio"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 2,
+     "of": 16,
+     "cities": [
+      "San Francisco",
+      "Washington"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 16,
+     "cities": [
+      "Buffalo",
+      "Irvine"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 16,
+     "cities": [
+      "Indianapolis"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Turnstile",
+   "set": "bench",
+   "region": "na",
+   "tour": "Never Enough Tour (fall 2025 North American leg), 2025",
+   "source": "https://en.wikipedia.org/w/index.php?title=Never_Enough_Tour&action=raw",
+   "R": 21,
+   "modelUnplaced": 1,
+   "rp": {
+    "population": {
+     "hits": 9,
+     "of": 21,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Fort Worth",
+      "Austin",
+      "Columbus"
+     ]
+    },
+    "model": {
+     "hits": 11,
+     "of": 21,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "Philadelphia",
+      "Boston",
+      "San Francisco",
+      "Seattle",
+      "Portland",
+      "Minneapolis",
+      "Denver",
+      "Austin",
+      "Nashville"
+     ]
+    },
+    "qloo": {
+     "hits": 11,
+     "of": 21,
+     "cities": [
+      "Philadelphia",
+      "Los Angeles",
+      "San Francisco",
+      "San Diego",
+      "Chicago",
+      "Portland",
+      "Boston",
+      "Austin",
+      "Seattle",
+      "Richmond",
+      "Denver"
+     ]
+    },
+    "blend": {
+     "hits": 12,
+     "of": 21,
+     "cities": [
+      "Los Angeles",
+      "Philadelphia",
+      "Chicago",
+      "San Diego",
+      "San Francisco",
+      "Austin",
+      "Phoenix",
+      "Seattle",
+      "Boston",
+      "Portland",
+      "Denver",
+      "Columbus"
+     ]
+    },
+    "modelQloo": {
+     "hits": 13,
+     "of": 21,
+     "cities": [
+      "Los Angeles",
+      "Philadelphia",
+      "Chicago",
+      "San Francisco",
+      "Boston",
+      "Portland",
+      "Seattle",
+      "Austin",
+      "Denver",
+      "Columbus",
+      "San Diego",
+      "Minneapolis",
+      "Buffalo"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 7,
+     "of": 12,
+     "cities": [
+      "Nashville",
+      "Boston",
+      "Minneapolis",
+      "Denver",
+      "San Francisco",
+      "Seattle",
+      "Portland"
+     ]
+    },
+    "qloo": {
+     "hits": 6,
+     "of": 12,
+     "cities": [
+      "Boston",
+      "Richmond",
+      "Denver",
+      "San Francisco",
+      "Seattle",
+      "Portland"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 12,
+     "cities": [
+      "Boston",
+      "Denver",
+      "San Francisco",
+      "Seattle",
+      "Portland"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Cuco",
+   "set": "bench",
+   "region": "na",
+   "tour": "Ridin' Tour (2025 North American leg), 2025",
+   "source": "https://www.rollingstone.com/music/music-latin/cuco-ridin-tour-dates-1235348673/",
+   "R": 28,
+   "modelUnplaced": 3,
+   "rp": {
+    "population": {
+     "hits": 16,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "Indianapolis",
+      "San Francisco",
+      "Denver",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 19,
+     "of": 28,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "San Francisco",
+      "Austin",
+      "Denver",
+      "San Diego",
+      "Boston",
+      "Washington",
+      "Philadelphia",
+      "Atlanta",
+      "Houston",
+      "Dallas",
+      "Phoenix",
+      "Minneapolis",
+      "Detroit",
+      "Sacramento",
+      "Las Vegas",
+      "Nashville"
+     ]
+    },
+    "qloo": {
+     "hits": 12,
+     "of": 28,
+     "cities": [
+      "Los Angeles",
+      "San Diego",
+      "San Francisco",
+      "El Paso",
+      "Sacramento",
+      "Austin",
+      "Chicago",
+      "Las Vegas",
+      "Houston",
+      "Phoenix",
+      "Dallas",
+      "New York"
+     ]
+    },
+    "blend": {
+     "hits": 17,
+     "of": 28,
+     "cities": [
+      "Los Angeles",
+      "San Diego",
+      "Chicago",
+      "New York",
+      "Houston",
+      "San Francisco",
+      "Phoenix",
+      "Austin",
+      "Dallas",
+      "El Paso",
+      "Las Vegas",
+      "Sacramento",
+      "Denver",
+      "Philadelphia",
+      "Washington",
+      "Albuquerque",
+      "Boston"
+     ]
+    },
+    "modelQloo": {
+     "hits": 18,
+     "of": 28,
+     "cities": [
+      "Los Angeles",
+      "San Francisco",
+      "San Diego",
+      "Austin",
+      "Chicago",
+      "New York",
+      "Sacramento",
+      "Houston",
+      "Phoenix",
+      "Dallas",
+      "Las Vegas",
+      "Denver",
+      "Washington",
+      "El Paso",
+      "Boston",
+      "Atlanta",
+      "Philadelphia",
+      "Minneapolis"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 6,
+     "of": 12,
+     "cities": [
+      "Sacramento",
+      "Las Vegas",
+      "Atlanta",
+      "Boston",
+      "Detroit",
+      "Minneapolis"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 12,
+     "cities": [
+      "Sacramento",
+      "Las Vegas",
+      "El Paso"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 12,
+     "cities": [
+      "Sacramento",
+      "Las Vegas",
+      "El Paso",
+      "Albuquerque",
+      "Boston"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "MJ Lenderman",
+   "set": "bench",
+   "region": "na",
+   "tour": "Manning Fireworks tour, winter 2025 North American leg (with Wild Pink), 2025",
+   "source": "https://consequence.net/2024/10/mj-lenderman-new-2025-tour-dates",
+   "R": 24,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 24,
+     "cities": [
+      "Los Angeles",
+      "Houston",
+      "Austin",
+      "San Francisco",
+      "Seattle"
+     ]
+    },
+    "model": {
+     "hits": 7,
+     "of": 24,
+     "cities": [
+      "Los Angeles",
+      "San Francisco",
+      "Seattle",
+      "Portland",
+      "Austin",
+      "Denver",
+      "Vancouver"
+     ]
+    },
+    "qloo": {
+     "hits": 6,
+     "of": 24,
+     "cities": [
+      "Austin",
+      "Santa Fe",
+      "Portland",
+      "New Orleans",
+      "Seattle",
+      "Boulder"
+     ]
+    },
+    "blend": {
+     "hits": 7,
+     "of": 24,
+     "cities": [
+      "Austin",
+      "Seattle",
+      "Portland",
+      "Denver",
+      "San Francisco",
+      "New Orleans",
+      "Los Angeles"
+     ]
+    },
+    "modelQloo": {
+     "hits": 6,
+     "of": 24,
+     "cities": [
+      "Austin",
+      "Portland",
+      "Seattle",
+      "Denver",
+      "San Francisco",
+      "Salt Lake City"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 3,
+     "of": 19,
+     "cities": [
+      "Portland",
+      "Vancouver",
+      "Denver"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 19,
+     "cities": [
+      "New Orleans",
+      "Santa Fe",
+      "Portland",
+      "Boulder"
+     ]
+    },
+    "blend": {
+     "hits": 3,
+     "of": 19,
+     "cities": [
+      "New Orleans",
+      "Portland",
+      "Denver"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Parcels",
+   "set": "bench",
+   "region": "eu",
+   "tour": "2025 European arena tour (LOVED era), 2025",
+   "source": "https://readdork.com/news/parcels-wembley-arena-tour",
+   "R": 5,
+   "modelUnplaced": 10,
+   "rp": {
+    "population": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Berlin",
+      "Paris"
+     ]
+    },
+    "model": {
+     "hits": 3,
+     "of": 5,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Amsterdam"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Paris",
+      "Berlin"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Berlin",
+      "Paris"
+     ]
+    },
+    "modelQloo": {
+     "hits": 3,
+     "of": 5,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Amsterdam"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 1,
+     "of": 3,
+     "cities": [
+      "Amsterdam"
+     ]
+    },
+    "qloo": {
+     "hits": 0,
+     "of": 3,
+     "cities": []
+    },
+    "blend": {
+     "hits": 0,
+     "of": 3,
+     "cities": []
+    }
+   }
+  },
+  {
+   "artist": "Alvvays",
+   "set": "bench",
+   "region": "na",
+   "tour": "Blue Rev tour, spring 2024 North American leg, 2024",
+   "source": "https://www.treblezine.com/alvvays-announce-2024-tour-dates/",
+   "R": 17,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 1,
+     "of": 17,
+     "cities": [
+      "Phoenix"
+     ]
+    },
+    "model": {
+     "hits": 0,
+     "of": 17,
+     "cities": []
+    },
+    "qloo": {
+     "hits": 0,
+     "of": 17,
+     "cities": []
+    },
+    "blend": {
+     "hits": 0,
+     "of": 17,
+     "cities": []
+    },
+    "modelQloo": {
+     "hits": 0,
+     "of": 17,
+     "cities": []
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 0,
+     "of": 16,
+     "cities": []
+    },
+    "qloo": {
+     "hits": 0,
+     "of": 16,
+     "cities": []
+    },
+    "blend": {
+     "hits": 0,
+     "of": 16,
+     "cities": []
+    }
+   }
+  },
+  {
+   "artist": "Arlo Parks",
+   "set": "bench",
+   "region": "uk",
+   "tour": "Ambiguous Desire world tour, opening UK album-launch run (April 2026), 2026",
+   "source": "https://faroutmagazine.co.uk/arlo-parks-announces-huge-world-tour/",
+   "R": 6,
+   "modelUnplaced": 13,
+   "rp": {
+    "population": {
+     "hits": 1,
+     "of": 6,
+     "cities": [
+      "London"
+     ]
+    },
+    "model": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "London",
+      "Brighton",
+      "Leeds"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "London",
+      "Brighton",
+      "Oxford"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 6,
+     "cities": [
+      "London",
+      "Leeds"
+     ]
+    },
+    "modelQloo": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "London",
+      "Brighton",
+      "Leeds"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Leeds",
+      "Brighton"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Brighton",
+      "Oxford"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 5,
+     "cities": [
+      "Leeds"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Wet Leg",
+   "set": "bench",
+   "region": "uk",
+   "tour": "moisturizer tour, autumn 2025 UK and Ireland leg, 2025",
+   "source": "https://www.radiox.co.uk/artists/wet-leg/2025-uk-tour-dates-buy-tickets/",
+   "R": 8,
+   "modelUnplaced": 14,
+   "rp": {
+    "population": {
+     "hits": 2,
+     "of": 8,
+     "cities": [
+      "London",
+      "Dublin"
+     ]
+    },
+    "model": {
+     "hits": 2,
+     "of": 8,
+     "cities": [
+      "London",
+      "Dublin"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 8,
+     "cities": [
+      "London",
+      "Southampton",
+      "Liverpool"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 8,
+     "cities": [
+      "London"
+     ]
+    },
+    "modelQloo": {
+     "hits": 3,
+     "of": 8,
+     "cities": [
+      "London",
+      "Liverpool",
+      "Southampton"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 0,
+     "of": 6,
+     "cities": []
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 6,
+     "cities": [
+      "Liverpool",
+      "Southampton"
+     ]
+    },
+    "blend": {
+     "hits": 0,
+     "of": 6,
+     "cities": []
+    }
+   }
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "set": "bench",
+   "region": "na",
+   "tour": "The Melancholy Tour (spring 2025 North American leg), 2025",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Melancholy_Tour&action=raw",
+   "R": 11,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "New York",
+      "Toronto",
+      "Chicago",
+      "Philadelphia",
+      "Dallas"
+     ]
+    },
+    "model": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Toronto",
+      "Austin",
+      "Boston"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "Boston",
+      "Austin",
+      "Philadelphia",
+      "Chicago",
+      "New York"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Philadelphia",
+      "Austin",
+      "Toronto"
+     ]
+    },
+    "modelQloo": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Austin",
+      "Boston",
+      "Philadelphia"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 2,
+     "of": 6,
+     "cities": [
+      "Austin",
+      "Boston"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 6,
+     "cities": [
+      "Austin",
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 6,
+     "cities": [
+      "Austin"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Fontaines D.C.",
+   "set": "bench",
+   "region": "uk",
+   "tour": "Romance tour, UK and Ireland leg, 2024",
+   "source": "https://radiox.co.uk/news/music/fontaines-d-c-2024-uk-dates-buy-tickets",
+   "R": 9,
+   "modelUnplaced": 9,
+   "rp": {
+    "population": {
+     "hits": 6,
+     "of": 9,
+     "cities": [
+      "London",
+      "Birmingham",
+      "Dublin",
+      "Glasgow",
+      "Manchester",
+      "Leeds"
+     ]
+    },
+    "model": {
+     "hits": 5,
+     "of": 9,
+     "cities": [
+      "London",
+      "Manchester",
+      "Glasgow",
+      "Leeds",
+      "Birmingham"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 9,
+     "cities": [
+      "Dublin",
+      "Manchester",
+      "Glasgow"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 9,
+     "cities": [
+      "Dublin",
+      "Manchester",
+      "Glasgow",
+      "London",
+      "Leeds",
+      "Birmingham"
+     ]
+    },
+    "modelQloo": {
+     "hits": 5,
+     "of": 9,
+     "cities": [
+      "Manchester",
+      "Glasgow",
+      "London",
+      "Dublin",
+      "Leeds"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 0,
+     "of": 3,
+     "cities": []
+    },
+    "qloo": {
+     "hits": 0,
+     "of": 3,
+     "cities": []
+    },
+    "blend": {
+     "hits": 0,
+     "of": 3,
+     "cities": []
+    }
+   }
+  },
+  {
+   "artist": "JPEGMAFIA",
+   "set": "bench",
+   "region": "na",
+   "tour": "Lay Down My Life Tour (2024 North American leg), 2024",
+   "source": "https://consequence.net/2024/06/jpegmafia-2024-tour-dates",
+   "R": 28,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 15,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Oklahoma City"
+     ]
+    },
+    "model": {
+     "hits": 20,
+     "of": 28,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Toronto",
+      "Atlanta",
+      "Houston",
+      "Dallas",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Phoenix",
+      "Vancouver",
+      "Philadelphia",
+      "Washington",
+      "Boston",
+      "Austin",
+      "Portland",
+      "Las Vegas",
+      "Orlando",
+      "Columbus"
+     ]
+    },
+    "qloo": {
+     "hits": 16,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Los Angeles",
+      "Washington",
+      "San Francisco",
+      "Philadelphia",
+      "Boston",
+      "Seattle",
+      "Toronto",
+      "Portland",
+      "Austin",
+      "Vancouver",
+      "Houston",
+      "Denver",
+      "Atlanta",
+      "Las Vegas"
+     ]
+    },
+    "blend": {
+     "hits": 19,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Philadelphia",
+      "Houston",
+      "San Francisco",
+      "Washington",
+      "Austin",
+      "Seattle",
+      "Boston",
+      "Portland",
+      "Denver",
+      "Phoenix",
+      "Vancouver",
+      "Dallas",
+      "Columbus",
+      "Las Vegas",
+      "Atlanta"
+     ]
+    },
+    "modelQloo": {
+     "hits": 20,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "San Francisco",
+      "Seattle",
+      "Washington",
+      "Philadelphia",
+      "Boston",
+      "Houston",
+      "Atlanta",
+      "Denver",
+      "Vancouver",
+      "Portland",
+      "Austin",
+      "Dallas",
+      "Las Vegas",
+      "Phoenix",
+      "Columbus",
+      "Orlando"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 6,
+     "of": 13,
+     "cities": [
+      "Las Vegas",
+      "Portland",
+      "Vancouver",
+      "Atlanta",
+      "Orlando",
+      "Boston"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 13,
+     "cities": [
+      "Las Vegas",
+      "Portland",
+      "Vancouver",
+      "Atlanta",
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 13,
+     "cities": [
+      "Las Vegas",
+      "Portland",
+      "Vancouver",
+      "Atlanta",
+      "Boston"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Clairo",
+   "set": "bench",
+   "region": "na",
+   "tour": "Charm Tour (2024 North American leg), 2024",
+   "source": "https://en.wikipedia.org/w/index.php?title=Charm_Tour&action=raw",
+   "R": 22,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 13,
+     "of": 22,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "San Jose",
+      "Austin",
+      "Columbus",
+      "Charlotte"
+     ]
+    },
+    "model": {
+     "hits": 17,
+     "of": 22,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Toronto",
+      "Seattle",
+      "Portland",
+      "Austin",
+      "Boston",
+      "Philadelphia",
+      "Washington",
+      "Denver",
+      "Atlanta",
+      "Nashville",
+      "Phoenix",
+      "Dallas",
+      "Houston",
+      "San Diego"
+     ]
+    },
+    "qloo": {
+     "hits": 12,
+     "of": 22,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "San Diego",
+      "Chicago",
+      "Seattle",
+      "Boston",
+      "Austin",
+      "Portland",
+      "Washington",
+      "Phoenix",
+      "Toronto",
+      "Dallas"
+     ]
+    },
+    "blend": {
+     "hits": 16,
+     "of": 22,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "San Diego",
+      "Toronto",
+      "Phoenix",
+      "Austin",
+      "Seattle",
+      "Dallas",
+      "Philadelphia",
+      "Houston",
+      "Washington",
+      "Boston",
+      "Portland",
+      "Denver",
+      "San Jose"
+     ]
+    },
+    "modelQloo": {
+     "hits": 16,
+     "of": 22,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Seattle",
+      "Austin",
+      "Boston",
+      "Portland",
+      "Toronto",
+      "Washington",
+      "San Diego",
+      "Denver",
+      "Philadelphia",
+      "Phoenix",
+      "Dallas",
+      "Houston",
+      "Atlanta"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 7,
+     "of": 9,
+     "cities": [
+      "Portland",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Boston",
+      "Nashville",
+      "Atlanta"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 9,
+     "cities": [
+      "Portland",
+      "Seattle",
+      "Washington",
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 9,
+     "cities": [
+      "Portland",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Boston"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Pierce the Veil",
+   "set": "held-out",
+   "region": "na",
+   "tour": "I Can't Hear You World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=I_Can't_Hear_You_World_Tour&oldid=1376231105",
+   "R": 37,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 15,
+     "of": 37,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Charlotte",
+      "Seattle",
+      "Denver",
+      "Nashville",
+      "Oklahoma City",
+      "Las Vegas"
+     ]
+    },
+    "model": {
+     "hits": 21,
+     "of": 37,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Toronto",
+      "Seattle",
+      "Denver",
+      "Austin",
+      "Philadelphia",
+      "Minneapolis",
+      "Atlanta",
+      "Phoenix",
+      "Dallas",
+      "San Diego",
+      "Pittsburgh",
+      "Nashville",
+      "Milwaukee",
+      "Orlando",
+      "Tampa",
+      "St. Louis",
+      "Cincinnati",
+      "Raleigh"
+     ]
+    },
+    "qloo": {
+     "hits": 20,
+     "of": 37,
+     "cities": [
+      "San Diego",
+      "Orlando",
+      "Chicago",
+      "Las Vegas",
+      "New York",
+      "Phoenix",
+      "Pittsburgh",
+      "Los Angeles",
+      "Denver",
+      "Philadelphia",
+      "Dallas",
+      "Milwaukee",
+      "Seattle",
+      "Tampa",
+      "Albuquerque",
+      "Cincinnati",
+      "Austin",
+      "Virginia Beach",
+      "St. Louis",
+      "Minneapolis"
+     ]
+    },
+    "blend": {
+     "hits": 19,
+     "of": 37,
+     "cities": [
+      "New York",
+      "Chicago",
+      "San Diego",
+      "Los Angeles",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "Denver",
+      "Las Vegas",
+      "Seattle",
+      "Austin",
+      "Toronto",
+      "Milwaukee",
+      "Orlando",
+      "Albuquerque",
+      "Pittsburgh",
+      "Tampa",
+      "Virginia Beach",
+      "Charlotte"
+     ]
+    },
+    "modelQloo": {
+     "hits": 21,
+     "of": 37,
+     "cities": [
+      "Chicago",
+      "New York",
+      "Los Angeles",
+      "Denver",
+      "San Diego",
+      "Phoenix",
+      "Philadelphia",
+      "Seattle",
+      "Pittsburgh",
+      "Orlando",
+      "Dallas",
+      "Austin",
+      "Minneapolis",
+      "Milwaukee",
+      "Toronto",
+      "Tampa",
+      "Las Vegas",
+      "Cincinnati",
+      "Atlanta",
+      "Albuquerque",
+      "St. Louis"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 9,
+     "of": 22,
+     "cities": [
+      "Tampa",
+      "Atlanta",
+      "Pittsburgh",
+      "Minneapolis",
+      "St. Louis",
+      "Milwaukee",
+      "Cincinnati",
+      "Raleigh",
+      "Orlando"
+     ]
+    },
+    "qloo": {
+     "hits": 9,
+     "of": 22,
+     "cities": [
+      "Tampa",
+      "Pittsburgh",
+      "Minneapolis",
+      "St. Louis",
+      "Albuquerque",
+      "Milwaukee",
+      "Cincinnati",
+      "Virginia Beach",
+      "Orlando"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 22,
+     "cities": [
+      "Tampa",
+      "Pittsburgh",
+      "Albuquerque",
+      "Milwaukee",
+      "Virginia Beach",
+      "Orlando"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Dua Lipa",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Radical Optimism Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Radical_Optimism_Tour&oldid=1374098811",
+   "R": 10,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 4,
+     "of": 10,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago"
+     ]
+    },
+    "model": {
+     "hits": 7,
+     "of": 10,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Dallas",
+      "Miami",
+      "Atlanta"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 10,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "San Francisco",
+      "Miami"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 10,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "San Francisco"
+     ]
+    },
+    "modelQloo": {
+     "hits": 7,
+     "of": 10,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Miami",
+      "San Francisco",
+      "Chicago",
+      "Boston"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "Atlanta",
+      "Miami",
+      "Dallas"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 6,
+     "cities": [
+      "Miami",
+      "San Francisco"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 6,
+     "cities": [
+      "San Francisco"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Troye Sivan",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "Something to Give Each Other Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Something_to_Give_Each_Other_Tour&oldid=1353175921",
+   "R": 11,
+   "modelUnplaced": 14,
+   "rp": {
+    "population": {
+     "hits": 4,
+     "of": 11,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Hamburg",
+      "Stockholm"
+     ]
+    },
+    "model": {
+     "hits": 7,
+     "of": 11,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Amsterdam",
+      "Stockholm",
+      "Zürich",
+      "Munich",
+      "Hamburg"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "Amsterdam",
+      "Berlin",
+      "Prague",
+      "Paris",
+      "Lisbon"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Prague",
+      "Stockholm",
+      "Munich"
+     ]
+    },
+    "modelQloo": {
+     "hits": 6,
+     "of": 11,
+     "cities": [
+      "Berlin",
+      "Amsterdam",
+      "Paris",
+      "Stockholm",
+      "Munich",
+      "Zürich"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 3,
+     "of": 7,
+     "cities": [
+      "Munich",
+      "Zürich",
+      "Amsterdam"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 7,
+     "cities": [
+      "Lisbon",
+      "Prague",
+      "Amsterdam"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Prague",
+      "Munich"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Queen + Adam Lambert",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Rhapsody Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Rhapsody_Tour&oldid=1379677608",
+   "R": 27,
+   "modelUnplaced": 1,
+   "rp": {
+    "population": {
+     "hits": 15,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "San Francisco",
+      "Denver",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 19,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "San Francisco",
+      "Boston",
+      "Philadelphia",
+      "Washington",
+      "Dallas",
+      "Houston",
+      "Atlanta",
+      "Denver",
+      "Phoenix",
+      "Vancouver",
+      "Minneapolis",
+      "Tampa",
+      "Detroit",
+      "Baltimore",
+      "Pittsburgh"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 27,
+     "cities": [
+      "Nashville",
+      "Los Angeles",
+      "Austin"
+     ]
+    },
+    "blend": {
+     "hits": 13,
+     "of": 27,
+     "cities": [
+      "Los Angeles",
+      "Nashville",
+      "Austin",
+      "New York",
+      "Toronto",
+      "Baltimore",
+      "Boston",
+      "San Francisco",
+      "Philadelphia",
+      "Dallas",
+      "Denver",
+      "Detroit",
+      "Minneapolis"
+     ]
+    },
+    "modelQloo": {
+     "hits": 14,
+     "of": 27,
+     "cities": [
+      "Los Angeles",
+      "Nashville",
+      "Austin",
+      "Boston",
+      "New York",
+      "Baltimore",
+      "Toronto",
+      "San Francisco",
+      "Minneapolis",
+      "Denver",
+      "Philadelphia",
+      "Dallas",
+      "Detroit",
+      "Vancouver"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 8,
+     "of": 12,
+     "cities": [
+      "Vancouver",
+      "Detroit",
+      "Pittsburgh",
+      "Minneapolis",
+      "Tampa",
+      "Atlanta",
+      "Baltimore",
+      "Boston"
+     ]
+    },
+    "qloo": {
+     "hits": 0,
+     "of": 12,
+     "cities": []
+    },
+    "blend": {
+     "hits": 4,
+     "of": 12,
+     "cities": [
+      "Detroit",
+      "Minneapolis",
+      "Baltimore",
+      "Boston"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Chappell Roan",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Midwest Princess Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Midwest_Princess_Tour&oldid=1348730313",
+   "R": 57,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 33,
+     "of": 57,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "Indianapolis",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Nashville",
+      "Oklahoma City",
+      "Vancouver",
+      "Boston",
+      "Portland",
+      "Detroit",
+      "Las Vegas",
+      "Milwaukee",
+      "Atlanta",
+      "Omaha",
+      "Raleigh",
+      "Kansas City",
+      "Tampa",
+      "Tulsa",
+      "Minneapolis"
+     ]
+    },
+    "model": {
+     "hits": 41,
+     "of": 57,
+     "cities": [
+      "Nashville",
+      "Atlanta",
+      "Austin",
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Dallas",
+      "Denver",
+      "Seattle",
+      "Portland",
+      "Minneapolis",
+      "Philadelphia",
+      "Boston",
+      "Washington",
+      "San Francisco",
+      "Phoenix",
+      "Houston",
+      "San Diego",
+      "Raleigh",
+      "Charlotte",
+      "Orlando",
+      "Tampa",
+      "Salt Lake City",
+      "Kansas City",
+      "St. Louis",
+      "Indianapolis",
+      "Columbus",
+      "Cincinnati",
+      "Cleveland",
+      "Pittsburgh",
+      "Detroit",
+      "Milwaukee",
+      "Madison",
+      "Omaha",
+      "Des Moines",
+      "Oklahoma City",
+      "Tulsa",
+      "Las Vegas",
+      "Toronto",
+      "Montréal",
+      "Vancouver"
+     ]
+    },
+    "qloo": {
+     "hits": 34,
+     "of": 57,
+     "cities": [
+      "Boston",
+      "Chicago",
+      "New York",
+      "San Francisco",
+      "Seattle",
+      "Portland",
+      "Washington",
+      "Austin",
+      "Nashville",
+      "Minneapolis",
+      "Pittsburgh",
+      "St. Louis",
+      "Orlando",
+      "Asheville",
+      "Denver",
+      "Philadelphia",
+      "Columbus",
+      "Kansas City",
+      "Los Angeles",
+      "Cincinnati",
+      "New Orleans",
+      "Milwaukee",
+      "San Diego",
+      "Madison",
+      "Cleveland",
+      "Indianapolis",
+      "Salt Lake City",
+      "Springfield",
+      "Boulder",
+      "Phoenix",
+      "Grand Rapids",
+      "Las Vegas",
+      "Detroit",
+      "Toronto"
+     ]
+    },
+    "blend": {
+     "hits": 42,
+     "of": 57,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Los Angeles",
+      "Philadelphia",
+      "Austin",
+      "San Francisco",
+      "Seattle",
+      "Boston",
+      "Washington",
+      "San Diego",
+      "Nashville",
+      "Columbus",
+      "Portland",
+      "Denver",
+      "Phoenix",
+      "Indianapolis",
+      "Toronto",
+      "Milwaukee",
+      "Minneapolis",
+      "Kansas City",
+      "Montréal",
+      "Dallas",
+      "Orlando",
+      "Las Vegas",
+      "Pittsburgh",
+      "Detroit",
+      "New Orleans",
+      "Cincinnati",
+      "St. Louis",
+      "Vancouver",
+      "Cleveland",
+      "Madison",
+      "Oklahoma City",
+      "Omaha",
+      "Salt Lake City",
+      "Tampa",
+      "Raleigh",
+      "Atlanta",
+      "Houston",
+      "Charlotte",
+      "Grand Rapids",
+      "Richmond"
+     ]
+    },
+    "modelQloo": {
+     "hits": 44,
+     "of": 57,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Nashville",
+      "Austin",
+      "Seattle",
+      "Boston",
+      "Portland",
+      "San Francisco",
+      "Washington",
+      "Minneapolis",
+      "Denver",
+      "Los Angeles",
+      "Philadelphia",
+      "Orlando",
+      "St. Louis",
+      "Pittsburgh",
+      "San Diego",
+      "Kansas City",
+      "Columbus",
+      "Cincinnati",
+      "Milwaukee",
+      "Phoenix",
+      "Salt Lake City",
+      "Indianapolis",
+      "Cleveland",
+      "Madison",
+      "Dallas",
+      "Detroit",
+      "Las Vegas",
+      "New Orleans",
+      "Atlanta",
+      "Tampa",
+      "Toronto",
+      "Raleigh",
+      "Vancouver",
+      "Des Moines",
+      "Montréal",
+      "Omaha",
+      "Oklahoma City",
+      "Tulsa",
+      "Houston",
+      "Charlotte",
+      "Grand Rapids",
+      "Richmond"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 8,
+     "of": 24,
+     "cities": [
+      "Salt Lake City",
+      "Orlando",
+      "Cincinnati",
+      "Des Moines",
+      "Pittsburgh",
+      "Cleveland",
+      "Madison",
+      "St. Louis"
+     ]
+    },
+    "qloo": {
+     "hits": 12,
+     "of": 24,
+     "cities": [
+      "Springfield",
+      "Salt Lake City",
+      "Orlando",
+      "New Orleans",
+      "Cincinnati",
+      "Pittsburgh",
+      "Grand Rapids",
+      "Boulder",
+      "Asheville",
+      "Cleveland",
+      "Madison",
+      "St. Louis"
+     ]
+    },
+    "blend": {
+     "hits": 10,
+     "of": 24,
+     "cities": [
+      "Salt Lake City",
+      "Orlando",
+      "New Orleans",
+      "Cincinnati",
+      "Pittsburgh",
+      "Grand Rapids",
+      "Richmond",
+      "Cleveland",
+      "Madison",
+      "St. Louis"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Billy Joel",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Billy Joel in Concert",
+   "source": "https://en.wikipedia.org/w/index.php?title=Billy_Joel_in_Concert&oldid=1350614192",
+   "R": 54,
+   "modelUnplaced": 4,
+   "rp": {
+    "population": {
+     "hits": 34,
+     "of": 54,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Dallas",
+      "Jacksonville",
+      "Fort Worth",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "Indianapolis",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Nashville",
+      "Boston",
+      "Portland",
+      "Detroit",
+      "Las Vegas",
+      "Memphis",
+      "Louisville",
+      "Baltimore",
+      "Milwaukee",
+      "Atlanta",
+      "Miami",
+      "Raleigh",
+      "Kansas City",
+      "Virginia Beach"
+     ]
+    },
+    "model": {
+     "hits": 39,
+     "of": 54,
+     "cities": [
+      "New York",
+      "Philadelphia",
+      "Boston",
+      "Washington",
+      "Chicago",
+      "Los Angeles",
+      "Baltimore",
+      "Syracuse",
+      "Pittsburgh",
+      "Cleveland",
+      "Detroit",
+      "Toronto",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Minneapolis",
+      "St. Louis",
+      "Kansas City",
+      "Dallas",
+      "Houston",
+      "Austin",
+      "Phoenix",
+      "San Diego",
+      "Las Vegas",
+      "Orlando",
+      "Miami",
+      "Tampa",
+      "Atlanta",
+      "Nashville",
+      "Charlotte",
+      "Raleigh",
+      "Columbus",
+      "Cincinnati",
+      "Indianapolis",
+      "Milwaukee",
+      "San Antonio",
+      "Jacksonville",
+      "Fort Worth",
+      "Portland"
+     ]
+    },
+    "qloo": {
+     "hits": 28,
+     "of": 54,
+     "cities": [
+      "New York",
+      "Hempstead",
+      "Boston",
+      "Philadelphia",
+      "Stamford",
+      "Washington",
+      "Orlando",
+      "Chicago",
+      "Pittsburgh",
+      "Fort Lauderdale",
+      "Las Vegas",
+      "St. Catharines",
+      "Nashville",
+      "Baltimore",
+      "Tampa",
+      "Phoenix",
+      "Los Angeles",
+      "Minneapolis",
+      "Miami",
+      "Cleveland",
+      "San Diego",
+      "New Orleans",
+      "Brockton",
+      "Seattle",
+      "San Francisco",
+      "Milwaukee",
+      "Indianapolis",
+      "Syracuse"
+     ]
+    },
+    "blend": {
+     "hits": 42,
+     "of": 54,
+     "cities": [
+      "New York",
+      "Philadelphia",
+      "Chicago",
+      "Boston",
+      "Washington",
+      "Los Angeles",
+      "Phoenix",
+      "San Diego",
+      "Nashville",
+      "Las Vegas",
+      "Toronto",
+      "Baltimore",
+      "San Francisco",
+      "Seattle",
+      "Indianapolis",
+      "Dallas",
+      "Orlando",
+      "Jacksonville",
+      "Austin",
+      "Denver",
+      "Pittsburgh",
+      "Miami",
+      "Tampa",
+      "Milwaukee",
+      "Columbus",
+      "San Antonio",
+      "Minneapolis",
+      "Charlotte",
+      "Fort Worth",
+      "Cleveland",
+      "Detroit",
+      "New Orleans",
+      "Houston",
+      "Atlanta",
+      "Memphis",
+      "Louisville",
+      "Kansas City",
+      "Portland",
+      "St. Louis",
+      "Fort Lauderdale",
+      "Raleigh",
+      "Cincinnati"
+     ]
+    },
+    "modelQloo": {
+     "hits": 43,
+     "of": 54,
+     "cities": [
+      "New York",
+      "Boston",
+      "Philadelphia",
+      "Washington",
+      "Chicago",
+      "Pittsburgh",
+      "Baltimore",
+      "Los Angeles",
+      "Orlando",
+      "Las Vegas",
+      "Cleveland",
+      "Minneapolis",
+      "Nashville",
+      "Phoenix",
+      "Syracuse",
+      "Tampa",
+      "San Francisco",
+      "Seattle",
+      "San Diego",
+      "Miami",
+      "Toronto",
+      "Denver",
+      "St. Louis",
+      "Detroit",
+      "Dallas",
+      "Austin",
+      "Milwaukee",
+      "Indianapolis",
+      "Atlanta",
+      "Kansas City",
+      "Jacksonville",
+      "Columbus",
+      "Cincinnati",
+      "Charlotte",
+      "New Orleans",
+      "Raleigh",
+      "Houston",
+      "San Antonio",
+      "Fort Worth",
+      "Memphis",
+      "Fort Lauderdale",
+      "Louisville",
+      "Portland"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 8,
+     "of": 20,
+     "cities": [
+      "Tampa",
+      "Pittsburgh",
+      "Cleveland",
+      "St. Louis",
+      "Orlando",
+      "Syracuse",
+      "Minneapolis",
+      "Cincinnati"
+     ]
+    },
+    "qloo": {
+     "hits": 12,
+     "of": 20,
+     "cities": [
+      "Fort Lauderdale",
+      "Tampa",
+      "Pittsburgh",
+      "Cleveland",
+      "Orlando",
+      "Syracuse",
+      "Minneapolis",
+      "Hempstead",
+      "New Orleans",
+      "Stamford",
+      "St. Catharines",
+      "Brockton"
+     ]
+    },
+    "blend": {
+     "hits": 9,
+     "of": 20,
+     "cities": [
+      "Fort Lauderdale",
+      "Tampa",
+      "Pittsburgh",
+      "Cleveland",
+      "St. Louis",
+      "Orlando",
+      "Minneapolis",
+      "Cincinnati",
+      "New Orleans"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Kim Petras",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Feed the Beast World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Feed_the_Beast_World_Tour&oldid=1377726738",
+   "R": 22,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 12,
+     "of": 22,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "San Jose",
+      "Austin",
+      "San Francisco"
+     ]
+    },
+    "model": {
+     "hits": 20,
+     "of": 22,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "San Francisco",
+      "Seattle",
+      "Portland",
+      "Austin",
+      "Denver",
+      "Minneapolis",
+      "Toronto",
+      "Vancouver",
+      "Montréal",
+      "Boston",
+      "Philadelphia",
+      "Washington",
+      "Atlanta",
+      "Nashville",
+      "Dallas",
+      "Houston",
+      "Phoenix"
+     ]
+    },
+    "qloo": {
+     "hits": 15,
+     "of": 22,
+     "cities": [
+      "San Francisco",
+      "New York",
+      "Los Angeles",
+      "Boston",
+      "Chicago",
+      "Seattle",
+      "Portland",
+      "Washington",
+      "Austin",
+      "Philadelphia",
+      "Vancouver",
+      "Montréal",
+      "Toronto",
+      "Minneapolis",
+      "Denver"
+     ]
+    },
+    "blend": {
+     "hits": 17,
+     "of": 22,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Philadelphia",
+      "Toronto",
+      "San Francisco",
+      "Montréal",
+      "Austin",
+      "Seattle",
+      "Boston",
+      "Washington",
+      "Phoenix",
+      "Portland",
+      "Denver",
+      "Vancouver",
+      "San Jose",
+      "Dallas"
+     ]
+    },
+    "modelQloo": {
+     "hits": 17,
+     "of": 22,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "San Francisco",
+      "Chicago",
+      "Seattle",
+      "Portland",
+      "Boston",
+      "Austin",
+      "Washington",
+      "Philadelphia",
+      "Vancouver",
+      "Toronto",
+      "Denver",
+      "Minneapolis",
+      "Montréal",
+      "Phoenix",
+      "Orlando"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 9,
+     "of": 10,
+     "cities": [
+      "Atlanta",
+      "Boston",
+      "Washington",
+      "Minneapolis",
+      "Seattle",
+      "Vancouver",
+      "Portland",
+      "Denver",
+      "Nashville"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 10,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Minneapolis",
+      "Seattle",
+      "Vancouver",
+      "Portland",
+      "Denver"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 10,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Seattle",
+      "Vancouver",
+      "Portland",
+      "Denver"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Tame Impala",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Deadbeat Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Deadbeat_Tour&oldid=1380752017",
+   "R": 25,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 16,
+     "of": 25,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "San Francisco",
+      "Seattle",
+      "Denver"
+     ]
+    },
+    "model": {
+     "hits": 21,
+     "of": 25,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "San Francisco",
+      "Seattle",
+      "Portland",
+      "Austin",
+      "Denver",
+      "Toronto",
+      "Boston",
+      "Philadelphia",
+      "Minneapolis",
+      "Montréal",
+      "Atlanta",
+      "Vancouver",
+      "Nashville",
+      "Phoenix",
+      "San Diego",
+      "Dallas",
+      "Houston",
+      "Columbus"
+     ]
+    },
+    "qloo": {
+     "hits": 13,
+     "of": 25,
+     "cities": [
+      "San Francisco",
+      "Austin",
+      "Los Angeles",
+      "San Diego",
+      "Seattle",
+      "Portland",
+      "Vancouver",
+      "Denver",
+      "Chicago",
+      "New York",
+      "Boston",
+      "Montréal",
+      "Toronto"
+     ]
+    },
+    "blend": {
+     "hits": 18,
+     "of": 25,
+     "cities": [
+      "Los Angeles",
+      "San Diego",
+      "New York",
+      "Chicago",
+      "Austin",
+      "San Francisco",
+      "Toronto",
+      "Montréal",
+      "Seattle",
+      "Denver",
+      "Portland",
+      "Vancouver",
+      "Philadelphia",
+      "Phoenix",
+      "Boston",
+      "Dallas",
+      "Nashville",
+      "Houston"
+     ]
+    },
+    "modelQloo": {
+     "hits": 17,
+     "of": 25,
+     "cities": [
+      "Los Angeles",
+      "San Francisco",
+      "Austin",
+      "Seattle",
+      "Portland",
+      "Chicago",
+      "New York",
+      "Denver",
+      "San Diego",
+      "Vancouver",
+      "Boston",
+      "Toronto",
+      "Montréal",
+      "Minneapolis",
+      "Philadelphia",
+      "Phoenix",
+      "Nashville"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 6,
+     "of": 9,
+     "cities": [
+      "Atlanta",
+      "Boston",
+      "Nashville",
+      "Minneapolis",
+      "Vancouver",
+      "Portland"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 9,
+     "cities": [
+      "Boston",
+      "Vancouver",
+      "Portland"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 9,
+     "cities": [
+      "Boston",
+      "Nashville",
+      "Vancouver",
+      "Portland"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Queens of the Stone Age",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Catacombs Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Catacombs_Tour&oldid=1375102207",
+   "R": 15,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 15,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Philadelphia"
+     ]
+    },
+    "model": {
+     "hits": 10,
+     "of": 15,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "San Francisco",
+      "Seattle",
+      "Portland",
+      "Austin",
+      "Boston",
+      "Philadelphia"
+     ]
+    },
+    "qloo": {
+     "hits": 10,
+     "of": 15,
+     "cities": [
+      "Los Angeles",
+      "San Francisco",
+      "Seattle",
+      "Austin",
+      "Portland",
+      "Toronto",
+      "New York",
+      "Chicago",
+      "Palm Springs",
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 9,
+     "of": 15,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Toronto",
+      "Chicago",
+      "Austin",
+      "San Francisco",
+      "Seattle",
+      "Philadelphia",
+      "Portland"
+     ]
+    },
+    "modelQloo": {
+     "hits": 10,
+     "of": 15,
+     "cities": [
+      "Los Angeles",
+      "San Francisco",
+      "Seattle",
+      "New York",
+      "Toronto",
+      "Austin",
+      "Chicago",
+      "Portland",
+      "Boston",
+      "Philadelphia"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 5,
+     "of": 10,
+     "cities": [
+      "Boston",
+      "San Francisco",
+      "Austin",
+      "Portland",
+      "Seattle"
+     ]
+    },
+    "qloo": {
+     "hits": 6,
+     "of": 10,
+     "cities": [
+      "Boston",
+      "San Francisco",
+      "Austin",
+      "Palm Springs",
+      "Portland",
+      "Seattle"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 10,
+     "cities": [
+      "San Francisco",
+      "Austin",
+      "Portland",
+      "Seattle"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Nine Inch Nails",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Peel It Back Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Peel_It_Back_Tour&oldid=1372261369",
+   "R": 40,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 28,
+     "of": 40,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Jacksonville",
+      "Fort Worth",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Nashville",
+      "Vancouver",
+      "Boston",
+      "Portland",
+      "Detroit",
+      "Las Vegas",
+      "Baltimore",
+      "Hamilton",
+      "Milwaukee"
+     ]
+    },
+    "model": {
+     "hits": 32,
+     "of": 40,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Toronto",
+      "Seattle",
+      "San Francisco",
+      "Boston",
+      "Philadelphia",
+      "Washington",
+      "Denver",
+      "Portland",
+      "Minneapolis",
+      "Montréal",
+      "Detroit",
+      "Phoenix",
+      "Dallas",
+      "Houston",
+      "Austin",
+      "Vancouver",
+      "Cleveland",
+      "St. Louis",
+      "Baltimore",
+      "San Diego",
+      "Tampa",
+      "Sacramento",
+      "Las Vegas",
+      "Columbus",
+      "Nashville",
+      "Raleigh",
+      "Charlotte",
+      "Milwaukee",
+      "Salt Lake City"
+     ]
+    },
+    "qloo": {
+     "hits": 25,
+     "of": 40,
+     "cities": [
+      "Los Angeles",
+      "Seattle",
+      "San Francisco",
+      "Chicago",
+      "Austin",
+      "Portland",
+      "New York",
+      "San Diego",
+      "Las Vegas",
+      "Denver",
+      "Irvine",
+      "Vancouver",
+      "Boston",
+      "Toronto",
+      "Phoenix",
+      "Sacramento",
+      "Minneapolis",
+      "Philadelphia",
+      "Montréal",
+      "Detroit",
+      "Salt Lake City",
+      "Cleveland",
+      "Washington",
+      "New Orleans",
+      "Milwaukee"
+     ]
+    },
+    "blend": {
+     "hits": 29,
+     "of": 40,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "New York",
+      "Toronto",
+      "San Diego",
+      "Austin",
+      "San Francisco",
+      "Seattle",
+      "Phoenix",
+      "Montréal",
+      "Philadelphia",
+      "Denver",
+      "Portland",
+      "Vancouver",
+      "Las Vegas",
+      "Boston",
+      "Washington",
+      "Detroit",
+      "Columbus",
+      "Sacramento",
+      "Dallas",
+      "Houston",
+      "Minneapolis",
+      "Milwaukee",
+      "Nashville",
+      "Cleveland",
+      "New Orleans",
+      "Irvine",
+      "Baltimore"
+     ]
+    },
+    "modelQloo": {
+     "hits": 31,
+     "of": 40,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "Seattle",
+      "San Francisco",
+      "New York",
+      "Toronto",
+      "Portland",
+      "Boston",
+      "Denver",
+      "Austin",
+      "Philadelphia",
+      "Vancouver",
+      "San Diego",
+      "Minneapolis",
+      "Phoenix",
+      "Montréal",
+      "Washington",
+      "Detroit",
+      "Las Vegas",
+      "Sacramento",
+      "Cleveland",
+      "Salt Lake City",
+      "St. Louis",
+      "Dallas",
+      "New Orleans",
+      "Columbus",
+      "Milwaukee",
+      "Houston",
+      "Baltimore",
+      "Nashville",
+      "Irvine"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 7,
+     "of": 12,
+     "cities": [
+      "Salt Lake City",
+      "Minneapolis",
+      "Cleveland",
+      "Raleigh",
+      "Tampa",
+      "St. Louis",
+      "Sacramento"
+     ]
+    },
+    "qloo": {
+     "hits": 6,
+     "of": 12,
+     "cities": [
+      "Salt Lake City",
+      "Minneapolis",
+      "Cleveland",
+      "New Orleans",
+      "Irvine",
+      "Sacramento"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 12,
+     "cities": [
+      "Minneapolis",
+      "Cleveland",
+      "New Orleans",
+      "Irvine",
+      "Sacramento"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Flo",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Access All Areas Tour (Flo)",
+   "source": "https://en.wikipedia.org/w/index.php?title=Access_All_Areas_Tour_(Flo)&oldid=1378984407",
+   "R": 26,
+   "modelUnplaced": 1,
+   "rp": {
+    "population": {
+     "hits": 15,
+     "of": 26,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington"
+     ]
+    },
+    "model": {
+     "hits": 21,
+     "of": 26,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Toronto",
+      "Chicago",
+      "San Francisco",
+      "Seattle",
+      "Vancouver",
+      "Portland",
+      "Austin",
+      "Denver",
+      "Montréal",
+      "Boston",
+      "Washington",
+      "Philadelphia",
+      "Minneapolis",
+      "Atlanta",
+      "Dallas",
+      "Houston",
+      "Phoenix",
+      "San Diego",
+      "Detroit"
+     ]
+    },
+    "qloo": {
+     "hits": 15,
+     "of": 26,
+     "cities": [
+      "Atlanta",
+      "New York",
+      "Los Angeles",
+      "Washington",
+      "Houston",
+      "Toronto",
+      "Chicago",
+      "Philadelphia",
+      "San Francisco",
+      "Dallas",
+      "Sacramento",
+      "Boston",
+      "San Diego",
+      "Detroit",
+      "Montréal"
+     ]
+    },
+    "blend": {
+     "hits": 18,
+     "of": 26,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Houston",
+      "Chicago",
+      "Philadelphia",
+      "Dallas",
+      "Washington",
+      "Montréal",
+      "San Diego",
+      "San Francisco",
+      "Austin",
+      "Atlanta",
+      "Boston",
+      "Phoenix",
+      "Seattle",
+      "Detroit",
+      "Sacramento"
+     ]
+    },
+    "modelQloo": {
+     "hits": 21,
+     "of": 26,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Washington",
+      "Atlanta",
+      "San Francisco",
+      "Philadelphia",
+      "Houston",
+      "Boston",
+      "Dallas",
+      "Seattle",
+      "Austin",
+      "Montréal",
+      "San Diego",
+      "Detroit",
+      "Minneapolis",
+      "Vancouver",
+      "Phoenix",
+      "Denver",
+      "Raleigh"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 6,
+     "of": 11,
+     "cities": [
+      "Atlanta",
+      "Boston",
+      "Detroit",
+      "Minneapolis",
+      "Portland",
+      "Vancouver"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 11,
+     "cities": [
+      "Atlanta",
+      "Boston",
+      "Detroit",
+      "Sacramento"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 11,
+     "cities": [
+      "Atlanta",
+      "Boston",
+      "Detroit",
+      "Sacramento"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Omar Apollo",
+   "set": "held-out",
+   "region": "na",
+   "tour": "God Said No World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=God_Said_No_World_Tour&oldid=1360001122",
+   "R": 26,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 15,
+     "of": 26,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Charlotte",
+      "Indianapolis",
+      "San Francisco",
+      "Seattle",
+      "Denver"
+     ]
+    },
+    "model": {
+     "hits": 19,
+     "of": 26,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Toronto",
+      "Chicago",
+      "Atlanta",
+      "Houston",
+      "Dallas",
+      "Miami",
+      "Philadelphia",
+      "Vancouver",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Phoenix",
+      "Boston",
+      "Austin",
+      "San Diego",
+      "Orlando",
+      "Charlotte"
+     ]
+    },
+    "qloo": {
+     "hits": 12,
+     "of": 26,
+     "cities": [
+      "Los Angeles",
+      "San Francisco",
+      "Chicago",
+      "San Diego",
+      "New York",
+      "Austin",
+      "Seattle",
+      "Houston",
+      "Santa Barbara",
+      "Dallas",
+      "Portland",
+      "Phoenix"
+     ]
+    },
+    "blend": {
+     "hits": 17,
+     "of": 26,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "New York",
+      "San Diego",
+      "Houston",
+      "San Francisco",
+      "Austin",
+      "Phoenix",
+      "Dallas",
+      "Seattle",
+      "Philadelphia",
+      "Toronto",
+      "Indianapolis",
+      "Portland",
+      "Denver",
+      "Boston",
+      "Vancouver"
+     ]
+    },
+    "modelQloo": {
+     "hits": 19,
+     "of": 26,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "New York",
+      "San Francisco",
+      "Houston",
+      "Seattle",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Phoenix",
+      "Atlanta",
+      "Toronto",
+      "Philadelphia",
+      "Boston",
+      "Denver",
+      "Miami",
+      "Portland",
+      "Vancouver",
+      "Orlando"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "Boston",
+      "Atlanta",
+      "Miami",
+      "Orlando",
+      "Vancouver"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 11,
+     "cities": [
+      "Portland",
+      "Santa Barbara"
+     ]
+    },
+    "blend": {
+     "hits": 3,
+     "of": 11,
+     "cities": [
+      "Boston",
+      "Vancouver",
+      "Portland"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Sugababes",
+   "set": "held-out",
+   "region": "uk",
+   "tour": "Sugababes '25 Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Sugababes_'25_Tour&oldid=1378669791",
+   "R": 9,
+   "modelUnplaced": 10,
+   "rp": {
+    "population": {
+     "hits": 6,
+     "of": 9,
+     "cities": [
+      "London",
+      "Birmingham",
+      "Dublin",
+      "Glasgow",
+      "Manchester",
+      "Leeds"
+     ]
+    },
+    "model": {
+     "hits": 7,
+     "of": 9,
+     "cities": [
+      "London",
+      "Manchester",
+      "Birmingham",
+      "Glasgow",
+      "Dublin",
+      "Leeds",
+      "Newcastle upon Tyne"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 9,
+     "cities": [
+      "London",
+      "Manchester",
+      "Birmingham",
+      "Glasgow",
+      "Newcastle upon Tyne"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 9,
+     "cities": [
+      "London",
+      "Birmingham",
+      "Manchester",
+      "Glasgow",
+      "Dublin",
+      "Leeds"
+     ]
+    },
+    "modelQloo": {
+     "hits": 6,
+     "of": 9,
+     "cities": [
+      "London",
+      "Manchester",
+      "Birmingham",
+      "Glasgow",
+      "Leeds",
+      "Newcastle upon Tyne"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 1,
+     "of": 3,
+     "cities": [
+      "Newcastle upon Tyne"
+     ]
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 3,
+     "cities": [
+      "Newcastle upon Tyne"
+     ]
+    },
+    "blend": {
+     "hits": 0,
+     "of": 3,
+     "cities": []
+    }
+   }
+  },
+  {
+   "artist": "Travis Scott",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Circus Maximus Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Circus_Maximus_Tour&oldid=1366276511",
+   "R": 31,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 17,
+     "of": 31,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Nashville",
+      "Vancouver",
+      "Boston"
+     ]
+    },
+    "model": {
+     "hits": 21,
+     "of": 31,
+     "cities": [
+      "Los Angeles",
+      "Atlanta",
+      "New York",
+      "Chicago",
+      "Dallas",
+      "Miami",
+      "Toronto",
+      "Philadelphia",
+      "Phoenix",
+      "Las Vegas",
+      "Detroit",
+      "Baltimore",
+      "Charlotte",
+      "Nashville",
+      "San Francisco",
+      "Orlando",
+      "Denver",
+      "Minneapolis",
+      "Kansas City",
+      "Milwaukee",
+      "Raleigh"
+     ]
+    },
+    "qloo": {
+     "hits": 17,
+     "of": 31,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Miami",
+      "Chicago",
+      "Las Vegas",
+      "Toronto",
+      "Austin",
+      "Orlando",
+      "San Francisco",
+      "Dallas",
+      "Boston",
+      "Phoenix",
+      "Philadelphia",
+      "Seattle",
+      "Denver",
+      "Vancouver",
+      "Montréal"
+     ]
+    },
+    "blend": {
+     "hits": 22,
+     "of": 31,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Phoenix",
+      "Austin",
+      "Philadelphia",
+      "Dallas",
+      "Montréal",
+      "San Francisco",
+      "Las Vegas",
+      "Seattle",
+      "Boston",
+      "Denver",
+      "Miami",
+      "Vancouver",
+      "Columbus",
+      "Orlando",
+      "Detroit",
+      "Milwaukee",
+      "Atlanta",
+      "Portland"
+     ]
+    },
+    "modelQloo": {
+     "hits": 22,
+     "of": 31,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Miami",
+      "Toronto",
+      "Las Vegas",
+      "Dallas",
+      "Philadelphia",
+      "Phoenix",
+      "San Francisco",
+      "Orlando",
+      "Atlanta",
+      "Austin",
+      "Denver",
+      "Detroit",
+      "Milwaukee",
+      "Minneapolis",
+      "Boston",
+      "Montréal",
+      "Vancouver",
+      "Seattle",
+      "Pittsburgh"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 10,
+     "of": 14,
+     "cities": [
+      "Raleigh",
+      "Kansas City",
+      "Las Vegas",
+      "Miami",
+      "Atlanta",
+      "Baltimore",
+      "Detroit",
+      "Milwaukee",
+      "Minneapolis",
+      "Orlando"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 14,
+     "cities": [
+      "Las Vegas",
+      "Miami",
+      "Orlando"
+     ]
+    },
+    "blend": {
+     "hits": 7,
+     "of": 14,
+     "cities": [
+      "Las Vegas",
+      "Portland",
+      "Miami",
+      "Atlanta",
+      "Detroit",
+      "Milwaukee",
+      "Orlando"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Halsey",
+   "set": "held-out",
+   "region": "na",
+   "tour": "For My Last Trick: The Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=For_My_Last_Trick%3A_The_Tour&oldid=1376678226",
+   "R": 23,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 7,
+     "of": 23,
+     "cities": [
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "Charlotte"
+     ]
+    },
+    "model": {
+     "hits": 10,
+     "of": 23,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Dallas",
+      "Philadelphia",
+      "Phoenix",
+      "Denver",
+      "Tampa",
+      "St. Louis",
+      "Charlotte"
+     ]
+    },
+    "qloo": {
+     "hits": 5,
+     "of": 23,
+     "cities": [
+      "Denver",
+      "Chicago",
+      "Los Angeles",
+      "Phoenix",
+      "Toronto"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 23,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "Phoenix",
+      "Toronto",
+      "Denver",
+      "Philadelphia"
+     ]
+    },
+    "modelQloo": {
+     "hits": 7,
+     "of": 23,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "Phoenix",
+      "Denver",
+      "Toronto",
+      "Philadelphia",
+      "St. Louis"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 3,
+     "of": 16,
+     "cities": [
+      "Tampa",
+      "St. Louis",
+      "Denver"
+     ]
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 16,
+     "cities": [
+      "Denver"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 16,
+     "cities": [
+      "Denver"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Bonnie Tyler",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "40 Years \"Total Eclipse of the Heart\" Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=40_Years_%22Total_Eclipse_of_the_Heart%22_Tour&oldid=1362833570",
+   "R": 27,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 27,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Hamburg",
+      "Vienna",
+      "Munich"
+     ]
+    },
+    "model": {
+     "hits": 12,
+     "of": 27,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Vienna",
+      "Zürich",
+      "Munich",
+      "Hamburg",
+      "Frankfurt am Main",
+      "Stuttgart",
+      "Essen",
+      "Dresden",
+      "Nuremberg",
+      "Lyon"
+     ]
+    },
+    "qloo": {
+     "hits": 9,
+     "of": 27,
+     "cities": [
+      "Hamburg",
+      "Berlin",
+      "Frankfurt am Main",
+      "Dresden",
+      "Munich",
+      "Vienna",
+      "Stuttgart",
+      "Paris",
+      "Essen"
+     ]
+    },
+    "blend": {
+     "hits": 9,
+     "of": 27,
+     "cities": [
+      "Berlin",
+      "Hamburg",
+      "Munich",
+      "Paris",
+      "Vienna",
+      "Frankfurt am Main",
+      "Dresden",
+      "Stuttgart",
+      "Essen"
+     ]
+    },
+    "modelQloo": {
+     "hits": 10,
+     "of": 27,
+     "cities": [
+      "Berlin",
+      "Hamburg",
+      "Frankfurt am Main",
+      "Munich",
+      "Paris",
+      "Vienna",
+      "Dresden",
+      "Stuttgart",
+      "Essen",
+      "Zürich"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 7,
+     "of": 22,
+     "cities": [
+      "Frankfurt am Main",
+      "Nuremberg",
+      "Essen",
+      "Zürich",
+      "Stuttgart",
+      "Lyon",
+      "Dresden"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 22,
+     "cities": [
+      "Frankfurt am Main",
+      "Essen",
+      "Stuttgart",
+      "Dresden"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 22,
+     "cities": [
+      "Frankfurt am Main",
+      "Essen",
+      "Stuttgart",
+      "Dresden"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Ado",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Hibana World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Hibana_World_Tour&oldid=1327682517",
+   "R": 12,
+   "modelUnplaced": 2,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 12,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Phoenix"
+     ]
+    },
+    "model": {
+     "hits": 6,
+     "of": 12,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Toronto",
+      "Chicago",
+      "San Francisco",
+      "Phoenix"
+     ]
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 12,
+     "cities": [
+      "Fort Worth"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 12,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Fort Worth"
+     ]
+    },
+    "modelQloo": {
+     "hits": 4,
+     "of": 12,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Orlando"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 1,
+     "of": 7,
+     "cities": [
+      "San Francisco"
+     ]
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 7,
+     "cities": [
+      "Fort Worth"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 7,
+     "cities": [
+      "Fort Worth"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Doja Cat",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Tour Ma Vie World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Tour_Ma_Vie_World_Tour&oldid=1379654155",
+   "R": 31,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 19,
+     "of": 31,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Charlotte",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Vancouver",
+      "Boston"
+     ]
+    },
+    "model": {
+     "hits": 27,
+     "of": 31,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Atlanta",
+      "Chicago",
+      "Houston",
+      "Toronto",
+      "Dallas",
+      "Miami",
+      "Philadelphia",
+      "Washington",
+      "San Francisco",
+      "Phoenix",
+      "Seattle",
+      "Minneapolis",
+      "Denver",
+      "Boston",
+      "Detroit",
+      "San Diego",
+      "Tampa",
+      "Orlando",
+      "Baltimore",
+      "Charlotte",
+      "Portland",
+      "Sacramento",
+      "Austin",
+      "Las Vegas",
+      "Kansas City"
+     ]
+    },
+    "qloo": {
+     "hits": 22,
+     "of": 31,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "San Francisco",
+      "Chicago",
+      "Las Vegas",
+      "San Diego",
+      "Sacramento",
+      "Orlando",
+      "Seattle",
+      "San Antonio",
+      "Washington",
+      "Austin",
+      "Portland",
+      "Philadelphia",
+      "Boston",
+      "Denver",
+      "Phoenix",
+      "Miami",
+      "Toronto",
+      "Dallas",
+      "Houston",
+      "Detroit"
+     ]
+    },
+    "blend": {
+     "hits": 25,
+     "of": 31,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "San Diego",
+      "San Antonio",
+      "San Francisco",
+      "Philadelphia",
+      "Toronto",
+      "Phoenix",
+      "Austin",
+      "Seattle",
+      "Houston",
+      "Dallas",
+      "Washington",
+      "Las Vegas",
+      "Denver",
+      "Portland",
+      "Boston",
+      "Sacramento",
+      "Detroit",
+      "Miami",
+      "Orlando",
+      "Vancouver",
+      "Atlanta",
+      "Baltimore"
+     ]
+    },
+    "modelQloo": {
+     "hits": 26,
+     "of": 31,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "San Francisco",
+      "Washington",
+      "Seattle",
+      "San Diego",
+      "Philadelphia",
+      "Orlando",
+      "Toronto",
+      "Miami",
+      "Sacramento",
+      "Houston",
+      "Phoenix",
+      "Dallas",
+      "Las Vegas",
+      "Boston",
+      "Denver",
+      "Atlanta",
+      "Austin",
+      "Portland",
+      "San Antonio",
+      "Detroit",
+      "Tampa",
+      "Minneapolis",
+      "Baltimore"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 11,
+     "of": 12,
+     "cities": [
+      "Detroit",
+      "Minneapolis",
+      "Kansas City",
+      "Portland",
+      "Sacramento",
+      "Las Vegas",
+      "Miami",
+      "Tampa",
+      "Orlando",
+      "Atlanta",
+      "Baltimore"
+     ]
+    },
+    "qloo": {
+     "hits": 6,
+     "of": 12,
+     "cities": [
+      "Detroit",
+      "Portland",
+      "Sacramento",
+      "Las Vegas",
+      "Miami",
+      "Orlando"
+     ]
+    },
+    "blend": {
+     "hits": 8,
+     "of": 12,
+     "cities": [
+      "Detroit",
+      "Portland",
+      "Sacramento",
+      "Las Vegas",
+      "Miami",
+      "Orlando",
+      "Atlanta",
+      "Baltimore"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Depeche Mode",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "Memento Mori World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Memento_Mori_World_Tour&oldid=1357215827",
+   "R": 34,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 20,
+     "of": 34,
+     "cities": [
+      "Berlin",
+      "Madrid",
+      "Rome",
+      "Paris",
+      "Hamburg",
+      "Bucharest",
+      "Budapest",
+      "Warsaw",
+      "Barcelona",
+      "Stockholm",
+      "Munich",
+      "Milan",
+      "Prague",
+      "Copenhagen",
+      "Oslo",
+      "Köln",
+      "Turin",
+      "Kraków",
+      "Amsterdam",
+      "Zagreb"
+     ]
+    },
+    "model": {
+     "hits": 24,
+     "of": 34,
+     "cities": [
+      "Berlin",
+      "Paris",
+      "Milan",
+      "Munich",
+      "Hamburg",
+      "Köln",
+      "Frankfurt am Main",
+      "Warsaw",
+      "Madrid",
+      "Barcelona",
+      "Amsterdam",
+      "Prague",
+      "Copenhagen",
+      "Stockholm",
+      "Lisbon",
+      "Oslo",
+      "Bucharest",
+      "Budapest",
+      "Rome",
+      "Turin",
+      "Bologna",
+      "Lyon",
+      "Bordeaux",
+      "Düsseldorf"
+     ]
+    },
+    "qloo": {
+     "hits": 20,
+     "of": 34,
+     "cities": [
+      "Berlin",
+      "Rome",
+      "Budapest",
+      "Prague",
+      "Barcelona",
+      "Milan",
+      "Copenhagen",
+      "Bologna",
+      "Warsaw",
+      "Munich",
+      "Lisbon",
+      "Turin",
+      "Hamburg",
+      "Stockholm",
+      "Madrid",
+      "Amsterdam",
+      "Paris",
+      "Frankfurt am Main",
+      "Kraków",
+      "Leipzig"
+     ]
+    },
+    "blend": {
+     "hits": 23,
+     "of": 34,
+     "cities": [
+      "Berlin",
+      "Rome",
+      "Budapest",
+      "Barcelona",
+      "Prague",
+      "Milan",
+      "Warsaw",
+      "Hamburg",
+      "Madrid",
+      "Copenhagen",
+      "Munich",
+      "Stockholm",
+      "Paris",
+      "Turin",
+      "Bucharest",
+      "Amsterdam",
+      "Kraków",
+      "Köln",
+      "Frankfurt am Main",
+      "Lisbon",
+      "Oslo",
+      "Bologna",
+      "Zagreb"
+     ]
+    },
+    "modelQloo": {
+     "hits": 24,
+     "of": 34,
+     "cities": [
+      "Berlin",
+      "Milan",
+      "Barcelona",
+      "Munich",
+      "Prague",
+      "Hamburg",
+      "Warsaw",
+      "Copenhagen",
+      "Rome",
+      "Budapest",
+      "Paris",
+      "Madrid",
+      "Lisbon",
+      "Stockholm",
+      "Frankfurt am Main",
+      "Bologna",
+      "Amsterdam",
+      "Turin",
+      "Köln",
+      "Bucharest",
+      "Leipzig",
+      "Oslo",
+      "Kraków",
+      "Düsseldorf"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 6,
+     "of": 14,
+     "cities": [
+      "Lyon",
+      "Düsseldorf",
+      "Frankfurt am Main",
+      "Bordeaux",
+      "Bologna",
+      "Lisbon"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 14,
+     "cities": [
+      "Leipzig",
+      "Frankfurt am Main",
+      "Bologna",
+      "Lisbon"
+     ]
+    },
+    "blend": {
+     "hits": 3,
+     "of": 14,
+     "cities": [
+      "Frankfurt am Main",
+      "Bologna",
+      "Lisbon"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Addison Rae",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Addison Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Addison_Tour&oldid=1368606917",
+   "R": 14,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 7,
+     "of": 14,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Philadelphia",
+      "Dallas"
+     ]
+    },
+    "model": {
+     "hits": 11,
+     "of": 14,
+     "cities": [
+      "Nashville",
+      "Austin",
+      "Los Angeles",
+      "New York",
+      "Atlanta",
+      "Dallas",
+      "Chicago",
+      "Denver",
+      "Boston",
+      "Philadelphia",
+      "Washington"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 14,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 8,
+     "of": 14,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Boston",
+      "Dallas",
+      "Austin",
+      "Philadelphia"
+     ]
+    },
+    "modelQloo": {
+     "hits": 8,
+     "of": 14,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Boston",
+      "Austin",
+      "Nashville",
+      "Dallas",
+      "Philadelphia"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 6,
+     "of": 7,
+     "cities": [
+      "Austin",
+      "Nashville",
+      "Atlanta",
+      "Washington",
+      "Boston",
+      "Denver"
+     ]
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 7,
+     "cities": [
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Austin",
+      "Boston"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Nicki Minaj",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Pink Friday 2 World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Pink_Friday_2_World_Tour&oldid=1380477554",
+   "R": 41,
+   "modelUnplaced": 2,
+   "rp": {
+    "population": {
+     "hits": 26,
+     "of": 41,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Dallas",
+      "Jacksonville",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Nashville",
+      "Oklahoma City",
+      "Boston",
+      "Detroit",
+      "Las Vegas",
+      "Baltimore",
+      "Milwaukee"
+     ]
+    },
+    "model": {
+     "hits": 30,
+     "of": 41,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Atlanta",
+      "Houston",
+      "Chicago",
+      "Miami",
+      "Toronto",
+      "Dallas",
+      "Washington",
+      "Philadelphia",
+      "Detroit",
+      "San Francisco",
+      "Baltimore",
+      "New Orleans",
+      "St. Louis",
+      "Charlotte",
+      "Birmingham",
+      "Jacksonville",
+      "Cleveland",
+      "Orlando",
+      "Tampa",
+      "Raleigh",
+      "Columbia",
+      "Montréal",
+      "San Antonio",
+      "Phoenix",
+      "San Diego",
+      "Seattle",
+      "Denver",
+      "Minneapolis"
+     ]
+    },
+    "qloo": {
+     "hits": 23,
+     "of": 41,
+     "cities": [
+      "Miami",
+      "New York",
+      "Las Vegas",
+      "Orlando",
+      "Washington",
+      "Atlanta",
+      "Los Angeles",
+      "Philadelphia",
+      "Dallas",
+      "Houston",
+      "New Orleans",
+      "Baltimore",
+      "Chicago",
+      "Detroit",
+      "Toronto",
+      "San Antonio",
+      "Tampa",
+      "Jacksonville",
+      "Cleveland",
+      "Austin",
+      "Charlotte",
+      "San Diego",
+      "Phoenix"
+     ]
+    },
+    "blend": {
+     "hits": 31,
+     "of": 41,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Houston",
+      "Philadelphia",
+      "Chicago",
+      "Toronto",
+      "Dallas",
+      "San Antonio",
+      "Washington",
+      "Jacksonville",
+      "Las Vegas",
+      "San Diego",
+      "Phoenix",
+      "Austin",
+      "Miami",
+      "Detroit",
+      "Baltimore",
+      "Charlotte",
+      "Atlanta",
+      "Orlando",
+      "Columbus",
+      "New Orleans",
+      "Boston",
+      "Tampa",
+      "San Francisco",
+      "Montréal",
+      "Milwaukee",
+      "Cleveland",
+      "Seattle",
+      "Denver",
+      "Raleigh"
+     ]
+    },
+    "modelQloo": {
+     "hits": 33,
+     "of": 41,
+     "cities": [
+      "New York",
+      "Miami",
+      "Los Angeles",
+      "Atlanta",
+      "Washington",
+      "Houston",
+      "Dallas",
+      "Chicago",
+      "Philadelphia",
+      "Toronto",
+      "Orlando",
+      "Baltimore",
+      "Detroit",
+      "New Orleans",
+      "Jacksonville",
+      "Tampa",
+      "Cleveland",
+      "Charlotte",
+      "Las Vegas",
+      "San Antonio",
+      "St. Louis",
+      "San Francisco",
+      "San Diego",
+      "Phoenix",
+      "Columbia",
+      "Austin",
+      "Boston",
+      "Raleigh",
+      "Columbus",
+      "Milwaukee",
+      "Minneapolis",
+      "Montréal",
+      "Seattle"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 11,
+     "of": 15,
+     "cities": [
+      "Atlanta",
+      "Orlando",
+      "Minneapolis",
+      "New Orleans",
+      "Cleveland",
+      "Birmingham",
+      "St. Louis",
+      "Tampa",
+      "Miami",
+      "Raleigh",
+      "Columbia"
+     ]
+    },
+    "qloo": {
+     "hits": 6,
+     "of": 15,
+     "cities": [
+      "Atlanta",
+      "Orlando",
+      "New Orleans",
+      "Cleveland",
+      "Tampa",
+      "Miami"
+     ]
+    },
+    "blend": {
+     "hits": 7,
+     "of": 15,
+     "cities": [
+      "Atlanta",
+      "Orlando",
+      "New Orleans",
+      "Cleveland",
+      "Tampa",
+      "Miami",
+      "Raleigh"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Gary Barlow",
+   "set": "held-out",
+   "region": "uk",
+   "tour": "The Songbook Tour (2025)",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Songbook_Tour_(2025)&oldid=1318185932",
+   "R": 25,
+   "modelUnplaced": 11,
+   "rp": {
+    "population": {
+     "hits": 18,
+     "of": 25,
+     "cities": [
+      "London",
+      "Birmingham",
+      "Dublin",
+      "Glasgow",
+      "Manchester",
+      "Sheffield",
+      "Leeds",
+      "Edinburgh",
+      "Liverpool",
+      "Cardiff",
+      "Leicester",
+      "Belfast",
+      "Nottingham",
+      "Preston",
+      "Newcastle upon Tyne",
+      "Brighton",
+      "Plymouth",
+      "Stoke-on-Trent"
+     ]
+    },
+    "model": {
+     "hits": 19,
+     "of": 25,
+     "cities": [
+      "Manchester",
+      "London",
+      "Leeds",
+      "Sheffield",
+      "Liverpool",
+      "Birmingham",
+      "Glasgow",
+      "Newcastle upon Tyne",
+      "Nottingham",
+      "Edinburgh",
+      "Cardiff",
+      "Leicester",
+      "Belfast",
+      "Dublin",
+      "Plymouth",
+      "Stoke-on-Trent",
+      "Brighton",
+      "Middlesbrough",
+      "Preston"
+     ]
+    },
+    "qloo": {
+     "hits": 15,
+     "of": 25,
+     "cities": [
+      "Manchester",
+      "Liverpool",
+      "London",
+      "Birmingham",
+      "Bournemouth",
+      "Leeds",
+      "Preston",
+      "Sheffield",
+      "Nottingham",
+      "Cardiff",
+      "Newcastle upon Tyne",
+      "Oxford",
+      "Plymouth",
+      "Woking",
+      "Edinburgh"
+     ]
+    },
+    "blend": {
+     "hits": 19,
+     "of": 25,
+     "cities": [
+      "London",
+      "Birmingham",
+      "Manchester",
+      "Liverpool",
+      "Leeds",
+      "Sheffield",
+      "Preston",
+      "Cardiff",
+      "Nottingham",
+      "Edinburgh",
+      "Newcastle upon Tyne",
+      "Bournemouth",
+      "Leicester",
+      "Glasgow",
+      "Plymouth",
+      "Oxford",
+      "Stoke-on-Trent",
+      "Brighton",
+      "Dublin"
+     ]
+    },
+    "modelQloo": {
+     "hits": 18,
+     "of": 25,
+     "cities": [
+      "Manchester",
+      "London",
+      "Liverpool",
+      "Leeds",
+      "Birmingham",
+      "Sheffield",
+      "Nottingham",
+      "Newcastle upon Tyne",
+      "Cardiff",
+      "Preston",
+      "Bournemouth",
+      "Edinburgh",
+      "Plymouth",
+      "Leicester",
+      "Glasgow",
+      "Stoke-on-Trent",
+      "Brighton",
+      "Oxford"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 1,
+     "of": 7,
+     "cities": [
+      "Middlesbrough"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 7,
+     "cities": [
+      "Bournemouth",
+      "Woking",
+      "Oxford"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Bournemouth",
+      "Oxford"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "The 1975",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Still... At Their Very Best",
+   "source": "https://en.wikipedia.org/w/index.php?title=Still..._At_Their_Very_Best&oldid=1367276826",
+   "R": 36,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 20,
+     "of": 36,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Fort Worth",
+      "Columbus",
+      "Charlotte",
+      "Indianapolis",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Nashville",
+      "Vancouver",
+      "Boston",
+      "Portland",
+      "Detroit"
+     ]
+    },
+    "model": {
+     "hits": 28,
+     "of": 36,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Toronto",
+      "San Francisco",
+      "Seattle",
+      "Boston",
+      "Philadelphia",
+      "Denver",
+      "Portland",
+      "Minneapolis",
+      "Atlanta",
+      "Vancouver",
+      "Montréal",
+      "Phoenix",
+      "San Diego",
+      "Nashville",
+      "Detroit",
+      "Miami",
+      "Tampa",
+      "Charlotte",
+      "Pittsburgh",
+      "Columbus",
+      "Indianapolis",
+      "Milwaukee",
+      "Kansas City",
+      "St. Louis",
+      "Salt Lake City"
+     ]
+    },
+    "qloo": {
+     "hits": 23,
+     "of": 36,
+     "cities": [
+      "New York",
+      "Chicago",
+      "San Diego",
+      "San Francisco",
+      "Seattle",
+      "Boston",
+      "Los Angeles",
+      "Vancouver",
+      "Pittsburgh",
+      "Nashville",
+      "Toronto",
+      "Columbus",
+      "Irvine",
+      "Minneapolis",
+      "Portland",
+      "Salt Lake City",
+      "Kansas City",
+      "Denver",
+      "Phoenix",
+      "Philadelphia",
+      "Milwaukee",
+      "Sacramento",
+      "Montréal"
+     ]
+    },
+    "blend": {
+     "hits": 23,
+     "of": 36,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Los Angeles",
+      "San Diego",
+      "Toronto",
+      "San Francisco",
+      "Seattle",
+      "Phoenix",
+      "Columbus",
+      "Philadelphia",
+      "Boston",
+      "Nashville",
+      "Vancouver",
+      "Montréal",
+      "Denver",
+      "Portland",
+      "Indianapolis",
+      "Milwaukee",
+      "Kansas City",
+      "Sacramento",
+      "Minneapolis",
+      "Pittsburgh",
+      "Detroit"
+     ]
+    },
+    "modelQloo": {
+     "hits": 26,
+     "of": 36,
+     "cities": [
+      "New York",
+      "Chicago",
+      "Los Angeles",
+      "San Francisco",
+      "Seattle",
+      "Boston",
+      "Toronto",
+      "San Diego",
+      "Vancouver",
+      "Portland",
+      "Minneapolis",
+      "Denver",
+      "Nashville",
+      "Philadelphia",
+      "Pittsburgh",
+      "Phoenix",
+      "Columbus",
+      "Montréal",
+      "Kansas City",
+      "Salt Lake City",
+      "Milwaukee",
+      "Sacramento",
+      "St. Louis",
+      "Indianapolis",
+      "Tampa",
+      "Detroit"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 9,
+     "of": 16,
+     "cities": [
+      "Atlanta",
+      "Miami",
+      "Tampa",
+      "St. Louis",
+      "Kansas City",
+      "Minneapolis",
+      "Milwaukee",
+      "Pittsburgh",
+      "Salt Lake City"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 16,
+     "cities": [
+      "Sacramento",
+      "Kansas City",
+      "Minneapolis",
+      "Milwaukee",
+      "Pittsburgh",
+      "Salt Lake City",
+      "Irvine"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 16,
+     "cities": [
+      "Sacramento",
+      "Kansas City",
+      "Minneapolis",
+      "Milwaukee",
+      "Pittsburgh"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "21 Savage",
+   "set": "held-out",
+   "region": "na",
+   "tour": "American Dream Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=American_Dream_Tour&oldid=1330479410",
+   "R": 27,
+   "modelUnplaced": 25,
+   "rp": {
+    "population": {
+     "hits": 8,
+     "of": 27,
+     "cities": [
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "Austin",
+      "Charlotte"
+     ]
+    },
+    "model": {
+     "hits": 5,
+     "of": 27,
+     "cities": [
+      "Atlanta",
+      "Dallas",
+      "Philadelphia",
+      "Los Angeles",
+      "Toronto"
+     ]
+    },
+    "qloo": {
+     "hits": 9,
+     "of": 27,
+     "cities": [
+      "Atlanta",
+      "Los Angeles",
+      "Chicago",
+      "Dallas",
+      "Charlotte",
+      "Philadelphia",
+      "Tampa",
+      "Toronto",
+      "Virginia Beach"
+     ]
+    },
+    "blend": {
+     "hits": 9,
+     "of": 27,
+     "cities": [
+      "Los Angeles",
+      "Chicago",
+      "Dallas",
+      "Philadelphia",
+      "Toronto",
+      "Charlotte",
+      "Phoenix",
+      "Atlanta",
+      "Austin"
+     ]
+    },
+    "modelQloo": {
+     "hits": 9,
+     "of": 27,
+     "cities": [
+      "Atlanta",
+      "Dallas",
+      "Los Angeles",
+      "Chicago",
+      "Philadelphia",
+      "Toronto",
+      "Charlotte",
+      "Phoenix",
+      "Austin"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 1,
+     "of": 19,
+     "cities": [
+      "Atlanta"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 19,
+     "cities": [
+      "Virginia Beach",
+      "Tampa",
+      "Atlanta"
+     ]
+    },
+    "blend": {
+     "hits": 1,
+     "of": 19,
+     "cities": [
+      "Atlanta"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Green Day",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Saviors Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Saviors_Tour&oldid=1378500500",
+   "R": 27,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 15,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Fort Worth",
+      "Austin",
+      "Charlotte",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 18,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "San Francisco",
+      "Boston",
+      "Philadelphia",
+      "Washington",
+      "Seattle",
+      "Minneapolis",
+      "Detroit",
+      "Denver",
+      "Portland",
+      "Atlanta",
+      "Phoenix",
+      "San Diego",
+      "Pittsburgh",
+      "St. Louis"
+     ]
+    },
+    "qloo": {
+     "hits": 13,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "San Diego",
+      "San Francisco",
+      "Boston",
+      "Chicago",
+      "Toronto",
+      "Pittsburgh",
+      "Seattle",
+      "Philadelphia",
+      "Washington",
+      "Minneapolis",
+      "Phoenix"
+     ]
+    },
+    "blend": {
+     "hits": 14,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "San Diego",
+      "Toronto",
+      "Philadelphia",
+      "San Francisco",
+      "Phoenix",
+      "Boston",
+      "Seattle",
+      "Washington",
+      "Austin",
+      "Denver",
+      "Portland"
+     ]
+    },
+    "modelQloo": {
+     "hits": 18,
+     "of": 27,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "San Francisco",
+      "Chicago",
+      "Boston",
+      "Toronto",
+      "San Diego",
+      "Seattle",
+      "Philadelphia",
+      "Washington",
+      "Minneapolis",
+      "Pittsburgh",
+      "Phoenix",
+      "Denver",
+      "Portland",
+      "Detroit",
+      "Austin",
+      "Milwaukee"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 7,
+     "of": 12,
+     "cities": [
+      "Boston",
+      "St. Louis",
+      "Minneapolis",
+      "Atlanta",
+      "Pittsburgh",
+      "Detroit",
+      "Portland"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 12,
+     "cities": [
+      "Boston",
+      "Minneapolis",
+      "Pittsburgh"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 12,
+     "cities": [
+      "Boston",
+      "Portland"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Pink",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Summer Carnival (tour)",
+   "source": "https://en.wikipedia.org/w/index.php?title=Summer_Carnival_(tour)&oldid=1376188311",
+   "R": 29,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 13,
+     "of": 29,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Edmonton",
+      "Indianapolis",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 18,
+     "of": 29,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Houston",
+      "Philadelphia",
+      "Washington",
+      "Atlanta",
+      "Boston",
+      "Phoenix",
+      "Minneapolis",
+      "San Diego",
+      "St. Louis",
+      "Orlando",
+      "San Antonio",
+      "Pittsburgh",
+      "Las Vegas",
+      "Cincinnati"
+     ]
+    },
+    "qloo": {
+     "hits": 15,
+     "of": 29,
+     "cities": [
+      "New York",
+      "Orlando",
+      "Las Vegas",
+      "Los Angeles",
+      "Chicago",
+      "San Diego",
+      "Washington",
+      "Toronto",
+      "Boston",
+      "Philadelphia",
+      "Phoenix",
+      "Nashville",
+      "Atlanta",
+      "Houston",
+      "San Antonio"
+     ]
+    },
+    "blend": {
+     "hits": 16,
+     "of": 29,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "San Diego",
+      "Philadelphia",
+      "Phoenix",
+      "Houston",
+      "Washington",
+      "Las Vegas",
+      "San Antonio",
+      "Boston",
+      "Nashville",
+      "Orlando",
+      "Detroit",
+      "Atlanta"
+     ]
+    },
+    "modelQloo": {
+     "hits": 18,
+     "of": 29,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Washington",
+      "Philadelphia",
+      "San Diego",
+      "Boston",
+      "Orlando",
+      "Las Vegas",
+      "Houston",
+      "Phoenix",
+      "Atlanta",
+      "Minneapolis",
+      "San Antonio",
+      "Nashville",
+      "Pittsburgh",
+      "St. Louis"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 8,
+     "of": 16,
+     "cities": [
+      "Cincinnati",
+      "Boston",
+      "Pittsburgh",
+      "Minneapolis",
+      "Atlanta",
+      "Las Vegas",
+      "St. Louis",
+      "Orlando"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 16,
+     "cities": [
+      "Boston",
+      "Atlanta",
+      "Las Vegas",
+      "Orlando"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 16,
+     "cities": [
+      "Boston",
+      "Detroit",
+      "Atlanta",
+      "Las Vegas",
+      "Orlando"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "SZA",
+   "set": "held-out",
+   "region": "na",
+   "tour": "SOS Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=SOS_Tour&oldid=1359128980",
+   "R": 28,
+   "modelUnplaced": 5,
+   "rp": {
+    "population": {
+     "hits": 17,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 15,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Atlanta",
+      "Chicago",
+      "Houston",
+      "Washington",
+      "Dallas",
+      "Philadelphia",
+      "Toronto",
+      "Miami",
+      "Baltimore",
+      "Detroit",
+      "St. Louis",
+      "San Francisco",
+      "Nashville"
+     ]
+    },
+    "qloo": {
+     "hits": 18,
+     "of": 28,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Washington",
+      "Chicago",
+      "Philadelphia",
+      "Atlanta",
+      "San Francisco",
+      "Las Vegas",
+      "Baltimore",
+      "Houston",
+      "Miami",
+      "Dallas",
+      "Austin",
+      "Seattle",
+      "Detroit",
+      "Portland",
+      "San Diego",
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 23,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Philadelphia",
+      "Houston",
+      "Dallas",
+      "Washington",
+      "San Francisco",
+      "Toronto",
+      "Austin",
+      "San Diego",
+      "Seattle",
+      "Las Vegas",
+      "Phoenix",
+      "Baltimore",
+      "Atlanta",
+      "San Antonio",
+      "Detroit",
+      "Portland",
+      "Boston",
+      "Miami",
+      "Denver",
+      "Columbus"
+     ]
+    },
+    "modelQloo": {
+     "hits": 18,
+     "of": 28,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Washington",
+      "Atlanta",
+      "Philadelphia",
+      "Houston",
+      "Baltimore",
+      "Dallas",
+      "Miami",
+      "San Francisco",
+      "Detroit",
+      "Toronto",
+      "St. Louis",
+      "Austin",
+      "Las Vegas",
+      "San Diego",
+      "Seattle"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "Detroit",
+      "Atlanta",
+      "Miami",
+      "Baltimore",
+      "St. Louis"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 11,
+     "cities": [
+      "Detroit",
+      "Boston",
+      "Atlanta",
+      "Portland",
+      "Miami",
+      "Baltimore",
+      "Las Vegas"
+     ]
+    },
+    "blend": {
+     "hits": 7,
+     "of": 11,
+     "cities": [
+      "Detroit",
+      "Boston",
+      "Atlanta",
+      "Portland",
+      "Miami",
+      "Baltimore",
+      "Las Vegas"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "For King & Country",
+   "set": "held-out",
+   "region": "na",
+   "tour": "A Drummer Boy Christmas Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=A_Drummer_Boy_Christmas_Tour&oldid=1323654848",
+   "R": 48,
+   "modelUnplaced": 18,
+   "rp": {
+    "population": {
+     "hits": 19,
+     "of": 48,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Houston",
+      "San Antonio",
+      "Dallas",
+      "Fort Worth",
+      "Columbus",
+      "Indianapolis",
+      "Nashville",
+      "Oklahoma City",
+      "El Paso",
+      "Portland",
+      "Louisville",
+      "Baltimore",
+      "Tucson",
+      "Sacramento",
+      "Atlanta",
+      "Omaha"
+     ]
+    },
+    "model": {
+     "hits": 14,
+     "of": 48,
+     "cities": [
+      "Nashville",
+      "Dallas",
+      "Atlanta",
+      "Houston",
+      "Orlando",
+      "Grand Rapids",
+      "Tulsa",
+      "Fort Worth",
+      "Oklahoma City",
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "San Antonio",
+      "Columbus"
+     ]
+    },
+    "qloo": {
+     "hits": 20,
+     "of": 48,
+     "cities": [
+      "Nashville",
+      "Orlando",
+      "Louisville",
+      "Indianapolis",
+      "Fort Worth",
+      "Tulsa",
+      "Kansas City",
+      "Oklahoma City",
+      "Pensacola",
+      "St. Louis",
+      "Columbus",
+      "Minneapolis",
+      "Grand Rapids",
+      "Lakeland",
+      "San Antonio",
+      "Dallas",
+      "Des Moines",
+      "Fort Wayne",
+      "Tampa",
+      "Omaha"
+     ]
+    },
+    "blend": {
+     "hits": 24,
+     "of": 48,
+     "cities": [
+      "Nashville",
+      "Fort Worth",
+      "Indianapolis",
+      "Louisville",
+      "Columbus",
+      "San Antonio",
+      "Dallas",
+      "Oklahoma City",
+      "Kansas City",
+      "Orlando",
+      "Tulsa",
+      "Minneapolis",
+      "Omaha",
+      "Houston",
+      "Tampa",
+      "St. Louis",
+      "Chicago",
+      "Atlanta",
+      "Fort Wayne",
+      "Sacramento",
+      "Des Moines",
+      "Boise",
+      "Grand Rapids",
+      "Irvine"
+     ]
+    },
+    "modelQloo": {
+     "hits": 20,
+     "of": 48,
+     "cities": [
+      "Nashville",
+      "Orlando",
+      "Fort Worth",
+      "Tulsa",
+      "Oklahoma City",
+      "Grand Rapids",
+      "Dallas",
+      "Indianapolis",
+      "Louisville",
+      "Atlanta",
+      "Columbus",
+      "San Antonio",
+      "Houston",
+      "Kansas City",
+      "Minneapolis",
+      "Omaha",
+      "Tampa",
+      "St. Louis",
+      "Chicago",
+      "Fort Wayne"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 3,
+     "of": 29,
+     "cities": [
+      "Orlando",
+      "Grand Rapids",
+      "Tulsa"
+     ]
+    },
+    "qloo": {
+     "hits": 11,
+     "of": 29,
+     "cities": [
+      "Lakeland",
+      "Orlando",
+      "Pensacola",
+      "Grand Rapids",
+      "Des Moines",
+      "Minneapolis",
+      "St. Louis",
+      "Kansas City",
+      "Tampa",
+      "Fort Wayne",
+      "Tulsa"
+     ]
+    },
+    "blend": {
+     "hits": 11,
+     "of": 29,
+     "cities": [
+      "Orlando",
+      "Grand Rapids",
+      "Des Moines",
+      "Minneapolis",
+      "St. Louis",
+      "Kansas City",
+      "Tampa",
+      "Fort Wayne",
+      "Boise",
+      "Irvine",
+      "Tulsa"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Ledisi",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Good Life Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Good_Life_Tour&oldid=1293293249",
+   "R": 29,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 13,
+     "of": 29,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "Dallas",
+      "Columbus",
+      "Charlotte",
+      "Indianapolis",
+      "San Francisco",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "model": {
+     "hits": 16,
+     "of": 29,
+     "cities": [
+      "Los Angeles",
+      "New York",
+      "Chicago",
+      "Houston",
+      "Dallas",
+      "Atlanta",
+      "Washington",
+      "San Francisco",
+      "Phoenix",
+      "Philadelphia",
+      "Boston",
+      "Detroit",
+      "Orlando",
+      "Baltimore",
+      "Charlotte",
+      "St. Louis"
+     ]
+    },
+    "qloo": {
+     "hits": 17,
+     "of": 29,
+     "cities": [
+      "Atlanta",
+      "Washington",
+      "New Orleans",
+      "Houston",
+      "Baltimore",
+      "Chicago",
+      "Philadelphia",
+      "New York",
+      "Charlotte",
+      "Nashville",
+      "Dallas",
+      "Detroit",
+      "Los Angeles",
+      "Orlando",
+      "St. Louis",
+      "Phoenix",
+      "Durham"
+     ]
+    },
+    "blend": {
+     "hits": 17,
+     "of": 29,
+     "cities": [
+      "New York",
+      "Houston",
+      "Chicago",
+      "Philadelphia",
+      "Los Angeles",
+      "Dallas",
+      "Washington",
+      "Charlotte",
+      "Phoenix",
+      "Nashville",
+      "Baltimore",
+      "Atlanta",
+      "Detroit",
+      "San Francisco",
+      "New Orleans",
+      "Columbus",
+      "Indianapolis"
+     ]
+    },
+    "modelQloo": {
+     "hits": 19,
+     "of": 29,
+     "cities": [
+      "Atlanta",
+      "Houston",
+      "Chicago",
+      "New York",
+      "Washington",
+      "Los Angeles",
+      "Dallas",
+      "Philadelphia",
+      "Baltimore",
+      "Charlotte",
+      "Detroit",
+      "Phoenix",
+      "Orlando",
+      "St. Louis",
+      "San Francisco",
+      "Nashville",
+      "New Orleans",
+      "Cleveland",
+      "Boston"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 6,
+     "of": 16,
+     "cities": [
+      "Boston",
+      "Baltimore",
+      "St. Louis",
+      "Detroit",
+      "Atlanta",
+      "Orlando"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 16,
+     "cities": [
+      "Baltimore",
+      "Durham",
+      "St. Louis",
+      "Detroit",
+      "Atlanta",
+      "New Orleans",
+      "Orlando"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 16,
+     "cities": [
+      "Baltimore",
+      "Detroit",
+      "Atlanta",
+      "New Orleans"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Twenty One Pilots",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Clancy World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Clancy_World_Tour&oldid=1373076398",
+   "R": 44,
+   "modelUnplaced": 0,
+   "rp": {
+    "population": {
+     "hits": 25,
+     "of": 44,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Toronto",
+      "Chicago",
+      "Houston",
+      "Montréal",
+      "Phoenix",
+      "Philadelphia",
+      "San Diego",
+      "Dallas",
+      "Austin",
+      "Columbus",
+      "Charlotte",
+      "Indianapolis",
+      "San Francisco",
+      "Seattle",
+      "Denver",
+      "Nashville",
+      "Boston",
+      "Portland",
+      "Detroit",
+      "Las Vegas",
+      "Baltimore",
+      "Milwaukee",
+      "Sacramento"
+     ]
+    },
+    "model": {
+     "hits": 25,
+     "of": 44,
+     "cities": [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Toronto",
+      "Montréal",
+      "Seattle",
+      "Portland",
+      "San Francisco",
+      "Boston",
+      "Philadelphia",
+      "Minneapolis",
+      "Denver",
+      "Austin",
+      "Nashville",
+      "Detroit",
+      "Cleveland",
+      "Pittsburgh",
+      "Baltimore",
+      "Columbus",
+      "Indianapolis",
+      "Milwaukee",
+      "St. Louis",
+      "Cincinnati",
+      "Raleigh",
+      "Hartford"
+     ]
+    },
+    "qloo": {
+     "hits": 23,
+     "of": 44,
+     "cities": [
+      "Columbus",
+      "Chicago",
+      "Orlando",
+      "Cincinnati",
+      "Pittsburgh",
+      "Denver",
+      "Salt Lake City",
+      "Cleveland",
+      "Milwaukee",
+      "Boston",
+      "Seattle",
+      "Minneapolis",
+      "St. Louis",
+      "New York",
+      "Indianapolis",
+      "San Diego",
+      "Harrisburg",
+      "Austin",
+      "Nashville",
+      "Portland",
+      "Phoenix",
+      "Philadelphia",
+      "Los Angeles"
+     ]
+    },
+    "blend": {
+     "hits": 30,
+     "of": 44,
+     "cities": [
+      "Chicago",
+      "New York",
+      "Columbus",
+      "San Diego",
+      "Denver",
+      "Phoenix",
+      "Los Angeles",
+      "Philadelphia",
+      "Seattle",
+      "Indianapolis",
+      "Austin",
+      "Boston",
+      "Nashville",
+      "Milwaukee",
+      "Toronto",
+      "Portland",
+      "Orlando",
+      "Cleveland",
+      "Cincinnati",
+      "Minneapolis",
+      "Pittsburgh",
+      "Detroit",
+      "San Francisco",
+      "Montréal",
+      "St. Louis",
+      "Sacramento",
+      "Las Vegas",
+      "Salt Lake City",
+      "Dallas",
+      "Tampa"
+     ]
+    },
+    "modelQloo": {
+     "hits": 28,
+     "of": 44,
+     "cities": [
+      "Chicago",
+      "New York",
+      "Seattle",
+      "Denver",
+      "Boston",
+      "Columbus",
+      "Pittsburgh",
+      "Minneapolis",
+      "Cleveland",
+      "Cincinnati",
+      "Portland",
+      "Los Angeles",
+      "Milwaukee",
+      "Philadelphia",
+      "Austin",
+      "Indianapolis",
+      "Nashville",
+      "St. Louis",
+      "Toronto",
+      "Detroit",
+      "San Diego",
+      "San Francisco",
+      "Phoenix",
+      "Orlando",
+      "Montréal",
+      "Salt Lake City",
+      "Sacramento",
+      "Tampa"
+     ]
+    }
+   },
+   "beyond": {
+    "model": {
+     "hits": 7,
+     "of": 19,
+     "cities": [
+      "Raleigh",
+      "Cleveland",
+      "St. Louis",
+      "Minneapolis",
+      "Cincinnati",
+      "Pittsburgh",
+      "Hartford"
+     ]
+    },
+    "qloo": {
+     "hits": 8,
+     "of": 19,
+     "cities": [
+      "Salt Lake City",
+      "Orlando",
+      "Cleveland",
+      "St. Louis",
+      "Minneapolis",
+      "Cincinnati",
+      "Harrisburg",
+      "Pittsburgh"
+     ]
+    },
+    "blend": {
+     "hits": 8,
+     "of": 19,
+     "cities": [
+      "Salt Lake City",
+      "Orlando",
+      "Cleveland",
+      "St. Louis",
+      "Minneapolis",
+      "Cincinnati",
+      "Pittsburgh",
+      "Tampa"
+     ]
+    }
+   }
+  }
+ ],
+ "test2": {
+  "n": 19,
+  "runs": 2,
+  "primary": {
+   "name": "Agent with Qloo vs agent with population",
+   "n": 19,
+   "meanA": 0.4868421052631579,
+   "meanB": 0.4613304093567252,
+   "diff": 0.025511695906432753,
+   "lo": -0.06396198830409357,
+   "hi": 0.11440058479532164,
+   "wins": 9,
+   "losses": 8,
+   "ties": 2,
+   "p": 1
+  },
+  "secondary": [
+   {
+    "name": "Fixed plan on Qloo vs fixed plan on population",
+    "n": 19,
+    "meanA": 0.48026315789473684,
+    "meanB": 0.506578947368421,
+    "diff": -0.02631578947368421,
+    "lo": -0.11842105263157894,
+    "hi": 0.06578947368421052,
+    "wins": 7,
+    "losses": 9,
+    "ties": 3,
+    "p": 0.803619384765625
+   },
+   {
+    "name": "Stored Routed tour vs stored model-alone tour (the Oct 15 outside check)",
+    "n": 19,
+    "meanA": 0.4868421052631579,
+    "meanB": 0.48026315789473684,
+    "diff": 0.006578947368421052,
+    "lo": -0.09210526315789473,
+    "hi": 0.11842105263157894,
+    "wins": 7,
+    "losses": 8,
+    "ties": 4,
+    "p": 1
+   }
+  ]
+ },
+ "test2Rows": [
+  {
+   "artist": "Zach Bryan",
+   "qloo": [
+    5,
+    5
+   ],
+   "pop": [
+    5,
+    5
+   ],
+   "qlooShare": 0.625,
+   "popShare": 0.625,
+   "fixedQloo": 5,
+   "fixedPop": 5,
+   "routed": {
+    "hits": 4,
+    "of": 8
+   },
+   "alone": {
+    "hits": 6,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Tyler Childers",
+   "qloo": [
+    2,
+    2
+   ],
+   "pop": [
+    3,
+    3
+   ],
+   "qlooShare": 0.25,
+   "popShare": 0.375,
+   "fixedQloo": 1,
+   "fixedPop": 4,
+   "routed": {
+    "hits": 2,
+    "of": 8
+   },
+   "alone": {
+    "hits": 3,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Caamp",
+   "qloo": [
+    3,
+    3
+   ],
+   "pop": [
+    4,
+    4
+   ],
+   "qlooShare": 0.375,
+   "popShare": 0.5,
+   "fixedQloo": 3,
+   "fixedPop": 5,
+   "routed": {
+    "hits": 3,
+    "of": 8
+   },
+   "alone": {
+    "hits": 4,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Waxahatchee",
+   "qloo": [
+    7,
+    7
+   ],
+   "pop": [
+    5,
+    5
+   ],
+   "qlooShare": 0.875,
+   "popShare": 0.625,
+   "fixedQloo": 5,
+   "fixedPop": 6,
+   "routed": {
+    "hits": 8,
+    "of": 8
+   },
+   "alone": {
+    "hits": 7,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Khruangbin",
+   "qloo": [
+    3,
+    3
+   ],
+   "pop": [
+    4,
+    4
+   ],
+   "qlooShare": 0.375,
+   "popShare": 0.4444444444444444,
+   "fixedQloo": 3,
+   "fixedPop": 4,
+   "routed": {
+    "hits": 3,
+    "of": 8
+   },
+   "alone": {
+    "hits": 3,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Durand Jones & The Indications",
+   "qloo": [
+    8,
+    8
+   ],
+   "pop": [
+    7,
+    7
+   ],
+   "qlooShare": 1,
+   "popShare": 0.875,
+   "fixedQloo": 8,
+   "fixedPop": 8,
+   "routed": {
+    "hits": 8,
+    "of": 8
+   },
+   "alone": {
+    "hits": 6,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Ghost",
+   "qloo": [
+    4,
+    4
+   ],
+   "pop": [
+    2,
+    2
+   ],
+   "qlooShare": 0.5,
+   "popShare": 0.2111111111111111,
+   "fixedQloo": 4,
+   "fixedPop": 2,
+   "routed": {
+    "hits": 5,
+    "of": 8
+   },
+   "alone": {
+    "hits": 5,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Knocked Loose",
+   "qloo": [
+    2,
+    2
+   ],
+   "pop": [
+    3,
+    3
+   ],
+   "qlooShare": 0.25,
+   "popShare": 0.375,
+   "fixedQloo": 2,
+   "fixedPop": 1,
+   "routed": {
+    "hits": 2,
+    "of": 8
+   },
+   "alone": {
+    "hits": 1,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Turnstile",
+   "qloo": [
+    6,
+    6
+   ],
+   "pop": [
+    3,
+    3
+   ],
+   "qlooShare": 0.75,
+   "popShare": 0.375,
+   "fixedQloo": 6,
+   "fixedPop": 4,
+   "routed": {
+    "hits": 7,
+    "of": 8
+   },
+   "alone": {
+    "hits": 2,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Cuco",
+   "qloo": [
+    7,
+    7
+   ],
+   "pop": [
+    6,
+    6
+   ],
+   "qlooShare": 0.875,
+   "popShare": 0.6666666666666666,
+   "fixedQloo": 7,
+   "fixedPop": 6,
+   "routed": {
+    "hits": 7,
+    "of": 8
+   },
+   "alone": {
+    "hits": 5,
+    "of": 8
+   }
+  },
+  {
+   "artist": "MJ Lenderman",
+   "qloo": [
+    1,
+    0
+   ],
+   "pop": [
+    1,
+    1
+   ],
+   "qlooShare": 0.0625,
+   "popShare": 0.125,
+   "fixedQloo": 2,
+   "fixedPop": 1,
+   "routed": {
+    "hits": 0,
+    "of": 8
+   },
+   "alone": {
+    "hits": 3,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Parcels",
+   "qloo": [
+    4,
+    3
+   ],
+   "pop": [
+    2,
+    2
+   ],
+   "qlooShare": 0.4375,
+   "popShare": 0.2,
+   "fixedQloo": 3,
+   "fixedPop": 2,
+   "routed": {
+    "hits": 3,
+    "of": 8
+   },
+   "alone": {
+    "hits": 1,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Alvvays",
+   "qloo": [
+    0,
+    0
+   ],
+   "pop": [
+    2,
+    2
+   ],
+   "qlooShare": 0,
+   "popShare": 0.25,
+   "fixedQloo": 0,
+   "fixedPop": 1,
+   "routed": {
+    "hits": 0,
+    "of": 8
+   },
+   "alone": {
+    "hits": 0,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Arlo Parks",
+   "qloo": [
+    3,
+    3
+   ],
+   "pop": [
+    2,
+    2
+   ],
+   "qlooShare": 0.375,
+   "popShare": 0.25,
+   "fixedQloo": 4,
+   "fixedPop": 1,
+   "routed": {
+    "hits": 3,
+    "of": 8
+   },
+   "alone": {
+    "hits": 3,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Wet Leg",
+   "qloo": [
+    1,
+    2
+   ],
+   "pop": [
+    3,
+    3
+   ],
+   "qlooShare": 0.1875,
+   "popShare": 0.375,
+   "fixedQloo": 2,
+   "fixedPop": 3,
+   "routed": {
+    "hits": 2,
+    "of": 8
+   },
+   "alone": {
+    "hits": 4,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "qloo": [
+    1,
+    1
+   ],
+   "pop": [
+    5,
+    5
+   ],
+   "qlooShare": 0.125,
+   "popShare": 0.5555555555555556,
+   "fixedQloo": 1,
+   "fixedPop": 5,
+   "routed": {
+    "hits": 1,
+    "of": 8
+   },
+   "alone": {
+    "hits": 2,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Fontaines D.C.",
+   "qloo": [
+    5,
+    5
+   ],
+   "pop": [
+    4,
+    5
+   ],
+   "qlooShare": 0.625,
+   "popShare": 0.5625,
+   "fixedQloo": 4,
+   "fixedPop": 5,
+   "routed": {
+    "hits": 4,
+    "of": 8
+   },
+   "alone": {
+    "hits": 6,
+    "of": 8
+   }
+  },
+  {
+   "artist": "JPEGMAFIA",
+   "qloo": [
+    7,
+    6
+   ],
+   "pop": [
+    5,
+    5
+   ],
+   "qlooShare": 0.8125,
+   "popShare": 0.625,
+   "fixedQloo": 6,
+   "fixedPop": 7,
+   "routed": {
+    "hits": 6,
+    "of": 8
+   },
+   "alone": {
+    "hits": 5,
+    "of": 8
+   }
+  },
+  {
+   "artist": "Clairo",
+   "qloo": [
+    6,
+    6
+   ],
+   "pop": [
+    6,
+    6
+   ],
+   "qlooShare": 0.75,
+   "popShare": 0.75,
+   "fixedQloo": 7,
+   "fixedPop": 7,
+   "routed": {
+    "hits": 6,
+    "of": 8
+   },
+   "alone": {
+    "hits": 7,
+    "of": 8
+   }
+  }
+ ]
+}

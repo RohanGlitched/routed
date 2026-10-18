@@ -1,0 +1,11637 @@
+{
+ "prompt": "You are an experienced booking agent. Using only your own knowledge of the artist and the cities, rank the cities in the region given where this artist would sell the most tickets for a headline show, strongest first.\nRules: exactly 50 cities, one entry per city (suburbs count as the city they belong to), each with its state, province or country, all in the region given.\nReply as JSON only.",
+ "runs": [
+  {
+   "artist": "Zach Bryan",
+   "ranking": [
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Fort Worth",
+     "area": "TX"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Greensboro",
+     "area": "NC"
+    },
+    {
+     "city": "Knoxville",
+     "area": "TN"
+    },
+    {
+     "city": "Chattanooga",
+     "area": "TN"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Fayetteville",
+     "area": "AR"
+    },
+    {
+     "city": "Springfield",
+     "area": "MO"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Lincoln",
+     "area": "NE"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA"
+    },
+    {
+     "city": "Wichita",
+     "area": "KS"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Norman",
+     "area": "OK"
+    },
+    {
+     "city": "Stillwater",
+     "area": "OK"
+    },
+    {
+     "city": "Lubbock",
+     "area": "TX"
+    },
+    {
+     "city": "Amarillo",
+     "area": "TX"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "Corpus Christi",
+     "area": "TX"
+    },
+    {
+     "city": "Baton Rouge",
+     "area": "LA"
+    },
+    {
+     "city": "Shreveport",
+     "area": "LA"
+    },
+    {
+     "city": "Jackson",
+     "area": "MS"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Huntsville",
+     "area": "AL"
+    },
+    {
+     "city": "Mobile",
+     "area": "AL"
+    },
+    {
+     "city": "Columbia",
+     "area": "SC"
+    },
+    {
+     "city": "Greenville",
+     "area": "SC"
+    },
+    {
+     "city": "Charleston",
+     "area": "SC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Norfolk",
+     "area": "VA"
+    },
+    {
+     "city": "Roanoke",
+     "area": "VA"
+    },
+    {
+     "city": "Lexington",
+     "area": "KY"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Fort Wayne",
+     "area": "IN"
+    },
+    {
+     "city": "Grand Rapids",
+     "area": "MI"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "tulsa-us-ok",
+       "oklahoma-city-us-ok",
+       "fayetteville-us-ar",
+       "fort-worth-us-tx",
+       "austin-us-tx",
+       "lubbock-us-tx",
+       "denver-us-co",
+       "nashville-us-tn"
+      ],
+      "cities": [
+       "tulsa-us-ok",
+       "oklahoma-city-us-ok",
+       "fayetteville-us-ar",
+       "fort-worth-us-tx",
+       "austin-us-tx",
+       "lubbock-us-tx",
+       "denver-us-co",
+       "nashville-us-tn"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "tulsa-us-ok",
+       "oklahoma-city-us-ok",
+       "fayetteville-us-ar",
+       "fort-worth-us-tx",
+       "austin-us-tx",
+       "lubbock-us-tx",
+       "denver-us-co",
+       "boulder-us-co"
+      ],
+      "cities": [
+       "tulsa-us-ok",
+       "oklahoma-city-us-ok",
+       "fayetteville-us-ar",
+       "fort-worth-us-tx",
+       "austin-us-tx",
+       "lubbock-us-tx",
+       "denver-us-co",
+       "nashville-us-tn"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "dallas-us-tx",
+       "houston-us-tx",
+       "austin-us-tx",
+       "san-antonio-us-tx",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl"
+      ],
+      "cities": [
+       "phoenix-us-az",
+       "jacksonville-us-fl",
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "san-antonio-us-tx",
+       "philadelphia-us-pa",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "dallas-us-tx",
+       "austin-us-tx",
+       "houston-us-tx",
+       "san-antonio-us-tx",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl"
+      ],
+      "cities": [
+       "phoenix-us-az",
+       "jacksonville-us-fl",
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "san-antonio-us-tx",
+       "philadelphia-us-pa",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Tyler Childers",
+   "ranking": [
+    {
+     "city": "Nashville",
+     "area": "TN, USA"
+    },
+    {
+     "city": "Austin",
+     "area": "TX, USA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX, USA"
+    },
+    {
+     "city": "Fort Worth",
+     "area": "TX, USA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX, USA"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX, USA"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK, USA"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK, USA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO, USA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO, USA"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR, USA"
+    },
+    {
+     "city": "Fayetteville",
+     "area": "AR, USA"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN, USA"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA, USA"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL, USA"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC, USA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC, USA"
+    },
+    {
+     "city": "Greenville",
+     "area": "SC, USA"
+    },
+    {
+     "city": "Columbia",
+     "area": "SC, USA"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL, USA"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL, USA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL, USA"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA, USA"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA, USA"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY, USA"
+    },
+    {
+     "city": "Lexington",
+     "area": "KY, USA"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH, USA"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH, USA"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN, USA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL, USA"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI, USA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN, USA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE, USA"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA, USA"
+    },
+    {
+     "city": "Wichita",
+     "area": "KS, USA"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK, USA"
+    },
+    {
+     "city": "Amarillo",
+     "area": "TX, USA"
+    },
+    {
+     "city": "Lubbock",
+     "area": "TX, USA"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX, USA"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM, USA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ, USA"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ, USA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV, USA"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT, USA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO, USA"
+    },
+    {
+     "city": "Colorado Springs",
+     "area": "CO, USA"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "lexington-us-ky",
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "chattanooga-us-tn",
+       "charleston-us-sc",
+       "mobile-us-al",
+       "fayetteville-us-ar",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "lexington-us-ky",
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "chattanooga-us-tn",
+       "charleston-us-sc",
+       "mobile-us-al",
+       "fayetteville-us-ar",
+       "austin-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "lexington-us-ky",
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "charleston-us-sc",
+       "austin-us-tx",
+       "fayetteville-us-ar",
+       "cincinnati-us-oh",
+       "roanoke-us-va"
+      ],
+      "cities": [
+       "lexington-us-ky",
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "charleston-us-sc",
+       "boulder-us-co",
+       "fayetteville-us-ar",
+       "roanoke-us-va",
+       "ashland-us-ky"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl",
+       "houston-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "jacksonville-us-fl",
+       "houston-us-tx",
+       "montreal-ca",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "philadelphia-us-pa",
+       "charlotte-us-nc",
+       "jacksonville-us-fl",
+       "houston-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "jacksonville-us-fl",
+       "houston-us-tx",
+       "montreal-ca",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Caamp",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Hamilton",
+     "area": "ON"
+    },
+    {
+     "city": "Mexico City",
+     "area": "MX"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "columbus-us-oh",
+       "pittsburgh-us-pa",
+       "boston-us-ma",
+       "portland-us-me",
+       "cleveland-us-oh",
+       "cincinnati-us-oh",
+       "asheville-us-nc",
+       "charleston-us-sc"
+      ],
+      "cities": [
+       "columbus-us-oh",
+       "pittsburgh-us-pa",
+       "boston-us-ma",
+       "portland-us-me",
+       "cleveland-us-oh",
+       "cincinnati-us-oh",
+       "asheville-us-nc",
+       "charleston-us-sc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "columbus-us-oh",
+       "pittsburgh-us-pa",
+       "boston-us-ma",
+       "portland-us-me",
+       "asheville-us-nc",
+       "charleston-us-sc",
+       "cincinnati-us-oh",
+       "cleveland-us-oh"
+      ],
+      "cities": [
+       "columbus-us-oh",
+       "pittsburgh-us-pa",
+       "boston-us-ma",
+       "portland-us-me",
+       "asheville-us-nc",
+       "charleston-us-sc",
+       "cincinnati-us-oh",
+       "cleveland-us-oh"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "charlotte-us-nc",
+       "jacksonville-us-fl",
+       "houston-us-tx",
+       "dallas-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "phoenix-us-az",
+       "montreal-ca",
+       "san-antonio-us-tx",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "montreal-ca",
+       "ottawa-ca",
+       "charlotte-us-nc",
+       "jacksonville-us-fl"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "montreal-ca",
+       "ottawa-ca",
+       "phoenix-us-az",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Waxahatchee",
+   "ranking": [
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "asheville-us-nc",
+       "chicago-us-il",
+       "minneapolis-us-mn",
+       "austin-us-tx",
+       "santa-fe-us-nm",
+       "portland-us-or",
+       "seattle-us-wa",
+       "san-francisco-us-ca"
+      ],
+      "cities": [
+       "asheville-us-nc",
+       "chicago-us-il",
+       "boston-us-ma",
+       "portland-us-me",
+       "austin-us-tx",
+       "minneapolis-us-mn",
+       "santa-fe-us-nm",
+       "philadelphia-us-pa"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "asheville-us-nc",
+       "chicago-us-il",
+       "minneapolis-us-mn",
+       "kansas-city-us-mo",
+       "austin-us-tx",
+       "santa-fe-us-nm",
+       "portland-us-or",
+       "seattle-us-wa"
+      ],
+      "cities": [
+       "asheville-us-nc",
+       "chicago-us-il",
+       "minneapolis-us-mn",
+       "austin-us-tx",
+       "santa-fe-us-nm",
+       "portland-us-me",
+       "boston-us-ma",
+       "philadelphia-us-pa"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl",
+       "houston-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "phoenix-us-az",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "jacksonville-us-fl",
+       "houston-us-tx",
+       "montreal-ca",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "birmingham-us-al",
+       "atlanta-us-ga",
+       "nashville-us-tn",
+       "st-louis-us-mo",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl"
+      ],
+      "cities": [
+       "phoenix-us-az",
+       "jacksonville-us-fl",
+       "new-york-city-us-ny",
+       "montreal-ca",
+       "toronto-ca",
+       "houston-us-tx",
+       "philadelphia-us-pa",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Khruangbin",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Oakland",
+     "area": "CA"
+    },
+    {
+     "city": "Long Beach",
+     "area": "CA"
+    },
+    {
+     "city": "Arlington",
+     "area": "TX"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "austin-us-tx",
+       "santa-fe-us-nm",
+       "denver-us-co",
+       "palm-springs-us-ca",
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "san-francisco-us-ca",
+       "portland-us-or"
+      ],
+      "cities": [
+       "austin-us-tx",
+       "santa-fe-us-nm",
+       "denver-us-co",
+       "palm-springs-us-ca",
+       "los-angeles-us-ca",
+       "san-francisco-us-ca",
+       "portland-us-or",
+       "seattle-us-wa"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "san-francisco-us-ca",
+       "portland-us-or",
+       "seattle-us-wa",
+       "denver-us-co",
+       "boulder-us-co",
+       "santa-fe-us-nm",
+       "los-angeles-us-ca",
+       "san-diego-us-ca"
+      ],
+      "cities": [
+       "san-francisco-us-ca",
+       "portland-us-or",
+       "seattle-us-wa",
+       "denver-us-co",
+       "santa-fe-us-nm",
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "austin-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "houston-us-tx",
+       "austin-us-tx",
+       "san-antonio-us-tx",
+       "dallas-us-tx",
+       "phoenix-us-az",
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "chicago-us-il"
+      ],
+      "cities": [
+       "phoenix-us-az",
+       "san-antonio-us-tx",
+       "chicago-us-il",
+       "new-york-city-us-ny",
+       "houston-us-tx",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "houston-us-tx",
+       "austin-us-tx",
+       "san-antonio-us-tx",
+       "dallas-us-tx",
+       "fort-worth-us-tx",
+       "phoenix-us-az",
+       "san-diego-us-ca",
+       "los-angeles-us-ca"
+      ],
+      "cities": [
+       "phoenix-us-az",
+       "san-antonio-us-tx",
+       "chicago-us-il",
+       "new-york-city-us-ny",
+       "houston-us-tx",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Durand Jones & The Indications",
+   "ranking": [
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Madison",
+     "area": "WI"
+    },
+    {
+     "city": "Ann Arbor",
+     "area": "MI"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Carrboro",
+     "area": "NC"
+    },
+    {
+     "city": "Asheville",
+     "area": "NC"
+    },
+    {
+     "city": "Charlottesville",
+     "area": "VA"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA"
+    },
+    {
+     "city": "Iowa City",
+     "area": "IA"
+    },
+    {
+     "city": "Lawrence",
+     "area": "KS"
+    },
+    {
+     "city": "Fayetteville",
+     "area": "AR"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Santa Fe",
+     "area": "NM"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Boise",
+     "area": "ID"
+    },
+    {
+     "city": "Spokane",
+     "area": "WA"
+    },
+    {
+     "city": "Eugene",
+     "area": "OR"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "chicago-us-il",
+       "toronto-ca",
+       "montreal-ca",
+       "boston-us-ma",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "washington-us-dc",
+       "denver-us-co"
+      ],
+      "cities": [
+       "chicago-us-il",
+       "toronto-ca",
+       "montreal-ca",
+       "boston-us-ma",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "washington-us-dc",
+       "denver-us-co"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "chicago-us-il",
+       "toronto-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "washington-us-dc",
+       "boston-us-ma",
+       "denver-us-co",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "chicago-us-il",
+       "toronto-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "washington-us-dc",
+       "boston-us-ma",
+       "denver-us-co",
+       "austin-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "chicago-us-il",
+       "toronto-ca",
+       "philadelphia-us-pa",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl",
+       "montreal-ca"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "chicago-us-il",
+       "toronto-ca",
+       "philadelphia-us-pa",
+       "jacksonville-us-fl",
+       "montreal-ca",
+       "houston-us-tx",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "chicago-us-il",
+       "columbus-us-oh",
+       "toronto-ca",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "charlotte-us-nc",
+       "jacksonville-us-fl",
+       "houston-us-tx"
+      ],
+      "cities": [
+       "chicago-us-il",
+       "toronto-ca",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "jacksonville-us-fl",
+       "houston-us-tx",
+       "montreal-ca",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Ghost",
+   "ranking": [
+    {
+     "city": "Berlin",
+     "area": "Germany"
+    },
+    {
+     "city": "Paris",
+     "area": "France"
+    },
+    {
+     "city": "Amsterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Stockholm",
+     "area": "Sweden"
+    },
+    {
+     "city": "Hamburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Munich",
+     "area": "Germany"
+    },
+    {
+     "city": "Cologne",
+     "area": "Germany"
+    },
+    {
+     "city": "Vienna",
+     "area": "Austria"
+    },
+    {
+     "city": "Copenhagen",
+     "area": "Denmark"
+    },
+    {
+     "city": "Oslo",
+     "area": "Norway"
+    },
+    {
+     "city": "Helsinki",
+     "area": "Finland"
+    },
+    {
+     "city": "Warsaw",
+     "area": "Poland"
+    },
+    {
+     "city": "Prague",
+     "area": "Czech Republic"
+    },
+    {
+     "city": "Zurich",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Brussels",
+     "area": "Belgium"
+    },
+    {
+     "city": "Antwerp",
+     "area": "Belgium"
+    },
+    {
+     "city": "Milan",
+     "area": "Italy"
+    },
+    {
+     "city": "Barcelona",
+     "area": "Spain"
+    },
+    {
+     "city": "Madrid",
+     "area": "Spain"
+    },
+    {
+     "city": "Lisbon",
+     "area": "Portugal"
+    },
+    {
+     "city": "Lyon",
+     "area": "France"
+    },
+    {
+     "city": "Toulouse",
+     "area": "France"
+    },
+    {
+     "city": "Nantes",
+     "area": "France"
+    },
+    {
+     "city": "Bordeaux",
+     "area": "France"
+    },
+    {
+     "city": "Marseille",
+     "area": "France"
+    },
+    {
+     "city": "Frankfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Stuttgart",
+     "area": "Germany"
+    },
+    {
+     "city": "Dusseldorf",
+     "area": "Germany"
+    },
+    {
+     "city": "Leipzig",
+     "area": "Germany"
+    },
+    {
+     "city": "Dresden",
+     "area": "Germany"
+    },
+    {
+     "city": "Hannover",
+     "area": "Germany"
+    },
+    {
+     "city": "Nuremberg",
+     "area": "Germany"
+    },
+    {
+     "city": "Bremen",
+     "area": "Germany"
+    },
+    {
+     "city": "Essen",
+     "area": "Germany"
+    },
+    {
+     "city": "Dortmund",
+     "area": "Germany"
+    },
+    {
+     "city": "Bochum",
+     "area": "Germany"
+    },
+    {
+     "city": "Wuppertal",
+     "area": "Germany"
+    },
+    {
+     "city": "Bielefeld",
+     "area": "Germany"
+    },
+    {
+     "city": "Bonn",
+     "area": "Germany"
+    },
+    {
+     "city": "Mannheim",
+     "area": "Germany"
+    },
+    {
+     "city": "Karlsruhe",
+     "area": "Germany"
+    },
+    {
+     "city": "Wiesbaden",
+     "area": "Germany"
+    },
+    {
+     "city": "Munster",
+     "area": "Germany"
+    },
+    {
+     "city": "Gelsenkirchen",
+     "area": "Germany"
+    },
+    {
+     "city": "Monchengladbach",
+     "area": "Germany"
+    },
+    {
+     "city": "Aachen",
+     "area": "Germany"
+    },
+    {
+     "city": "Krefeld",
+     "area": "Germany"
+    },
+    {
+     "city": "Lubeck",
+     "area": "Germany"
+    },
+    {
+     "city": "Oberhausen",
+     "area": "Germany"
+    },
+    {
+     "city": "Erfurt",
+     "area": "Germany"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "paris-fr",
+       "amsterdam-nl",
+       "hamburg-de",
+       "kassel-de",
+       "leipzig-de",
+       "dresden-de",
+       "munich-de",
+       "milan-it"
+      ],
+      "cities": [
+       "paris-fr",
+       "amsterdam-nl",
+       "hamburg-de",
+       "kassel-de",
+       "leipzig-de",
+       "milan-it",
+       "koeln-de",
+       "berlin-de"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "paris-fr",
+       "amsterdam-nl",
+       "hamburg-de",
+       "koeln-de",
+       "leipzig-de",
+       "munich-de",
+       "milan-it",
+       "rome-it"
+      ],
+      "cities": [
+       "paris-fr",
+       "amsterdam-nl",
+       "hamburg-de",
+       "koeln-de",
+       "leipzig-de",
+       "milan-it",
+       "rome-it",
+       "berlin-de"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "stockholm-se",
+       "oslo-no",
+       "copenhagen-dk",
+       "hamburg-de",
+       "berlin-de",
+       "warsaw-pl",
+       "prague-cz",
+       "vienna-at"
+      ],
+      "cities": [
+       "hamburg-de",
+       "berlin-de",
+       "warsaw-pl",
+       "vienna-at",
+       "rome-it",
+       "paris-fr",
+       "bucharest-ro",
+       "budapest-hu",
+       "barcelona-es"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "stockholm-se",
+       "oslo-no",
+       "copenhagen-dk",
+       "berlin-de",
+       "hamburg-de",
+       "paris-fr",
+       "munich-de",
+       "vienna-at"
+      ],
+      "cities": [
+       "berlin-de",
+       "hamburg-de",
+       "paris-fr",
+       "vienna-at",
+       "madrid-es",
+       "rome-it",
+       "bucharest-ro",
+       "budapest-hu",
+       "warsaw-pl",
+       "barcelona-es"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Knocked Loose",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "louisville-us-ky",
+       "cincinnati-us-oh",
+       "columbus-us-oh",
+       "cleveland-us-oh",
+       "pittsburgh-us-pa",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma"
+      ],
+      "cities": [
+       "louisville-us-ky",
+       "columbus-us-oh",
+       "cleveland-us-oh",
+       "pittsburgh-us-pa",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "chicago-us-il"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "louisville-us-ky",
+       "cincinnati-us-oh",
+       "columbus-us-oh",
+       "cleveland-us-oh",
+       "pittsburgh-us-pa",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma"
+      ],
+      "cities": [
+       "louisville-us-ky",
+       "columbus-us-oh",
+       "cleveland-us-oh",
+       "pittsburgh-us-pa",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "chicago-us-il"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "chicago-us-il",
+       "jacksonville-us-fl",
+       "houston-us-tx",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "jacksonville-us-fl"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "chicago-us-il",
+       "jacksonville-us-fl",
+       "houston-us-tx",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Turnstile",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Syracuse",
+     "area": "NY"
+    },
+    {
+     "city": "Albany",
+     "area": "NY"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Burlington",
+     "area": "VT"
+    },
+    {
+     "city": "Portland",
+     "area": "ME"
+    },
+    {
+     "city": "Manchester",
+     "area": "NH"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Hamilton",
+     "area": "ON"
+    },
+    {
+     "city": "London",
+     "area": "ON"
+    },
+    {
+     "city": "Kitchener",
+     "area": "ON"
+    },
+    {
+     "city": "Windsor",
+     "area": "ON"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Victoria",
+     "area": "BC"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "baltimore-us-md",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "pittsburgh-us-pa",
+       "chicago-us-il",
+       "denver-us-co",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "pittsburgh-us-pa",
+       "chicago-us-il",
+       "denver-us-co",
+       "san-francisco-us-ca",
+       "los-angeles-us-ca",
+       "philadelphia-us-pa"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "baltimore-us-md",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "pittsburgh-us-pa",
+       "chicago-us-il",
+       "denver-us-co",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "pittsburgh-us-pa",
+       "chicago-us-il",
+       "denver-us-co",
+       "san-francisco-us-ca",
+       "los-angeles-us-ca",
+       "philadelphia-us-pa"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Cuco",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Oakland",
+     "area": "CA"
+    },
+    {
+     "city": "San Jose",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Hamilton",
+     "area": "ON"
+    },
+    {
+     "city": "Mexico City",
+     "area": "MX"
+    },
+    {
+     "city": "Guadalajara",
+     "area": "JAL"
+    },
+    {
+     "city": "Monterrey",
+     "area": "NLE"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "san-antonio-us-tx",
+       "austin-us-tx",
+       "el-paso-us-tx",
+       "san-francisco-us-ca",
+       "sacramento-us-ca",
+       "santa-cruz-us-ca"
+      ],
+      "cities": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "san-antonio-us-tx",
+       "el-paso-us-tx",
+       "san-francisco-us-ca",
+       "phoenix-us-az",
+       "las-vegas-us-nv",
+       "houston-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "san-francisco-us-ca",
+       "sacramento-us-ca",
+       "san-antonio-us-tx",
+       "austin-us-tx",
+       "el-paso-us-tx",
+       "chicago-us-il"
+      ],
+      "cities": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "san-francisco-us-ca",
+       "san-antonio-us-tx",
+       "el-paso-us-tx",
+       "phoenix-us-az",
+       "las-vegas-us-nv",
+       "houston-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "phoenix-us-az",
+       "san-jose-us-ca",
+       "austin-us-tx",
+       "dallas-us-tx",
+       "houston-us-tx",
+       "fort-worth-us-tx"
+      ],
+      "cities": [
+       "houston-us-tx",
+       "san-antonio-us-tx",
+       "phoenix-us-az",
+       "chicago-us-il",
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "phoenix-us-az",
+       "san-jose-us-ca",
+       "austin-us-tx",
+       "dallas-us-tx",
+       "houston-us-tx",
+       "san-antonio-us-tx"
+      ],
+      "cities": [
+       "houston-us-tx",
+       "san-antonio-us-tx",
+       "phoenix-us-az",
+       "chicago-us-il",
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "MJ Lenderman",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Brooklyn",
+     "area": "NY"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA"
+    },
+    {
+     "city": "Madison",
+     "area": "WI"
+    },
+    {
+     "city": "Ann Arbor",
+     "area": "MI"
+    },
+    {
+     "city": "Bloomington",
+     "area": "IN"
+    },
+    {
+     "city": "Champaign",
+     "area": "IL"
+    },
+    {
+     "city": "Iowa City",
+     "area": "IA"
+    },
+    {
+     "city": "Lawrence",
+     "area": "KS"
+    },
+    {
+     "city": "Denton",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Boise",
+     "area": "ID"
+    },
+    {
+     "city": "Spokane",
+     "area": "WA"
+    },
+    {
+     "city": "Eugene",
+     "area": "OR"
+    },
+    {
+     "city": "Olympia",
+     "area": "WA"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "pittsburgh-us-pa",
+       "albany-us-ny",
+       "boston-us-ma",
+       "chicago-us-il",
+       "st-louis-us-mo",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "albany-us-ny",
+       "boston-us-ma",
+       "chicago-us-il",
+       "austin-us-tx",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "pittsburgh-us-pa",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "albany-us-ny",
+       "chicago-us-il"
+      ],
+      "cities": [
+       "asheville-us-nc",
+       "nashville-us-tn",
+       "pittsburgh-us-pa",
+       "philadelphia-us-pa",
+       "new-york-city-us-ny",
+       "boston-us-ma",
+       "albany-us-ny",
+       "chicago-us-il"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "asheville-us-nc",
+       "jacksonville-us-fl",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "phoenix-us-az",
+       "jacksonville-us-fl",
+       "toronto-ca",
+       "houston-us-tx",
+       "montreal-ca",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc",
+       "asheville-us-nc",
+       "jacksonville-us-fl",
+       "toronto-ca"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "phoenix-us-az",
+       "jacksonville-us-fl",
+       "toronto-ca",
+       "houston-us-tx",
+       "montreal-ca",
+       "san-antonio-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Parcels",
+   "ranking": [
+    {
+     "city": "Berlin",
+     "area": "Germany"
+    },
+    {
+     "city": "Paris",
+     "area": "France"
+    },
+    {
+     "city": "Amsterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Copenhagen",
+     "area": "Denmark"
+    },
+    {
+     "city": "Stockholm",
+     "area": "Sweden"
+    },
+    {
+     "city": "Vienna",
+     "area": "Austria"
+    },
+    {
+     "city": "Zurich",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Brussels",
+     "area": "Belgium"
+    },
+    {
+     "city": "Hamburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Munich",
+     "area": "Germany"
+    },
+    {
+     "city": "Cologne",
+     "area": "Germany"
+    },
+    {
+     "city": "Frankfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Stuttgart",
+     "area": "Germany"
+    },
+    {
+     "city": "Leipzig",
+     "area": "Germany"
+    },
+    {
+     "city": "Dortmund",
+     "area": "Germany"
+    },
+    {
+     "city": "Essen",
+     "area": "Germany"
+    },
+    {
+     "city": "Bremen",
+     "area": "Germany"
+    },
+    {
+     "city": "Dresden",
+     "area": "Germany"
+    },
+    {
+     "city": "Hanover",
+     "area": "Germany"
+    },
+    {
+     "city": "Nuremberg",
+     "area": "Germany"
+    },
+    {
+     "city": "Dusseldorf",
+     "area": "Germany"
+    },
+    {
+     "city": "Bochum",
+     "area": "Germany"
+    },
+    {
+     "city": "Wuppertal",
+     "area": "Germany"
+    },
+    {
+     "city": "Bielefeld",
+     "area": "Germany"
+    },
+    {
+     "city": "Bonn",
+     "area": "Germany"
+    },
+    {
+     "city": "Mannheim",
+     "area": "Germany"
+    },
+    {
+     "city": "Karlsruhe",
+     "area": "Germany"
+    },
+    {
+     "city": "Wiesbaden",
+     "area": "Germany"
+    },
+    {
+     "city": "Gelsenkirchen",
+     "area": "Germany"
+    },
+    {
+     "city": "Munster",
+     "area": "Germany"
+    },
+    {
+     "city": "Monchengladbach",
+     "area": "Germany"
+    },
+    {
+     "city": "Aachen",
+     "area": "Germany"
+    },
+    {
+     "city": "Krefeld",
+     "area": "Germany"
+    },
+    {
+     "city": "Lubeck",
+     "area": "Germany"
+    },
+    {
+     "city": "Erfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Kassel",
+     "area": "Germany"
+    },
+    {
+     "city": "Rostock",
+     "area": "Germany"
+    },
+    {
+     "city": "Osnabruck",
+     "area": "Germany"
+    },
+    {
+     "city": "Potsdam",
+     "area": "Germany"
+    },
+    {
+     "city": "Saarbrucken",
+     "area": "Germany"
+    },
+    {
+     "city": "Regensburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Kiel",
+     "area": "Germany"
+    },
+    {
+     "city": "Ingen",
+     "area": "Germany"
+    },
+    {
+     "city": "Leverkusen",
+     "area": "Germany"
+    },
+    {
+     "city": "Oberhausen",
+     "area": "Germany"
+    },
+    {
+     "city": "Heilbronn",
+     "area": "Germany"
+    },
+    {
+     "city": "Ulm",
+     "area": "Germany"
+    },
+    {
+     "city": "Wurzburg",
+     "area": "Germany"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "berlin-de",
+       "hamburg-de",
+       "copenhagen-dk",
+       "amsterdam-nl",
+       "brussels-be",
+       "paris-fr",
+       "lyon-fr",
+       "barcelona-es"
+      ],
+      "cities": [
+       "berlin-de",
+       "hamburg-de",
+       "copenhagen-dk",
+       "amsterdam-nl",
+       "brussels-be",
+       "paris-fr",
+       "lyon-fr",
+       "munich-de"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "berlin-de",
+       "hamburg-de",
+       "copenhagen-dk",
+       "amsterdam-nl",
+       "brussels-be",
+       "paris-fr",
+       "bordeaux-fr",
+       "san-sebastian-es"
+      ],
+      "cities": [
+       "berlin-de",
+       "hamburg-de",
+       "copenhagen-dk",
+       "amsterdam-nl",
+       "paris-fr",
+       "bordeaux-fr",
+       "san-sebastian-es",
+       "munich-de"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "berlin-de",
+       "hamburg-de",
+       "koeln-de",
+       "munich-de",
+       "prague-cz",
+       "vienna-at",
+       "budapest-hu",
+       "warsaw-pl"
+      ],
+      "cities": [
+       "berlin-de",
+       "hamburg-de",
+       "vienna-at",
+       "budapest-hu",
+       "warsaw-pl",
+       "madrid-es",
+       "rome-it",
+       "paris-fr",
+       "bucharest-ro",
+       "barcelona-es"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "berlin-de",
+       "hamburg-de",
+       "koeln-de",
+       "brussels-be",
+       "paris-fr",
+       "madrid-es",
+       "barcelona-es",
+       "rome-it"
+      ],
+      "cities": [
+       "berlin-de",
+       "hamburg-de",
+       "paris-fr",
+       "madrid-es",
+       "barcelona-es",
+       "rome-it",
+       "bucharest-ro",
+       "budapest-hu",
+       "warsaw-pl",
+       "vienna-at"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Alvvays",
+   "ranking": [
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "chicago-us-il",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "chicago-us-il",
+       "halifax-ca"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "chicago-us-il",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "chicago-us-il",
+       "halifax-ca"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Arlo Parks",
+   "ranking": [
+    {
+     "city": "London",
+     "area": "England"
+    },
+    {
+     "city": "Manchester",
+     "area": "England"
+    },
+    {
+     "city": "Bristol",
+     "area": "England"
+    },
+    {
+     "city": "Brighton",
+     "area": "England"
+    },
+    {
+     "city": "Leeds",
+     "area": "England"
+    },
+    {
+     "city": "Glasgow",
+     "area": "Scotland"
+    },
+    {
+     "city": "Dublin",
+     "area": "Ireland"
+    },
+    {
+     "city": "Birmingham",
+     "area": "England"
+    },
+    {
+     "city": "Liverpool",
+     "area": "England"
+    },
+    {
+     "city": "Nottingham",
+     "area": "England"
+    },
+    {
+     "city": "Sheffield",
+     "area": "England"
+    },
+    {
+     "city": "Newcastle",
+     "area": "England"
+    },
+    {
+     "city": "Edinburgh",
+     "area": "Scotland"
+    },
+    {
+     "city": "Cardiff",
+     "area": "Wales"
+    },
+    {
+     "city": "Southampton",
+     "area": "England"
+    },
+    {
+     "city": "Leicester",
+     "area": "England"
+    },
+    {
+     "city": "Oxford",
+     "area": "England"
+    },
+    {
+     "city": "Cambridge",
+     "area": "England"
+    },
+    {
+     "city": "Norwich",
+     "area": "England"
+    },
+    {
+     "city": "Belfast",
+     "area": "Northern Ireland"
+    },
+    {
+     "city": "Exeter",
+     "area": "England"
+    },
+    {
+     "city": "Portsmouth",
+     "area": "England"
+    },
+    {
+     "city": "York",
+     "area": "England"
+    },
+    {
+     "city": "Bournemouth",
+     "area": "England"
+    },
+    {
+     "city": "Reading",
+     "area": "England"
+    },
+    {
+     "city": "Derby",
+     "area": "England"
+    },
+    {
+     "city": "Hull",
+     "area": "England"
+    },
+    {
+     "city": "Plymouth",
+     "area": "England"
+    },
+    {
+     "city": "Stoke-on-Trent",
+     "area": "England"
+    },
+    {
+     "city": "Coventry",
+     "area": "England"
+    },
+    {
+     "city": "Swansea",
+     "area": "Wales"
+    },
+    {
+     "city": "Aberdeen",
+     "area": "Scotland"
+    },
+    {
+     "city": "Dundee",
+     "area": "Scotland"
+    },
+    {
+     "city": "Inverness",
+     "area": "Scotland"
+    },
+    {
+     "city": "Cork",
+     "area": "Ireland"
+    },
+    {
+     "city": "Galway",
+     "area": "Ireland"
+    },
+    {
+     "city": "Limerick",
+     "area": "Ireland"
+    },
+    {
+     "city": "Waterford",
+     "area": "Ireland"
+    },
+    {
+     "city": "Newport",
+     "area": "Wales"
+    },
+    {
+     "city": "Wrexham",
+     "area": "Wales"
+    },
+    {
+     "city": "St Albans",
+     "area": "England"
+    },
+    {
+     "city": "Cheltenham",
+     "area": "England"
+    },
+    {
+     "city": "Bath",
+     "area": "England"
+    },
+    {
+     "city": "Canterbury",
+     "area": "England"
+    },
+    {
+     "city": "Lancaster",
+     "area": "England"
+    },
+    {
+     "city": "Lincoln",
+     "area": "England"
+    },
+    {
+     "city": "Chester",
+     "area": "England"
+    },
+    {
+     "city": "Durham",
+     "area": "England"
+    },
+    {
+     "city": "Winchester",
+     "area": "England"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "manchester-gb",
+       "edinburgh-gb",
+       "glasgow-gb",
+       "birmingham-gb",
+       "nottingham-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "manchester-gb",
+       "edinburgh-gb",
+       "glasgow-gb",
+       "birmingham-gb",
+       "nottingham-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "bournemouth-gb",
+       "plymouth-gb",
+       "birmingham-gb",
+       "nottingham-gb",
+       "manchester-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "bournemouth-gb",
+       "plymouth-gb",
+       "birmingham-gb",
+       "nottingham-gb",
+       "manchester-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "cardiff-gb",
+       "nottingham-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "nottingham-gb",
+       "dublin-ie"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "cardiff-gb",
+       "nottingham-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "nottingham-gb",
+       "dublin-ie"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Wet Leg",
+   "ranking": [
+    {
+     "city": "London",
+     "area": "England"
+    },
+    {
+     "city": "Manchester",
+     "area": "England"
+    },
+    {
+     "city": "Glasgow",
+     "area": "Scotland"
+    },
+    {
+     "city": "Bristol",
+     "area": "England"
+    },
+    {
+     "city": "Brighton",
+     "area": "England"
+    },
+    {
+     "city": "Leeds",
+     "area": "England"
+    },
+    {
+     "city": "Dublin",
+     "area": "Ireland"
+    },
+    {
+     "city": "Birmingham",
+     "area": "England"
+    },
+    {
+     "city": "Liverpool",
+     "area": "England"
+    },
+    {
+     "city": "Nottingham",
+     "area": "England"
+    },
+    {
+     "city": "Sheffield",
+     "area": "England"
+    },
+    {
+     "city": "Newcastle",
+     "area": "England"
+    },
+    {
+     "city": "Cardiff",
+     "area": "Wales"
+    },
+    {
+     "city": "Edinburgh",
+     "area": "Scotland"
+    },
+    {
+     "city": "Southampton",
+     "area": "England"
+    },
+    {
+     "city": "Norwich",
+     "area": "England"
+    },
+    {
+     "city": "Oxford",
+     "area": "England"
+    },
+    {
+     "city": "Cambridge",
+     "area": "England"
+    },
+    {
+     "city": "Belfast",
+     "area": "Northern Ireland"
+    },
+    {
+     "city": "Leicester",
+     "area": "England"
+    },
+    {
+     "city": "Portsmouth",
+     "area": "England"
+    },
+    {
+     "city": "Plymouth",
+     "area": "England"
+    },
+    {
+     "city": "Exeter",
+     "area": "England"
+    },
+    {
+     "city": "York",
+     "area": "England"
+    },
+    {
+     "city": "Hull",
+     "area": "England"
+    },
+    {
+     "city": "Swansea",
+     "area": "Wales"
+    },
+    {
+     "city": "Aberdeen",
+     "area": "Scotland"
+    },
+    {
+     "city": "Derby",
+     "area": "England"
+    },
+    {
+     "city": "Stoke-on-Trent",
+     "area": "England"
+    },
+    {
+     "city": "Coventry",
+     "area": "England"
+    },
+    {
+     "city": "Reading",
+     "area": "England"
+    },
+    {
+     "city": "Luton",
+     "area": "England"
+    },
+    {
+     "city": "Preston",
+     "area": "England"
+    },
+    {
+     "city": "Cheltenham",
+     "area": "England"
+    },
+    {
+     "city": "Colchester",
+     "area": "England"
+    },
+    {
+     "city": "Ipswich",
+     "area": "England"
+    },
+    {
+     "city": "Blackpool",
+     "area": "England"
+    },
+    {
+     "city": "Bournemouth",
+     "area": "England"
+    },
+    {
+     "city": "Peterborough",
+     "area": "England"
+    },
+    {
+     "city": "Milton Keynes",
+     "area": "England"
+    },
+    {
+     "city": "Wolverhampton",
+     "area": "England"
+    },
+    {
+     "city": "Sunderland",
+     "area": "England"
+    },
+    {
+     "city": "Warrington",
+     "area": "England"
+    },
+    {
+     "city": "Huddersfield",
+     "area": "England"
+    },
+    {
+     "city": "Bolton",
+     "area": "England"
+    },
+    {
+     "city": "Middlesbrough",
+     "area": "England"
+    },
+    {
+     "city": "Birkenhead",
+     "area": "England"
+    },
+    {
+     "city": "Poole",
+     "area": "England"
+    },
+    {
+     "city": "Gloucester",
+     "area": "England"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "newcastle-upon-tyne-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "newcastle-upon-tyne-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "leeds-gb",
+       "glasgow-gb",
+       "edinburgh-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "brighton-gb",
+       "bristol-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "southampton-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "cardiff-gb",
+       "southampton-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "dublin-ie",
+       "belfast-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "cardiff-gb",
+       "nottingham-gb"
+      ],
+      "cities": [
+       "london-gb",
+       "birmingham-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "bristol-gb",
+       "nottingham-gb",
+       "dublin-ie"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "portland-us-or",
+       "seattle-us-wa",
+       "vancouver-ca",
+       "san-francisco-us-ca",
+       "los-angeles-us-ca",
+       "santa-barbara-us-ca",
+       "austin-us-tx",
+       "minneapolis-us-mn"
+      ],
+      "cities": [
+       "portland-us-or",
+       "seattle-us-wa",
+       "vancouver-ca",
+       "san-francisco-us-ca",
+       "los-angeles-us-ca",
+       "santa-fe-us-nm",
+       "palm-springs-us-ca",
+       "austin-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "portland-us-or",
+       "seattle-us-wa",
+       "vancouver-ca",
+       "san-francisco-us-ca",
+       "los-angeles-us-ca",
+       "austin-us-tx",
+       "chicago-us-il",
+       "new-york-city-us-ny"
+      ],
+      "cities": [
+       "portland-us-or",
+       "seattle-us-wa",
+       "vancouver-ca",
+       "san-francisco-us-ca",
+       "los-angeles-us-ca",
+       "palm-springs-us-ca",
+       "austin-us-tx",
+       "santa-fe-us-nm"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "phoenix-us-az",
+       "san-jose-us-ca",
+       "calgary-ca",
+       "edmonton-ca",
+       "seattle-us-wa",
+       "vancouver-ca"
+      ],
+      "cities": [
+       "houston-us-tx",
+       "san-antonio-us-tx",
+       "phoenix-us-az",
+       "dallas-us-tx",
+       "chicago-us-il",
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "los-angeles-us-ca",
+       "san-diego-us-ca",
+       "phoenix-us-az",
+       "san-jose-us-ca",
+       "calgary-ca",
+       "edmonton-ca",
+       "seattle-us-wa",
+       "vancouver-ca"
+      ],
+      "cities": [
+       "houston-us-tx",
+       "san-antonio-us-tx",
+       "phoenix-us-az",
+       "dallas-us-tx",
+       "chicago-us-il",
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Fontaines D.C.",
+   "ranking": [
+    {
+     "city": "London",
+     "area": "England"
+    },
+    {
+     "city": "Manchester",
+     "area": "England"
+    },
+    {
+     "city": "Glasgow",
+     "area": "Scotland"
+    },
+    {
+     "city": "Bristol",
+     "area": "England"
+    },
+    {
+     "city": "Brighton",
+     "area": "England"
+    },
+    {
+     "city": "Leeds",
+     "area": "England"
+    },
+    {
+     "city": "Birmingham",
+     "area": "England"
+    },
+    {
+     "city": "Liverpool",
+     "area": "England"
+    },
+    {
+     "city": "Edinburgh",
+     "area": "Scotland"
+    },
+    {
+     "city": "Dublin",
+     "area": "Ireland"
+    },
+    {
+     "city": "Nottingham",
+     "area": "England"
+    },
+    {
+     "city": "Sheffield",
+     "area": "England"
+    },
+    {
+     "city": "Newcastle",
+     "area": "England"
+    },
+    {
+     "city": "Cardiff",
+     "area": "Wales"
+    },
+    {
+     "city": "Southampton",
+     "area": "England"
+    },
+    {
+     "city": "Leicester",
+     "area": "England"
+    },
+    {
+     "city": "Norwich",
+     "area": "England"
+    },
+    {
+     "city": "Oxford",
+     "area": "England"
+    },
+    {
+     "city": "Cambridge",
+     "area": "England"
+    },
+    {
+     "city": "Belfast",
+     "area": "Northern Ireland"
+    },
+    {
+     "city": "Exeter",
+     "area": "England"
+    },
+    {
+     "city": "York",
+     "area": "England"
+    },
+    {
+     "city": "Aberdeen",
+     "area": "Scotland"
+    },
+    {
+     "city": "Dundee",
+     "area": "Scotland"
+    },
+    {
+     "city": "Plymouth",
+     "area": "England"
+    },
+    {
+     "city": "Portsmouth",
+     "area": "England"
+    },
+    {
+     "city": "Reading",
+     "area": "England"
+    },
+    {
+     "city": "Derby",
+     "area": "England"
+    },
+    {
+     "city": "Swansea",
+     "area": "Wales"
+    },
+    {
+     "city": "Cork",
+     "area": "Ireland"
+    },
+    {
+     "city": "Galway",
+     "area": "Ireland"
+    },
+    {
+     "city": "Limerick",
+     "area": "Ireland"
+    },
+    {
+     "city": "Stoke-on-Trent",
+     "area": "England"
+    },
+    {
+     "city": "Coventry",
+     "area": "England"
+    },
+    {
+     "city": "Hull",
+     "area": "England"
+    },
+    {
+     "city": "Preston",
+     "area": "England"
+    },
+    {
+     "city": "Blackpool",
+     "area": "England"
+    },
+    {
+     "city": "Middlesbrough",
+     "area": "England"
+    },
+    {
+     "city": "Peterborough",
+     "area": "England"
+    },
+    {
+     "city": "Milton Keynes",
+     "area": "England"
+    },
+    {
+     "city": "Wolverhampton",
+     "area": "England"
+    },
+    {
+     "city": "Bolton",
+     "area": "England"
+    },
+    {
+     "city": "Bradford",
+     "area": "England"
+    },
+    {
+     "city": "Swindon",
+     "area": "England"
+    },
+    {
+     "city": "Luton",
+     "area": "England"
+    },
+    {
+     "city": "Bournemouth",
+     "area": "England"
+    },
+    {
+     "city": "Poole",
+     "area": "England"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "dublin-ie",
+       "belfast-gb",
+       "glasgow-gb",
+       "manchester-gb",
+       "liverpool-gb",
+       "leeds-gb",
+       "birmingham-gb",
+       "london-gb"
+      ],
+      "cities": [
+       "dublin-ie",
+       "belfast-gb",
+       "glasgow-gb",
+       "manchester-gb",
+       "birmingham-gb",
+       "london-gb",
+       "galway-ie",
+       "cork-ie"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "dublin-ie",
+       "belfast-gb",
+       "glasgow-gb",
+       "manchester-gb",
+       "london-gb",
+       "bristol-gb",
+       "brighton-gb",
+       "birmingham-gb"
+      ],
+      "cities": [
+       "dublin-ie",
+       "belfast-gb",
+       "glasgow-gb",
+       "manchester-gb",
+       "london-gb",
+       "bristol-gb",
+       "brighton-gb",
+       "birmingham-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "dublin-ie",
+       "belfast-gb",
+       "liverpool-gb",
+       "manchester-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "newcastle-upon-tyne-gb",
+       "birmingham-gb"
+      ],
+      "cities": [
+       "dublin-ie",
+       "belfast-gb",
+       "liverpool-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "newcastle-upon-tyne-gb",
+       "birmingham-gb",
+       "london-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "dublin-ie",
+       "belfast-gb",
+       "liverpool-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "newcastle-upon-tyne-gb",
+       "leeds-gb",
+       "birmingham-gb"
+      ],
+      "cities": [
+       "dublin-ie",
+       "belfast-gb",
+       "liverpool-gb",
+       "glasgow-gb",
+       "edinburgh-gb",
+       "leeds-gb",
+       "birmingham-gb",
+       "london-gb"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "JPEGMAFIA",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Grand Rapids",
+     "area": "MI"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "toronto-ca",
+       "detroit-us-mi",
+       "chicago-us-il",
+       "denver-us-co",
+       "austin-us-tx"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "toronto-ca",
+       "detroit-us-mi",
+       "chicago-us-il",
+       "denver-us-co",
+       "austin-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "toronto-ca",
+       "montreal-ca",
+       "detroit-us-mi",
+       "baltimore-us-md"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "boston-us-ma",
+       "toronto-ca",
+       "montreal-ca",
+       "detroit-us-mi",
+       "washington-us-dc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "ottawa-ca",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "ottawa-ca",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "philadelphia-us-pa",
+       "toronto-ca",
+       "montreal-ca",
+       "ottawa-ca",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Clairo",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "San Jose",
+     "area": "CA"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    }
+   ],
+   "ablation": {
+    "qloo": [
+     {
+      "shortlist": [
+       "boston-us-ma",
+       "new-york-city-us-ny",
+       "washington-us-dc",
+       "montreal-ca",
+       "toronto-ca",
+       "chicago-us-il",
+       "austin-us-tx",
+       "phoenix-us-az"
+      ],
+      "cities": [
+       "boston-us-ma",
+       "new-york-city-us-ny",
+       "washington-us-dc",
+       "montreal-ca",
+       "toronto-ca",
+       "chicago-us-il",
+       "dallas-us-tx",
+       "minneapolis-us-mn"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "boston-us-ma",
+       "new-york-city-us-ny",
+       "washington-us-dc",
+       "montreal-ca",
+       "toronto-ca",
+       "chicago-us-il",
+       "austin-us-tx",
+       "san-antonio-us-tx"
+      ],
+      "cities": [
+       "boston-us-ma",
+       "new-york-city-us-ny",
+       "washington-us-dc",
+       "montreal-ca",
+       "toronto-ca",
+       "chicago-us-il",
+       "minneapolis-us-mn",
+       "dallas-us-tx"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ],
+    "pop": [
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "ottawa-ca",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "montreal-ca",
+       "philadelphia-us-pa",
+       "chicago-us-il",
+       "columbus-us-oh",
+       "ottawa-ca",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     },
+     {
+      "shortlist": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "montreal-ca",
+       "ottawa-ca",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "cities": [
+       "new-york-city-us-ny",
+       "toronto-ca",
+       "chicago-us-il",
+       "philadelphia-us-pa",
+       "montreal-ca",
+       "ottawa-ca",
+       "columbus-us-oh",
+       "charlotte-us-nc"
+      ],
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+     }
+    ]
+   }
+  },
+  {
+   "artist": "Pierce the Veil",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "California, USA"
+    },
+    {
+     "city": "New York",
+     "area": "New York, USA"
+    },
+    {
+     "city": "Chicago",
+     "area": "Illinois, USA"
+    },
+    {
+     "city": "Toronto",
+     "area": "Ontario, Canada"
+    },
+    {
+     "city": "Seattle",
+     "area": "Washington, USA"
+    },
+    {
+     "city": "Portland",
+     "area": "Oregon, USA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "California, USA"
+    },
+    {
+     "city": "Denver",
+     "area": "Colorado, USA"
+    },
+    {
+     "city": "Austin",
+     "area": "Texas, USA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "Pennsylvania, USA"
+    },
+    {
+     "city": "Boston",
+     "area": "Massachusetts, USA"
+    },
+    {
+     "city": "Montreal",
+     "area": "Quebec, Canada"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "Minnesota, USA"
+    },
+    {
+     "city": "Atlanta",
+     "area": "Georgia, USA"
+    },
+    {
+     "city": "Detroit",
+     "area": "Michigan, USA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "British Columbia, Canada"
+    },
+    {
+     "city": "Phoenix",
+     "area": "Arizona, USA"
+    },
+    {
+     "city": "Dallas",
+     "area": "Texas, USA"
+    },
+    {
+     "city": "Houston",
+     "area": "Texas, USA"
+    },
+    {
+     "city": "Washington",
+     "area": "District of Columbia, USA"
+    },
+    {
+     "city": "San Diego",
+     "area": "California, USA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "Maryland, USA"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "Pennsylvania, USA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "Ohio, USA"
+    },
+    {
+     "city": "Columbus",
+     "area": "Ohio, USA"
+    },
+    {
+     "city": "Nashville",
+     "area": "Tennessee, USA"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "Utah, USA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "Missouri, USA"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "Wisconsin, USA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "California, USA"
+    },
+    {
+     "city": "Orlando",
+     "area": "Florida, USA"
+    },
+    {
+     "city": "Tampa",
+     "area": "Florida, USA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "Missouri, USA"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "Ohio, USA"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "Indiana, USA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "North Carolina, USA"
+    },
+    {
+     "city": "Richmond",
+     "area": "Virginia, USA"
+    },
+    {
+     "city": "Buffalo",
+     "area": "New York, USA"
+    },
+    {
+     "city": "Rochester",
+     "area": "New York, USA"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "New Mexico, USA"
+    },
+    {
+     "city": "Tucson",
+     "area": "Arizona, USA"
+    },
+    {
+     "city": "Fresno",
+     "area": "California, USA"
+    },
+    {
+     "city": "Omaha",
+     "area": "Nebraska, USA"
+    },
+    {
+     "city": "Tulsa",
+     "area": "Oklahoma, USA"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "Oklahoma, USA"
+    },
+    {
+     "city": "Hartford",
+     "area": "Connecticut, USA"
+    },
+    {
+     "city": "New Orleans",
+     "area": "Louisiana, USA"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "Manitoba, Canada"
+    }
+   ]
+  },
+  {
+   "artist": "Dua Lipa",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "San Jose",
+     "area": "CA"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Grand Rapids",
+     "area": "MI"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    }
+   ]
+  },
+  {
+   "artist": "Troye Sivan",
+   "ranking": [
+    {
+     "city": "Berlin",
+     "area": "Germany"
+    },
+    {
+     "city": "Paris",
+     "area": "France"
+    },
+    {
+     "city": "Amsterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Stockholm",
+     "area": "Sweden"
+    },
+    {
+     "city": "Copenhagen",
+     "area": "Denmark"
+    },
+    {
+     "city": "Oslo",
+     "area": "Norway"
+    },
+    {
+     "city": "Helsinki",
+     "area": "Finland"
+    },
+    {
+     "city": "Vienna",
+     "area": "Austria"
+    },
+    {
+     "city": "Zurich",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Munich",
+     "area": "Germany"
+    },
+    {
+     "city": "Hamburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Cologne",
+     "area": "Germany"
+    },
+    {
+     "city": "Frankfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Stuttgart",
+     "area": "Germany"
+    },
+    {
+     "city": "Dusseldorf",
+     "area": "Germany"
+    },
+    {
+     "city": "Leipzig",
+     "area": "Germany"
+    },
+    {
+     "city": "Dortmund",
+     "area": "Germany"
+    },
+    {
+     "city": "Essen",
+     "area": "Germany"
+    },
+    {
+     "city": "Bremen",
+     "area": "Germany"
+    },
+    {
+     "city": "Dresden",
+     "area": "Germany"
+    },
+    {
+     "city": "Hannover",
+     "area": "Germany"
+    },
+    {
+     "city": "Nuremberg",
+     "area": "Germany"
+    },
+    {
+     "city": "Duisburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Bochum",
+     "area": "Germany"
+    },
+    {
+     "city": "Wuppertal",
+     "area": "Germany"
+    },
+    {
+     "city": "Bielefeld",
+     "area": "Germany"
+    },
+    {
+     "city": "Bonn",
+     "area": "Germany"
+    },
+    {
+     "city": "Mannheim",
+     "area": "Germany"
+    },
+    {
+     "city": "Karlsruhe",
+     "area": "Germany"
+    },
+    {
+     "city": "Wiesbaden",
+     "area": "Germany"
+    },
+    {
+     "city": "Gelsenkirchen",
+     "area": "Germany"
+    },
+    {
+     "city": "Monchengladbach",
+     "area": "Germany"
+    },
+    {
+     "city": "Aachen",
+     "area": "Germany"
+    },
+    {
+     "city": "Krefeld",
+     "area": "Germany"
+    },
+    {
+     "city": "Lubeck",
+     "area": "Germany"
+    },
+    {
+     "city": "Oberhausen",
+     "area": "Germany"
+    },
+    {
+     "city": "Hagen",
+     "area": "Germany"
+    },
+    {
+     "city": "Rostock",
+     "area": "Germany"
+    },
+    {
+     "city": "Braunschweig",
+     "area": "Germany"
+    },
+    {
+     "city": "Kiel",
+     "area": "Germany"
+    },
+    {
+     "city": "Chemnitz",
+     "area": "Germany"
+    },
+    {
+     "city": "Siegen",
+     "area": "Germany"
+    },
+    {
+     "city": "Jena",
+     "area": "Germany"
+    },
+    {
+     "city": "Erlangen",
+     "area": "Germany"
+    },
+    {
+     "city": "Moers",
+     "area": "Germany"
+    },
+    {
+     "city": "Furtwangen",
+     "area": "Germany"
+    },
+    {
+     "city": "Heilbronn",
+     "area": "Germany"
+    },
+    {
+     "city": "Ingen",
+     "area": "Germany"
+    },
+    {
+     "city": "Leverkusen",
+     "area": "Germany"
+    },
+    {
+     "city": "Osnabruck",
+     "area": "Germany"
+    }
+   ]
+  },
+  {
+   "artist": "Queen + Adam Lambert",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Hamilton",
+     "area": "ON"
+    },
+    {
+     "city": "Mexico City",
+     "area": "Mexico"
+    }
+   ]
+  },
+  {
+   "artist": "Chappell Roan",
+   "ranking": [
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Madison",
+     "area": "WI"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "San Jose",
+     "area": "CA"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    }
+   ]
+  },
+  {
+   "artist": "Billy Joel",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Long Island",
+     "area": "NY"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Newark",
+     "area": "NJ"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Atlantic City",
+     "area": "NJ"
+    },
+    {
+     "city": "Syracuse",
+     "area": "NY"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albany",
+     "area": "NY"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Norfolk",
+     "area": "VA"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    }
+   ]
+  },
+  {
+   "artist": "Kim Petras",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    }
+   ]
+  },
+  {
+   "artist": "Tame Impala",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Charleston",
+     "area": "SC"
+    },
+    {
+     "city": "Asheville",
+     "area": "NC"
+    },
+    {
+     "city": "Boise",
+     "area": "ID"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Santa Fe",
+     "area": "NM"
+    },
+    {
+     "city": "Boulder",
+     "area": "CO"
+    },
+    {
+     "city": "Fort Collins",
+     "area": "CO"
+    },
+    {
+     "city": "Eugene",
+     "area": "OR"
+    },
+    {
+     "city": "Spokane",
+     "area": "WA"
+    },
+    {
+     "city": "Victoria",
+     "area": "BC"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    }
+   ]
+  },
+  {
+   "artist": "Queens of the Stone Age",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albany",
+     "area": "NY"
+    },
+    {
+     "city": "Syracuse",
+     "area": "NY"
+    },
+    {
+     "city": "Burlington",
+     "area": "VT"
+    },
+    {
+     "city": "Manchester",
+     "area": "NH"
+    },
+    {
+     "city": "Portland",
+     "area": "ME"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    }
+   ]
+  },
+  {
+   "artist": "Nine Inch Nails",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    }
+   ]
+  },
+  {
+   "artist": "Flo",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Norfolk",
+     "area": "VA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Syracuse",
+     "area": "NY"
+    },
+    {
+     "city": "Albany",
+     "area": "NY"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    }
+   ]
+  },
+  {
+   "artist": "Omar Apollo",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Hamilton",
+     "area": "ON"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    }
+   ]
+  },
+  {
+   "artist": "Sugababes",
+   "ranking": [
+    {
+     "city": "London",
+     "area": "England"
+    },
+    {
+     "city": "Manchester",
+     "area": "England"
+    },
+    {
+     "city": "Birmingham",
+     "area": "England"
+    },
+    {
+     "city": "Glasgow",
+     "area": "Scotland"
+    },
+    {
+     "city": "Dublin",
+     "area": "Ireland"
+    },
+    {
+     "city": "Leeds",
+     "area": "England"
+    },
+    {
+     "city": "Liverpool",
+     "area": "England"
+    },
+    {
+     "city": "Bristol",
+     "area": "England"
+    },
+    {
+     "city": "Newcastle",
+     "area": "England"
+    },
+    {
+     "city": "Sheffield",
+     "area": "England"
+    },
+    {
+     "city": "Edinburgh",
+     "area": "Scotland"
+    },
+    {
+     "city": "Nottingham",
+     "area": "England"
+    },
+    {
+     "city": "Cardiff",
+     "area": "Wales"
+    },
+    {
+     "city": "Belfast",
+     "area": "Northern Ireland"
+    },
+    {
+     "city": "Leicester",
+     "area": "England"
+    },
+    {
+     "city": "Brighton",
+     "area": "England"
+    },
+    {
+     "city": "Southampton",
+     "area": "England"
+    },
+    {
+     "city": "Plymouth",
+     "area": "England"
+    },
+    {
+     "city": "Stoke-on-Trent",
+     "area": "England"
+    },
+    {
+     "city": "Coventry",
+     "area": "England"
+    },
+    {
+     "city": "Derby",
+     "area": "England"
+    },
+    {
+     "city": "Hull",
+     "area": "England"
+    },
+    {
+     "city": "Swansea",
+     "area": "Wales"
+    },
+    {
+     "city": "Portsmouth",
+     "area": "England"
+    },
+    {
+     "city": "Reading",
+     "area": "England"
+    },
+    {
+     "city": "Luton",
+     "area": "England"
+    },
+    {
+     "city": "Norwich",
+     "area": "England"
+    },
+    {
+     "city": "Preston",
+     "area": "England"
+    },
+    {
+     "city": "Peterborough",
+     "area": "England"
+    },
+    {
+     "city": "Milton Keynes",
+     "area": "England"
+    },
+    {
+     "city": "Bournemouth",
+     "area": "England"
+    },
+    {
+     "city": "Blackpool",
+     "area": "England"
+    },
+    {
+     "city": "Middlesbrough",
+     "area": "England"
+    },
+    {
+     "city": "Ipswich",
+     "area": "England"
+    },
+    {
+     "city": "Wolverhampton",
+     "area": "England"
+    },
+    {
+     "city": "Bolton",
+     "area": "England"
+    },
+    {
+     "city": "Aberdeen",
+     "area": "Scotland"
+    },
+    {
+     "city": "Dundee",
+     "area": "Scotland"
+    },
+    {
+     "city": "Cork",
+     "area": "Ireland"
+    },
+    {
+     "city": "Limerick",
+     "area": "Ireland"
+    },
+    {
+     "city": "Galway",
+     "area": "Ireland"
+    },
+    {
+     "city": "Waterford",
+     "area": "Ireland"
+    },
+    {
+     "city": "Newport",
+     "area": "Wales"
+    },
+    {
+     "city": "Wrexham",
+     "area": "Wales"
+    },
+    {
+     "city": "Londonderry",
+     "area": "Northern Ireland"
+    },
+    {
+     "city": "St Albans",
+     "area": "England"
+    }
+   ]
+  },
+  {
+   "artist": "Travis Scott",
+   "ranking": [
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Oakland",
+     "area": "CA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "San Jose",
+     "area": "CA"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Fort Worth",
+     "area": "TX"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    }
+   ]
+  },
+  {
+   "artist": "Halsey",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Grand Rapids",
+     "area": "MI"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    }
+   ]
+  },
+  {
+   "artist": "Bonnie Tyler",
+   "ranking": [
+    {
+     "city": "Berlin",
+     "area": "Germany"
+    },
+    {
+     "city": "Amsterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Paris",
+     "area": "France"
+    },
+    {
+     "city": "Copenhagen",
+     "area": "Denmark"
+    },
+    {
+     "city": "Stockholm",
+     "area": "Sweden"
+    },
+    {
+     "city": "Oslo",
+     "area": "Norway"
+    },
+    {
+     "city": "Vienna",
+     "area": "Austria"
+    },
+    {
+     "city": "Zurich",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Munich",
+     "area": "Germany"
+    },
+    {
+     "city": "Hamburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Cologne",
+     "area": "Germany"
+    },
+    {
+     "city": "Frankfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Stuttgart",
+     "area": "Germany"
+    },
+    {
+     "city": "Dusseldorf",
+     "area": "Germany"
+    },
+    {
+     "city": "Dortmund",
+     "area": "Germany"
+    },
+    {
+     "city": "Essen",
+     "area": "Germany"
+    },
+    {
+     "city": "Leipzig",
+     "area": "Germany"
+    },
+    {
+     "city": "Dresden",
+     "area": "Germany"
+    },
+    {
+     "city": "Hanover",
+     "area": "Germany"
+    },
+    {
+     "city": "Nuremberg",
+     "area": "Germany"
+    },
+    {
+     "city": "Brussels",
+     "area": "Belgium"
+    },
+    {
+     "city": "Antwerp",
+     "area": "Belgium"
+    },
+    {
+     "city": "Ghent",
+     "area": "Belgium"
+    },
+    {
+     "city": "Rotterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "The Hague",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Utrecht",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Eindhoven",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Lyon",
+     "area": "France"
+    },
+    {
+     "city": "Marseille",
+     "area": "France"
+    },
+    {
+     "city": "Toulouse",
+     "area": "France"
+    },
+    {
+     "city": "Bordeaux",
+     "area": "France"
+    },
+    {
+     "city": "Lille",
+     "area": "France"
+    },
+    {
+     "city": "Nice",
+     "area": "France"
+    },
+    {
+     "city": "Nantes",
+     "area": "France"
+    },
+    {
+     "city": "Strasbourg",
+     "area": "France"
+    },
+    {
+     "city": "Milan",
+     "area": "Italy"
+    },
+    {
+     "city": "Rome",
+     "area": "Italy"
+    },
+    {
+     "city": "Barcelona",
+     "area": "Spain"
+    },
+    {
+     "city": "Madrid",
+     "area": "Spain"
+    },
+    {
+     "city": "Lisbon",
+     "area": "Portugal"
+    },
+    {
+     "city": "Warsaw",
+     "area": "Poland"
+    },
+    {
+     "city": "Prague",
+     "area": "Czech Republic"
+    },
+    {
+     "city": "Budapest",
+     "area": "Hungary"
+    },
+    {
+     "city": "Vilnius",
+     "area": "Lithuania"
+    },
+    {
+     "city": "Riga",
+     "area": "Latvia"
+    },
+    {
+     "city": "Tallinn",
+     "area": "Estonia"
+    },
+    {
+     "city": "Ljubljana",
+     "area": "Slovenia"
+    },
+    {
+     "city": "Zagreb",
+     "area": "Croatia"
+    },
+    {
+     "city": "Belgrade",
+     "area": "Serbia"
+    },
+    {
+     "city": "Sofia",
+     "area": "Bulgaria"
+    }
+   ]
+  },
+  {
+   "artist": "Ado",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "California, USA"
+    },
+    {
+     "city": "New York",
+     "area": "New York, USA"
+    },
+    {
+     "city": "Toronto",
+     "area": "Ontario, Canada"
+    },
+    {
+     "city": "Chicago",
+     "area": "Illinois, USA"
+    },
+    {
+     "city": "Houston",
+     "area": "Texas, USA"
+    },
+    {
+     "city": "Miami",
+     "area": "Florida, USA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "California, USA"
+    },
+    {
+     "city": "Dallas",
+     "area": "Texas, USA"
+    },
+    {
+     "city": "Atlanta",
+     "area": "Georgia, USA"
+    },
+    {
+     "city": "Montreal",
+     "area": "Quebec, Canada"
+    },
+    {
+     "city": "Washington",
+     "area": "District of Columbia, USA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "Arizona, USA"
+    },
+    {
+     "city": "San Diego",
+     "area": "California, USA"
+    },
+    {
+     "city": "Seattle",
+     "area": "Washington, USA"
+    },
+    {
+     "city": "Boston",
+     "area": "Massachusetts, USA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "British Columbia, Canada"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "Pennsylvania, USA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "Nevada, USA"
+    },
+    {
+     "city": "Denver",
+     "area": "Colorado, USA"
+    },
+    {
+     "city": "Orlando",
+     "area": "Florida, USA"
+    },
+    {
+     "city": "Austin",
+     "area": "Texas, USA"
+    },
+    {
+     "city": "San Antonio",
+     "area": "Texas, USA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "California, USA"
+    },
+    {
+     "city": "Tampa",
+     "area": "Florida, USA"
+    },
+    {
+     "city": "Portland",
+     "area": "Oregon, USA"
+    },
+    {
+     "city": "Nashville",
+     "area": "Tennessee, USA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "North Carolina, USA"
+    },
+    {
+     "city": "Charlotte",
+     "area": "North Carolina, USA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "Minnesota, USA"
+    },
+    {
+     "city": "Columbus",
+     "area": "Ohio, USA"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "Florida, USA"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "Utah, USA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "Missouri, USA"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "Indiana, USA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "Ohio, USA"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "Pennsylvania, USA"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "Wisconsin, USA"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "Ohio, USA"
+    },
+    {
+     "city": "Detroit",
+     "area": "Michigan, USA"
+    },
+    {
+     "city": "Ottawa",
+     "area": "Ontario, Canada"
+    },
+    {
+     "city": "Calgary",
+     "area": "Alberta, Canada"
+    },
+    {
+     "city": "Edmonton",
+     "area": "Alberta, Canada"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "Manitoba, Canada"
+    },
+    {
+     "city": "Quebec City",
+     "area": "Quebec, Canada"
+    },
+    {
+     "city": "Hamilton",
+     "area": "Ontario, Canada"
+    },
+    {
+     "city": "Mexico City",
+     "area": "Mexico"
+    },
+    {
+     "city": "Guadalajara",
+     "area": "Jalisco, Mexico"
+    }
+   ]
+  },
+  {
+   "artist": "Doja Cat",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Grand Rapids",
+     "area": "MI"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    }
+   ]
+  },
+  {
+   "artist": "Depeche Mode",
+   "ranking": [
+    {
+     "city": "Berlin",
+     "area": "Germany"
+    },
+    {
+     "city": "Paris",
+     "area": "France"
+    },
+    {
+     "city": "Milan",
+     "area": "Italy"
+    },
+    {
+     "city": "Munich",
+     "area": "Germany"
+    },
+    {
+     "city": "Hamburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Cologne",
+     "area": "Germany"
+    },
+    {
+     "city": "Frankfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Vienna",
+     "area": "Austria"
+    },
+    {
+     "city": "Warsaw",
+     "area": "Poland"
+    },
+    {
+     "city": "Madrid",
+     "area": "Spain"
+    },
+    {
+     "city": "Barcelona",
+     "area": "Spain"
+    },
+    {
+     "city": "Amsterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Brussels",
+     "area": "Belgium"
+    },
+    {
+     "city": "Prague",
+     "area": "Czech Republic"
+    },
+    {
+     "city": "Copenhagen",
+     "area": "Denmark"
+    },
+    {
+     "city": "Stockholm",
+     "area": "Sweden"
+    },
+    {
+     "city": "Zurich",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Lisbon",
+     "area": "Portugal"
+    },
+    {
+     "city": "Oslo",
+     "area": "Norway"
+    },
+    {
+     "city": "Helsinki",
+     "area": "Finland"
+    },
+    {
+     "city": "Bucharest",
+     "area": "Romania"
+    },
+    {
+     "city": "Budapest",
+     "area": "Hungary"
+    },
+    {
+     "city": "Rome",
+     "area": "Italy"
+    },
+    {
+     "city": "Turin",
+     "area": "Italy"
+    },
+    {
+     "city": "Bologna",
+     "area": "Italy"
+    },
+    {
+     "city": "Florence",
+     "area": "Italy"
+    },
+    {
+     "city": "Lyon",
+     "area": "France"
+    },
+    {
+     "city": "Marseille",
+     "area": "France"
+    },
+    {
+     "city": "Toulouse",
+     "area": "France"
+    },
+    {
+     "city": "Bordeaux",
+     "area": "France"
+    },
+    {
+     "city": "Nantes",
+     "area": "France"
+    },
+    {
+     "city": "Stuttgart",
+     "area": "Germany"
+    },
+    {
+     "city": "Düsseldorf",
+     "area": "Germany"
+    },
+    {
+     "city": "Dortmund",
+     "area": "Germany"
+    },
+    {
+     "city": "Essen",
+     "area": "Germany"
+    },
+    {
+     "city": "Leipzig",
+     "area": "Germany"
+    },
+    {
+     "city": "Dresden",
+     "area": "Germany"
+    },
+    {
+     "city": "Hanover",
+     "area": "Germany"
+    },
+    {
+     "city": "Nuremberg",
+     "area": "Germany"
+    },
+    {
+     "city": "Bremen",
+     "area": "Germany"
+    },
+    {
+     "city": "Graz",
+     "area": "Austria"
+    },
+    {
+     "city": "Salzburg",
+     "area": "Austria"
+    },
+    {
+     "city": "Innsbruck",
+     "area": "Austria"
+    },
+    {
+     "city": "Krakow",
+     "area": "Poland"
+    },
+    {
+     "city": "Wroclaw",
+     "area": "Poland"
+    },
+    {
+     "city": "Poznan",
+     "area": "Poland"
+    },
+    {
+     "city": "Gdansk",
+     "area": "Poland"
+    },
+    {
+     "city": "Lodz",
+     "area": "Poland"
+    }
+   ]
+  },
+  {
+   "artist": "Addison Rae",
+   "ranking": [
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "San Jose",
+     "area": "CA"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Long Beach",
+     "area": "CA"
+    },
+    {
+     "city": "Oakland",
+     "area": "CA"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    }
+   ]
+  },
+  {
+   "artist": "Nicki Minaj",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Oakland",
+     "area": "CA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Norfolk",
+     "area": "VA"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Baton Rouge",
+     "area": "LA"
+    },
+    {
+     "city": "Greensboro",
+     "area": "NC"
+    },
+    {
+     "city": "Columbia",
+     "area": "SC"
+    },
+    {
+     "city": "Montgomery",
+     "area": "AL"
+    },
+    {
+     "city": "Shreveport",
+     "area": "LA"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Mobile",
+     "area": "AL"
+    },
+    {
+     "city": "Augusta",
+     "area": "GA"
+    },
+    {
+     "city": "Savannah",
+     "area": "GA"
+    },
+    {
+     "city": "Jackson",
+     "area": "MS"
+    },
+    {
+     "city": "Montréal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    }
+   ]
+  },
+  {
+   "artist": "Gary Barlow",
+   "ranking": [
+    {
+     "city": "Manchester",
+     "area": "England"
+    },
+    {
+     "city": "London",
+     "area": "England"
+    },
+    {
+     "city": "Leeds",
+     "area": "England"
+    },
+    {
+     "city": "Sheffield",
+     "area": "England"
+    },
+    {
+     "city": "Liverpool",
+     "area": "England"
+    },
+    {
+     "city": "Birmingham",
+     "area": "England"
+    },
+    {
+     "city": "Glasgow",
+     "area": "Scotland"
+    },
+    {
+     "city": "Newcastle",
+     "area": "England"
+    },
+    {
+     "city": "Nottingham",
+     "area": "England"
+    },
+    {
+     "city": "Bristol",
+     "area": "England"
+    },
+    {
+     "city": "Edinburgh",
+     "area": "Scotland"
+    },
+    {
+     "city": "Cardiff",
+     "area": "Wales"
+    },
+    {
+     "city": "Leicester",
+     "area": "England"
+    },
+    {
+     "city": "Coventry",
+     "area": "England"
+    },
+    {
+     "city": "Bradford",
+     "area": "England"
+    },
+    {
+     "city": "Belfast",
+     "area": "Northern Ireland"
+    },
+    {
+     "city": "Dublin",
+     "area": "Ireland"
+    },
+    {
+     "city": "Hull",
+     "area": "England"
+    },
+    {
+     "city": "Plymouth",
+     "area": "England"
+    },
+    {
+     "city": "Stoke-on-Trent",
+     "area": "England"
+    },
+    {
+     "city": "Southampton",
+     "area": "England"
+    },
+    {
+     "city": "Derby",
+     "area": "England"
+    },
+    {
+     "city": "Portsmouth",
+     "area": "England"
+    },
+    {
+     "city": "Brighton",
+     "area": "England"
+    },
+    {
+     "city": "Wolverhampton",
+     "area": "England"
+    },
+    {
+     "city": "Sunderland",
+     "area": "England"
+    },
+    {
+     "city": "Reading",
+     "area": "England"
+    },
+    {
+     "city": "Middlesbrough",
+     "area": "England"
+    },
+    {
+     "city": "Norwich",
+     "area": "England"
+    },
+    {
+     "city": "Preston",
+     "area": "England"
+    },
+    {
+     "city": "Milton Keynes",
+     "area": "England"
+    },
+    {
+     "city": "Swansea",
+     "area": "Wales"
+    },
+    {
+     "city": "Aberdeen",
+     "area": "Scotland"
+    },
+    {
+     "city": "Bournemouth",
+     "area": "England"
+    },
+    {
+     "city": "Peterborough",
+     "area": "England"
+    },
+    {
+     "city": "Luton",
+     "area": "England"
+    },
+    {
+     "city": "Blackpool",
+     "area": "England"
+    },
+    {
+     "city": "York",
+     "area": "England"
+    },
+    {
+     "city": "Colchester",
+     "area": "England"
+    },
+    {
+     "city": "Gloucester",
+     "area": "England"
+    },
+    {
+     "city": "Cheltenham",
+     "area": "England"
+    },
+    {
+     "city": "Ipswich",
+     "area": "England"
+    },
+    {
+     "city": "Exeter",
+     "area": "England"
+    },
+    {
+     "city": "Lincoln",
+     "area": "England"
+    },
+    {
+     "city": "Worcester",
+     "area": "England"
+    },
+    {
+     "city": "Carlisle",
+     "area": "England"
+    },
+    {
+     "city": "Chester",
+     "area": "England"
+    },
+    {
+     "city": "Dundee",
+     "area": "Scotland"
+    },
+    {
+     "city": "Cork",
+     "area": "Ireland"
+    }
+   ]
+  },
+  {
+   "artist": "The 1975",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    }
+   ]
+  },
+  {
+   "artist": "21 Savage",
+   "ranking": [
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Jackson",
+     "area": "MS"
+    },
+    {
+     "city": "Baton Rouge",
+     "area": "LA"
+    },
+    {
+     "city": "Mobile",
+     "area": "AL"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Shreveport",
+     "area": "LA"
+    },
+    {
+     "city": "Montgomery",
+     "area": "AL"
+    },
+    {
+     "city": "Augusta",
+     "area": "GA"
+    },
+    {
+     "city": "Savannah",
+     "area": "GA"
+    },
+    {
+     "city": "Macon",
+     "area": "GA"
+    },
+    {
+     "city": "Columbus",
+     "area": "GA"
+    },
+    {
+     "city": "Huntsville",
+     "area": "AL"
+    },
+    {
+     "city": "Tuscaloosa",
+     "area": "AL"
+    },
+    {
+     "city": "Lafayette",
+     "area": "LA"
+    },
+    {
+     "city": "Monroe",
+     "area": "LA"
+    },
+    {
+     "city": "Alexandria",
+     "area": "LA"
+    },
+    {
+     "city": "Hattiesburg",
+     "area": "MS"
+    },
+    {
+     "city": "Greenville",
+     "area": "MS"
+    },
+    {
+     "city": "Meridian",
+     "area": "MS"
+    },
+    {
+     "city": "Tupelo",
+     "area": "MS"
+    },
+    {
+     "city": "Starkville",
+     "area": "MS"
+    },
+    {
+     "city": "Vicksburg",
+     "area": "MS"
+    },
+    {
+     "city": "Natchez",
+     "area": "MS"
+    },
+    {
+     "city": "Clarksdale",
+     "area": "MS"
+    },
+    {
+     "city": "Gulfport",
+     "area": "MS"
+    },
+    {
+     "city": "Biloxi",
+     "area": "MS"
+    },
+    {
+     "city": "Pascagoula",
+     "area": "MS"
+    },
+    {
+     "city": "McComb",
+     "area": "MS"
+    },
+    {
+     "city": "Brookhaven",
+     "area": "MS"
+    },
+    {
+     "city": "Pearl",
+     "area": "MS"
+    },
+    {
+     "city": "Brandon",
+     "area": "MS"
+    },
+    {
+     "city": "Flowood",
+     "area": "MS"
+    },
+    {
+     "city": "Canton",
+     "area": "MS"
+    },
+    {
+     "city": "Yazoo",
+     "area": "MS"
+    },
+    {
+     "city": "Indianola",
+     "area": "MS"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "MS"
+    },
+    {
+     "city": "Columbia",
+     "area": "MS"
+    },
+    {
+     "city": "Oxford",
+     "area": "MS"
+    },
+    {
+     "city": "New Albany",
+     "area": "MS"
+    },
+    {
+     "city": "Corinth",
+     "area": "MS"
+    },
+    {
+     "city": "Booneville",
+     "area": "MS"
+    },
+    {
+     "city": "Ripley",
+     "area": "MS"
+    },
+    {
+     "city": "Baldwyn",
+     "area": "MS"
+    },
+    {
+     "city": "Ashland",
+     "area": "MS"
+    }
+   ]
+  },
+  {
+   "artist": "Green Day",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    }
+   ]
+  },
+  {
+   "artist": "Pink",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Grand Rapids",
+     "area": "MI"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    }
+   ]
+  },
+  {
+   "artist": "SZA",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Oakland",
+     "area": "CA"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Norfolk",
+     "area": "VA"
+    },
+    {
+     "city": "Baton Rouge",
+     "area": "LA"
+    },
+    {
+     "city": "Columbia",
+     "area": "SC"
+    },
+    {
+     "city": "Montgomery",
+     "area": "AL"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Greensboro",
+     "area": "NC"
+    },
+    {
+     "city": "Shreveport",
+     "area": "LA"
+    },
+    {
+     "city": "Savannah",
+     "area": "GA"
+    },
+    {
+     "city": "Mobile",
+     "area": "AL"
+    },
+    {
+     "city": "Jackson",
+     "area": "MS"
+    },
+    {
+     "city": "Augusta",
+     "area": "GA"
+    },
+    {
+     "city": "Tallahassee",
+     "area": "FL"
+    },
+    {
+     "city": "Macon",
+     "area": "GA"
+    },
+    {
+     "city": "Wilmington",
+     "area": "DE"
+    },
+    {
+     "city": "Dayton",
+     "area": "OH"
+    },
+    {
+     "city": "Knoxville",
+     "area": "TN"
+    },
+    {
+     "city": "Chattanooga",
+     "area": "TN"
+    },
+    {
+     "city": "Flint",
+     "area": "MI"
+    },
+    {
+     "city": "Gary",
+     "area": "IN"
+    },
+    {
+     "city": "East St. Louis",
+     "area": "IL"
+    },
+    {
+     "city": "Harrisburg",
+     "area": "PA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Mexico City",
+     "area": "MX"
+    }
+   ]
+  },
+  {
+   "artist": "For King & Country",
+   "ranking": [
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Grand Rapids",
+     "area": "MI"
+    },
+    {
+     "city": "Colorado Springs",
+     "area": "CO"
+    },
+    {
+     "city": "Franklin",
+     "area": "TN"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Greenville",
+     "area": "SC"
+    },
+    {
+     "city": "Fort Worth",
+     "area": "TX"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Knoxville",
+     "area": "TN"
+    },
+    {
+     "city": "Chattanooga",
+     "area": "TN"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Waco",
+     "area": "TX"
+    },
+    {
+     "city": "Lynchburg",
+     "area": "VA"
+    },
+    {
+     "city": "Springfield",
+     "area": "MO"
+    },
+    {
+     "city": "Jackson",
+     "area": "MS"
+    },
+    {
+     "city": "Baton Rouge",
+     "area": "LA"
+    },
+    {
+     "city": "Shreveport",
+     "area": "LA"
+    },
+    {
+     "city": "Mobile",
+     "area": "AL"
+    },
+    {
+     "city": "Huntsville",
+     "area": "AL"
+    },
+    {
+     "city": "Fayetteville",
+     "area": "AR"
+    },
+    {
+     "city": "Columbia",
+     "area": "SC"
+    },
+    {
+     "city": "Augusta",
+     "area": "GA"
+    },
+    {
+     "city": "Savannah",
+     "area": "GA"
+    },
+    {
+     "city": "Macon",
+     "area": "GA"
+    },
+    {
+     "city": "Columbus",
+     "area": "GA"
+    },
+    {
+     "city": "Rome",
+     "area": "GA"
+    },
+    {
+     "city": "Warner Robins",
+     "area": "GA"
+    },
+    {
+     "city": "Valdosta",
+     "area": "GA"
+    },
+    {
+     "city": "Albany",
+     "area": "GA"
+    },
+    {
+     "city": "Thomasville",
+     "area": "GA"
+    },
+    {
+     "city": "Waycross",
+     "area": "GA"
+    },
+    {
+     "city": "Douglas",
+     "area": "GA"
+    },
+    {
+     "city": "Tifton",
+     "area": "GA"
+    },
+    {
+     "city": "Cordele",
+     "area": "GA"
+    },
+    {
+     "city": "Americus",
+     "area": "GA"
+    },
+    {
+     "city": "Perry",
+     "area": "GA"
+    },
+    {
+     "city": "Vidalia",
+     "area": "GA"
+    },
+    {
+     "city": "Eastman",
+     "area": "GA"
+    },
+    {
+     "city": "Cochran",
+     "area": "GA"
+    },
+    {
+     "city": "Hawkinsville",
+     "area": "GA"
+    },
+    {
+     "city": "McRae",
+     "area": "GA"
+    },
+    {
+     "city": "Lumber City",
+     "area": "GA"
+    },
+    {
+     "city": "Jesup",
+     "area": "GA"
+    }
+   ]
+  },
+  {
+   "artist": "Ledisi",
+   "ranking": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    }
+   ]
+  },
+  {
+   "artist": "Twenty One Pilots",
+   "ranking": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Syracuse",
+     "area": "NY"
+    },
+    {
+     "city": "Albany",
+     "area": "NY"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Burlington",
+     "area": "VT"
+    },
+    {
+     "city": "Portland",
+     "area": "ME"
+    },
+    {
+     "city": "Manchester",
+     "area": "NH"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Hamilton",
+     "area": "ON"
+    },
+    {
+     "city": "London",
+     "area": "ON"
+    },
+    {
+     "city": "Kitchener",
+     "area": "ON"
+    }
+   ]
+  }
+ ]
+}

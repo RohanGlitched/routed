@@ -41,7 +41,7 @@ export function marketLabel(m: Market): string {
   return `${m.name}, ${COUNTRY[m.cc] ?? m.cc}`;
 }
 
-const CA_ABBR: Record<string, string> = {
+export const CA_ABBR: Record<string, string> = {
   Ontario: "ON", Quebec: "QC", "British Columbia": "BC", Alberta: "AB", Manitoba: "MB", Saskatchewan: "SK", "Nova Scotia": "NS",
   "New Brunswick": "NB", "Newfoundland and Labrador": "NL", "Prince Edward Island": "PE",
 };
@@ -151,7 +151,7 @@ export function unrankedLabel(stop: { city: string; label: string }, region: Reg
   return "not a touring city";
 }
 
-const US_STATES: Record<string, string> = {
+export const US_STATES: Record<string, string> = {
   AL: "alabama", AK: "alaska", AZ: "arizona", AR: "arkansas", CA: "california", CO: "colorado", CT: "connecticut", DE: "delaware", DC: "district of columbia",
   FL: "florida", GA: "georgia", HI: "hawaii", ID: "idaho", IL: "illinois", IN: "indiana", IA: "iowa", KS: "kansas", KY: "kentucky", LA: "louisiana",
   ME: "maine", MD: "maryland", MA: "massachusetts", MI: "michigan", MN: "minnesota", MS: "mississippi", MO: "missouri", MT: "montana", NE: "nebraska",

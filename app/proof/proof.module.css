@@ -62,3 +62,17 @@
 .prompt summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
 .prompt pre { white-space: pre-wrap; font-size: 13px; line-height: 1.5; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; margin: 6px 0; }
 .prompt p { margin: 0; color: var(--mute); font-size: 13px; }
+
+/* The head-to-head. */
+.lede2 { margin: 0 0 4px; font-size: 17px; color: var(--ink-2); max-width: 46em; }
+.h3 { margin: clamp(36px, 5vw, 56px) 0 10px; font-family: var(--wood); font-weight: 800; font-size: clamp(26px, 3vw, 34px); line-height: 1; }
+.narrow { min-width: 720px; }
+.cap { caption-side: bottom; text-align: left; font-size: 13px; color: var(--mute); padding: 10px 0 0; max-width: 60em; }
+.best { font-weight: 800; color: var(--fire-deep); }
+.dim { color: var(--mute); font-size: 13px; }
+.reading { margin: 22px 0 28px; display: grid; gap: 10px; max-width: 52em; }
+.reading p { margin: 0; font-size: 16px; color: var(--ink-2); border-left: 4px solid var(--blue); padding-left: 14px; }
+.reading p:first-child { border-left-color: var(--fire); }
+.history { margin: 0 0 18px; font-size: 15px; color: var(--ink-2); max-width: 52em; }
+.table tfoot th, .table tfoot td { font-weight: 700; border-top: 1px solid var(--ink); border-bottom: 0; }
+.tableWrap + .tableWrap { margin-top: 28px; }

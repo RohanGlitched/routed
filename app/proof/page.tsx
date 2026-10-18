@@ -6,6 +6,7 @@ import { findMarket, marketId, unrankedLabel } from "@/lib/geo/markets";
 import { outsideRow, REAL_TOURS, realTourFor } from "@/lib/outside";
 import { shelfTours } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
+import { HeadToHead, H2H_ARTISTS as R_ALL } from "@/components/proof/HeadToHead";
 import s from "./proof.module.css";
 
 export const metadata: Metadata = {
@@ -105,7 +106,7 @@ export default async function Proof() {
       <header className={s.head}>
         <h1 className={s.h1}>With and without Qloo</h1>
         <p className={s.lede}>
-          Every tour on Routed runs twice. Before the agent looks anything up, the same model is asked to route the same shows from what it already knows. Both tours are then scored on the artist&apos;s own Qloo evidence. Here are {r.length || "the"} artists, run on the live site.
+          Every tour on Routed runs twice. Before the agent looks anything up, the same model is asked to route the same shows from what it already knows. Both tours are then scored on the artist&apos;s own Qloo evidence. Here are {r.length || "the"} artists, run on the live site. That ruler is Qloo&apos;s own, so <a href="#head-to-head">the head-to-head</a> below scores Qloo, the model alone and population against the cities {R_ALL} artists really played.
         </p>
       </header>
 
@@ -216,11 +217,16 @@ export default async function Proof() {
             </div>
           </section>
 
+          <HeadToHead />
+
           {realRows.length > 0 && (
             <section className={s.sec} aria-labelledby="outside-title">
               <h2 id="outside-title" className={s.h2}>
-                An outside check: the cities they actually played
+                Oct 15, the first outside check: eight picks, a tie
               </h2>
+              <p className={s.history}>
+                Kept as it was published. It counted how many of each tour&apos;s eight cities the artist really played, and Routed and the model alone came out level. Eight picks against a twenty- to forty-city tour mostly measure whether both sides named the big cities every tour plays, which is why the head-to-head above holds every ranking to as many picks as the artist played, and tests the agent with Qloo taken out.
+              </p>
               <p className={s.note}>
                 A ruler Qloo didn&apos;t make. For {realRows.length} of the artists, the cities of one recent headline tour they announced and played (from Wikipedia tour articles, press listings and label releases; festivals, support slots and in-stores left out), placed on the same touring cities. For each tour below: how many of the cities it booked did the artist really play? Suburbs and venue towns count as the touring city within 60 km (Morrison is Denver; Wolverhampton is Birmingham).
               </p>
@@ -313,7 +319,7 @@ export default async function Proof() {
             <div>
               <h2 className={s.h2}>What this does and doesn&apos;t show</h2>
               <p>
-                It measures with Qloo&apos;s own ruler, and says so: Routed chooses from the heatmap ranking it is then scored on, so what the number shows is how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. It can&apos;t show ticket sales: those aren&apos;t public. Two outside checks are on the page: the cities each artist actually played on a recent tour (above), and the home base each benchmark tour starts from, which the heatmap knows nothing about; it ranks the home base here:
+                It measures with Qloo&apos;s own ruler, and says so: Routed chooses from the heatmap ranking it is then scored on, so what the number shows is how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. It can&apos;t show ticket sales: those aren&apos;t public. The rulers Qloo didn&apos;t make are above (the head-to-head, and the first outside check) and here: the home base each benchmark tour starts from, which the heatmap knows nothing about; it ranks the home base here:
               </p>
               {homes.length > 0 && (
                 <ul className={s.homes}>

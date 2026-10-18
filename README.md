@@ -26,7 +26,7 @@ It is for the people who route tours without a data team: independent artists, t
 - **Press "Route the tour"** on the home page (the form is pre-filled). A tour takes about a minute and streams its call sheet as it works: every Qloo question in plain words, with the exact request and what came back, and every rule that changed the agent's answer.
 - **Open any day sheet.** The room holds a number with a source (Wikidata or a named web page) and fits the usual crowd, or it's a two-night stand, or the sheet says plainly what to ask the room. One support act plays every date. Under the date, a street-level map of the city: each dot a Qloo heatmap tile about 150 m across, the booked room marked, and the neighbourhood where the fans over-index most named from Qloo's own places there.
 - **Scroll to "The same model, without Qloo".** The same model routed the same shows from memory before the agent looked anything up; both tours sit on one rank axis, scored on the artist's own heatmap.
-- **[The benchmark](https://routed-tours.vercel.app/proof)** runs that for twenty artists, and adds an outside check Qloo didn't make: both tours against the cities each artist really played on a recent tour.
+- **[The benchmark](https://routed-tours.vercel.app/proof)** runs that for twenty artists, and adds [a head-to-head on a ruler Qloo didn't make](https://routed-tours.vercel.app/proof#head-to-head): Qloo, the model alone and population against the cities 49 artists really played, 30 of them held out, with the protocol committed before it ran.
 - **Add to calendar** gives the tour as an .ics file with every show, both nights of a two-night stand, travel days and days off; **Open in email** opens a pitch in your mail client; **Print the tour book** prints it. The tour book also says what the run cost: Qloo requests, model calls and tokens.
 
 ## Why it needs Qloo
@@ -84,11 +84,97 @@ Read this with Qloo's own ruler in mind: Routed chooses from the heatmap ranking
 
 The benchmark tours were routed on the build of Oct 15 (commit d81a398); their rooms were then re-sized under the stricter capacity reader and the bar, pub and orchestra-hall rules that landed the same day (`/api/admin/resize`, which changes rooms and nights, never cities). Fan-map ranks are unchanged by that.
 
-### An outside check
+### The head-to-head: what Qloo changes, on a ruler Qloo didn't make
+
+The benchmark above scores with Qloo's own heatmap, and the first outside check (below) came out a tie. Neither says what Qloo's data changes. So on Oct 18 we ran a fair test, with the protocol [committed before it ran](https://github.com/RohanGlitched/routed/commit/096d898) (the header of [scripts/head-to-head.ts](scripts/head-to-head.ts); two later changes are recorded there: one cut the model budget before the ablation ran, one fixed a name-matching gap in the model's favour).
+
+- **Ground truth:** the cities each artist actually played on one recent headline tour. 49 artists: the 19 benchmark artists with a tour on file, and 30 **held-out** artists nobody here picked: the first 30 single-artist tours in Wikipedia's "2024 concert tours" and "2025 concert tours" categories, taken in SHA-256 order of the page title, with eight or more touring cities in one region, read off the article's date tables by a fixed rule ([lib/wikitours.ts](lib/wikitours.ts); festivals, cancelled and postponed shows left out). Every skipped page and why is in [data/head-to-head/held-out.json](data/head-to-head/held-out.json).
+- **Test 1, four rankings** of every touring city in the region: **population** (biggest metro first), **the model alone** (Nemotron 3 Ultra's own top 50 for the artist, no Qloo), **Qloo** (the artist's heatmap ranking, as Routed computes it) and **Qloo + population** (a city's two places averaged; no weight to tune). Each picks as many cities as the artist played (R); the score is how many were right (R-precision).
+- **Test 2, the agent with Qloo taken out:** Routed's own shortlist step and city rules on the 19 benchmark tours, run with Qloo's table and with a table of the region's biggest cities instead, two runs each; the score is the share of the eight cities on the real tour.
+- Per-artist differences, wins and losses, an exact sign test and a 95% bootstrap interval. Results: [data/head-to-head/results.json](data/head-to-head/results.json), all on [/proof](https://routed-tours.vercel.app/proof#head-to-head).
+
+| Comparison (49 artists) | Score | Difference (95% interval) | Artists won–lost–tied | Sign test |
+|---|---|---|---|---|
+| **Qloo + population vs population** (primary) | 54.1% vs 46.7% | **+7.4 pts** (+4.9 to +9.9) | 36–7–6 | p < 0.001 |
+| **Qloo vs the model alone** (primary) | 45.3% vs 58.0% | **−12.7 pts** (−17.1 to −8.5) | 7–36–6 | p < 0.001 |
+| Qloo vs population | 45.3% vs 46.7% | −1.3 pts (−5.4 to +2.7) | 22–20–7 | p = 0.88 |
+| The model alone vs population | 58.0% vs 46.7% | +11.3 pts (+7.7 to +15.0) | 37–8–4 | p < 0.001 |
+| Qloo + population vs the model alone | 54.1% vs 58.0% | −3.9 pts (−7.2 to −0.5) | 13–30–6 | p = 0.01 |
+| The model + Qloo vs the model alone (added after the results) | 57.2% vs 58.0% | −0.8 pts (−3.2 to +1.7) | 13–20–16 | p = 0.30 |
+| **Test 2: the agent with Qloo's table vs population's** (19 tours) | 48.7% vs 46.1% | +2.6 pts (−6.4 to +11.4) | 9–8–2 | p = 1.00 |
+
+Split by set, Qloo + population beats population on the benchmark artists by 4.5 points (11–3–5, p = 0.06) and on the held-out artists by 9.3 (25–4–1, p < 0.001).
+
+What it shows, plainly:
+
+- **Qloo's taste data carries real information about where an artist tours that population doesn't.** Added to population it finds 7 more points of the real tour's cities, for 36 of 49 artists, on a ruler Qloo had no part in. That is the non-circular answer to "what does Qloo add".
+- **The model's own knowledge carries more.** Asked from memory, Nemotron found 58% of the real cities, ahead of Qloo's ranking and of Qloo plus population. A model that has read these tours' announcements can recite where artists play; averaging Qloo into its ranking made no measurable difference.
+- **Inside the agent, eight picks can't tell Qloo from population** (+2.6 points, not significant), just as the first outside check couldn't tell Routed from the model.
+- So the honest claim is narrower than "Qloo picks better cities": Qloo says where an artist's fans over-index, which a population list doesn't know, and Routed builds on it (the fan map, the rooms those fans go to, the neighbourhood, the support act). At predicting what a booker actually did, a large model that may have read the announcements does better.
+
+Limits: one tour per artist; a past tour is one booker's answer, made with ticket data neither side has; the model may have seen these tours in training (which favours it), and Qloo's signals may include check-ins at these shows (which favours Qloo); Wikipedia's tour articles lean to arena acts, where population is hard to beat. Cost: 61 Qloo requests (31 artist searches, 30 heatmaps), 125 model calls, about 156,000 tokens, about $0.30.
+
+<details><summary>Artist by artist: real-tour cities found in each ranking's top R</summary>
+
+| Artist | Set | R | Population | Model alone | Qloo | Qloo + population |
+|---|---|---|---|---|---|---|
+| Alvvays | benchmark | 17 | 1 | 0 | 0 | 0 |
+| Arlo Parks | benchmark | 6 | 1 | 3 | 3 | 2 |
+| Caamp | benchmark | 28 | 12 | 15 | 9 | 13 |
+| Clairo | benchmark | 22 | 13 | 17 | 12 | 16 |
+| Cuco | benchmark | 28 | 16 | 19 | 12 | 17 |
+| Durand Jones & The Indications | benchmark | 34 | 24 | 19 | 24 | 27 |
+| Fontaines D.C. | benchmark | 9 | 6 | 5 | 3 | 6 |
+| Ghost | benchmark | 19 | 7 | 10 | 7 | 7 |
+| Japanese Breakfast | benchmark | 11 | 5 | 5 | 5 | 5 |
+| JPEGMAFIA | benchmark | 28 | 15 | 20 | 16 | 19 |
+| Khruangbin | benchmark | 20 | 4 | 8 | 5 | 8 |
+| Knocked Loose | benchmark | 20 | 4 | 4 | 5 | 4 |
+| MJ Lenderman | benchmark | 24 | 5 | 7 | 6 | 7 |
+| Parcels | benchmark | 5 | 2 | 3 | 2 | 2 |
+| Turnstile | benchmark | 21 | 9 | 11 | 11 | 12 |
+| Tyler Childers | benchmark | 27 | 10 | 7 | 7 | 6 |
+| Waxahatchee | benchmark | 36 | 16 | 21 | 18 | 20 |
+| Wet Leg | benchmark | 8 | 2 | 2 | 3 | 1 |
+| Zach Bryan | benchmark | 43 | 20 | 16 | 13 | 22 |
+| 21 Savage | held out | 27 | 8 | 5 | 9 | 9 |
+| Addison Rae | held out | 14 | 7 | 11 | 4 | 8 |
+| Ado | held out | 12 | 5 | 6 | 1 | 4 |
+| Billy Joel | held out | 54 | 34 | 38 | 28 | 42 |
+| Bonnie Tyler | held out | 27 | 5 | 12 | 9 | 9 |
+| Chappell Roan | held out | 57 | 33 | 41 | 34 | 42 |
+| Depeche Mode | held out | 34 | 20 | 24 | 20 | 23 |
+| Doja Cat | held out | 31 | 19 | 27 | 22 | 25 |
+| Dua Lipa | held out | 10 | 4 | 7 | 5 | 5 |
+| Flo | held out | 26 | 15 | 21 | 15 | 18 |
+| For King & Country | held out | 48 | 19 | 14 | 20 | 24 |
+| Gary Barlow | held out | 25 | 18 | 19 | 15 | 19 |
+| Green Day | held out | 27 | 15 | 18 | 13 | 14 |
+| Halsey | held out | 23 | 7 | 10 | 5 | 6 |
+| Kim Petras | held out | 22 | 12 | 20 | 15 | 17 |
+| Ledisi | held out | 29 | 13 | 16 | 17 | 17 |
+| Nicki Minaj | held out | 41 | 26 | 29 | 23 | 31 |
+| Nine Inch Nails | held out | 40 | 28 | 32 | 25 | 29 |
+| Omar Apollo | held out | 26 | 15 | 19 | 12 | 17 |
+| Pierce the Veil | held out | 37 | 15 | 21 | 20 | 19 |
+| Pink | held out | 29 | 13 | 18 | 15 | 16 |
+| Queen + Adam Lambert | held out | 27 | 15 | 19 | 3 | 13 |
+| Queens of the Stone Age | held out | 15 | 5 | 10 | 10 | 9 |
+| Sugababes | held out | 9 | 6 | 7 | 5 | 6 |
+| SZA | held out | 28 | 17 | 15 | 18 | 23 |
+| Tame Impala | held out | 25 | 16 | 21 | 13 | 18 |
+| The 1975 | held out | 36 | 20 | 28 | 23 | 23 |
+| Travis Scott | held out | 31 | 17 | 21 | 17 | 22 |
+| Troye Sivan | held out | 11 | 4 | 7 | 5 | 5 |
+| Twenty One Pilots | held out | 44 | 25 | 25 | 23 | 30 |
+
+</details>
+
+### The first outside check (Oct 15, kept as history)
 
 A ruler Qloo didn't make. For 19 of the artists (no recent UK headline tour could be found for Jamie xx), [data/real-tours.json](data/real-tours.json) holds the cities of one recent headline tour they announced and played, from Wikipedia tour articles, press listings and label releases, every source linked; festivals, support slots and in-stores left out. Suburbs and venue towns count as the touring city within 60 km (Morrison is Denver; Wolverhampton is Birmingham). How many of the cities each tour booked did the artist really play?
 
-**49% of Routed's cities were on the artist's real tour (74 of 152); 48% of the model alone's were (73 of 152).** A tie.
+**49% of Routed's cities were on the artist's real tour (74 of 152); 48% of the model alone's were (73 of 152).** A tie. (Eight picks against a twenty- to forty-city tour mostly measure whether both sides named the big cities; the head-to-head above fixes that.)
 
 | Artist | Real tour | Routed's cities played | Model alone's cities played |
 |---|---|---|---|
@@ -176,7 +262,7 @@ git clone https://github.com/RohanGlitched/routed && cd routed
 npm install
 cp .env.example .env.local   # then fill in the keys
 npm run dev                  # http://localhost:3000
-npm test                     # 55 unit tests: every booking rule, scoring, capacity parsing, evidence checks (both nights of a two-night stand), the outside check, the city map, the calendar file
+npm test                     # 67 unit tests: every booking rule, scoring, capacity parsing, evidence checks (both nights of a two-night stand), the outside check, the head-to-head's scoring and tour-table reader, the city map, the calendar file
 ```
 
 | Variable | Needed for |
@@ -189,11 +275,11 @@ npm test                     # 55 unit tests: every booking rule, scoring, capac
 | `DAILY_MODEL_CAP`, `QLOO_DAILY_CAP`, `MCP_DAILY_CAP` | Daily allowances for the public demo (model runs, Qloo requests, tours routed through the MCP endpoint) |
 | `ADMIN_TOKEN` | Optional: shelving tours, the benchmark (`scripts/bench.mjs`), re-sizing stored tours and adding measured capacities |
 
-`node scripts/probe-qloo.mjs "Artist"` measures every Qloo call Routed depends on and saves the raw responses (gitignored: Qloo's data isn't published here). `node scripts/bench.mjs <url>` runs the benchmark; `npx tsx scripts/bench-table.ts <url> <ids>` prints the two tables above from the finished tours; `scripts/measure-rooms.ts` measures rooms a live run couldn't (Wikidata rate-limits shared serverless addresses) and adds them to the live index.
+`scripts/head-to-head.ts` runs the head-to-head (`sample`, `run`, `score`; its header is the protocol). `node scripts/probe-qloo.mjs "Artist"` measures every Qloo call Routed depends on and saves the raw responses (gitignored: Qloo's data isn't published here). `node scripts/bench.mjs <url>` runs the benchmark; `npx tsx scripts/bench-table.ts <url> <ids>` prints the two tables above from the finished tours; `scripts/measure-rooms.ts` measures rooms a live run couldn't (Wikidata rate-limits shared serverless addresses) and adds them to the live index.
 
 ## What Routed doesn't know
 
-- Qloo affinity says where fans over-index, not how many tickets will sell. It's the first question a booker asks, not the last. The main benchmark measures with Qloo's own ruler and says so; the outside check is a tie.
+- Qloo affinity says where fans over-index, not how many tickets will sell. It's the first question a booker asks, not the last. The main benchmark measures with Qloo's own ruler and says so. Against real tours, Qloo adds to population (+7.4 points, 36 of 49 artists), but the model alone predicts past tours better than Qloo does, and inside the agent the two can't be told apart on eight picks.
 - About a quarter of booked rooms still have no confirmed capacity (clubs Wikidata doesn't know, pages that don't say); the sheet says to ask the room.
 - Availability, holds, offers, guarantees and ticket prices come from the rooms; the pitch asks for them. The radius clause is distance, not time, and festival weeks aren't checked.
 - The figure check asks whether each number in a pitch appears in the stop's evidence. A true figure written another way is struck; a wrong figure that happens to match another number passes.

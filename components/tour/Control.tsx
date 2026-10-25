@@ -1,4 +1,5 @@
 import { unrankedLabel } from "@/lib/geo/markets";
+import { DOT_R, layoutStrip, type Strip, type StripCity } from "@/lib/rankstrip";
 import type { Plan } from "@/lib/types";
 import c from "./control.module.css";
 
@@ -17,7 +18,6 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
   const n = g.ranked;
   const ours = plan.stops.map((s) => ({ name: s.city, rank: s.score.rank }));
   const theirs = g.stops.filter((s) => s.rank || s.outside).map((s) => ({ name: s.city, rank: s.rank }));
-  const cap = Math.min(n, Math.max(40, ...ours.map((o) => o.rank), ...theirs.map((t) => t.rank ?? 0)) + 4);
   const missed = plan.stops.filter((s) => !g.stops.some((x) => x.marketId === s.marketId)).sort((a, b) => a.score.rank - b.score.rank);
   const weak = g.stops.filter((x) => !plan.stops.some((s) => s.marketId === x.marketId)).sort((a, b) => (b.rank ?? n + 1) - (a.rank ?? n + 1));
   const better = (g.rankMean.routed ?? 0) < (g.rankMean.guess ?? 0);
@@ -52,11 +52,9 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
       </div>
 
       <figure className={c.strip}>
-        <figcaption>Where each tour&apos;s cities rank on {artist}&apos;s fan map. Further left is stronger.</figcaption>
-        <RankStrip ours={ours} theirs={theirs} cap={cap} />
-        <div className={c.legend} aria-hidden="true">
-          <span className={c.keyOurs}>Routed</span>
-          <span className={c.keyTheirs}>Model alone</span>
+        <figcaption>Where each tour&apos;s cities rank on {artist}&apos;s fan map. Further left is stronger; the scale is logarithmic, so #1 to #10 takes as much room as #10 to #100.</figcaption>
+        <div className={c.stripScroll}>
+          <RankStrip ours={ours} theirs={theirs} n={n} />
         </div>
       </figure>
 
@@ -128,40 +126,68 @@ function TourList({ title, rows, n, mean, ours = false }: { title: string; rows:
   );
 }
 
-/** Two rows of marks on one rank axis: Routed above in fire, the model alone below in ink. */
-function RankStrip({ ours, theirs, cap }: { ours: { name: string; rank: number }[]; theirs: { name: string; rank?: number }[]; cap: number }) {
-  const W = 760, H = 112, L = 12, R = 12;
-  const x = (rank: number) => L + ((Math.min(rank, cap) - 1) / Math.max(1, cap - 1)) * (W - L - R);
-  // Leave room for the end label: no tick within 50 px of it.
-  const ticks = [1, 10, 20, 30, 40, 50, 75, 100, 150, 200].filter((t) => t <= cap && x(cap) - x(t) > 50);
+/** Two rows of dots on one log rank axis (lib/rankstrip.ts): Routed in fire, the model alone in blue, the tick labels
+ *  under their own baseline. Each dot names its city on hover; the rows label as many cities as fit. */
+function RankStrip({ ours, theirs, n }: { ours: StripCity[]; theirs: StripCity[]; n: number }) {
+  const st = layoutStrip(ours, theirs, n);
+  const [routed, alone] = st.rows as [Strip["rows"][number], Strip["rows"][number]];
+  const top = routed.y - 22;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className={c.svg} role="img" aria-label={`Routed's cities rank ${ours.map((o) => `#${o.rank}`).join(", ")}; the model alone's rank ${theirs.map((t) => (t.rank ? `#${t.rank}` : "unranked")).join(", ")}.`}>
-      <line x1={L} x2={W - R} y1={56} y2={56} stroke="var(--ink)" strokeWidth="2" />
-      {ticks.map((t) => (
-        <g key={t}>
-          <line x1={x(t)} x2={x(t)} y1={51} y2={61} stroke="var(--ink)" strokeWidth="1.5" />
-          <text x={x(t)} y={78} textAnchor="middle" className={c.tick}>
-            #{t}
+    <svg viewBox={`0 0 ${st.W} ${st.H}`} className={c.svg} role="img" aria-label={`Routed's cities rank ${ours.map((o) => `#${o.rank}`).join(", ")}; the model alone's rank ${theirs.map((t) => (t.rank ? `#${t.rank}` : "unranked")).join(", ")}.`}>
+      {st.ticks.map((t) => (
+        <line key={`g${t.label}`} x1={t.x} x2={t.x} y1={top} y2={st.axis.y} stroke="var(--rule)" strokeWidth="1" />
+      ))}
+      {st.off && <line x1={st.off.x} x2={st.off.x} y1={top} y2={st.axis.y} stroke="var(--rule)" strokeWidth="1" strokeDasharray="3 4" />}
+      {st.rows.map((r) => (
+        <g key={r.name}>
+          <line x1={st.axis.x1} x2={st.off ? st.off.x : st.axis.x2} y1={r.y} y2={r.y} stroke="var(--rule)" strokeWidth="1.5" />
+          <text x={0} y={r.y + 5} className={`${c.lane} ${r === routed ? c.laneOurs : c.laneTheirs}`}>
+            {r.name}
           </text>
         </g>
       ))}
-      <text x={W - R} y={78} textAnchor="end" className={c.tick}>
-        {cap < 200 ? `#${cap}+` : ""}
-      </text>
-      {ours.map((o, i) => (
-        <g key={`o${i}`}>
-          <line x1={x(o.rank)} x2={x(o.rank)} y1={22} y2={52} stroke="var(--fire)" strokeWidth="2.5" />
-          <circle cx={x(o.rank)} cy={20} r={6.5} fill="var(--fire)" style={{ mixBlendMode: "multiply" }}>
-            <title>{`${o.name}: #${o.rank}`}</title>
-          </circle>
+      <line x1={st.axis.x1} x2={st.axis.x2} y1={st.axis.y} y2={st.axis.y} stroke="var(--ink)" strokeWidth="2" />
+      {st.ticks.map((t) => (
+        <g key={t.label}>
+          <line x1={t.x} x2={t.x} y1={st.axis.y} y2={st.axis.y + 6} stroke="var(--ink)" strokeWidth="1.5" />
+          <text x={t.x} y={st.axis.y + 22} textAnchor="middle" className={c.tick}>
+            {t.label}
+          </text>
         </g>
       ))}
-      {theirs.map((t, i) => (
+      {st.off && (
+        <text x={st.off.x} y={st.axis.y + 22} textAnchor="middle" className={c.tick}>
+          {st.off.label}
+        </text>
+      )}
+      {alone.dots.map((d, i) => (
         <g key={`t${i}`}>
-          <line x1={x(t.rank ?? cap)} x2={x(t.rank ?? cap)} y1={60} y2={90} stroke="var(--blue)" strokeWidth="2.5" />
-          <circle cx={x(t.rank ?? cap)} cy={93} r={6.5} fill="var(--stock)" stroke="var(--blue)" strokeWidth="2.5">
-            <title>{`${t.name}: ${t.rank ? `#${t.rank}` : "not a touring city"}`}</title>
+          <circle cx={d.x} cy={d.y} r={DOT_R} fill="var(--stock)" stroke="var(--blue)" strokeWidth="2.5">
+            <title>{`${d.name}: ${d.rank ? `#${d.rank} on the fan map` : "not a touring city on the fan map"}`}</title>
           </circle>
+          {d.label && (
+            <>
+              {d.label.y2 !== d.label.y1 && Math.abs(d.label.y2 - d.label.y1) > 3 && <line x1={d.x} x2={d.x} y1={d.label.y1} y2={d.label.y2} stroke="var(--blue)" strokeWidth="1" />}
+              <text x={d.label.x} y={d.label.y} textAnchor="middle" className={`${c.cityLabel} ${c.cityTheirs}`}>
+                {d.label.text}
+              </text>
+            </>
+          )}
+        </g>
+      ))}
+      {routed.dots.map((d, i) => (
+        <g key={`o${i}`}>
+          <circle cx={d.x} cy={d.y} r={DOT_R} fill="var(--fire)" style={{ mixBlendMode: "multiply" }}>
+            <title>{`${d.name}: #${d.rank} on the fan map`}</title>
+          </circle>
+          {d.label && (
+            <>
+              {d.label.y2 !== d.label.y1 && Math.abs(d.label.y2 - d.label.y1) > 3 && <line x1={d.x} x2={d.x} y1={d.label.y1} y2={d.label.y2} stroke="var(--fire)" strokeWidth="1" />}
+              <text x={d.label.x} y={d.label.y} textAnchor="middle" className={`${c.cityLabel} ${c.cityOurs}`}>
+                {d.label.text}
+              </text>
+            </>
+          )}
         </g>
       ))}
     </svg>

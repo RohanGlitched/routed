@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Dot } from "@/lib/geo/map";
+import { fitTitle, stampCity, STAMP_BASELINE, supportBand } from "@/lib/posterfit";
 import s from "./poster.module.css";
 
 /**
@@ -36,24 +37,6 @@ const W = 540;
 const H = 800;
 const MAP_Y = 300;
 
-/** Splits a name into one or two wood-type lines, balanced by length. */
-export function woodLines(name: string): string[] {
-  const t = name.toUpperCase().trim();
-  if (t.length <= 11 || !t.includes(" ")) return [t];
-  const words = t.split(/\s+/);
-  let best = [t];
-  let bestDiff = Infinity;
-  for (let i = 1; i < words.length; i++) {
-    const a = words.slice(0, i).join(" "), b = words.slice(i).join(" ");
-    const diff = Math.abs(a.length - b.length);
-    if (diff < bestDiff) {
-      bestDiff = diff;
-      best = [a, b];
-    }
-  }
-  return best;
-}
-
 const fmt = (iso: string) => {
   const [, m, d] = iso.split("-");
   return `${Number(m)}/${Number(d)}`;
@@ -84,10 +67,9 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
     return () => io.disconnect();
   }, [print, state]);
 
-  const lines = woodLines(artist);
-  const blockH = 196;
-  const lineH = lines.length === 1 ? blockH : blockH / 2;
-  const fontSize = lineH * 1.16;
+  // Wood type set to fill the block without stretching a short line into slabs (lib/posterfit.ts).
+  const title = fitTitle(artist);
+  const stamp = topCity ? stampCity(topCity) : null;
   const rows = Math.max(1, Math.ceil(stops.length / 2));
   const datesTop = 566;
   const rowH = Math.min(40, (764 - datesTop) / rows);
@@ -113,7 +95,7 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
         </text>
         <rect x={32} y={260} width={W - 64} height={3} />
         <text x={W / 2} y={285} textAnchor="middle" className={s.band} {...(support && support.length > 28 ? { textLength: W - 80, lengthAdjust: "spacingAndGlyphs" as const } : {})}>
-          {support ? `WITH ${support.toUpperCase()}` : "WITH SPECIAL GUESTS IN EVERY CITY"}
+          {supportBand(support)}
         </text>
         <rect x={32} y={294} width={W - 64} height={3} />
         <g transform={`translate(0 ${MAP_Y})`}>
@@ -150,9 +132,9 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
 
       {/* Fire plate, a hair out of register */}
       <g className={s.fire} style={{ mixBlendMode: "multiply" }} fill="var(--fire)">
-        {lines.map((l, i) => (
-          <text key={l} x={32} y={74 + lineH * (i + 1) - lineH * 0.06} className={s.wood} style={{ fontSize }} textLength={W - 64} lengthAdjust="spacingAndGlyphs">
-            {l}
+        {title.map((l) => (
+          <text key={l.text} x={l.x} y={l.y} className={s.wood} style={{ fontSize: l.size }} textLength={l.width} lengthAdjust="spacingAndGlyphs">
+            {l.text}
           </text>
         ))}
         <g transform={`translate(0 ${MAP_Y})`}>
@@ -173,7 +155,7 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
             </text>
           );
         })}
-        {topCity && (
+        {topCity && stamp && (
           <g transform={`translate(${W - 90} ${MAP_Y + 196}) rotate(-10)`} className={s.stamp}>
             <circle r={46} fill="none" stroke="var(--fire)" strokeWidth={3} />
             <text y={-17} textAnchor="middle" className={s.stampSmall}>
@@ -182,7 +164,7 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
             <text y={13} textAnchor="middle" className={s.stampBig}>
               NO.{topRank}
             </text>
-            <text y={31} textAnchor="middle" className={s.stampSmall} textLength={topCity.length > 9 ? 70 : undefined} lengthAdjust="spacingAndGlyphs">
+            <text y={STAMP_BASELINE} textAnchor="middle" className={s.stampSmall} style={{ fontSize: stamp.size, letterSpacing: `${stamp.track}em` }} {...(stamp.textLength ? { textLength: stamp.textLength, lengthAdjust: "spacingAndGlyphs" as const } : {})}>
               {topCity.toUpperCase()}
             </text>
           </g>

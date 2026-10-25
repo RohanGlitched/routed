@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { REDUCED_MAX, STADIUM_MIN_DRAW } from "@/lib/agent/rooms";
-import { ANCHOR_RANK, MAJOR_POP, MAX_LEG_KM, MAX_SHOWS_IN_A_ROW, RADIUS_BY_REGION, ROAD_FACTOR, SHOW_DAY_DRIVE_H, TRAVEL_DAY_DRIVE_H, VAN_KMH } from "@/lib/geo/route";
+import { MAX_REVISIONS } from "@/lib/agent/plan";
+import { BAR_TAG_DRAW, BIG_ROOM_DRAW, REDUCED_MAX, SHORT_MIN, STADIUM_MIN_DRAW, TWO_NIGHT_MIN } from "@/lib/agent/rooms";
+import { ANCHOR_RANK, EXACT_MAX, MAJOR_POP, MAX_LEG_KM, MAX_SHOWS_IN_A_ROW, RADIUS_BY_REGION, ROAD_FACTOR, SHOW_DAY_DRIVE_H, TRAVEL_DAY_DRIVE_H, VAN_KMH } from "@/lib/geo/route";
 import { loadTour, showcaseTours } from "@/lib/store";
-import type { LogLine } from "@/lib/types";
+import type { LogLine, Usage } from "@/lib/types";
+import { AgentLoop } from "./AgentLoop";
 import s from "./how.module.css";
+
+const pc = (v: number) => `${Math.round(v * 100)}%`;
+const n0 = (v: number) => v.toLocaleString("en-US");
 
 export const metadata: Metadata = { title: "How it works", description: "The agent, every Qloo call it makes, the routing rules, and what Routed doesn't know." };
 export const revalidate = 600;
@@ -19,7 +24,7 @@ const CALLS: { match: RegExp; title: string; why: string; endpoint: string }[] =
   { match: /brands/, title: "Merch and partners", why: "Cross-domain: brands these fans over-index on.", endpoint: "GET /v2/insights with filter.type=urn:entity:brand" },
   { match: /films/, title: "Films, TV and books", why: "Cross-domain: what this audience watches and reads, for content and tie-ins.", endpoint: "GET /v2/insights with filter.type=urn:entity:movie, tv_show and book" },
   { match: /growing/, title: "Momentum", why: "Weekly popularity percentile for the last six months; shown when it moved.", endpoint: "GET /v2/trending" },
-  { match: /^Which (clubs|halls|theatres|arenas)/, title: "Rooms in each city", why: "Places of the kind the crowd needs (clubs and halls; halls, ballrooms and theatres; theatres, amphitheatres and arenas; arenas and amphitheatres), inside the city's radius, ranked by affinity to the artist's fans. For a crowd of 3,000 or more the arenas and amphitheatres are asked for on their own too. Chapels, museums, fairs, stadiums, housing, and (for big crowds) cafés, bars and clubs that carry the tag are left out.", endpoint: "GET /v2/insights with filter.type=urn:entity:place, filter.tags, filter.location=POINT(…) and filter.location.radius" },
+  { match: /^Which (clubs|halls|theatres|arenas)/, title: "Rooms in each city", why: `Places of the kind the crowd needs (clubs and halls; halls, ballrooms and theatres; theatres, amphitheatres and arenas; arenas and amphitheatres), inside the city's radius, ranked by affinity to the artist's fans. For a crowd of ${n0(BIG_ROOM_DRAW)} or more the arenas and amphitheatres are asked for on their own too. Chapels, museums, fairs, housing and parks are never rooms; stadiums only for a crowd of ${n0(STADIUM_MIN_DRAW)} or more; bars, pubs, cafés and restaurants are left out from a crowd of ${n0(BAR_TAG_DRAW)}, and anything named a club from ${n0(BIG_ROOM_DRAW)}.`, endpoint: "GET /v2/insights with filter.type=urn:entity:place, filter.tags, filter.location=POINT(…) and filter.location.radius" },
   { match: /^Who could open/, title: "Support acts", why: "Artists clearly smaller than the headliner whose audience matches, weighted to the city's own taste. A rule rules out the headliner's own members and members of other bands (by Qloo's description), a shared name, and any act with no genre in common. The agent then picks one support act for the whole run.", endpoint: "GET /v2/insights with filter.type=urn:entity:artist, signal.location, filter.popularity.max and .min" },
   { match: /fans share\?$/, title: "What the audiences share", why: "Qloo's audience comparison between the headliner and the support act: the style, genre and mood both fan bases hold, as the words for the pitch. Words every pair shares (Engaging, Passionate) are left out.", endpoint: "GET /v2/analysis/compare with a.signal.interests.entities and b.signal.interests.entities" },
   { match: /street by street/, title: "Inside the city", why: "The heatmap again, for one city: a few hundred tiles about 150 m across say which neighbourhood the fans over-index in. A rule measures the booked room against it, and the poster run is anchored there.", endpoint: "GET /v2/insights with filter.type=urn:heatmap, filter.location=POINT(<city>) and filter.location.radius" },
@@ -28,11 +33,11 @@ const CALLS: { match: RegExp; title: string; why: string; endpoint: string }[] =
   { match: /each room, Routed/, title: "Scoring both tours", why: "Every room from Routed's tour and the model-alone tour, scored against this artist's fans in one call restricted to exactly those rooms, so both sides share a scale.", endpoint: "GET /v2/insights with filter.type=urn:entity:place and filter.results.entities" },
 ];
 
-async function example(): Promise<{ id: string; artist: string; log: LogLine[] } | null> {
+async function example(): Promise<{ id: string; artist: string; log: LogLine[]; usage?: Usage } | null> {
   const id = process.env.SHOWCASE_ID;
   const pinned = id ? await loadTour(id).catch(() => null) : null;
   const t = (pinned?.showcase ? pinned : null) ?? (await showcaseTours().catch(() => []))[0];
-  return t?.status === "done" ? { id: t.id, artist: t.plan?.artist.name ?? t.input.artist, log: t.log } : null;
+  return t?.status === "done" ? { id: t.id, artist: t.plan?.artist.name ?? t.input.artist, log: t.log, usage: t.engine?.usage } : null;
 }
 
 export default async function How() {
@@ -48,11 +53,12 @@ export default async function How() {
 
       <section className={s.sec}>
         <h2 className={s.h2}>The agent</h2>
+        <AgentLoop log={ex?.log} usage={ex?.usage} artist={ex?.artist} />
         <p>
-          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does, in three moves. It <b>shortlists</b> cities from Qloo&apos;s ranked heatmap, weighing fan strength against geography, with a few alternates. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room per city and one support act for the whole run, swapping in an alternate when a city&apos;s rooms don&apos;t fit, and writes one sentence on why.
+          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does. It <b>shortlists</b> cities from Qloo&apos;s ranked heatmap, weighing fan strength against geography, with a few alternates. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room per city and one support act for the whole run, and writes one sentence on why. Then <b>check_plan</b> runs the tour&apos;s rules over the booking as a tool and sends every objection back; the model <b>re-books</b>, changing only what an objection names, up to {MAX_REVISIONS} times.
         </p>
         <p>
-          Rules hold it in, and every rule that changes the agent&apos;s answer says so on the call sheet. Cities must come from Qloo&apos;s candidates; the radius clause is enforced; a major market in the artist&apos;s top ten stays on the tour; no leg between shows runs over {MAX_LEG_KM.toLocaleString("en-US")} km where a city with rooms can close it; rooms are measured and sized to the crowd; one support act plays every date; gaps are filled from the ranking. If the model is down or the day&apos;s budget is spent, the same steps run as a fixed plan, and the tour book says which one ran.
+          Rules hold it in, and every rule that changes the agent&apos;s answer says so on the call sheet. What check_plan still objects to after the model&apos;s last answer, a rule settles. Cities must come from Qloo&apos;s candidates; the radius clause is enforced; a major market in the artist&apos;s top ten stays on the tour; no leg between shows runs over {MAX_LEG_KM.toLocaleString("en-US")} km where a city with rooms can close it; rooms are measured and sized to the crowd; one support act plays every date; gaps are filled from the ranking. If the model is down or the day&apos;s budget is spent, the same steps run as a fixed plan, and the tour book says which one ran.
         </p>
         <p>
           A free-running tool loop came first. Nemotron repeated lookups and ran out of turns on most tours, so the moves are fixed and the choices are the model&apos;s. Every model call returns strict JSON with reasoning off, which took a booking from about a minute to a few seconds.
@@ -69,7 +75,7 @@ export default async function How() {
       <section className={s.sec}>
         <h2 className={s.h2}>The control group</h2>
         <p>
-          Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for twenty artists, and checks both tours against the cities each artist actually played on a recent tour, which Qloo knows nothing about.
+          Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for twenty artists, and checks both tours against the cities each artist actually played on a recent tour: <Link href="/proof#head-to-head">a ruler Qloo didn&apos;t make</Link>. After every run, the same rules also re-plan the tour on city size alone, with no Qloo or model call, so the tour book names the stops Qloo changed.
         </p>
       </section>
 
@@ -86,7 +92,12 @@ export default async function How() {
                 {line && (
                   <div className={s.example}>
                     <p className={s.q}>{line.text}</p>
-                    {line.request && <code>GET {line.request}</code>}
+                    {line.request && (
+                      <details>
+                        <summary>The request</summary>
+                        <code>GET {line.request}</code>
+                      </details>
+                    )}
                     {line.result && <p className={s.a}>{line.result}</p>}
                   </div>
                 )}
@@ -114,11 +125,11 @@ export default async function How() {
           </li>
           <li>A major market of {(MAJOR_POP / 1e6).toFixed(1)} million or more in the artist&apos;s top {ANCHOR_RANK} is always on the tour when the route can reach it: no UK tour skips London. The smaller city inside its radius gives way.</li>
           <li>
-            No leg between two shows longer than {MAX_LEG_KM.toLocaleString("en-US")} km of road (two days in the van). A tour split across two coasts keeps the group with the artist&apos;s strongest cities and replaces the rest with cities that join it; a long leg left over is broken by a swap. One that no city with rooms can close stays, and its day sheet says so.
+            No leg over {MAX_LEG_KM.toLocaleString("en-US")} km (ferries and borders counted in hours, at van speed). A tour split across two coasts keeps the group with the artist&apos;s strongest cities and replaces the rest with cities that join it; a long leg left over is broken by a swap. One that no city with rooms can close stays, and its day sheet says so.
           </li>
-          <li>The route is the shortest drive from the starting city: nearest neighbour, then 2-opt until no swap helps.</li>
+          <li>The route is the shortest drive from the starting city: every order is searched exactly up to {EXACT_MAX} stops, then 2-opt until no swap helps. Each country&apos;s dates stay together.</li>
           <li>
-            Rooms are sized to the usual crowd. Capacities come from Wikidata&apos;s maximum-capacity property (the item must be the room itself, not a hall inside it), then from a web page that names the room, read by rule with the source linked; one number per room, everywhere. A room that holds 60–250% of the crowd is booked for one night. Failing that, one that holds 30–60% is booked for two nights; then one up to {REDUCED_MAX} times the crowd in a reduced configuration; then a room whose capacity couldn&apos;t be found (the sheet says to ask). A room known to miss by more is booked only when nothing else is left. No stadium below a {STADIUM_MIN_DRAW.toLocaleString("en-US")} crowd.
+            Rooms are sized to the usual crowd. Capacities come from Wikidata&apos;s maximum-capacity property (the item must be the room itself, not a hall inside it), then from a web page that names the room, read by rule with the source linked; one number per room, everywhere. A room that holds 60–250% of the crowd is booked for one night. Failing that, one that holds {pc(TWO_NIGHT_MIN)}–60% is booked for two nights, so the two nights hold everyone; then one up to {REDUCED_MAX} times the crowd in a reduced configuration; then a measured room at {pc(SHORT_MIN)}–{pc(TWO_NIGHT_MIN)} for one night, with the sheet saying how short; then a room whose capacity couldn&apos;t be found (the sheet says to ask). A room known to miss by more is booked only when nothing else is left. No stadium below a {STADIUM_MIN_DRAW.toLocaleString("en-US")} crowd.
           </li>
           <li>One support act for the whole run, as on a real tour: never the headliner&apos;s own member or a member of another band, clearly smaller than the headliner, and sharing a genre with them. The other artists each city suggested are listed as local options.</li>
           <li>A pitch may only use figures from its stop&apos;s evidence. Any other figure is struck through on the page.</li>

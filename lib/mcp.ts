@@ -10,7 +10,7 @@ import { ipAllowed, QLOO_PER_TOUR, qlooRemaining, takeMcpRun, takeModelRun } fro
 import { findMarket, REGIONS } from "./geo/markets";
 import { hasKey } from "./nebius";
 import { search, wherePopular } from "./qloo";
-import { hotSpot, localTiles } from "./geo/local";
+import { hotSpot, localEvidence, localTiles, readLocal } from "./geo/local";
 import { lookUpSpots } from "./agent/tools";
 import { cityArea } from "./agent/rooms";
 import { SITE_URL } from "./site";
@@ -124,12 +124,13 @@ function register(server: McpServer) {
       if (!hot) return text(`Qloo's heatmap has no tiles for ${a.name} fans in ${m.name}.`);
       const art = { id: a.id, name: a.name, genres: [] };
       const shops = await lookUpSpots("posters", art, [m.ascii, m.cc, m.cc === "US" ? m.state : ""].filter(Boolean).join("-").toLowerCase().replace(/[^a-z0-9]+/g, "-"), () => {}, [], hot);
-      const area = shops.find((s) => s.area)?.area;
+      // The same reading as the day sheet: the hot area named by a vote of the places around it, or left unnamed.
+      const read = readLocal({ tiles }, undefined, shops);
       const strong = tiles.filter((t) => t[2] >= 0.8).length;
       return text(
         [
           `${a.name} fans in ${m.name}: ${r.tiles.length} street-level tiles on Qloo's heatmap; ${strong} of them in the top fifth of the city's strength.`,
-          `Strongest area: ${area ?? "around"} ${hot.lat.toFixed(3)}, ${hot.lon.toFixed(3)}.`,
+          `${localEvidence(read, m.name, a.name)} The hottest tile is at ${hot.lat.toFixed(3)}, ${hot.lon.toFixed(3)}.`,
           shops.length ? `Poster run there: ${shops.map((s) => `${s.name}${s.kind ? ` (${s.kind.toLowerCase()})` : ""}`).join(", ")}.` : "No shops came back for a poster run.",
         ].join("\n"),
       );

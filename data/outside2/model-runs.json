@@ -1,0 +1,4089 @@
+{
+ "prompts": {
+  "venues": "You are an experienced booking agent. Using only your own knowledge of the artist and the cities, name the venues where this artist would most likely play a headline show in each city given, for the crowd size given.\nRules: exactly 5 venues per city, most likely first, each a real venue in or near that city (its usual name, no address). One entry per city_id given.\nReply as JSON only.",
+  "support": "You are an experienced booking agent. Using only your own knowledge, name the artists most likely to be booked as the opening (support) act on this artist's headline tour of the region given.\nRules: exactly 5 artists, most likely first, never the headliner or a member of it.\nReply as JSON only.",
+  "postcut": "You are an experienced booking agent. Using only your own knowledge of the artist and the cities, rank the cities in the region given where this artist would sell the most tickets for a headline show, strongest first.\nRules: exactly 50 cities, one entry per city (suburbs count as the city they belong to), each with its state, province or country, all in the region given.\nReply as JSON only."
+ },
+ "venues": [
+  {
+   "artist": "Ledisi",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "dallas-us-tx",
+     "rooms": [
+      "The Factory in Deep Ellum",
+      "South Side Ballroom",
+      "House of Blues",
+      "The Rustic",
+      "The Echo Lounge & Music Hall"
+     ]
+    },
+    {
+     "city_id": "washington-us-dc",
+     "rooms": [
+      "The Anthem",
+      "Echostage",
+      "The Fillmore Silver Spring",
+      "Howard Theatre",
+      "Lincoln Theatre"
+     ]
+    },
+    {
+     "city_id": "birmingham-us-al",
+     "rooms": [
+      "Iron City",
+      "Avondale Brewing Company",
+      "Zydeco",
+      "Saturn",
+      "WorkPlay"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "The 1975",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "chicago-us-il",
+     "rooms": [
+      "United Center",
+      "Allstate Arena",
+      "Credit Union 1 Arena",
+      "Wintrust Arena",
+      "Now Arena"
+     ]
+    },
+    {
+     "city_id": "st-louis-us-mo",
+     "rooms": [
+      "Enterprise Center",
+      "Chaifetz Arena",
+      "The Dome at America's Center",
+      "The Family Arena",
+      "St. Louis Music Park"
+     ]
+    },
+    {
+     "city_id": "vancouver-ca",
+     "rooms": [
+      "Rogers Arena",
+      "Pacific Coliseum",
+      "Thunderbird Arena",
+      "Doug Mitchell Thunderbird Sports Centre",
+      "PNE Forum"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Omar Apollo",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "chicago-us-il",
+     "rooms": [
+      "Byline Bank Aragon Ballroom",
+      "Chicago Theatre",
+      "The Salt Shed",
+      "The Vic Theatre",
+      "Thalia Hall"
+     ]
+    },
+    {
+     "city_id": "dallas-us-tx",
+     "rooms": [
+      "The Pavilion at Toyota Music Factory",
+      "South Side Ballroom",
+      "The Bomb Factory",
+      "The Rustic",
+      "House of Blues"
+     ]
+    },
+    {
+     "city_id": "miami-us-fl",
+     "rooms": [
+      "The Fillmore Miami Beach",
+      "Oasis Wynwood",
+      "The Ground",
+      "Miami Beach Bandshell",
+      "North Beach Bandshell"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Flo",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "new-york-city-us-ny",
+     "rooms": [
+      "Brooklyn Steel",
+      "Terminal 5",
+      "The Rooftop at Pier 17",
+      "Webster Hall",
+      "Avant Gardner"
+     ]
+    },
+    {
+     "city_id": "vancouver-ca",
+     "rooms": [
+      "The Centre in Vancouver for Performing Arts",
+      "Vogue Theatre",
+      "The Imperial Vancouver",
+      "Commodore Ballroom",
+      "PNE Forum"
+     ]
+    },
+    {
+     "city_id": "boston-us-ma",
+     "rooms": [
+      "MGM Music Hall at Fenway",
+      "Roadrunner",
+      "House of Blues",
+      "The Sinclair",
+      "Big Night Live"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Queen + Adam Lambert",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "boston-us-ma",
+     "rooms": [
+      "TD Garden",
+      "Xfinity Center",
+      "MGM Music Hall at Fenway",
+      "Agganis Arena",
+      "Leader Bank Pavilion"
+     ]
+    },
+    {
+     "city_id": "austin-us-tx",
+     "rooms": [
+      "Moody Center",
+      "ACL Live at Moody Theater",
+      "H-E-B Center at Cedar Park",
+      "Germania Insurance Amphitheater",
+      "Stubb's Waller Creek Amphitheater"
+     ]
+    },
+    {
+     "city_id": "los-angeles-us-ca",
+     "rooms": [
+      "Kia Forum",
+      "Intuit Dome",
+      "Hollywood Bowl",
+      "BMO Stadium",
+      "YouTube Theater"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Queens of the Stone Age",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "toronto-ca",
+     "rooms": [
+      "History",
+      "The Danforth Music Hall",
+      "The Phoenix Concert Theatre",
+      "The Opera House",
+      "The Axis Club"
+     ]
+    },
+    {
+     "city_id": "santa-barbara-us-ca",
+     "rooms": [
+      "Santa Barbara Bowl",
+      "Arlington Theatre",
+      "The Granada Theatre",
+      "Lobero Theatre",
+      "Soho Restaurant & Music Club"
+     ]
+    },
+    {
+     "city_id": "palm-springs-us-ca",
+     "rooms": [
+      "The Show at Agua Caliente",
+      "McCallum Theatre",
+      "Richards Center for the Arts",
+      "Palm Springs Cultural Center",
+      "The Purple Room"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Clairo",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "san-diego-us-ca",
+     "rooms": [
+      "The Observatory North Park",
+      "SOMA San Diego",
+      "The Magnolia",
+      "House of Blues",
+      "Humphreys Concerts by the Bay"
+     ]
+    },
+    {
+     "city_id": "washington-us-dc",
+     "rooms": [
+      "The Anthem",
+      "Echostage",
+      "9:30 Club",
+      "Howard Theatre",
+      "Lincoln Theatre"
+     ]
+    },
+    {
+     "city_id": "charlotte-us-nc",
+     "rooms": [
+      "The Fillmore Charlotte",
+      "The Underground",
+      "Neighborhood Theatre",
+      "Skyla Credit Union Amphitheatre",
+      "AvidXchange Music Factory"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Doja Cat",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "tampa-us-fl",
+     "rooms": [
+      "Amalie Arena",
+      "Yuengling Center",
+      "MidFlorida Credit Union Amphitheatre",
+      "Hard Rock Live",
+      "Jannus Landing"
+     ]
+    },
+    {
+     "city_id": "las-vegas-us-nv",
+     "rooms": [
+      "T-Mobile Arena",
+      "MGM Grand Garden Arena",
+      "Michelob Ultra Arena",
+      "The Chelsea at Cosmopolitan",
+      "Brooklyn Bowl"
+     ]
+    },
+    {
+     "city_id": "san-antonio-us-tx",
+     "rooms": [
+      "Frost Bank Center",
+      "AT&T Center",
+      "Freeman Coliseum",
+      "Majestic Theatre",
+      "St. Mary's University Arena"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Depeche Mode",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "turin-it",
+     "rooms": [
+      "Stadio Olimpico Grande Torino",
+      "Pala Alpitour",
+      "PalaRuffini",
+      "Oval Lingotto",
+      "Teatro Regio"
+     ]
+    },
+    {
+     "city_id": "barcelona-es",
+     "rooms": [
+      "Estadi Olímpic Lluís Companys",
+      "Palau Sant Jordi",
+      "WiZink Center",
+      "Sala Apolo",
+      "Gran Teatre del Liceu"
+     ]
+    },
+    {
+     "city_id": "lodz-pl",
+     "rooms": [
+      "Stadion Miejski",
+      "Atlas Arena",
+      "Łódź Sport Arena",
+      "Centrum Spotkania Kultur",
+      "Teatr Wielki"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Billy Joel",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "los-angeles-us-ca",
+     "rooms": [
+      "SoFi Stadium",
+      "Rose Bowl",
+      "Los Angeles Memorial Coliseum",
+      "BMO Stadium",
+      "Dodger Stadium"
+     ]
+    },
+    {
+     "city_id": "winston-salem-us-nc",
+     "rooms": [
+      "Truist Field",
+      "Lawrence Joel Veterans Memorial Coliseum",
+      "Bowman Gray Stadium",
+      "Truist Stadium",
+      "Winston-Salem Fairgrounds"
+     ]
+    },
+    {
+     "city_id": "tampa-us-fl",
+     "rooms": [
+      "Raymond James Stadium",
+      "Amalie Arena",
+      "Yuengling Center",
+      "Tampa Stadium",
+      "Al Lang Stadium"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Sugababes",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "glasgow-gb",
+     "rooms": [
+      "OVO Hydro",
+      "The SSE Hydro",
+      "Barrowland Ballroom",
+      "Braehead Arena",
+      "SEC Armadillo"
+     ]
+    },
+    {
+     "city_id": "newcastle-upon-tyne-gb",
+     "rooms": [
+      "Utilita Arena Newcastle",
+      "Vertu Motors Arena",
+      "Newcastle City Hall",
+      "Newcastle University Students' Union",
+      "O2 Academy Newcastle"
+     ]
+    },
+    {
+     "city_id": "manchester-gb",
+     "rooms": [
+      "Co-op Live",
+      "AO Arena",
+      "Manchester Arena (Victoria Warehouse)",
+      "O2 Victoria Warehouse",
+      "Manchester Academy"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Green Day",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "new-york-city-us-ny",
+     "rooms": [
+      "MetLife Stadium",
+      "Citi Field",
+      "Yankee Stadium",
+      "Prudential Center",
+      "Red Bull Arena"
+     ]
+    },
+    {
+     "city_id": "pittsburgh-us-pa",
+     "rooms": [
+      "Acrisure Stadium",
+      "PNC Park",
+      "PPG Paints Arena",
+      "Highmark Stadium",
+      "UPMC Events Center"
+     ]
+    },
+    {
+     "city_id": "portland-us-or",
+     "rooms": [
+      "Providence Park",
+      "Moda Center",
+      "Nike World Headquarters",
+      "Hillsboro Stadium",
+      "Vancouver Events Center"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Dua Lipa",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "boston-us-ma",
+     "rooms": [
+      "TD Garden",
+      "Fenway Park",
+      "Gillette Stadium",
+      "Xfinity Center",
+      "Agganis Arena"
+     ]
+    },
+    {
+     "city_id": "new-york-city-us-ny",
+     "rooms": [
+      "Madison Square Garden",
+      "Barclays Center",
+      "UBS Arena",
+      "Citi Field",
+      "Forest Hills Stadium"
+     ]
+    },
+    {
+     "city_id": "los-angeles-us-ca",
+     "rooms": [
+      "Kia Forum",
+      "Crypto.com Arena",
+      "Intuit Dome",
+      "BMO Stadium",
+      "Hollywood Bowl"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Nine Inch Nails",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "cleveland-us-oh",
+     "rooms": [
+      "Rocket Mortgage FieldHouse",
+      "Wolstein Center",
+      "Rocket Arena",
+      "Blossom Music Center",
+      "Jacobs Pavilion at Nautica Entertainment Complex"
+     ]
+    },
+    {
+     "city_id": "irvine-us-ca",
+     "rooms": [
+      "FivePoint Amphitheatre",
+      "Honda Center",
+      "Pacific Amphitheatre",
+      "The Forum",
+      "Bren Events Center"
+     ]
+    },
+    {
+     "city_id": "fort-worth-us-tx",
+     "rooms": [
+      "Dickies Arena",
+      "Bass Performance Hall",
+      "Will Rogers Coliseum",
+      "Texas Trust Amphitheatre",
+      "Choctaw Stadium"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "For King & Country",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "duluth-us-mn",
+     "rooms": [
+      "Amsoil Arena",
+      "DECC Arena",
+      "Essentia Health Duluth Heritage Center",
+      "Bayfront Festival Park",
+      "Leif Erikson Park"
+     ]
+    },
+    {
+     "city_id": "college-station-us-tx",
+     "rooms": [
+      "Reed Arena",
+      "Kyle Field",
+      "Veterans Park & Athletic Complex",
+      "Wolf Pen Amphitheater",
+      "Post Oak Mall"
+     ]
+    },
+    {
+     "city_id": "pensacola-us-fl",
+     "rooms": [
+      "Pensacola Bay Center",
+      "Community Maritime Park",
+      "Veterans Memorial Park",
+      "Seville Quarter",
+      "University of West Florida Pen Air Force Base"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Bonnie Tyler",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "bremen-de",
+     "rooms": [
+      "ÖVB Arena",
+      "Stadthalle Bremen",
+      "Freilichtbühne Bürgerpark",
+      "Pier 2",
+      "Schlachthof"
+     ]
+    },
+    {
+     "city_id": "enschede-nl",
+     "rooms": [
+      "GelreDome",
+      "Evenemententerrein De Baarsjes",
+      "Podium",
+      "De Bonte Wever",
+      "Cultuurcentrum De Klinker"
+     ]
+    },
+    {
+     "city_id": "reutlingen-de",
+     "rooms": [
+      "Messe Reutlingen",
+      "Stadthalle Reutlingen",
+      "Freilichtbühne Markwasen",
+      "Kulturzentrum Franz K",
+      "Halle 7"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Chappell Roan",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "madison-us-wi",
+     "rooms": [
+      "The Sylvee",
+      "Barrymore Theatre",
+      "Capitol Theater",
+      "Orpheum Theater",
+      "Majestic Theatre"
+     ]
+    },
+    {
+     "city_id": "new-york-city-us-ny",
+     "rooms": [
+      "Webster Hall",
+      "Town Hall",
+      "Le Poisson Rouge",
+      "The Bell House",
+      "Rough Trade NYC"
+     ]
+    },
+    {
+     "city_id": "pittsburgh-us-pa",
+     "rooms": [
+      "Mr. Smalls Theatre",
+      "Thunderbird Cafe",
+      "Club Cafe",
+      "Spirit",
+      "The Warhol"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Travis Scott",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "raleigh-us-nc",
+     "rooms": [
+      "PNC Arena",
+      "Lenovo Center",
+      "Coastal Credit Union Music Park",
+      "Red Hat Amphitheater",
+      "Dorton Arena"
+     ]
+    },
+    {
+     "city_id": "detroit-us-mi",
+     "rooms": [
+      "Little Caesars Arena",
+      "Pine Knob Music Theatre",
+      "Fox Theatre",
+      "Michigan Lottery Amphitheatre",
+      "The Masonic Temple Theatre"
+     ]
+    },
+    {
+     "city_id": "miami-us-fl",
+     "rooms": [
+      "Kaseya Center",
+      "Hard Rock Live",
+      "FPL Solar Amphitheatre",
+      "James L. Knight Center",
+      "Watsco Center"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "21 Savage",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "atlanta-us-ga",
+     "rooms": [
+      "State Farm Arena",
+      "Gas South Arena",
+      "Coca-Cola Roxy Theatre",
+      "Fox Theatre",
+      "Tabernacle"
+     ]
+    },
+    {
+     "city_id": "tampa-us-fl",
+     "rooms": [
+      "Amalie Arena",
+      "MidFlorida Credit Union Amphitheatre",
+      "Yuengling Center",
+      "Jannus Landing",
+      "The Ritz Ybor"
+     ]
+    },
+    {
+     "city_id": "brockton-us-ma",
+     "rooms": [
+      "Gillette Stadium",
+      "Campanelli Stadium",
+      "MassMutual Center (Worcester)",
+      "Xfinity Center (Mansfield)",
+      "The Palladium (Worcester)"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "SZA",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "dallas-us-tx",
+     "rooms": [
+      "American Airlines Center",
+      "Dos Equis Pavilion",
+      "Dickies Arena",
+      "Toyota Stadium",
+      "Credit Union of Texas Event Center"
+     ]
+    },
+    {
+     "city_id": "chicago-us-il",
+     "rooms": [
+      "United Center",
+      "Allstate Arena",
+      "Northerly Island Pavilion",
+      "Wintrust Arena",
+      "Credit Union 1 Amphitheatre"
+     ]
+    },
+    {
+     "city_id": "nashville-us-tn",
+     "rooms": [
+      "Bridgestone Arena",
+      "Nissan Stadium",
+      "FirstBank Amphitheater",
+      "Municipal Auditorium",
+      "Grand Ole Opry House"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Halsey",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "raleigh-us-nc",
+     "rooms": [
+      "PNC Arena",
+      "Lenovo Center",
+      "Coastal Credit Union Music Park",
+      "Red Hat Amphitheater",
+      "Dorton Arena"
+     ]
+    },
+    {
+     "city_id": "farmington-hills-us-mi",
+     "rooms": [
+      "Little Caesars Arena",
+      "Pine Knob Music Theatre",
+      "Fox Theatre",
+      "Masonic Temple Theatre",
+      "The Fillmore Detroit"
+     ]
+    },
+    {
+     "city_id": "salt-lake-city-us-ut",
+     "rooms": [
+      "Delta Center",
+      "USANA Amphitheatre",
+      "The Complex",
+      "Red Butte Garden Amphitheatre",
+      "Maverik Center"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Pink",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "philadelphia-us-pa",
+     "rooms": [
+      "Lincoln Financial Field",
+      "Wells Fargo Center",
+      "Citizens Bank Park",
+      "Xfinity Live",
+      "The Mann Center"
+     ]
+    },
+    {
+     "city_id": "new-york-city-us-ny",
+     "rooms": [
+      "MetLife Stadium",
+      "Barclays Center",
+      "Citi Field",
+      "UBS Arena",
+      "Forest Hills Stadium"
+     ]
+    },
+    {
+     "city_id": "missoula-us-mt",
+     "rooms": [
+      "Washington–Grizzly Stadium",
+      "Adams Center",
+      "Dennison Theatre",
+      "The Wilma",
+      "The Top Hat"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Pierce the Veil",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "seattle-us-wa",
+     "rooms": [
+      "Climate Pledge Arena",
+      "T-Mobile Park",
+      "WaMu Theater",
+      "The Showbox",
+      "Paramount Theatre"
+     ]
+    },
+    {
+     "city_id": "west-palm-beach-us-fl",
+     "rooms": [
+      "iTHINK Financial Amphitheatre",
+      "FLA Live Arena",
+      "Hard Rock Live",
+      "Kravis Center",
+      "Sunset Cove Amphitheatre"
+     ]
+    },
+    {
+     "city_id": "los-angeles-us-ca",
+     "rooms": [
+      "Kia Forum",
+      "YouTube Theater",
+      "Greek Theatre",
+      "Hollywood Bowl",
+      "Shrine Auditorium"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "atlanta-us-ga",
+     "rooms": [
+      "The Eastern",
+      "The Tabernacle",
+      "Coca-Cola Roxy Theatre",
+      "Variety Playhouse",
+      "Center Stage Theater"
+     ]
+    },
+    {
+     "city_id": "nashville-us-tn",
+     "rooms": [
+      "Ryman Auditorium",
+      "Brooklyn Bowl",
+      "Marathon Music Works",
+      "Grand Ole Opry House",
+      "War Memorial Auditorium"
+     ]
+    },
+    {
+     "city_id": "philadelphia-us-pa",
+     "rooms": [
+      "The Met Philadelphia",
+      "Franklin Music Hall",
+      "Keswick Theatre",
+      "The Fillmore Philadelphia",
+      "Miller Theater"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Ado",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "toronto-ca",
+     "rooms": [
+      "Scotiabank Arena",
+      "Budweiser Stage",
+      "Coca-Cola Coliseum",
+      "Rogers Centre",
+      "Paramount Fine Foods Centre"
+     ]
+    },
+    {
+     "city_id": "fort-worth-us-tx",
+     "rooms": [
+      "Dickies Arena",
+      "Will Rogers Memorial Center",
+      "Texas Trust CU Theatre",
+      "Bass Performance Hall",
+      "Fort Worth Convention Center Arena"
+     ]
+    },
+    {
+     "city_id": "new-york-city-us-ny",
+     "rooms": [
+      "Barclays Center",
+      "Madison Square Garden",
+      "UBS Arena",
+      "Prudential Center",
+      "Forest Hills Stadium"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Ghost",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "berlin-de",
+     "rooms": [
+      "Mercedes-Benz Arena",
+      "Max-Schmeling-Halle",
+      "Uber Arena",
+      "Tempodrom",
+      "Columbiahalle"
+     ]
+    },
+    {
+     "city_id": "oslo-no",
+     "rooms": [
+      "Oslo Spektrum",
+      "Telenor Arena",
+      "Oslo Konserthus",
+      "Rockefeller Music Hall",
+      "Sentrum Scene"
+     ]
+    },
+    {
+     "city_id": "linkoeping-se",
+     "rooms": [
+      "Saab Arena",
+      "Linköping Konserthus",
+      "Stadshallen",
+      "Gårda Hallen",
+      "Kulturhuset"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Troye Sivan",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "stockholm-se",
+     "rooms": [
+      "Avicii Arena",
+      "Hovet",
+      "Annexet",
+      "Cirkus",
+      "Fryshuset"
+     ]
+    },
+    {
+     "city_id": "berlin-de",
+     "rooms": [
+      "Uber Arena",
+      "Velodrom",
+      "Max-Schmeling-Halle",
+      "Columbiahalle",
+      "Tempodrom"
+     ]
+    },
+    {
+     "city_id": "zuerich-ch",
+     "rooms": [
+      "Hallenstadion",
+      "Samsung Hall",
+      "The Hall",
+      "X-tra",
+      "Volkshaus"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Nicki Minaj",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "new-orleans-us-la",
+     "rooms": [
+      "Smoothie King Center",
+      "Caesars Superdome",
+      "Lakefront Arena",
+      "UNO Lakefront Arena",
+      "Mahalia Jackson Theater"
+     ]
+    },
+    {
+     "city_id": "philadelphia-us-pa",
+     "rooms": [
+      "Wells Fargo Center",
+      "Lincoln Financial Field",
+      "The Mann Center",
+      "Temple Liacouras Center",
+      "Metropolitan Opera House"
+     ]
+    },
+    {
+     "city_id": "montreal-ca",
+     "rooms": [
+      "Bell Centre",
+      "Olympic Stadium",
+      "Videotron Centre",
+      "M Telus Centre",
+      "Place des Arts"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Addison Rae",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "philadelphia-us-pa",
+     "rooms": [
+      "The Met Philadelphia",
+      "Franklin Music Hall",
+      "The Fillmore Philadelphia",
+      "Brooklyn Bowl",
+      "Union Transfer"
+     ]
+    },
+    {
+     "city_id": "washington-us-dc",
+     "rooms": [
+      "The Anthem",
+      "Echostage",
+      "The Fillmore Silver Spring",
+      "Howard Theatre",
+      "Lincoln Theatre"
+     ]
+    },
+    {
+     "city_id": "denver-us-co",
+     "rooms": [
+      "Fillmore Auditorium",
+      "Mission Ballroom",
+      "Ogden Theatre",
+      "Gothic Theatre",
+      "Bluebird Theater"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Twenty One Pilots",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "austin-us-tx",
+     "rooms": [
+      "Moody Center",
+      "Germania Insurance Amphitheater",
+      "H-E-B Center at Cedar Park",
+      "ACL Live at the Moody Theater",
+      "Circuit of the Americas"
+     ]
+    },
+    {
+     "city_id": "las-vegas-us-nv",
+     "rooms": [
+      "MGM Grand Garden Arena",
+      "T-Mobile Arena",
+      "Michelob Ultra Arena",
+      "The Chelsea at The Cosmopolitan",
+      "The Theater at Virgin Hotels"
+     ]
+    },
+    {
+     "city_id": "harrisburg-us-pa",
+     "rooms": [
+      "Giant Center",
+      "Santander Arena",
+      "Hollywood Casino at Penn National Race Course",
+      "The Forum at the Giant Center",
+      "Clipper Magazine Stadium"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Gary Barlow",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "manchester-gb",
+     "rooms": [
+      "O2 Apollo Manchester",
+      "O2 Victoria Warehouse",
+      "Manchester Academy",
+      "New Century Hall",
+      "The Ritz"
+     ]
+    },
+    {
+     "city_id": "brighton-gb",
+     "rooms": [
+      "Brighton Centre",
+      "The Brighton Dome",
+      "Concorde 2",
+      "Patterns",
+      "CHALK"
+     ]
+    },
+    {
+     "city_id": "nottingham-gb",
+     "rooms": [
+      "Rock City",
+      "Nottingham Forum",
+      "Rescue Rooms",
+      "Metronome",
+      "The Bodega Social Club"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Turnstile",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "des-moines-us-ia",
+     "rooms": [
+      "Wells Fargo Arena",
+      "Val Air Ballroom",
+      "Hoyt Sherman Place",
+      "Wooly's",
+      "xBk Live"
+     ]
+    },
+    {
+     "city_id": "minneapolis-us-mn",
+     "rooms": [
+      "The Armory",
+      "First Avenue",
+      "Palace Theatre",
+      "Fillmore",
+      "Varsity Theater"
+     ]
+    },
+    {
+     "city_id": "san-francisco-us-ca",
+     "rooms": [
+      "Bill Graham Civic Auditorium",
+      "The Warfield",
+      "The Regency Ballroom",
+      "The Independent",
+      "August Hall"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Kim Petras",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "seattle-us-wa",
+     "rooms": [
+      "WaMu Theater",
+      "Paramount Theatre",
+      "Moore Theatre",
+      "The Showbox",
+      "Neptune Theatre"
+     ]
+    },
+    {
+     "city_id": "washington-us-dc",
+     "rooms": [
+      "The Anthem",
+      "Warner Theatre",
+      "Lincoln Theatre",
+      "Echostage",
+      "The Fillmore Silver Spring"
+     ]
+    },
+    {
+     "city_id": "san-francisco-us-ca",
+     "rooms": [
+      "The Masonic",
+      "The Warfield",
+      "SF Masonic Auditorium",
+      "The Regency Ballroom",
+      "The Independent"
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Tame Impala",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "cities": [
+    {
+     "city_id": "portland-us-or",
+     "rooms": [
+      "Moda Center",
+      "Veterans Memorial Coliseum",
+      "Providence Park",
+      "Arlene Schnitzer Concert Hall",
+      "McMenamins Crystal Ballroom"
+     ]
+    },
+    {
+     "city_id": "nashville-us-tn",
+     "rooms": [
+      "Bridgestone Arena",
+      "Nissan Stadium",
+      "Ascend Amphitheater",
+      "Ryman Auditorium",
+      "Municipal Auditorium"
+     ]
+    },
+    {
+     "city_id": "seattle-us-wa",
+     "rooms": [
+      "Climate Pledge Arena",
+      "T-Mobile Park",
+      "Lumen Field",
+      "WaMu Theater",
+      "Paramount Theatre"
+     ]
+    }
+   ]
+  }
+ ],
+ "support": [
+  {
+   "artist": "Ledisi",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Sabrina Teitelbaum",
+    "Miya Folick",
+    "Lola Young",
+    "Megan Bülow",
+    "Hannah Jadagu"
+   ]
+  },
+  {
+   "artist": "The 1975",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Beabadoobee",
+    "The Japanese House",
+    "No Vacation",
+    "The Happy Fits",
+    "Maya Hawke"
+   ]
+  },
+  {
+   "artist": "Omar Apollo",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Masego",
+    "Ber",
+    "Kassa Overall",
+    "Tash",
+    "Mereba"
+   ]
+  },
+  {
+   "artist": "Flo",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Mallrat",
+    "Lola Young",
+    "Hatchie",
+    "Gia Margaret",
+    "Blusher"
+   ]
+  },
+  {
+   "artist": "Clairo",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Jay Someday",
+    "Lomelda",
+    "Blondshell",
+    "Dazy",
+    "Faye Webster"
+   ]
+  },
+  {
+   "artist": "Doja Cat",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Ice Spice",
+    "Latto",
+    "Rico Nasty",
+    "Kash Doll",
+    "Lola Brooke"
+   ]
+  },
+  {
+   "artist": "Depeche Mode",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Nitzer Ebb",
+    "She Past Away",
+    "Keluar",
+    "Boy Harsher",
+    "Lebanon Hanover"
+   ]
+  },
+  {
+   "artist": "Green Day",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "The Interrupters",
+    "The Linda Lindas",
+    "Amyl and the Sniffers",
+    "The Hives",
+    "Bobby and the Strays"
+   ]
+  },
+  {
+   "artist": "Dua Lipa",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Caroline Polachek",
+    "Griff",
+    "Lolo Zouaï",
+    "Remi Wolf",
+    "Tove Lo"
+   ]
+  },
+  {
+   "artist": "Bonnie Tyler",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Megan O'Neill",
+    "Catherine McGrath",
+    "Emma Langford",
+    "Sarah Darling",
+    "Hannah Grace"
+   ]
+  },
+  {
+   "artist": "Travis Scott",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Don Toliver",
+    "Sheck Wes",
+    "Baby Keem",
+    "SoFaygo",
+    "Teezo Touchdown"
+   ]
+  },
+  {
+   "artist": "21 Savage",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Lil Tecca",
+    "Rob49",
+    "Kashdami",
+    "Yung Bans",
+    "BigWalkDog"
+   ]
+  },
+  {
+   "artist": "SZA",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Doechii",
+    "Ravyn Lenae",
+    "Muni Long",
+    "Ari Lennox",
+    "Amber Mark"
+   ]
+  },
+  {
+   "artist": "Halsey",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Beabadoobee",
+    "Ethel Cain",
+    "Suki Waterhouse",
+    "Lola Young",
+    "Abby Roberts"
+   ]
+  },
+  {
+   "artist": "Pink",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Brandi Carlile",
+    "KidCutUp",
+    "G Flip",
+    "Maren Morris",
+    "Emily Weisband"
+   ]
+  },
+  {
+   "artist": "Pierce the Veil",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Casket",
+    "VCTMS",
+    "Distant",
+    "Kublai Khan TX",
+    "Orthodox"
+   ]
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Ginger Root",
+    "Horse Jumper of Love",
+    "Tommy Lefroy",
+    "Makena",
+    "ahem"
+   ]
+  },
+  {
+   "artist": "Nicki Minaj",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Ice Spice",
+    "Lola Brooke",
+    "Bia",
+    "Kash Doll",
+    "Rico Nasty"
+   ]
+  },
+  {
+   "artist": "Twenty One Pilots",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "The Heavy Heavy Hits",
+    "The Velveteers",
+    "The Tontons",
+    "The Sh-Booms",
+    "Thee Commons"
+   ]
+  },
+  {
+   "artist": "Gary Barlow",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Rhys Lewis",
+    "Callum Beattie",
+    "Niamh Regan",
+    "Megan O'Neill",
+    "Hannah Grace"
+   ]
+  },
+  {
+   "artist": "Turnstile",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Gulch",
+    "Drain",
+    "Scowl",
+    "Zulu",
+    "Koyo"
+   ]
+  },
+  {
+   "artist": "Tame Impala",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "artists": [
+    "Unknown Mortal Orchestra",
+    "Pond",
+    "Mild High Club",
+    "Jay Watson",
+    "GUM"
+   ]
+  }
+ ],
+ "postcut": [
+  {
+   "artist": "Flo",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    }
+   ]
+  },
+  {
+   "artist": "Beabadoobee",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "New Haven",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    }
+   ]
+  },
+  {
+   "artist": "Lizzy McAlpine",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Norfolk",
+     "area": "VA"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    }
+   ]
+  },
+  {
+   "artist": "Karol G",
+   "model": "nvidia/nemotron-3-super-120b-a12b",
+   "named": [
+    {
+     "city": "Miami",
+     "area": "Florida"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "California"
+    },
+    {
+     "city": "New York",
+     "area": "New York"
+    },
+    {
+     "city": "Houston",
+     "area": "Texas"
+    },
+    {
+     "city": "Chicago",
+     "area": "Illinois"
+    },
+    {
+     "city": "San Antonio",
+     "area": "Texas"
+    },
+    {
+     "city": "Phoenix",
+     "area": "Arizona"
+    },
+    {
+     "city": "Dallas",
+     "area": "Texas"
+    },
+    {
+     "city": "Atlanta",
+     "area": "Georgia"
+    },
+    {
+     "city": "Orlando",
+     "area": "Florida"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "Nevada"
+    },
+    {
+     "city": "San Diego",
+     "area": "California"
+    },
+    {
+     "city": "Tampa",
+     "area": "Florida"
+    },
+    {
+     "city": "Austin",
+     "area": "Texas"
+    },
+    {
+     "city": "Denver",
+     "area": "Colorado"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "Pennsylvania"
+    },
+    {
+     "city": "Charlotte",
+     "area": "North Carolina"
+    },
+    {
+     "city": "Washington D.C.",
+     "area": "District of Columbia"
+    },
+    {
+     "city": "Boston",
+     "area": "Massachusetts"
+    },
+    {
+     "city": "Seattle",
+     "area": "Washington"
+    },
+    {
+     "city": "Portland",
+     "area": "Oregon"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "Minnesota"
+    },
+    {
+     "city": "Detroit",
+     "area": "Michigan"
+    },
+    {
+     "city": "Cleveland",
+     "area": "Ohio"
+    },
+    {
+     "city": "St. Louis",
+     "area": "Missouri"
+    },
+    {
+     "city": "Columbus",
+     "area": "Ohio"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "Indiana"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "Wisconsin"
+    },
+    {
+     "city": "Kansas City",
+     "area": "Missouri/Kansas"
+    },
+    {
+     "city": "Sacramento",
+     "area": "California"
+    },
+    {
+     "city": "Raleigh",
+     "area": "North Carolina"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "Florida"
+    },
+    {
+     "city": "Fort Worth",
+     "area": "Texas"
+    },
+    {
+     "city": "El Paso",
+     "area": "Texas"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "New Mexico"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "Utah"
+    },
+    {
+     "city": "Honolulu",
+     "area": "Hawaii"
+    },
+    {
+     "city": "Anchorage",
+     "area": "Alaska"
+    },
+    {
+     "city": "Providence",
+     "area": "Rhode Island"
+    },
+    {
+     "city": "Richmond",
+     "area": "Virginia"
+    },
+    {
+     "city": "Memphis",
+     "area": "Tennessee"
+    },
+    {
+     "city": "Nashville",
+     "area": "Tennessee"
+    },
+    {
+     "city": "Birmingham",
+     "area": "Alabama"
+    },
+    {
+     "city": "Louisville",
+     "area": "Kentucky"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "Oklahoma"
+    },
+    {
+     "city": "Tulsa",
+     "area": "Oklahoma"
+    },
+    {
+     "city": "Des Moines",
+     "area": "Iowa"
+    }
+   ]
+  },
+  {
+   "artist": "Garth Brooks",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA"
+    },
+    {
+     "city": "Wichita",
+     "area": "KS"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Reno",
+     "area": "NV"
+    },
+    {
+     "city": "Boise",
+     "area": "ID"
+    },
+    {
+     "city": "Spokane",
+     "area": "WA"
+    },
+    {
+     "city": "Billings",
+     "area": "MT"
+    },
+    {
+     "city": "Cheyenne",
+     "area": "WY"
+    },
+    {
+     "city": "Rapid City",
+     "area": "SD"
+    },
+    {
+     "city": "Fargo",
+     "area": "ND"
+    },
+    {
+     "city": "Sioux Falls",
+     "area": "SD"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    }
+   ]
+  },
+  {
+   "artist": "Take That",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Berlin",
+     "area": "Germany"
+    },
+    {
+     "city": "Munich",
+     "area": "Germany"
+    },
+    {
+     "city": "Hamburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Cologne",
+     "area": "Germany"
+    },
+    {
+     "city": "Frankfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Stuttgart",
+     "area": "Germany"
+    },
+    {
+     "city": "Düsseldorf",
+     "area": "Germany"
+    },
+    {
+     "city": "Dortmund",
+     "area": "Germany"
+    },
+    {
+     "city": "Essen",
+     "area": "Germany"
+    },
+    {
+     "city": "Leipzig",
+     "area": "Germany"
+    },
+    {
+     "city": "Bremen",
+     "area": "Germany"
+    },
+    {
+     "city": "Dresden",
+     "area": "Germany"
+    },
+    {
+     "city": "Hanover",
+     "area": "Germany"
+    },
+    {
+     "city": "Nuremberg",
+     "area": "Germany"
+    },
+    {
+     "city": "Amsterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Rotterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "The Hague",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Utrecht",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Eindhoven",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Groningen",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Tilburg",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Brussels",
+     "area": "Belgium"
+    },
+    {
+     "city": "Antwerp",
+     "area": "Belgium"
+    },
+    {
+     "city": "Ghent",
+     "area": "Belgium"
+    },
+    {
+     "city": "Paris",
+     "area": "France"
+    },
+    {
+     "city": "Lyon",
+     "area": "France"
+    },
+    {
+     "city": "Marseille",
+     "area": "France"
+    },
+    {
+     "city": "Toulouse",
+     "area": "France"
+    },
+    {
+     "city": "Nice",
+     "area": "France"
+    },
+    {
+     "city": "Nantes",
+     "area": "France"
+    },
+    {
+     "city": "Strasbourg",
+     "area": "France"
+    },
+    {
+     "city": "Montpellier",
+     "area": "France"
+    },
+    {
+     "city": "Bordeaux",
+     "area": "France"
+    },
+    {
+     "city": "Lille",
+     "area": "France"
+    },
+    {
+     "city": "Rennes",
+     "area": "France"
+    },
+    {
+     "city": "Vienna",
+     "area": "Austria"
+    },
+    {
+     "city": "Graz",
+     "area": "Austria"
+    },
+    {
+     "city": "Linz",
+     "area": "Austria"
+    },
+    {
+     "city": "Salzburg",
+     "area": "Austria"
+    },
+    {
+     "city": "Innsbruck",
+     "area": "Austria"
+    },
+    {
+     "city": "Zurich",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Geneva",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Basel",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Bern",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Lausanne",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Copenhagen",
+     "area": "Denmark"
+    },
+    {
+     "city": "Aarhus",
+     "area": "Denmark"
+    },
+    {
+     "city": "Odense",
+     "area": "Denmark"
+    },
+    {
+     "city": "Aalborg",
+     "area": "Denmark"
+    },
+    {
+     "city": "Stockholm",
+     "area": "Sweden"
+    }
+   ]
+  },
+  {
+   "artist": "Role Model",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Oakland",
+     "area": "CA"
+    },
+    {
+     "city": "Long Beach",
+     "area": "CA"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    }
+   ]
+  },
+  {
+   "artist": "Sugarland",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Knoxville",
+     "area": "TN"
+    },
+    {
+     "city": "Chattanooga",
+     "area": "TN"
+    },
+    {
+     "city": "Greenville",
+     "area": "SC"
+    },
+    {
+     "city": "Columbia",
+     "area": "SC"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Wichita",
+     "area": "KS"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Des Moines",
+     "area": "IA"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Colorado Springs",
+     "area": "CO"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Boise",
+     "area": "ID"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "El Paso",
+     "area": "TX"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Fort Worth",
+     "area": "TX"
+    },
+    {
+     "city": "Corpus Christi",
+     "area": "TX"
+    },
+    {
+     "city": "Lubbock",
+     "area": "TX"
+    },
+    {
+     "city": "Amarillo",
+     "area": "TX"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    }
+   ]
+  },
+  {
+   "artist": "Victoria Monét",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Birmingham",
+     "area": "AL"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Greensboro",
+     "area": "NC"
+    },
+    {
+     "city": "Durham",
+     "area": "NC"
+    },
+    {
+     "city": "Columbia",
+     "area": "SC"
+    },
+    {
+     "city": "Little Rock",
+     "area": "AR"
+    },
+    {
+     "city": "Shreveport",
+     "area": "LA"
+    },
+    {
+     "city": "Baton Rouge",
+     "area": "LA"
+    },
+    {
+     "city": "Mobile",
+     "area": "AL"
+    },
+    {
+     "city": "Savannah",
+     "area": "GA"
+    },
+    {
+     "city": "Augusta",
+     "area": "GA"
+    },
+    {
+     "city": "Tallahassee",
+     "area": "FL"
+    },
+    {
+     "city": "Norfolk",
+     "area": "VA"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Albany",
+     "area": "NY"
+    },
+    {
+     "city": "Syracuse",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    }
+   ]
+  },
+  {
+   "artist": "Phoebe Bridgers",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Albuquerque",
+     "area": "NM"
+    },
+    {
+     "city": "Tucson",
+     "area": "AZ"
+    },
+    {
+     "city": "Fresno",
+     "area": "CA"
+    },
+    {
+     "city": "Omaha",
+     "area": "NE"
+    },
+    {
+     "city": "Tulsa",
+     "area": "OK"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    }
+   ]
+  },
+  {
+   "artist": "James Blunt",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Berlin",
+     "area": "Germany"
+    },
+    {
+     "city": "Paris",
+     "area": "France"
+    },
+    {
+     "city": "Amsterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Copenhagen",
+     "area": "Denmark"
+    },
+    {
+     "city": "Stockholm",
+     "area": "Sweden"
+    },
+    {
+     "city": "Vienna",
+     "area": "Austria"
+    },
+    {
+     "city": "Munich",
+     "area": "Germany"
+    },
+    {
+     "city": "Hamburg",
+     "area": "Germany"
+    },
+    {
+     "city": "Cologne",
+     "area": "Germany"
+    },
+    {
+     "city": "Frankfurt",
+     "area": "Germany"
+    },
+    {
+     "city": "Brussels",
+     "area": "Belgium"
+    },
+    {
+     "city": "Zurich",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Oslo",
+     "area": "Norway"
+    },
+    {
+     "city": "Helsinki",
+     "area": "Finland"
+    },
+    {
+     "city": "Warsaw",
+     "area": "Poland"
+    },
+    {
+     "city": "Prague",
+     "area": "Czech Republic"
+    },
+    {
+     "city": "Barcelona",
+     "area": "Spain"
+    },
+    {
+     "city": "Madrid",
+     "area": "Spain"
+    },
+    {
+     "city": "Lisbon",
+     "area": "Portugal"
+    },
+    {
+     "city": "Milan",
+     "area": "Italy"
+    },
+    {
+     "city": "Rome",
+     "area": "Italy"
+    },
+    {
+     "city": "Bologna",
+     "area": "Italy"
+    },
+    {
+     "city": "Lyon",
+     "area": "France"
+    },
+    {
+     "city": "Nantes",
+     "area": "France"
+    },
+    {
+     "city": "Bordeaux",
+     "area": "France"
+    },
+    {
+     "city": "Toulouse",
+     "area": "France"
+    },
+    {
+     "city": "Marseille",
+     "area": "France"
+    },
+    {
+     "city": "Strasbourg",
+     "area": "France"
+    },
+    {
+     "city": "Lille",
+     "area": "France"
+    },
+    {
+     "city": "Rotterdam",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Utrecht",
+     "area": "Netherlands"
+    },
+    {
+     "city": "Ghent",
+     "area": "Belgium"
+    },
+    {
+     "city": "Antwerp",
+     "area": "Belgium"
+    },
+    {
+     "city": "Leipzig",
+     "area": "Germany"
+    },
+    {
+     "city": "Dresden",
+     "area": "Germany"
+    },
+    {
+     "city": "Hannover",
+     "area": "Germany"
+    },
+    {
+     "city": "Nuremberg",
+     "area": "Germany"
+    },
+    {
+     "city": "Stuttgart",
+     "area": "Germany"
+    },
+    {
+     "city": "Dusseldorf",
+     "area": "Germany"
+    },
+    {
+     "city": "Essen",
+     "area": "Germany"
+    },
+    {
+     "city": "Dortmund",
+     "area": "Germany"
+    },
+    {
+     "city": "Bremen",
+     "area": "Germany"
+    },
+    {
+     "city": "Graz",
+     "area": "Austria"
+    },
+    {
+     "city": "Salzburg",
+     "area": "Austria"
+    },
+    {
+     "city": "Basel",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Geneva",
+     "area": "Switzerland"
+    },
+    {
+     "city": "Ljubljana",
+     "area": "Slovenia"
+    },
+    {
+     "city": "Zagreb",
+     "area": "Croatia"
+    },
+    {
+     "city": "Budapest",
+     "area": "Hungary"
+    }
+   ]
+  },
+  {
+   "artist": "Jonas Brothers",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "San Jose",
+     "area": "CA"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Virginia Beach",
+     "area": "VA"
+    },
+    {
+     "city": "Providence",
+     "area": "RI"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Jacksonville",
+     "area": "FL"
+    },
+    {
+     "city": "Oklahoma City",
+     "area": "OK"
+    },
+    {
+     "city": "Memphis",
+     "area": "TN"
+    },
+    {
+     "city": "Richmond",
+     "area": "VA"
+    },
+    {
+     "city": "Louisville",
+     "area": "KY"
+    },
+    {
+     "city": "New Orleans",
+     "area": "LA"
+    },
+    {
+     "city": "Hartford",
+     "area": "CT"
+    },
+    {
+     "city": "Buffalo",
+     "area": "NY"
+    },
+    {
+     "city": "Rochester",
+     "area": "NY"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    }
+   ]
+  },
+  {
+   "artist": "Charli XCX",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "named": [
+    {
+     "city": "Los Angeles",
+     "area": "CA"
+    },
+    {
+     "city": "New York",
+     "area": "NY"
+    },
+    {
+     "city": "Chicago",
+     "area": "IL"
+    },
+    {
+     "city": "Toronto",
+     "area": "ON"
+    },
+    {
+     "city": "San Francisco",
+     "area": "CA"
+    },
+    {
+     "city": "Seattle",
+     "area": "WA"
+    },
+    {
+     "city": "Montreal",
+     "area": "QC"
+    },
+    {
+     "city": "Boston",
+     "area": "MA"
+    },
+    {
+     "city": "Washington",
+     "area": "DC"
+    },
+    {
+     "city": "Philadelphia",
+     "area": "PA"
+    },
+    {
+     "city": "Vancouver",
+     "area": "BC"
+    },
+    {
+     "city": "Atlanta",
+     "area": "GA"
+    },
+    {
+     "city": "Portland",
+     "area": "OR"
+    },
+    {
+     "city": "Denver",
+     "area": "CO"
+    },
+    {
+     "city": "Austin",
+     "area": "TX"
+    },
+    {
+     "city": "Minneapolis",
+     "area": "MN"
+    },
+    {
+     "city": "Dallas",
+     "area": "TX"
+    },
+    {
+     "city": "Houston",
+     "area": "TX"
+    },
+    {
+     "city": "Phoenix",
+     "area": "AZ"
+    },
+    {
+     "city": "San Diego",
+     "area": "CA"
+    },
+    {
+     "city": "Nashville",
+     "area": "TN"
+    },
+    {
+     "city": "Detroit",
+     "area": "MI"
+    },
+    {
+     "city": "Miami",
+     "area": "FL"
+    },
+    {
+     "city": "Orlando",
+     "area": "FL"
+    },
+    {
+     "city": "Tampa",
+     "area": "FL"
+    },
+    {
+     "city": "Sacramento",
+     "area": "CA"
+    },
+    {
+     "city": "Pittsburgh",
+     "area": "PA"
+    },
+    {
+     "city": "Cleveland",
+     "area": "OH"
+    },
+    {
+     "city": "Columbus",
+     "area": "OH"
+    },
+    {
+     "city": "Indianapolis",
+     "area": "IN"
+    },
+    {
+     "city": "Kansas City",
+     "area": "MO"
+    },
+    {
+     "city": "St. Louis",
+     "area": "MO"
+    },
+    {
+     "city": "Cincinnati",
+     "area": "OH"
+    },
+    {
+     "city": "Milwaukee",
+     "area": "WI"
+    },
+    {
+     "city": "Raleigh",
+     "area": "NC"
+    },
+    {
+     "city": "Charlotte",
+     "area": "NC"
+    },
+    {
+     "city": "Baltimore",
+     "area": "MD"
+    },
+    {
+     "city": "Salt Lake City",
+     "area": "UT"
+    },
+    {
+     "city": "Las Vegas",
+     "area": "NV"
+    },
+    {
+     "city": "San Antonio",
+     "area": "TX"
+    },
+    {
+     "city": "Ottawa",
+     "area": "ON"
+    },
+    {
+     "city": "Calgary",
+     "area": "AB"
+    },
+    {
+     "city": "Edmonton",
+     "area": "AB"
+    },
+    {
+     "city": "Winnipeg",
+     "area": "MB"
+    },
+    {
+     "city": "Quebec City",
+     "area": "QC"
+    },
+    {
+     "city": "Halifax",
+     "area": "NS"
+    }
+   ]
+  }
+ ]
+}

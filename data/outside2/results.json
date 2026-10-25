@@ -1,0 +1,8709 @@
+{
+ "scored": "2026-10-25T08:20:36.111Z",
+ "protocol": "data/outside2/PROTOCOL.md",
+ "script": "scripts/outside2.ts",
+ "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+ "usage": {
+  "qloo": {
+   "venues": 233,
+   "support": 63,
+   "sample": 14,
+   "postcut": 13
+  },
+  "qlooTotal": 323,
+  "modelCalls": 70,
+  "tokensIn": 8810,
+  "tokensOut": 20709,
+  "dollars": 0.071
+ },
+ "venues": {
+  "n": 34,
+  "cities": 102,
+  "popularityOnlyUnavailable": 0,
+  "primary": [
+   {
+    "name": "Qloo (artist signal) vs Qloo popularity only",
+    "n": 34,
+    "meanA": 0.28431372549019607,
+    "meanB": 0.3431372549019608,
+    "diff": -0.0588235294117647,
+    "lo": -0.11764705882352941,
+    "hi": -0.00980392156862745,
+    "wins": 1,
+    "losses": 6,
+    "ties": 27,
+    "p": 0.125
+   },
+   {
+    "name": "Qloo vs the model alone",
+    "n": 34,
+    "meanA": 0.28431372549019607,
+    "meanB": 0.735294117647059,
+    "diff": -0.4509803921568627,
+    "lo": -0.5784313725490196,
+    "hi": -0.3333333333333333,
+    "wins": 1,
+    "losses": 26,
+    "ties": 7,
+    "p": 4.172325134277344e-7
+   }
+  ],
+  "secondary": [
+   {
+    "name": "The model alone vs Qloo popularity only",
+    "n": 34,
+    "meanA": 0.735294117647059,
+    "meanB": 0.3431372549019608,
+    "diff": 0.392156862745098,
+    "lo": 0.2647058823529412,
+    "hi": 0.5196078431372549,
+    "wins": 24,
+    "losses": 3,
+    "ties": 7,
+    "p": 0.000049233436584472656
+   },
+   {
+    "name": "Qloo vs the biggest fitting Wikidata room",
+    "n": 34,
+    "meanA": 0.28431372549019607,
+    "meanB": 0.37254901960784315,
+    "diff": -0.08823529411764706,
+    "lo": -0.23529411764705888,
+    "hi": 0.05882352941176469,
+    "wins": 9,
+    "losses": 12,
+    "ties": 13,
+    "p": 0.6636238098144531
+   },
+   {
+    "name": "The model alone vs the biggest fitting Wikidata room",
+    "n": 34,
+    "meanA": 0.735294117647059,
+    "meanB": 0.37254901960784315,
+    "diff": 0.36274509803921573,
+    "lo": 0.24509803921568624,
+    "hi": 0.4901960784313726,
+    "wins": 21,
+    "losses": 0,
+    "ties": 13,
+    "p": 9.5367431640625e-7
+   },
+   {
+    "name": "Qloo in Routed's measuring order vs Qloo popularity only",
+    "n": 34,
+    "meanA": 0.2647058823529412,
+    "meanB": 0.3431372549019608,
+    "diff": -0.0784313725490196,
+    "lo": -0.14705882352941177,
+    "hi": -0.0196078431372549,
+    "wins": 0,
+    "losses": 6,
+    "ties": 28,
+    "p": 0.03125
+   },
+   {
+    "name": "Qloo, hit@1, vs the model alone",
+    "n": 34,
+    "meanA": 0.15686274509803919,
+    "meanB": 0.5392156862745098,
+    "diff": -0.38235294117647056,
+    "lo": -0.48039215686274506,
+    "hi": -0.27450980392156865,
+    "wins": 1,
+    "losses": 25,
+    "ties": 8,
+    "p": 8.046627044677734e-7
+   },
+   {
+    "name": "Qloo, MRR@5, vs the model alone",
+    "n": 34,
+    "meanA": 0.2187908496732026,
+    "meanB": 0.6364379084967322,
+    "diff": -0.4176470588235294,
+    "lo": -0.5060457516339869,
+    "hi": -0.325,
+    "wins": 1,
+    "losses": 29,
+    "ties": 4,
+    "p": 5.774199962615967e-8
+   },
+   {
+    "name": "Qloo, hit@1, vs Qloo popularity only",
+    "n": 34,
+    "meanA": 0.15686274509803919,
+    "meanB": 0.24509803921568624,
+    "diff": -0.08823529411764708,
+    "lo": -0.1568627450980392,
+    "hi": -0.029411764705882353,
+    "wins": 0,
+    "losses": 7,
+    "ties": 27,
+    "p": 0.015625
+   }
+  ],
+  "pooled": {
+   "qloo": {
+    "cities": 102,
+    "hit1": 16,
+    "hit3": 29,
+    "listed": 39,
+    "medianRank": 2
+   },
+   "routedOrder": {
+    "cities": 102,
+    "hit1": 18,
+    "hit3": 27,
+    "listed": 39,
+    "medianRank": 2
+   },
+   "popular": {
+    "cities": 102,
+    "hit1": 25,
+    "hit3": 35,
+    "listed": 49,
+    "medianRank": 1
+   },
+   "ladder": {
+    "cities": 102,
+    "hit1": 27,
+    "hit3": 38,
+    "listed": 42,
+    "medianRank": 1
+   },
+   "model": {
+    "cities": 102,
+    "hit1": 55,
+    "hit3": 75,
+    "listed": 78,
+    "medianRank": 1
+   }
+  },
+  "rows": [
+   {
+    "artist": "Ledisi",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Good Life Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Good_Life_Tour&oldid=1293293249",
+    "draw": 2700,
+    "cities": [
+     {
+      "marketId": "dallas-us-tx",
+      "city": "Dallas",
+      "real": [
+       "Music Hall at Fair Park"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Uptown Theater in Grand Prairie",
+        "The Epic",
+        "Mesquite Arts Center"
+       ],
+       "routedOrder": [
+        "Moody Performance Hall",
+        "Uptown Theater in Grand Prairie",
+        "Dallas Children's Theater"
+       ],
+       "popular": [
+        "House of Blues",
+        "Dos Equis Pavilion",
+        "The Bomb Factory"
+       ],
+       "ladder": [
+        "Mesquite Arena",
+        "Annette Strauss Square",
+        "Gas Monkey Live"
+       ],
+       "model": [
+        "The Factory in Deep Ellum",
+        "South Side Ballroom",
+        "House of Blues"
+       ]
+      },
+      "returned": {
+       "qloo": 6,
+       "popular": 14,
+       "ladder": 9
+      }
+     },
+     {
+      "marketId": "washington-us-dc",
+      "city": "Washington",
+      "real": [
+       "Theater At MGM National Harbor"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "The Howard Theatre",
+        "Joe's Movement Emporium",
+        "Dance Place"
+       ],
+       "routedOrder": [
+        "The Fillmore Silver Spring",
+        "The Howard Theatre",
+        "The REACH, at the Kennedy Center for the Performing Arts"
+       ],
+       "popular": [
+        "The Fillmore Silver Spring",
+        "Echostage",
+        "9:30 Club"
+       ],
+       "ladder": [
+        "The Show Place Arena",
+        "Charles E. Smith Athletic Center",
+        "Bender Arena"
+       ],
+       "model": [
+        "The Anthem",
+        "Echostage",
+        "The Fillmore Silver Spring"
+       ]
+      },
+      "returned": {
+       "qloo": 9,
+       "popular": 14,
+       "ladder": 21
+      }
+     },
+     {
+      "marketId": "birmingham-us-al",
+      "city": "Birmingham",
+      "real": [
+       "Alabama Theatre"
+      ],
+      "ranks": {
+       "qloo": 9,
+       "routedOrder": 1,
+       "popular": 2,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "The Fennec - Sports, Live Music, Events",
+        "WORKPLAY",
+        "Alys Robinson Stephens Performing Arts Center"
+       ],
+       "routedOrder": [
+        "Alabama Theatre",
+        "Bartow Arena",
+        "Lyric Theatre"
+       ],
+       "popular": [
+        "Iron City Bham",
+        "Alabama Theatre",
+        "Saturn"
+       ],
+       "ladder": [
+        "Bill Harris Arena",
+        "Bartow Arena",
+        "Oak Mountain Amphitheatre"
+       ],
+       "model": [
+        "Iron City",
+        "Avondale Brewing Company",
+        "Zydeco"
+       ]
+      },
+      "returned": {
+       "qloo": 10,
+       "popular": 14,
+       "ladder": 3
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.16666666666666666,
+     "ladder": 0,
+     "model": 0
+    }
+   },
+   {
+    "artist": "The 1975",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Still... At Their Very Best",
+    "source": "https://en.wikipedia.org/w/index.php?title=Still..._At_Their_Very_Best&oldid=1367276826",
+    "draw": 18400,
+    "cities": [
+     {
+      "marketId": "chicago-us-il",
+      "city": "Chicago",
+      "real": [
+       "Allstate Arena"
+      ],
+      "ranks": {
+       "qloo": 5,
+       "routedOrder": 3,
+       "popular": 3,
+       "ladder": 2,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Credit Union 1 Arena",
+        "Wintrust Arena",
+        "Petrillo Music Shell"
+       ],
+       "routedOrder": [
+        "Wintrust Arena",
+        "Credit Union 1 Arena",
+        "Allstate Arena"
+       ],
+       "popular": [
+        "Wintrust Arena",
+        "Credit Union 1 Arena",
+        "Allstate Arena"
+       ],
+       "ladder": [
+        "United Center",
+        "Allstate Arena",
+        "Wintrust Arena"
+       ],
+       "model": [
+        "United Center",
+        "Allstate Arena",
+        "Credit Union 1 Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 8,
+       "popular": 8,
+       "ladder": 23
+      }
+     },
+     {
+      "marketId": "st-louis-us-mo",
+      "city": "St. Louis",
+      "real": [
+       "Enterprise Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Chaifetz Arena"
+       ],
+       "routedOrder": [
+        "Chaifetz Arena"
+       ],
+       "popular": [
+        "Chaifetz Arena",
+        "Jefferson Barracks Veterans Memorial Amphitheater"
+       ],
+       "ladder": [
+        "Enterprise Center",
+        "St. Louis Municipal Opera Theatre",
+        "Chaifetz Arena"
+       ],
+       "model": [
+        "Enterprise Center",
+        "Chaifetz Arena",
+        "The Dome at America's Center"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 2,
+       "ladder": 4
+      }
+     },
+     {
+      "marketId": "vancouver-ca",
+      "city": "Vancouver",
+      "real": [
+       "Rogers Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Malkin Bowl",
+        "PNE Forum",
+        "Moody Park Arena"
+       ],
+       "routedOrder": [
+        "Moody Park Arena",
+        "PNE Forum",
+        "Malkin Bowl"
+       ],
+       "popular": [
+        "PNE Forum",
+        "Malkin Bowl",
+        "Poirier Sport & Leisure Complex"
+       ],
+       "ladder": [
+        "Rogers Arena",
+        "Pacific Coliseum",
+        "Richmond Olympic Oval"
+       ],
+       "model": [
+        "Rogers Arena",
+        "Pacific Coliseum",
+        "Thunderbird Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 4,
+       "popular": 8,
+       "ladder": 29
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 1,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.06666666666666667,
+     "routedOrder": 0.1111111111111111,
+     "popular": 0.1111111111111111,
+     "ladder": 0.8333333333333334,
+     "model": 0.8333333333333334
+    }
+   },
+   {
+    "artist": "Omar Apollo",
+    "set": "held-out",
+    "region": "na",
+    "tour": "God Said No World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=God_Said_No_World_Tour&oldid=1360001122",
+    "draw": 8500,
+    "cities": [
+     {
+      "marketId": "chicago-us-il",
+      "city": "Chicago",
+      "real": [
+       "Huntington Bank Pavilion"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 18,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "The Second City",
+        "OuterSpace Studios",
+        "The Theatre School at DePaul University"
+       ],
+       "routedOrder": [
+        "The Chicago Theatre",
+        "CIBC Theatre",
+        "The Riviera Theatre"
+       ],
+       "popular": [
+        "The Chicago Theatre",
+        "House of Blues Chicago",
+        "CIBC Theatre"
+       ],
+       "ladder": [
+        "Allstate Arena",
+        "Wintrust Arena",
+        "Credit Union 1 Arena"
+       ],
+       "model": [
+        "Byline Bank Aragon Ballroom",
+        "Chicago Theatre",
+        "The Salt Shed"
+       ]
+      },
+      "returned": {
+       "qloo": 20,
+       "popular": 20,
+       "ladder": 23
+      }
+     },
+     {
+      "marketId": "dallas-us-tx",
+      "city": "Dallas",
+      "real": [
+       "The Pavilion at Toyota Music Factory"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "House of Blues",
+        "Granada Theater",
+        "South Side Music Hall"
+       ],
+       "routedOrder": [
+        "Dos Equis Pavilion",
+        "Granada Theater",
+        "Winspear Opera House"
+       ],
+       "popular": [
+        "American Airlines Center",
+        "House of Blues",
+        "Dos Equis Pavilion"
+       ],
+       "ladder": [
+        "American Airlines Center",
+        "Mesquite Arena",
+        "Annette Strauss Square"
+       ],
+       "model": [
+        "The Pavilion at Toyota Music Factory",
+        "South Side Ballroom",
+        "The Bomb Factory"
+       ]
+      },
+      "returned": {
+       "qloo": 16,
+       "popular": 18,
+       "ladder": 9
+      }
+     },
+     {
+      "marketId": "miami-us-fl",
+      "city": "Miami",
+      "real": [
+       "FPL Solar Amphitheater"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Kaseya Center",
+        "Maurice Gusman Concert Hall",
+        "Olympia Theater"
+       ],
+       "routedOrder": [
+        "Faena Theater",
+        "Adrienne Arsht Center for the Performing Arts of Miami-Dade County",
+        "Olympia Theater"
+       ],
+       "popular": [
+        "Kaseya Center",
+        "Faena Theater",
+        "Adrienne Arsht Center for the Performing Arts of Miami-Dade County"
+       ],
+       "ladder": [
+        "Kaseya Center",
+        "Miami-Dade County Auditorium",
+        "New World Center"
+       ],
+       "model": [
+        "The Fillmore Miami Beach",
+        "Oasis Wynwood",
+        "The Ground"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 15,
+       "ladder": 4
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    }
+   },
+   {
+    "artist": "Flo",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Access All Areas Tour (Flo)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Access_All_Areas_Tour_(Flo)&oldid=1378984407",
+    "draw": 2300,
+    "cities": [
+     {
+      "marketId": "new-york-city-us-ny",
+      "city": "New York",
+      "real": [
+       "Brooklyn Paramount Theater"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Ambassador Theatre",
+        "Gershwin Theatre",
+        "Pier 36 NYC"
+       ],
+       "routedOrder": [
+        "Gershwin Theatre",
+        "Minskoff Theatre",
+        "Majestic Theatre"
+       ],
+       "popular": [
+        "Infosys Theater at Madison Square Garden",
+        "Jazz At Lincoln Center",
+        "Webster Hall"
+       ],
+       "ladder": [
+        "Infosys Theater",
+        "Four Seasons Arena",
+        "Rose Hill Gymnasium"
+       ],
+       "model": [
+        "Brooklyn Steel",
+        "Terminal 5",
+        "The Rooftop at Pier 17"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 84
+      }
+     },
+     {
+      "marketId": "vancouver-ca",
+      "city": "Vancouver",
+      "real": [
+       "Commodore Ballroom"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 1,
+       "ladder": null,
+       "model": 4
+      },
+      "top": {
+       "qloo": [
+        "Royal Palace Banquet Hall",
+        "Anvil Centre",
+        "Orpheum"
+       ],
+       "routedOrder": [
+        "Vogue Theatre",
+        "Orpheum",
+        "Rickshaw Theatre"
+       ],
+       "popular": [
+        "Commodore Ballroom",
+        "Vogue Theatre",
+        "Orpheum"
+       ],
+       "ladder": [
+        "Vancouver Forum",
+        "Queen Elizabeth Theatre (Auditorium)",
+        "Orpheum Auditorium"
+       ],
+       "model": [
+        "The Centre in Vancouver for Performing Arts",
+        "Vogue Theatre",
+        "The Imperial Vancouver"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 29
+      }
+     },
+     {
+      "marketId": "boston-us-ma",
+      "city": "Boston",
+      "real": [
+       "Citizens House of Blues Boston"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 1,
+       "ladder": null,
+       "model": 3
+      },
+      "top": {
+       "qloo": [
+        "Strand Theatre",
+        "The Norwood Theatre",
+        "Big Night Live"
+       ],
+       "routedOrder": [
+        "Leader Bank Pavilion",
+        "Orpheum Theatre",
+        "Emerson Colonial Theatre"
+       ],
+       "popular": [
+        "Citizens House of Blues Boston",
+        "Paradise Rock Club",
+        "Leader Bank Pavilion"
+       ],
+       "ladder": [
+        "Leader Bank Pavilion",
+        "Matthews Arena",
+        "Aleppo Shrine Auditorium"
+       ],
+       "model": [
+        "MGM Music Hall at Fenway",
+        "Roadrunner",
+        "House of Blues"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 28
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0.6666666666666666,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0.6666666666666666,
+     "ladder": 0,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0.6666666666666666,
+     "ladder": 0,
+     "model": 0.19444444444444442
+    }
+   },
+   {
+    "artist": "Queen + Adam Lambert",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Rhapsody Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Rhapsody_Tour&oldid=1379677608",
+    "draw": 19100,
+    "cities": [
+     {
+      "marketId": "boston-us-ma",
+      "city": "Boston",
+      "real": [
+       "TD Garden"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Leader Bank Pavilion",
+        "Walter Brown Arena",
+        "Conte Forum"
+       ],
+       "routedOrder": [
+        "Leader Bank Pavilion",
+        "Matthews Arena - Originally The Boston Arena",
+        "Walter Brown Arena"
+       ],
+       "popular": [
+        "Leader Bank Pavilion",
+        "Matthews Arena - Originally The Boston Arena",
+        "Walter Brown Arena"
+       ],
+       "ladder": [
+        "TD Garden",
+        "The Stage at Suffolk Downs",
+        "Agganis Arena"
+       ],
+       "model": [
+        "TD Garden",
+        "Xfinity Center",
+        "MGM Music Hall at Fenway"
+       ]
+      },
+      "returned": {
+       "qloo": 7,
+       "popular": 7,
+       "ladder": 28
+      }
+     },
+     {
+      "marketId": "austin-us-tx",
+      "city": "Austin",
+      "real": [
+       "Circuit of the Americas"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Moody Amphitheater",
+        "Gregory Gym",
+        "Moody Center"
+       ],
+       "routedOrder": [
+        "Germania Insurance Amphitheater",
+        "Moody Amphitheater",
+        "Gregory Gym"
+       ],
+       "popular": [
+        "Gregory Gym",
+        "Germania Insurance Amphitheater",
+        "Moody Amphitheater"
+       ],
+       "ladder": [
+        "Moody Center",
+        "Gregory Gymnasium",
+        "Ritz"
+       ],
+       "model": [
+        "Moody Center",
+        "ACL Live at Moody Theater",
+        "H-E-B Center at Cedar Park"
+       ]
+      },
+      "returned": {
+       "qloo": 4,
+       "popular": 4,
+       "ladder": 3
+      }
+     },
+     {
+      "marketId": "los-angeles-us-ca",
+      "city": "Los Angeles",
+      "real": [
+       "The Forum",
+       "BMO Stadium"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 2,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Lucha Underground Arena",
+        "Hollywood Bowl",
+        "The Greek Theatre"
+       ],
+       "routedOrder": [
+        "Pauley Pavilion",
+        "The Greek Theatre",
+        "Riot Games Arena"
+       ],
+       "popular": [
+        "Hollywood Bowl",
+        "Pauley Pavilion",
+        "Galen Center"
+       ],
+       "ladder": [
+        "Crypto.com Arena",
+        "Kia Forum",
+        "Hollywood Bowl"
+       ],
+       "model": [
+        "Kia Forum",
+        "Intuit Dome",
+        "Hollywood Bowl"
+       ]
+      },
+      "returned": {
+       "qloo": 7,
+       "popular": 9,
+       "ladder": 18
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.3333333333333333,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.5,
+     "model": 0.6666666666666666
+    }
+   },
+   {
+    "artist": "Queens of the Stone Age",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Catacombs Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Catacombs_Tour&oldid=1375102207",
+    "draw": 2800,
+    "cities": [
+     {
+      "marketId": "toronto-ca",
+      "city": "Toronto",
+      "real": [
+       "Massey Hall"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 3,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Velvet Underground",
+        "Lee's Palace",
+        "The Mod Club"
+       ],
+       "routedOrder": [
+        "Danforth Music Hall",
+        "The Opera House",
+        "Phoenix Concert Theatre"
+       ],
+       "popular": [
+        "RBC Amphitheatre",
+        "Rebel",
+        "Danforth Music Hall"
+       ],
+       "ladder": [
+        "Mississauga Sports and Entertainment Centre",
+        "CAA Centre",
+        "Massey Hall"
+       ],
+       "model": [
+        "History",
+        "The Danforth Music Hall",
+        "The Phoenix Concert Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 41
+      }
+     },
+     {
+      "marketId": "santa-barbara-us-ca",
+      "city": "Santa Barbara",
+      "real": [
+       "Arlington Theatre"
+      ],
+      "ranks": {
+       "qloo": 5,
+       "routedOrder": 4,
+       "popular": 6,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Lobero Theatre",
+        "Santa Barbara Bowl",
+        "The Granada Theatre"
+       ],
+       "routedOrder": [
+        "The Granada Theatre",
+        "Lobero Theatre",
+        "Center Stage Theater"
+       ],
+       "popular": [
+        "Santa Barbara Bowl",
+        "The Granada Theatre",
+        "Lobero Theatre"
+       ],
+       "ladder": [
+        "Santa Barbara Bowl",
+        "Lobero Theatre"
+       ],
+       "model": [
+        "Santa Barbara Bowl",
+        "Arlington Theatre",
+        "The Granada Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 5,
+       "popular": 6,
+       "ladder": 2
+      }
+     },
+     {
+      "marketId": "palm-springs-us-ca",
+      "city": "Palm Springs",
+      "real": [
+       "Joshua Tree Retreat Center",
+       "Agua Caliente Casino"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "McCallum Theatre"
+       ],
+       "routedOrder": [
+        "McCallum Theatre"
+       ],
+       "popular": [
+        "McCallum Theatre"
+       ],
+       "ladder": [
+        "McCallum Theatre",
+        "Acrisure Arena"
+       ],
+       "model": [
+        "The Show at Agua Caliente",
+        "McCallum Theatre",
+        "Richards Center for the Arts"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 1,
+       "ladder": 2
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.3333333333333333,
+     "model": 0.3333333333333333
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0.06666666666666667,
+     "routedOrder": 0.08333333333333333,
+     "popular": 0,
+     "ladder": 0.1111111111111111,
+     "model": 0.16666666666666666
+    }
+   },
+   {
+    "artist": "Clairo",
+    "set": "bench",
+    "region": "na",
+    "tour": "Charm Tour (2024 North American leg)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Charm_Tour&oldid=1337886246",
+    "draw": 3500,
+    "cities": [
+     {
+      "marketId": "san-diego-us-ca",
+      "city": "San Diego",
+      "real": [
+       "The Rady Shell at Jacobs Park"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Spreckels Theatre",
+        "Brick By Brick",
+        "Teatro Cala-Fórnix"
+       ],
+       "routedOrder": [
+        "San Diego Civic Theatre",
+        "Viejas Arena",
+        "Joan B. Kroc Theatre"
+       ],
+       "popular": [
+        "San Diego Civic Theatre",
+        "Music Box",
+        "SOMA SAN DIEGO"
+       ],
+       "ladder": [
+        "Auditorio Fausto Gutierrez Moreno",
+        "Peterson Gym",
+        "San Diego Civic Theatre"
+       ],
+       "model": [
+        "The Observatory North Park",
+        "SOMA San Diego",
+        "The Magnolia"
+       ]
+      },
+      "returned": {
+       "qloo": 15,
+       "popular": 18,
+       "ladder": 7
+      }
+     },
+     {
+      "marketId": "washington-us-dc",
+      "city": "Washington",
+      "real": [
+       "The Anthem"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 13,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Flash",
+        "Capital One Arena",
+        "Echostage"
+       ],
+       "routedOrder": [
+        "Capital One Arena",
+        "The Howard Theatre",
+        "Ford's Theatre"
+       ],
+       "popular": [
+        "Capital One Arena",
+        "The Fillmore Silver Spring",
+        "Echostage"
+       ],
+       "ladder": [
+        "Wolf Trap National Park for the Performing Arts",
+        "The Show Place Arena",
+        "Charles E. Smith Athletic Center"
+       ],
+       "model": [
+        "The Anthem",
+        "Echostage",
+        "9:30 Club"
+       ]
+      },
+      "returned": {
+       "qloo": 17,
+       "popular": 19,
+       "ladder": 20
+      }
+     },
+     {
+      "marketId": "charlotte-us-nc",
+      "city": "Charlotte",
+      "real": [
+       "Ovens Auditorium"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 12,
+       "ladder": 2,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "The Underground",
+        "Skyla Credit Union Amphitheatre",
+        "World"
+       ],
+       "routedOrder": [
+        "The Fillmore Charlotte",
+        "Skyla Credit Union Amphitheatre",
+        "Belk Theater at Blumenthal Performing Arts Center"
+       ],
+       "popular": [
+        "The Fillmore Charlotte",
+        "The Underground",
+        "Skyla Credit Union Amphitheatre"
+       ],
+       "ladder": [
+        "Grady Cole Center",
+        "Ovens Auditorium",
+        "Dale F. Halton Arena"
+       ],
+       "model": [
+        "The Fillmore Charlotte",
+        "The Underground",
+        "Neighborhood Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 15,
+       "popular": 15,
+       "ladder": 4
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.3333333333333333,
+     "model": 0.3333333333333333
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.16666666666666666,
+     "model": 0.3333333333333333
+    }
+   },
+   {
+    "artist": "Doja Cat",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Tour Ma Vie World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Tour_Ma_Vie_World_Tour&oldid=1379654155",
+    "draw": 19000,
+    "cities": [
+     {
+      "marketId": "tampa-us-fl",
+      "city": "Tampa",
+      "real": [
+       "Benchmark International Arena"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Benchmark International Arena"
+       ],
+       "routedOrder": [
+        "Benchmark International Arena"
+       ],
+       "popular": [
+        "Benchmark International Arena"
+       ],
+       "ladder": [
+        "Yuengling Center",
+        "Mahaffey Theater",
+        "Jannus Live"
+       ],
+       "model": [
+        "Amalie Arena",
+        "Yuengling Center",
+        "MidFlorida Credit Union Amphitheatre"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 1,
+       "ladder": 4
+      }
+     },
+     {
+      "marketId": "las-vegas-us-nv",
+      "city": "Las Vegas",
+      "real": [
+       "T-Mobile Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Orleans Arena",
+        "Cox Pavilion",
+        "South Point Arena & Equestrian Center"
+       ],
+       "routedOrder": [
+        "Orleans Arena",
+        "South Point Arena & Equestrian Center",
+        "City National Arena"
+       ],
+       "popular": [
+        "Orleans Arena",
+        "South Point Arena & Equestrian Center",
+        "City National Arena"
+       ],
+       "ladder": [
+        "T-Mobile Arena",
+        "Sphere",
+        "Silver State Arena"
+       ],
+       "model": [
+        "T-Mobile Arena",
+        "MGM Grand Garden Arena",
+        "Michelob Ultra Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 6,
+       "popular": 10,
+       "ladder": 13
+      }
+     },
+     {
+      "marketId": "san-antonio-us-tx",
+      "city": "San Antonio",
+      "real": [
+       "Frost Bank Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Lila Cockrell Theatre",
+        "Sunken Garden Theater",
+        "Bexar County Community Arenas"
+       ],
+       "routedOrder": [
+        "Lila Cockrell Theatre",
+        "Sunken Garden Theater",
+        "Bexar County Community Arenas"
+       ],
+       "popular": [
+        "Lila Cockrell Theatre",
+        "Sunken Garden Theater",
+        "Bexar County Community Arenas"
+       ],
+       "ladder": [
+        "Frost Bank Center",
+        "Freeman Coliseum",
+        "McDermott Convocation Center"
+       ],
+       "model": [
+        "Frost Bank Center",
+        "AT&T Center",
+        "Freeman Coliseum"
+       ]
+      },
+      "returned": {
+       "qloo": 3,
+       "popular": 4,
+       "ladder": 5
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    }
+   },
+   {
+    "artist": "Depeche Mode",
+    "set": "held-out",
+    "region": "eu",
+    "tour": "Memento Mori World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Memento_Mori_World_Tour&oldid=1357215827",
+    "draw": 23000,
+    "cities": [
+     {
+      "marketId": "turin-it",
+      "city": "Turin",
+      "real": [
+       "Pala Alpitour"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Duca's Guest House"
+       ],
+       "routedOrder": [
+        "Duca's Guest House"
+       ],
+       "popular": [
+        "Duca's Guest House"
+       ],
+       "ladder": [
+        "Torino Palasport Olimpico",
+        "PalaTorino",
+        "Torino Palavela"
+       ],
+       "model": [
+        "Stadio Olimpico Grande Torino",
+        "Pala Alpitour",
+        "PalaRuffini"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 1,
+       "ladder": 11
+      }
+     },
+     {
+      "marketId": "barcelona-es",
+      "city": "Barcelona",
+      "real": [
+       "Palau Sant Jordi"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 2
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [],
+       "ladder": [
+        "Palau Sant Jordi",
+        "Palau Municipal d'Esports de Badalona",
+        "Palau Blaugrana"
+       ],
+       "model": [
+        "Estadi Olímpic Lluís Companys",
+        "Palau Sant Jordi",
+        "WiZink Center"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 0,
+       "ladder": 13
+      }
+     },
+     {
+      "marketId": "lodz-pl",
+      "city": "Łódź",
+      "real": [
+       "Atlas Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 2
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [
+        "Powiatowa Hala Sportowa przy II Liceum Ogólnokształcącym im. Królowej Jadwigi w Pabianicach"
+       ],
+       "ladder": [
+        "Arena Łódź",
+        "Hala MOSiR"
+       ],
+       "model": [
+        "Stadion Miejski",
+        "Atlas Arena",
+        "Łódź Sport Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 1,
+       "ladder": 2
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 1,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 1,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 1,
+     "model": 0.5
+    }
+   },
+   {
+    "artist": "Billy Joel",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Billy Joel in Concert",
+    "source": "https://en.wikipedia.org/w/index.php?title=Billy_Joel_in_Concert&oldid=1350614192",
+    "draw": 37900,
+    "cities": [
+     {
+      "marketId": "los-angeles-us-ca",
+      "city": "Los Angeles",
+      "real": [
+       "Hollywood Bowl",
+       "Dodger Stadium",
+       "SoFi Stadium"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 10,
+       "popular": 4,
+       "ladder": 3,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "LightSpace Studios West | Event Venue | Film Productions",
+        "SoFi Stadium",
+        "Crypto.com Arena"
+       ],
+       "routedOrder": [
+        "Crypto.com Arena",
+        "LA Memorial Coliseum",
+        "Hollywood Palladium"
+       ],
+       "popular": [
+        "Crypto.com Arena",
+        "Kia Forum",
+        "Rose Bowl Stadium"
+       ],
+       "ladder": [
+        "Crypto.com Arena",
+        "Kia Forum",
+        "Hollywood Bowl"
+       ],
+       "model": [
+        "SoFi Stadium",
+        "Rose Bowl",
+        "Los Angeles Memorial Coliseum"
+       ]
+      },
+      "returned": {
+       "qloo": 18,
+       "popular": 20,
+       "ladder": 18
+      }
+     },
+     {
+      "marketId": "winston-salem-us-nc",
+      "city": "Winston-Salem",
+      "real": [
+       "BB&T Field"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Deaton-Thompson Stadium",
+        "Lawrence Joel Veterans Memorial Coliseum"
+       ],
+       "routedOrder": [
+        "Lawrence Joel Veterans Memorial Coliseum",
+        "Deaton-Thompson Stadium"
+       ],
+       "popular": [
+        "Lawrence Joel Veterans Memorial Coliseum",
+        "Deaton-Thompson Stadium",
+        "Winston-Salem State University Football Field"
+       ],
+       "ladder": [
+        "Qubein Center",
+        "Reynolds Gymnasium"
+       ],
+       "model": [
+        "Truist Field",
+        "Lawrence Joel Veterans Memorial Coliseum",
+        "Bowman Gray Stadium"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 4,
+       "ladder": 2
+      }
+     },
+     {
+      "marketId": "tampa-us-fl",
+      "city": "Tampa",
+      "real": [
+       "Tampa Bay Times Forum",
+       "Raymond James Stadium"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 4,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Raymond James Stadium",
+        "MIDFLORIDA Credit Union Amphitheatre",
+        "USF School of Music"
+       ],
+       "routedOrder": [
+        "MIDFLORIDA Credit Union Amphitheatre",
+        "Benchmark International Arena",
+        "Power-Pole Arena"
+       ],
+       "popular": [
+        "Raymond James Stadium",
+        "MIDFLORIDA Credit Union Amphitheatre",
+        "Benchmark International Arena"
+       ],
+       "ladder": [
+        "Yuengling Center",
+        "Mahaffey Theater",
+        "Jannus Live"
+       ],
+       "model": [
+        "Raymond James Stadium",
+        "Amalie Arena",
+        "Yuengling Center"
+       ]
+      },
+      "returned": {
+       "qloo": 8,
+       "popular": 10,
+       "ladder": 4
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0,
+     "popular": 0.3333333333333333,
+     "ladder": 0.3333333333333333,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.5,
+     "routedOrder": 0.08333333333333333,
+     "popular": 0.4166666666666667,
+     "ladder": 0.1111111111111111,
+     "model": 1
+    }
+   },
+   {
+    "artist": "Sugababes",
+    "set": "held-out",
+    "region": "uk",
+    "tour": "Sugababes '25 Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Sugababes_'25_Tour&oldid=1378669791",
+    "draw": 13000,
+    "cities": [
+     {
+      "marketId": "glasgow-gb",
+      "city": "Glasgow",
+      "real": [
+       "OVO Hydro"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 2,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "OVO Hydro",
+        "Braehead Arena"
+       ],
+       "routedOrder": [
+        "Braehead Arena",
+        "OVO Hydro"
+       ],
+       "popular": [
+        "OVO Hydro",
+        "Braehead Arena"
+       ],
+       "ladder": [
+        "The OVO Hydro",
+        "Commonwealth Arena and Sir Chris Hoy Velodrome",
+        "Braehead Arena"
+       ],
+       "model": [
+        "OVO Hydro",
+        "The SSE Hydro",
+        "Barrowland Ballroom"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 2,
+       "ladder": 6
+      }
+     },
+     {
+      "marketId": "newcastle-upon-tyne-gb",
+      "city": "Newcastle upon Tyne",
+      "real": [
+       "Utilita Arena"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Utilita Arena Newcastle"
+       ],
+       "routedOrder": [
+        "Utilita Arena Newcastle"
+       ],
+       "popular": [
+        "Utilita Arena Newcastle",
+        "Sunderland Live Arena"
+       ],
+       "ladder": [
+        "Utilita Arena",
+        "Sunderland Empire Theatre",
+        "Boiler Shop"
+       ],
+       "model": [
+        "Utilita Arena Newcastle",
+        "Vertu Motors Arena",
+        "Newcastle City Hall"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 2,
+       "ladder": 4
+      }
+     },
+     {
+      "marketId": "manchester-gb",
+      "city": "Manchester",
+      "real": [
+       "Co-op Live"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "AO Arena",
+        "National Squash Centre"
+       ],
+       "routedOrder": [
+        "AO Arena",
+        "National Squash Centre"
+       ],
+       "popular": [
+        "AO Arena",
+        "National Squash Centre"
+       ],
+       "ladder": [
+        "Manchester Arena",
+        "Bolton Arena",
+        "Manchester Velodrome"
+       ],
+       "model": [
+        "Co-op Live",
+        "AO Arena",
+        "Manchester Arena (Victoria Warehouse)"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 2,
+       "ladder": 9
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.6666666666666666,
+     "popular": 0.6666666666666666,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.6666666666666666,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.5,
+     "popular": 0.6666666666666666,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    }
+   },
+   {
+    "artist": "Green Day",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Saviors Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Saviors_Tour&oldid=1378500500",
+    "draw": 41100,
+    "cities": [
+     {
+      "marketId": "new-york-city-us-ny",
+      "city": "New York",
+      "real": [
+       "Citi Field"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Arthur Ashe Stadium",
+        "Madison Square Garden",
+        "Forest Hills Stadium"
+       ],
+       "routedOrder": [
+        "Webster Hall",
+        "Gramercy Theatre",
+        "The Bowery Ballroom"
+       ],
+       "popular": [
+        "Madison Square Garden",
+        "Barclays Center",
+        "Infosys Theater at Madison Square Garden"
+       ],
+       "ladder": [
+        "Meadowlands Arena",
+        "Madison Square Garden",
+        "Barclays Center"
+       ],
+       "model": [
+        "MetLife Stadium",
+        "Citi Field",
+        "Yankee Stadium"
+       ]
+      },
+      "returned": {
+       "qloo": 20,
+       "popular": 20,
+       "ladder": 84
+      }
+     },
+     {
+      "marketId": "pittsburgh-us-pa",
+      "city": "Pittsburgh",
+      "real": [
+       "PNC Park"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Stage AE",
+        "F.N.B. Stadium",
+        "Petersen Events Center"
+       ],
+       "routedOrder": [
+        "PPG Paints Arena",
+        "Hartwood Acres Amphitheater",
+        "Petersen Events Center"
+       ],
+       "popular": [
+        "PPG Paints Arena",
+        "Stage AE",
+        "F.N.B. Stadium"
+       ],
+       "ladder": [
+        "PPG Paints Arena",
+        "UPMC Cooper Fieldhouse",
+        "Heinz Hall"
+       ],
+       "model": [
+        "Acrisure Stadium",
+        "PNC Park",
+        "PPG Paints Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 9,
+       "popular": 10,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "portland-us-or",
+      "city": "Portland",
+      "real": [
+       "Providence Park"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Roseland Theater",
+        "McMenamins Crystal Ballroom",
+        "Chiles Center"
+       ],
+       "routedOrder": [
+        "McMenamins Crystal Ballroom",
+        "Roseland Theater",
+        "Keller Auditorium"
+       ],
+       "popular": [
+        "McMenamins Crystal Ballroom",
+        "Roseland Theater",
+        "Keller Auditorium"
+       ],
+       "ladder": [
+        "Moda Center",
+        "Veterans Memorial Coliseum",
+        "Arlene Schnitzer Concert Hall"
+       ],
+       "model": [
+        "Providence Park",
+        "Moda Center",
+        "Nike World Headquarters"
+       ]
+      },
+      "returned": {
+       "qloo": 12,
+       "popular": 15,
+       "ladder": 6
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    }
+   },
+   {
+    "artist": "Dua Lipa",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Radical Optimism Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Radical_Optimism_Tour&oldid=1374098811",
+    "draw": 18600,
+    "cities": [
+     {
+      "marketId": "boston-us-ma",
+      "city": "Boston",
+      "real": [
+       "TD Garden"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Leader Bank Pavilion",
+        "Lavietes Pavilion",
+        "Walter Brown Arena"
+       ],
+       "routedOrder": [
+        "Leader Bank Pavilion",
+        "Matthews Arena - Originally The Boston Arena",
+        "Walter Brown Arena"
+       ],
+       "popular": [
+        "Leader Bank Pavilion",
+        "Matthews Arena - Originally The Boston Arena",
+        "Walter Brown Arena"
+       ],
+       "ladder": [
+        "TD Garden",
+        "The Stage at Suffolk Downs",
+        "Agganis Arena"
+       ],
+       "model": [
+        "TD Garden",
+        "Fenway Park",
+        "Gillette Stadium"
+       ]
+      },
+      "returned": {
+       "qloo": 7,
+       "popular": 7,
+       "ladder": 28
+      }
+     },
+     {
+      "marketId": "new-york-city-us-ny",
+      "city": "New York",
+      "real": [
+       "Madison Square Garden"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 2,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Barclays Center",
+        "Meadowlands Arena",
+        "Coney Island Amphitheater"
+       ],
+       "routedOrder": [
+        "Nassau Veterans Memorial Coliseum",
+        "Coney Island Amphitheater",
+        "Carnesecca Arena"
+       ],
+       "popular": [
+        "Barclays Center",
+        "Prudential Center",
+        "Nassau Veterans Memorial Coliseum"
+       ],
+       "ladder": [
+        "Meadowlands Arena",
+        "Madison Square Garden",
+        "Barclays Center"
+       ],
+       "model": [
+        "Madison Square Garden",
+        "Barclays Center",
+        "UBS Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 10,
+       "popular": 11,
+       "ladder": 84
+      }
+     },
+     {
+      "marketId": "los-angeles-us-ca",
+      "city": "Los Angeles",
+      "real": [
+       "Kia Forum"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 2,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Hollywood Bowl",
+        "Galen Center",
+        "Pauley Pavilion"
+       ],
+       "routedOrder": [
+        "Pauley Pavilion",
+        "The Greek Theatre",
+        "Riot Games Arena"
+       ],
+       "popular": [
+        "Hollywood Bowl",
+        "Pauley Pavilion",
+        "Galen Center"
+       ],
+       "ladder": [
+        "Crypto.com Arena",
+        "Kia Forum",
+        "Hollywood Bowl"
+       ],
+       "model": [
+        "Kia Forum",
+        "Crypto.com Arena",
+        "Intuit Dome"
+       ]
+      },
+      "returned": {
+       "qloo": 7,
+       "popular": 9,
+       "ladder": 18
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 1,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.3333333333333333,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    }
+   },
+   {
+    "artist": "Nine Inch Nails",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Peel It Back Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Peel_It_Back_Tour&oldid=1372261369",
+    "draw": 18500,
+    "cities": [
+     {
+      "marketId": "cleveland-us-oh",
+      "city": "Cleveland",
+      "real": [
+       "Rocket Arena"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Wolstein Center",
+        "Rocket Arena"
+       ],
+       "routedOrder": [
+        "Rocket Arena",
+        "Wolstein Center"
+       ],
+       "popular": [
+        "Rocket Arena",
+        "Wolstein Center"
+       ],
+       "ladder": [
+        "Rocket Arena",
+        "Wolstein Center",
+        "Connor Palace"
+       ],
+       "model": [
+        "Rocket Mortgage FieldHouse",
+        "Wolstein Center",
+        "Rocket Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 2,
+       "ladder": 6
+      }
+     },
+     {
+      "marketId": "irvine-us-ca",
+      "city": "Irvine",
+      "real": [
+       "Honda Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "The Pacific Amphitheatre"
+       ],
+       "routedOrder": [
+        "The Pacific Amphitheatre"
+       ],
+       "popular": [
+        "The Pacific Amphitheatre"
+       ],
+       "ladder": [
+        "Honda Center",
+        "Hyperion Theater",
+        "Carpenter Performing Arts Center"
+       ],
+       "model": [
+        "FivePoint Amphitheatre",
+        "Honda Center",
+        "Pacific Amphitheatre"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 1,
+       "ladder": 3
+      }
+     },
+     {
+      "marketId": "fort-worth-us-tx",
+      "city": "Fort Worth",
+      "real": [
+       "Dickies Arena"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Cowtown Coliseum",
+        "Dickies Arena",
+        "Stockyards Championship Rodeo"
+       ],
+       "routedOrder": [
+        "Dickies Arena",
+        "Cowtown Coliseum",
+        "Stockyards Championship Rodeo"
+       ],
+       "popular": [
+        "Dickies Arena",
+        "Stockyards Championship Rodeo",
+        "Cowtown Coliseum"
+       ],
+       "ladder": [
+        "NYTEX Sports Centre",
+        "Bass Performance Hall",
+        "Casa Mañana"
+       ],
+       "model": [
+        "Dickies Arena",
+        "Bass Performance Hall",
+        "Will Rogers Coliseum"
+       ]
+      },
+      "returned": {
+       "qloo": 4,
+       "popular": 7,
+       "ladder": 4
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.6666666666666666,
+     "popular": 0.6666666666666666,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0.6666666666666666,
+     "popular": 0.6666666666666666,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.6666666666666666,
+     "popular": 0.6666666666666666,
+     "ladder": 0.6666666666666666,
+     "model": 0.8333333333333334
+    }
+   },
+   {
+    "artist": "For King & Country",
+    "set": "held-out",
+    "region": "na",
+    "tour": "A Drummer Boy Christmas Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=A_Drummer_Boy_Christmas_Tour&oldid=1323654848",
+    "draw": 18200,
+    "cities": [
+     {
+      "marketId": "duluth-us-mn",
+      "city": "Duluth",
+      "real": [
+       "Gas South Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Wessman Arena",
+        "Mars Lakeview Arena"
+       ],
+       "routedOrder": [
+        "Wessman Arena",
+        "Mars Lakeview Arena"
+       ],
+       "popular": [
+        "Wessman Arena",
+        "Amsoil Arena",
+        "Mars Lakeview Arena"
+       ],
+       "ladder": [],
+       "model": [
+        "Amsoil Arena",
+        "DECC Arena",
+        "Essentia Health Duluth Heritage Center"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 3,
+       "ladder": 0
+      }
+     },
+     {
+      "marketId": "college-station-us-tx",
+      "city": "College Station",
+      "real": [
+       "Reed Arena"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Reed Arena"
+       ],
+       "routedOrder": [
+        "Reed Arena"
+       ],
+       "popular": [
+        "Reed Arena",
+        "Wolf Pen Creek Amphitheater"
+       ],
+       "ladder": [],
+       "model": [
+        "Reed Arena",
+        "Kyle Field",
+        "Veterans Park & Athletic Complex"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 2,
+       "ladder": 0
+      }
+     },
+     {
+      "marketId": "pensacola-us-fl",
+      "city": "Pensacola",
+      "real": [
+       "Five Flags Speedway"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [
+        "Pensacola Bay Center"
+       ],
+       "ladder": [
+        "Pensacola Civic Center",
+        "Saenger Theatre"
+       ],
+       "model": [
+        "Pensacola Bay Center",
+        "Community Maritime Park",
+        "Veterans Memorial Park"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 1,
+       "ladder": 2
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    }
+   },
+   {
+    "artist": "Bonnie Tyler",
+    "set": "held-out",
+    "region": "eu",
+    "tour": "40 Years \"Total Eclipse of the Heart\" Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=40_Years_%22Total_Eclipse_of_the_Heart%22_Tour&oldid=1362833570",
+    "draw": 15000,
+    "cities": [
+     {
+      "marketId": "bremen-de",
+      "city": "Bremen",
+      "real": [
+       "Metropol Theater"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [],
+       "ladder": [
+        "Stedingsehre",
+        "ÖVB Arena"
+       ],
+       "model": [
+        "ÖVB Arena",
+        "Stadthalle Bremen",
+        "Freilichtbühne Bürgerpark"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 0,
+       "ladder": 2
+      }
+     },
+     {
+      "marketId": "enschede-nl",
+      "city": "Enschede",
+      "real": [
+       "EmslandArena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [],
+       "ladder": [],
+       "model": [
+        "GelreDome",
+        "Evenemententerrein De Baarsjes",
+        "Podium"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 0,
+       "ladder": 0
+      }
+     },
+     {
+      "marketId": "reutlingen-de",
+      "city": "Reutlingen",
+      "real": [
+       "Volksbankmesse"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [
+        "Paul Horn-Arena"
+       ],
+       "ladder": [
+        "Paul Horn-Arena",
+        "Stadthalle Reutlingen"
+       ],
+       "model": [
+        "Messe Reutlingen",
+        "Stadthalle Reutlingen",
+        "Freilichtbühne Markwasen"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 1,
+       "ladder": 2
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0
+    }
+   },
+   {
+    "artist": "Chappell Roan",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Midwest Princess Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Midwest_Princess_Tour&oldid=1348730313",
+    "draw": 1600,
+    "cities": [
+     {
+      "marketId": "madison-us-wi",
+      "city": "Madison",
+      "real": [
+       "The Sylvee"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 7,
+       "popular": 2,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Barrymore Theatre",
+        "The Sylvee",
+        "Middleton Performing Arts Center"
+       ],
+       "routedOrder": [
+        "Barrymore Theatre",
+        "Wisconsin Union Theater",
+        "Majestic Theatre"
+       ],
+       "popular": [
+        "Overture Center for the Arts",
+        "The Sylvee",
+        "Barrymore Theatre"
+       ],
+       "ladder": [
+        "Hartmeyer Ice Arena",
+        "LaBahn Arena",
+        "Stoughton Opera House"
+       ],
+       "model": [
+        "The Sylvee",
+        "Barrymore Theatre",
+        "Capitol Theater"
+       ]
+      },
+      "returned": {
+       "qloo": 9,
+       "popular": 10,
+       "ladder": 4
+      }
+     },
+     {
+      "marketId": "new-york-city-us-ny",
+      "city": "New York",
+      "real": [
+       "Brooklyn Steel"
+      ],
+      "ranks": {
+       "qloo": 9,
+       "routedOrder": 10,
+       "popular": 6,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Jazz At Lincoln Center",
+        "Richard Rodgers Theatre",
+        "Sleep No More"
+       ],
+       "routedOrder": [
+        "Richard Rodgers Theatre",
+        "Lincoln Center Theater",
+        "Walter Kerr Theatre"
+       ],
+       "popular": [
+        "Infosys Theater at Madison Square Garden",
+        "Jazz At Lincoln Center",
+        "Webster Hall"
+       ],
+       "ladder": [
+        "Rose Hill Gymnasium",
+        "New York City Center",
+        "Walsh Gymnasium"
+       ],
+       "model": [
+        "Webster Hall",
+        "Town Hall",
+        "Le Poisson Rouge"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 84
+      }
+     },
+     {
+      "marketId": "pittsburgh-us-pa",
+      "city": "Pittsburgh",
+      "real": [
+       "Stage AE"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 13,
+       "popular": 1,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Mr. Smalls Theatre",
+        "Stage AE",
+        "Pittsburgh Ballet Theatre"
+       ],
+       "routedOrder": [
+        "Mr. Smalls Theatre",
+        "Roxian Theatre",
+        "Benedum Center for the Performing Arts"
+       ],
+       "popular": [
+        "Stage AE",
+        "Mr. Smalls Theatre",
+        "Roxian Theatre"
+       ],
+       "ladder": [
+        "UPMC Cooper Fieldhouse",
+        "Heinz Hall",
+        "O'Reilly Theater"
+       ],
+       "model": [
+        "Mr. Smalls Theatre",
+        "Thunderbird Cafe",
+        "Club Cafe"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 5
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0,
+     "popular": 0.6666666666666666,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0,
+     "popular": 0.5,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    }
+   },
+   {
+    "artist": "Travis Scott",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Circus Maximus Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Circus_Maximus_Tour&oldid=1366276511",
+    "draw": 19200,
+    "cities": [
+     {
+      "marketId": "raleigh-us-nc",
+      "city": "Raleigh",
+      "real": [
+       "PNC Arena"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Lenovo Center",
+        "Coastal Credit Union Music Park at Walnut Creek"
+       ],
+       "routedOrder": [
+        "Lenovo Center",
+        "Coastal Credit Union Music Park at Walnut Creek"
+       ],
+       "popular": [
+        "Lenovo Center",
+        "Coastal Credit Union Music Park at Walnut Creek",
+        "Koka Booth Amphitheatre"
+       ],
+       "ladder": [
+        "Lenovo Center",
+        "Reynolds Coliseum",
+        "Koka Booth Amphitheatre"
+       ],
+       "model": [
+        "PNC Arena",
+        "Lenovo Center",
+        "Coastal Credit Union Music Park"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 5,
+       "ladder": 3
+      }
+     },
+     {
+      "marketId": "detroit-us-mi",
+      "city": "Detroit",
+      "real": [
+       "Little Caesars Arena"
+      ],
+      "ranks": {
+       "qloo": 3,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Yack Arena",
+        "Detroit City Fieldhouse",
+        "Little Caesars Arena"
+       ],
+       "routedOrder": [
+        "Little Caesars Arena",
+        "The Aretha Franklin Amphitheatre",
+        "Yack Arena"
+       ],
+       "popular": [
+        "Little Caesars Arena",
+        "The Aretha Franklin Amphitheatre",
+        "Yack Arena"
+       ],
+       "ladder": [
+        "Calihan Hall",
+        "WFCU Centre",
+        "Windsor Arena"
+       ],
+       "model": [
+        "Little Caesars Arena",
+        "Pine Knob Music Theatre",
+        "Fox Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 4,
+       "popular": 7,
+       "ladder": 8
+      }
+     },
+     {
+      "marketId": "miami-us-fl",
+      "city": "Miami",
+      "real": [
+       "Kaseya Center"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Kaseya Center"
+       ],
+       "routedOrder": [
+        "Kaseya Center"
+       ],
+       "popular": [
+        "Kaseya Center",
+        "Watsco Center",
+        "Ocean Bank Convocation Center"
+       ],
+       "ladder": [
+        "Kaseya Center",
+        "Miami-Dade County Auditorium",
+        "New World Center"
+       ],
+       "model": [
+        "Kaseya Center",
+        "Hard Rock Live",
+        "FPL Solar Amphitheatre"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 3,
+       "ladder": 4
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 1,
+     "routedOrder": 1,
+     "popular": 1,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 1,
+     "popular": 1,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.7777777777777777,
+     "routedOrder": 1,
+     "popular": 1,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    }
+   },
+   {
+    "artist": "21 Savage",
+    "set": "held-out",
+    "region": "na",
+    "tour": "American Dream Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=American_Dream_Tour&oldid=1330479410",
+    "draw": 18400,
+    "cities": [
+     {
+      "marketId": "atlanta-us-ga",
+      "city": "Atlanta",
+      "real": [
+       "Cellairis Amphitheatre at Lakewood"
+      ],
+      "ranks": {
+       "qloo": 3,
+       "routedOrder": 2,
+       "popular": 2,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Mable House Barnes Amphitheatre",
+        "Chastain Park Amphitheater",
+        "Lakewood Amphitheatre"
+       ],
+       "routedOrder": [
+        "Mable House Barnes Amphitheatre",
+        "Lakewood Amphitheatre",
+        "Chastain Park Amphitheater"
+       ],
+       "popular": [
+        "Mable House Barnes Amphitheatre",
+        "Lakewood Amphitheatre",
+        "Chastain Park Amphitheater"
+       ],
+       "ladder": [
+        "McCamish Pavilion",
+        "Cadence Bank Amphitheatre",
+        "GSU Sports Arena"
+       ],
+       "model": [
+        "State Farm Arena",
+        "Gas South Arena",
+        "Coca-Cola Roxy Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 3,
+       "popular": 6,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "tampa-us-fl",
+      "city": "Tampa",
+      "real": [
+       "MidFlorida Credit Union Amphitheatre"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Benchmark International Arena"
+       ],
+       "routedOrder": [
+        "Benchmark International Arena"
+       ],
+       "popular": [
+        "Benchmark International Arena"
+       ],
+       "ladder": [
+        "Yuengling Center",
+        "Mahaffey Theater",
+        "Jannus Live"
+       ],
+       "model": [
+        "Amalie Arena",
+        "MidFlorida Credit Union Amphitheatre",
+        "Yuengling Center"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 1,
+       "ladder": 4
+      }
+     },
+     {
+      "marketId": "brockton-us-ma",
+      "city": "Brockton",
+      "real": [
+       "Xfinity Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 4
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [
+        "Foxboro Sports Center"
+       ],
+       "ladder": [
+        "Leader Bank Pavilion",
+        "Matthews Arena",
+        "Reggie Lewis Track and Athletic Center"
+       ],
+       "model": [
+        "Gillette Stadium",
+        "Campanelli Stadium",
+        "MassMutual Center (Worcester)"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 1,
+       "ladder": 6
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0.1111111111111111,
+     "routedOrder": 0.16666666666666666,
+     "popular": 0.16666666666666666,
+     "ladder": 0,
+     "model": 0.25
+    }
+   },
+   {
+    "artist": "SZA",
+    "set": "held-out",
+    "region": "na",
+    "tour": "SOS Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=SOS_Tour&oldid=1359128980",
+    "draw": 19000,
+    "cities": [
+     {
+      "marketId": "dallas-us-tx",
+      "city": "Dallas",
+      "real": [
+       "American Airlines Center"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 3,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "American Airlines Center",
+        "College Park Center",
+        "Dos Equis Pavilion"
+       ],
+       "routedOrder": [
+        "Dos Equis Pavilion",
+        "Gomez Western Wear Arena",
+        "American Airlines Center"
+       ],
+       "popular": [
+        "American Airlines Center",
+        "Dos Equis Pavilion",
+        "College Park Center"
+       ],
+       "ladder": [
+        "American Airlines Center",
+        "Mesquite Arena",
+        "Annette Strauss Square"
+       ],
+       "model": [
+        "American Airlines Center",
+        "Dos Equis Pavilion",
+        "Dickies Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 5,
+       "popular": 7,
+       "ladder": 9
+      }
+     },
+     {
+      "marketId": "chicago-us-il",
+      "city": "Chicago",
+      "real": [
+       "United Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Credit Union 1 Arena",
+        "Wintrust Arena",
+        "Welsh Ryan Arena"
+       ],
+       "routedOrder": [
+        "Wintrust Arena",
+        "Credit Union 1 Arena",
+        "Allstate Arena"
+       ],
+       "popular": [
+        "Wintrust Arena",
+        "Credit Union 1 Arena",
+        "Allstate Arena"
+       ],
+       "ladder": [
+        "United Center",
+        "Allstate Arena",
+        "Wintrust Arena"
+       ],
+       "model": [
+        "United Center",
+        "Allstate Arena",
+        "Northerly Island Pavilion"
+       ]
+      },
+      "returned": {
+       "qloo": 8,
+       "popular": 8,
+       "ladder": 23
+      }
+     },
+     {
+      "marketId": "nashville-us-tn",
+      "city": "Nashville",
+      "real": [
+       "Bridgestone Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Ascend Federal Credit Union Amphitheater",
+        "Memorial Gymnasium",
+        "Allen Arena"
+       ],
+       "routedOrder": [
+        "Ascend Federal Credit Union Amphitheater",
+        "Allen Arena",
+        "Memorial Gymnasium"
+       ],
+       "popular": [
+        "Ascend Federal Credit Union Amphitheater",
+        "Memorial Gymnasium",
+        "Allen Arena"
+       ],
+       "ladder": [
+        "Bridgestone Arena",
+        "Nashville Municipal Auditorium",
+        "The Pinnacle"
+       ],
+       "model": [
+        "Bridgestone Arena",
+        "Nissan Stadium",
+        "FirstBank Amphitheater"
+       ]
+      },
+      "returned": {
+       "qloo": 3,
+       "popular": 5,
+       "ladder": 5
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 1,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0,
+     "popular": 0.3333333333333333,
+     "ladder": 1,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.1111111111111111,
+     "popular": 0.3333333333333333,
+     "ladder": 1,
+     "model": 1
+    }
+   },
+   {
+    "artist": "Halsey",
+    "set": "held-out",
+    "region": "na",
+    "tour": "For My Last Trick: The Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=For_My_Last_Trick%3A_The_Tour&oldid=1376678226",
+    "draw": 17500,
+    "cities": [
+     {
+      "marketId": "raleigh-us-nc",
+      "city": "Raleigh",
+      "real": [
+       "Coastal Credit Union Music Park"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 2,
+       "popular": 2,
+       "ladder": null,
+       "model": 3
+      },
+      "top": {
+       "qloo": [
+        "Lenovo Center",
+        "Coastal Credit Union Music Park at Walnut Creek"
+       ],
+       "routedOrder": [
+        "Lenovo Center",
+        "Coastal Credit Union Music Park at Walnut Creek"
+       ],
+       "popular": [
+        "Lenovo Center",
+        "Coastal Credit Union Music Park at Walnut Creek",
+        "Koka Booth Amphitheatre"
+       ],
+       "ladder": [
+        "Lenovo Center",
+        "Reynolds Coliseum",
+        "Koka Booth Amphitheatre"
+       ],
+       "model": [
+        "PNC Arena",
+        "Lenovo Center",
+        "Coastal Credit Union Music Park"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 5,
+       "ladder": 3
+      }
+     },
+     {
+      "marketId": "farmington-hills-us-mi",
+      "city": "Farmington Hills",
+      "real": [
+       "Pine Knob Music Theatre"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [],
+       "ladder": [
+        "Calihan Hall",
+        "USA Hockey Arena",
+        "OU Credit Union O'rena"
+       ],
+       "model": [
+        "Little Caesars Arena",
+        "Pine Knob Music Theatre",
+        "Fox Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 0,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "salt-lake-city-us-ut",
+      "city": "Salt Lake City",
+      "real": [
+       "Utah First Credit Union Amphitheatre"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Utah First Credit Union Amphitheatre",
+        "Maverik Center",
+        "Utah Olympic Oval"
+       ],
+       "routedOrder": [
+        "Utah First Credit Union Amphitheatre",
+        "Red Butte Garden Amphitheatre",
+        "Maverik Center"
+       ],
+       "popular": [
+        "Utah First Credit Union Amphitheatre",
+        "Maverik Center",
+        "Utah Olympic Oval"
+       ],
+       "ladder": [
+        "Delta Center",
+        "Maverik Center",
+        "Nielsen Fieldhouse"
+       ],
+       "model": [
+        "Delta Center",
+        "USANA Amphitheatre",
+        "The Complex"
+       ]
+      },
+      "returned": {
+       "qloo": 5,
+       "popular": 5,
+       "ladder": 3
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.6666666666666666,
+     "popular": 0.6666666666666666,
+     "ladder": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0.5,
+     "routedOrder": 0.5,
+     "popular": 0.5,
+     "ladder": 0,
+     "model": 0.4444444444444444
+    }
+   },
+   {
+    "artist": "Pink",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Summer Carnival (tour)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Summer_Carnival_(tour)&oldid=1376188311",
+    "draw": 42300,
+    "cities": [
+     {
+      "marketId": "philadelphia-us-pa",
+      "city": "Philadelphia",
+      "real": [
+       "Citizens Bank Park",
+       "Lincoln Financial Field"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Theatre of The Living Arts",
+        "The Fillmore Philadelphia",
+        "The 2300 Arena"
+       ],
+       "routedOrder": [
+        "The Fillmore Philadelphia",
+        "The 2300 Arena",
+        "The Tower Theater"
+       ],
+       "popular": [
+        "The Fillmore Philadelphia",
+        "Union Transfer",
+        "The Liacouras Center"
+       ],
+       "ladder": [
+        "Palestra",
+        "Finneran Pavilion",
+        "Tom Gola Arena"
+       ],
+       "model": [
+        "Lincoln Financial Field",
+        "Wells Fargo Center",
+        "Citizens Bank Park"
+       ]
+      },
+      "returned": {
+       "qloo": 16,
+       "popular": 20,
+       "ladder": 11
+      }
+     },
+     {
+      "marketId": "new-york-city-us-ny",
+      "city": "New York",
+      "real": [
+       "Citi Field",
+       "MetLife Stadium"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 5,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Madison Square Garden",
+        "Barclays Center",
+        "Pier 17"
+       ],
+       "routedOrder": [
+        "Webster Hall",
+        "Gramercy Theatre",
+        "The Bowery Ballroom"
+       ],
+       "popular": [
+        "Madison Square Garden",
+        "Barclays Center",
+        "Infosys Theater at Madison Square Garden"
+       ],
+       "ladder": [
+        "Meadowlands Arena",
+        "Madison Square Garden",
+        "Barclays Center"
+       ],
+       "model": [
+        "MetLife Stadium",
+        "Barclays Center",
+        "Citi Field"
+       ]
+      },
+      "returned": {
+       "qloo": 19,
+       "popular": 20,
+       "ladder": 84
+      }
+     },
+     {
+      "marketId": "missoula-us-mt",
+      "city": "Missoula",
+      "real": [
+       "Washington–Grizzly Stadium"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Washington-Grizzly Stadium",
+        "Adams Center",
+        "The Wilma"
+       ],
+       "routedOrder": [
+        "Washington-Grizzly Stadium",
+        "The Wilma",
+        "Adams Center"
+       ],
+       "popular": [
+        "Washington-Grizzly Stadium",
+        "The Wilma",
+        "Adams Center"
+       ],
+       "ladder": [
+        "Dahlberg Arena",
+        "Glacier Ice Rink"
+       ],
+       "model": [
+        "Washington–Grizzly Stadium",
+        "Adams Center",
+        "Dennison Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 3,
+       "popular": 4,
+       "ladder": 2
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.39999999999999997,
+     "ladder": 0,
+     "model": 1
+    }
+   },
+   {
+    "artist": "Pierce the Veil",
+    "set": "held-out",
+    "region": "na",
+    "tour": "I Can't Hear You World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=I_Can't_Hear_You_World_Tour&oldid=1376231105",
+    "draw": 17500,
+    "cities": [
+     {
+      "marketId": "seattle-us-wa",
+      "city": "Seattle",
+      "real": [
+       "WaMu Theater"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 3
+      },
+      "top": {
+       "qloo": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "routedOrder": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "popular": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "ladder": [
+        "Climate Pledge Arena",
+        "Hec Edmundson Pavilion",
+        "accesso ShoWare Center"
+       ],
+       "model": [
+        "Climate Pledge Arena",
+        "T-Mobile Park",
+        "WaMu Theater"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 2,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "west-palm-beach-us-fl",
+      "city": "West Palm Beach",
+      "real": [
+       "ITHINK Financial Amphitheatre"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "iTHINK Financial Amphitheatre"
+       ],
+       "routedOrder": [
+        "iTHINK Financial Amphitheatre"
+       ],
+       "popular": [
+        "iTHINK Financial Amphitheatre",
+        "Meyer Amphitheater"
+       ],
+       "ladder": [
+        "Raymond F. Kravis Center for the Performing Arts"
+       ],
+       "model": [
+        "iTHINK Financial Amphitheatre",
+        "FLA Live Arena",
+        "Hard Rock Live"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 2,
+       "ladder": 1
+      }
+     },
+     {
+      "marketId": "los-angeles-us-ca",
+      "city": "Los Angeles",
+      "real": [
+       "Kia Forum"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 2,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "The Greek Theatre",
+        "Lucha Underground Arena",
+        "Hollywood Bowl"
+       ],
+       "routedOrder": [
+        "Pauley Pavilion",
+        "The Greek Theatre",
+        "Riot Games Arena"
+       ],
+       "popular": [
+        "Hollywood Bowl",
+        "Pauley Pavilion",
+        "Galen Center"
+       ],
+       "ladder": [
+        "Crypto.com Arena",
+        "Kia Forum",
+        "Hollywood Bowl"
+       ],
+       "model": [
+        "Kia Forum",
+        "YouTube Theater",
+        "Greek Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 7,
+       "popular": 9,
+       "ladder": 18
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0.3333333333333333,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0.16666666666666666,
+     "model": 0.7777777777777777
+    }
+   },
+   {
+    "artist": "Japanese Breakfast",
+    "set": "bench",
+    "region": "na",
+    "tour": "The Melancholy Tour (spring 2025 North American leg)",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Melancholy_Tour&oldid=1348731607",
+    "draw": 2800,
+    "cities": [
+     {
+      "marketId": "atlanta-us-ga",
+      "city": "Atlanta",
+      "real": [
+       "Tabernacle"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 12,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "The Drunken Unicorn",
+        "Dad's Garage",
+        "Terminal West"
+       ],
+       "routedOrder": [
+        "Buckhead Theatre",
+        "Alliance Theatre",
+        "Ray Charles Performing Arts Center"
+       ],
+       "popular": [
+        "Fox Theatre",
+        "The Masquerade",
+        "Coca-Cola Roxy"
+       ],
+       "ladder": [
+        "Cadence Bank Amphitheatre",
+        "GSU Sports Arena",
+        "Cobb Energy Performing Arts Centre"
+       ],
+       "model": [
+        "The Eastern",
+        "The Tabernacle",
+        "Coca-Cola Roxy Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "nashville-us-tn",
+      "city": "Nashville",
+      "real": [
+       "Ryman Auditorium"
+      ],
+      "ranks": {
+       "qloo": 11,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "The East Room",
+        "OZ Arts Nashville",
+        "Musicians Corner"
+       ],
+       "routedOrder": [
+        "Ryman Auditorium",
+        "War Memorial Auditorium",
+        "Nashville Children's Theatre"
+       ],
+       "popular": [
+        "Ryman Auditorium",
+        "Marathon Music Works",
+        "The Basement East"
+       ],
+       "ladder": [
+        "The Pinnacle",
+        "War Memorial Auditorium",
+        "Schermerhorn Symphony Center"
+       ],
+       "model": [
+        "Ryman Auditorium",
+        "Brooklyn Bowl",
+        "Marathon Music Works"
+       ]
+      },
+      "returned": {
+       "qloo": 11,
+       "popular": 7,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "philadelphia-us-pa",
+      "city": "Philadelphia",
+      "real": [
+       "Metropolitan Opera House"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "FringeArts",
+        "Penn Live Arts/Annenberg Center for the Performing Arts",
+        "23rd Street Armory"
+       ],
+       "routedOrder": [
+        "The Fillmore Philadelphia",
+        "The Tower Theater",
+        "Forrest Theatre"
+       ],
+       "popular": [
+        "The Fillmore Philadelphia",
+        "Union Transfer",
+        "Underground Arts"
+       ],
+       "ladder": [
+        "Finneran Pavilion",
+        "Tom Gola Arena",
+        "Academy of Music"
+       ],
+       "model": [
+        "The Met Philadelphia",
+        "Franklin Music Hall",
+        "Keswick Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 11
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.8333333333333334
+    }
+   },
+   {
+    "artist": "Ado",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Hibana World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Hibana_World_Tour&oldid=1327682517",
+    "draw": 18800,
+    "cities": [
+     {
+      "marketId": "toronto-ca",
+      "city": "Toronto",
+      "real": [
+       "Scotiabank Arena"
+      ],
+      "ranks": {
+       "qloo": 9,
+       "routedOrder": 11,
+       "popular": 4,
+       "ladder": 2,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "McCormick Arena",
+        "Coca-Cola Coliseum",
+        "Downsview Arena"
+       ],
+       "routedOrder": [
+        "Coca-Cola Coliseum",
+        "Chesswood Arena",
+        "Paul Coffey Arena"
+       ],
+       "popular": [
+        "RBC Amphitheatre",
+        "Coca-Cola Coliseum",
+        "Mississauga Sports & Entertainment Centre"
+       ],
+       "ladder": [
+        "Mississauga Celebration Square",
+        "Scotiabank Arena",
+        "Coca-Cola Coliseum"
+       ],
+       "model": [
+        "Scotiabank Arena",
+        "Budweiser Stage",
+        "Coca-Cola Coliseum"
+       ]
+      },
+      "returned": {
+       "qloo": 12,
+       "popular": 14,
+       "ladder": 41
+      }
+     },
+     {
+      "marketId": "fort-worth-us-tx",
+      "city": "Fort Worth",
+      "real": [
+       "Dickies Arena"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Cowtown Coliseum",
+        "Dickies Arena",
+        "Stockyards Championship Rodeo"
+       ],
+       "routedOrder": [
+        "Dickies Arena",
+        "Cowtown Coliseum",
+        "Stockyards Championship Rodeo"
+       ],
+       "popular": [
+        "Dickies Arena",
+        "Stockyards Championship Rodeo",
+        "Cowtown Coliseum"
+       ],
+       "ladder": [
+        "NYTEX Sports Centre",
+        "Bass Performance Hall",
+        "Casa Mañana"
+       ],
+       "model": [
+        "Dickies Arena",
+        "Will Rogers Memorial Center",
+        "Texas Trust CU Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 4,
+       "popular": 7,
+       "ladder": 4
+      }
+     },
+     {
+      "marketId": "new-york-city-us-ny",
+      "city": "New York",
+      "real": [
+       "Prudential Center"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 6,
+       "popular": 2,
+       "ladder": 4,
+       "model": 4
+      },
+      "top": {
+       "qloo": [
+        "Prudential Center",
+        "Jersey City Armory",
+        "Barclays Center"
+       ],
+       "routedOrder": [
+        "Nassau Veterans Memorial Coliseum",
+        "Coney Island Amphitheater",
+        "Carnesecca Arena"
+       ],
+       "popular": [
+        "Barclays Center",
+        "Prudential Center",
+        "Nassau Veterans Memorial Coliseum"
+       ],
+       "ladder": [
+        "Meadowlands Arena",
+        "Madison Square Garden",
+        "Barclays Center"
+       ],
+       "model": [
+        "Barclays Center",
+        "Madison Square Garden",
+        "UBS Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 10,
+       "popular": 11,
+       "ladder": 84
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.6666666666666666,
+     "ladder": 0.3333333333333333,
+     "model": 0.6666666666666666
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.5,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.5833333333333334,
+     "ladder": 0.25,
+     "model": 0.75
+    }
+   },
+   {
+    "artist": "Ghost",
+    "set": "bench",
+    "region": "eu",
+    "tour": "Skeletour World Tour (2025 European leg)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Skeletour&oldid=1381597196",
+    "draw": 13500,
+    "cities": [
+     {
+      "marketId": "berlin-de",
+      "city": "Berlin",
+      "real": [
+       "Uber Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "UFO Berlin - Konzerthalle",
+        "Parkbühne Wuhlheide",
+        "Velodrom"
+       ],
+       "routedOrder": [
+        "Parkbühne Wuhlheide",
+        "Velodrom",
+        "BOLLE Festsäle"
+       ],
+       "popular": [
+        "Parkbühne Wuhlheide",
+        "Velodrom",
+        "BOLLE Festsäle"
+       ],
+       "ladder": [
+        "Uber Arena",
+        "Wellblechpalast",
+        "Uber Eats Music Hall"
+       ],
+       "model": [
+        "Mercedes-Benz Arena",
+        "Max-Schmeling-Halle",
+        "Uber Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 4,
+       "popular": 5,
+       "ladder": 15
+      }
+     },
+     {
+      "marketId": "oslo-no",
+      "city": "Oslo",
+      "real": [
+       "Oslo Spektrum"
+      ],
+      "ranks": {
+       "qloo": 3,
+       "routedOrder": 2,
+       "popular": 1,
+       "ladder": 3,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "SALT - Art & Music",
+        "Sentrum Scene",
+        "Oslo Spektrum"
+       ],
+       "routedOrder": [
+        "Unity Arena",
+        "Oslo Spektrum",
+        "Sentrum Scene"
+       ],
+       "popular": [
+        "Oslo Spektrum",
+        "Sentrum Scene",
+        "SALT - Art & Music"
+       ],
+       "ladder": [
+        "Holmenkollen National Arena",
+        "Unity Arena",
+        "Oslo Spektrum"
+       ],
+       "model": [
+        "Oslo Spektrum",
+        "Telenor Arena",
+        "Oslo Konserthus"
+       ]
+      },
+      "returned": {
+       "qloo": 7,
+       "popular": 11,
+       "ladder": 10
+      }
+     },
+     {
+      "marketId": "linkoeping-se",
+      "city": "Linköping",
+      "real": [
+       "Saab Arena"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Saab Arena"
+       ],
+       "routedOrder": [
+        "Saab Arena"
+       ],
+       "popular": [
+        "Saab Arena"
+       ],
+       "ladder": [
+        "Saab Arena",
+        "Stångebro Ishall",
+        "Stora teatern"
+       ],
+       "model": [
+        "Saab Arena",
+        "Linköping Konserthus",
+        "Stadshallen"
+       ]
+      },
+      "returned": {
+       "qloo": 1,
+       "popular": 1,
+       "ladder": 3
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.6666666666666666,
+     "popular": 0.6666666666666666,
+     "ladder": 1,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.6666666666666666,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.4444444444444444,
+     "routedOrder": 0.5,
+     "popular": 0.6666666666666666,
+     "ladder": 0.7777777777777777,
+     "model": 1
+    }
+   },
+   {
+    "artist": "Troye Sivan",
+    "set": "held-out",
+    "region": "eu",
+    "tour": "Something to Give Each Other Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Something_to_Give_Each_Other_Tour&oldid=1353175921",
+    "draw": 7500,
+    "cities": [
+     {
+      "marketId": "stockholm-se",
+      "city": "Stockholm",
+      "real": [
+       "Hovet"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 13,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Nya Rågsveds Folkets Hus",
+        "Solvalla",
+        "Riksteatern"
+       ],
+       "routedOrder": [
+        "Strawberry Arena",
+        "Cirkus",
+        "Södra Teatern"
+       ],
+       "popular": [
+        "Strawberry Arena",
+        "Cirkus",
+        "Södra Teatern"
+       ],
+       "ladder": [
+        "Avicii Arena",
+        "Renew Arena",
+        "Täljehallen"
+       ],
+       "model": [
+        "Avicii Arena",
+        "Hovet",
+        "Annexet"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 15,
+       "ladder": 12
+      }
+     },
+     {
+      "marketId": "berlin-de",
+      "city": "Berlin",
+      "real": [
+       "Velodrom"
+      ],
+      "ranks": {
+       "qloo": 16,
+       "routedOrder": 12,
+       "popular": 15,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Konzerthaus Berlin",
+        "Badehaus Berlin",
+        "Columbia-Theater"
+       ],
+       "routedOrder": [
+        "Columbia-Theater",
+        "Maxim Gorki Theater",
+        "CHAMÄLEON Theater GmbH"
+       ],
+       "popular": [
+        "Konzerthaus Berlin",
+        "Friedrichstadt-Palast",
+        "Huxleys Neue Welt"
+       ],
+       "ladder": [
+        "Uber Arena",
+        "Wellblechpalast",
+        "Uber Eats Music Hall"
+       ],
+       "model": [
+        "Uber Arena",
+        "Velodrom",
+        "Max-Schmeling-Halle"
+       ]
+      },
+      "returned": {
+       "qloo": 16,
+       "popular": 18,
+       "ladder": 15
+      }
+     },
+     {
+      "marketId": "zuerich-ch",
+      "city": "Zürich",
+      "real": [
+       "The Hall"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 3
+      },
+      "top": {
+       "qloo": [
+        "Zentralwäscherei Space",
+        "Bogen F",
+        "Tanzhaus Zürich"
+       ],
+       "routedOrder": [
+        "Theater 11",
+        "Theater Winterthur",
+        "Theater am Hechtplatz"
+       ],
+       "popular": [
+        "Theater 11",
+        "Salzhaus",
+        "Halle 622 Zürich / Eventhalle"
+       ],
+       "ladder": [
+        "Swiss Life Arena",
+        "Stimo Arena",
+        "Bossard Arena"
+       ],
+       "model": [
+        "Hallenstadion",
+        "Samsung Hall",
+        "The Hall"
+       ]
+      },
+      "returned": {
+       "qloo": 15,
+       "popular": 15,
+       "ladder": 7
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.4444444444444444
+    }
+   },
+   {
+    "artist": "Nicki Minaj",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Pink Friday 2 World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Pink_Friday_2_World_Tour&oldid=1380477554",
+    "draw": 19000,
+    "cities": [
+     {
+      "marketId": "new-orleans-us-la",
+      "city": "New Orleans",
+      "real": [
+       "Smoothie King Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Champions Square",
+        "Sugar Bowl"
+       ],
+       "routedOrder": [
+        "Champions Square",
+        "Sugar Bowl"
+       ],
+       "popular": [
+        "Champions Square",
+        "Sugar Bowl",
+        "XULA Convocation Center"
+       ],
+       "ladder": [
+        "Smoothie King Center",
+        "Lakefront Arena",
+        "Avron B. Fogelman Arena in Devlin Fieldhouse"
+       ],
+       "model": [
+        "Smoothie King Center",
+        "Caesars Superdome",
+        "Lakefront Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 3,
+       "ladder": 9
+      }
+     },
+     {
+      "marketId": "philadelphia-us-pa",
+      "city": "Philadelphia",
+      "real": [
+       "Wells Fargo Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "The Dell Music Center",
+        "The 2300 Arena",
+        "Tom Gola Arena"
+       ],
+       "routedOrder": [
+        "The 2300 Arena",
+        "Pearson & McGonigle Hall",
+        "Hagan Arena St Joseph's University"
+       ],
+       "popular": [
+        "The 2300 Arena",
+        "Pearson & McGonigle Hall",
+        "Hagan Arena St Joseph's University"
+       ],
+       "ladder": [
+        "Palestra",
+        "Finneran Pavilion",
+        "Tom Gola Arena"
+       ],
+       "model": [
+        "Wells Fargo Center",
+        "Lincoln Financial Field",
+        "The Mann Center"
+       ]
+      },
+      "returned": {
+       "qloo": 7,
+       "popular": 8,
+       "ladder": 11
+      }
+     },
+     {
+      "marketId": "montreal-ca",
+      "city": "Montréal",
+      "real": [
+       "Bell Centre"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 6,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Place Bell",
+        "Aréna Martin Brodeur",
+        "Combat d'Archers - Combat Archery"
+       ],
+       "routedOrder": [
+        "Bob Birnie Arena",
+        "Arena Mascouche",
+        "McConnell Arena"
+       ],
+       "popular": [
+        "Place Bell",
+        "Centre Bell",
+        "CEPSUM"
+       ],
+       "ladder": [
+        "Bell Centre",
+        "Place Bell",
+        "Mount Royal Arena"
+       ],
+       "model": [
+        "Bell Centre",
+        "Olympic Stadium",
+        "Videotron Centre"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 25
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0,
+     "popular": 0.3333333333333333,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0,
+     "popular": 0.3333333333333333,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0,
+     "popular": 0.3333333333333333,
+     "ladder": 0.6666666666666666,
+     "model": 1
+    }
+   },
+   {
+    "artist": "Addison Rae",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Addison Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Addison_Tour&oldid=1368606917",
+    "draw": 5900,
+    "cities": [
+     {
+      "marketId": "philadelphia-us-pa",
+      "city": "Philadelphia",
+      "real": [
+       "The Fillmore Philadelphia"
+      ],
+      "ranks": {
+       "qloo": 4,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 3
+      },
+      "top": {
+       "qloo": [
+        "FringeArts",
+        "Underground Arts",
+        "Ruba"
+       ],
+       "routedOrder": [
+        "The Fillmore Philadelphia",
+        "The 2300 Arena",
+        "Ardmore Music Hall"
+       ],
+       "popular": [
+        "The Fillmore Philadelphia",
+        "Union Transfer",
+        "Underground Arts"
+       ],
+       "ladder": [
+        "Palestra",
+        "Finneran Pavilion",
+        "Tom Gola Arena"
+       ],
+       "model": [
+        "The Met Philadelphia",
+        "Franklin Music Hall",
+        "The Fillmore Philadelphia"
+       ]
+      },
+      "returned": {
+       "qloo": 20,
+       "popular": 20,
+       "ladder": 11
+      }
+     },
+     {
+      "marketId": "washington-us-dc",
+      "city": "Washington",
+      "real": [
+       "The Anthem"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 13,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Flash",
+        "The DC Arts Center (DCAC)",
+        "Dance Place"
+       ],
+       "routedOrder": [
+        "Capital One Arena",
+        "The Howard Theatre",
+        "Lincoln Theatre"
+       ],
+       "popular": [
+        "Capital One Arena",
+        "The Fillmore Silver Spring",
+        "Echostage"
+       ],
+       "ladder": [
+        "Patriot Center",
+        "D.C. Armory",
+        "Wolf Trap National Park for the Performing Arts"
+       ],
+       "model": [
+        "The Anthem",
+        "Echostage",
+        "The Fillmore Silver Spring"
+       ]
+      },
+      "returned": {
+       "qloo": 20,
+       "popular": 19,
+       "ladder": 20
+      }
+     },
+     {
+      "marketId": "denver-us-co",
+      "city": "Denver",
+      "real": [
+       "Mission Ballroom"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": 12,
+       "ladder": null,
+       "model": 2
+      },
+      "top": {
+       "qloo": [
+        "Bluebird Theater",
+        "Ogden Theatre",
+        "Levitt Pavilion Denver"
+       ],
+       "routedOrder": [
+        "Ogden Theatre",
+        "Fillmore Auditorium",
+        "Bluebird Theater"
+       ],
+       "popular": [
+        "Ogden Theatre",
+        "Fillmore Auditorium",
+        "Bluebird Theater"
+       ],
+       "ladder": [
+        "Denver Auditorium Arena",
+        "Denver Coliseum",
+        "Red Rocks Amphitheatre"
+       ],
+       "model": [
+        "Fillmore Auditorium",
+        "Mission Ballroom",
+        "Ogden Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 19,
+       "ladder": 6
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.3333333333333333
+    },
+    "mrr5": {
+     "qloo": 0.08333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.611111111111111
+    }
+   },
+   {
+    "artist": "Twenty One Pilots",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Clancy World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Clancy_World_Tour&oldid=1373076398",
+    "draw": 19200,
+    "cities": [
+     {
+      "marketId": "austin-us-tx",
+      "city": "Austin",
+      "real": [
+       "Moody Center"
+      ],
+      "ranks": {
+       "qloo": 2,
+       "routedOrder": 2,
+       "popular": 3,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Gregory Gym",
+        "Moody Amphitheater",
+        "Moody Center"
+       ],
+       "routedOrder": [
+        "Germania Insurance Amphitheater",
+        "Moody Amphitheater",
+        "Gregory Gym"
+       ],
+       "popular": [
+        "Gregory Gym",
+        "Germania Insurance Amphitheater",
+        "Moody Amphitheater"
+       ],
+       "ladder": [
+        "Moody Center",
+        "Gregory Gymnasium",
+        "Ritz"
+       ],
+       "model": [
+        "Moody Center",
+        "Germania Insurance Amphitheater",
+        "H-E-B Center at Cedar Park"
+       ]
+      },
+      "returned": {
+       "qloo": 4,
+       "popular": 4,
+       "ladder": 3
+      }
+     },
+     {
+      "marketId": "las-vegas-us-nv",
+      "city": "Las Vegas",
+      "real": [
+       "MGM Grand Garden Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 5,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Orleans Arena",
+        "South Point Arena & Equestrian Center",
+        "Cox Pavilion"
+       ],
+       "routedOrder": [
+        "Orleans Arena",
+        "South Point Arena & Equestrian Center",
+        "City National Arena"
+       ],
+       "popular": [
+        "Orleans Arena",
+        "South Point Arena & Equestrian Center",
+        "City National Arena"
+       ],
+       "ladder": [
+        "T-Mobile Arena",
+        "Sphere",
+        "Silver State Arena"
+       ],
+       "model": [
+        "MGM Grand Garden Arena",
+        "T-Mobile Arena",
+        "Michelob Ultra Arena"
+       ]
+      },
+      "returned": {
+       "qloo": 6,
+       "popular": 10,
+       "ladder": 13
+      }
+     },
+     {
+      "marketId": "harrisburg-us-pa",
+      "city": "Harrisburg",
+      "real": [
+       "Hersheypark Stadium"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": null
+      },
+      "top": {
+       "qloo": [],
+       "routedOrder": [],
+       "popular": [],
+       "ladder": [
+        "Hersheypark Arena",
+        "Hershey Theatre"
+       ],
+       "model": [
+        "Giant Center",
+        "Santander Arena",
+        "Hollywood Casino at Penn National Race Course"
+       ]
+      },
+      "returned": {
+       "qloo": 0,
+       "popular": 0,
+       "ladder": 2
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.6666666666666666,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.16666666666666666,
+     "routedOrder": 0.16666666666666666,
+     "popular": 0.1111111111111111,
+     "ladder": 0.7333333333333334,
+     "model": 0.6666666666666666
+    }
+   },
+   {
+    "artist": "Gary Barlow",
+    "set": "held-out",
+    "region": "uk",
+    "tour": "The Songbook Tour (2025)",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Songbook_Tour_(2025)&oldid=1318185932",
+    "draw": 2400,
+    "cities": [
+     {
+      "marketId": "manchester-gb",
+      "city": "Manchester",
+      "real": [
+       "O2 Apollo Manchester"
+      ],
+      "ranks": {
+       "qloo": 10,
+       "routedOrder": 12,
+       "popular": 11,
+       "ladder": 10,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "AO Arena",
+        "O2 Victoria Warehouse Manchester",
+        "The Bridgewater Hall"
+       ],
+       "routedOrder": [
+        "AO Arena",
+        "Albert Hall, Manchester",
+        "The Bridgewater Hall"
+       ],
+       "popular": [
+        "AO Arena",
+        "Manchester Academy",
+        "O2 Ritz Manchester"
+       ],
+       "ladder": [
+        "Bolton Arena",
+        "Manchester Velodrome",
+        "Manchester Academy 1"
+       ],
+       "model": [
+        "O2 Apollo Manchester",
+        "O2 Victoria Warehouse",
+        "Manchester Academy"
+       ]
+      },
+      "returned": {
+       "qloo": 14,
+       "popular": 14,
+       "ladder": 10
+      }
+     },
+     {
+      "marketId": "brighton-gb",
+      "city": "Brighton",
+      "real": [
+       "Brighton Centre"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Brighton Music Hall",
+        "Theatre Royal Brighton",
+        "Komedia Brighton"
+       ],
+       "routedOrder": [
+        "Theatre Royal Brighton",
+        "Brighton Music Hall",
+        "Brighton Open Air Theatre"
+       ],
+       "popular": [
+        "Komedia Brighton",
+        "Green Door Store",
+        "Theatre Royal Brighton"
+       ],
+       "ladder": [
+        "The Saffrons",
+        "Connaught Theatre",
+        "Lamb Theatre"
+       ],
+       "model": [
+        "Brighton Centre",
+        "The Brighton Dome",
+        "Concorde 2"
+       ]
+      },
+      "returned": {
+       "qloo": 9,
+       "popular": 8,
+       "ladder": 3
+      }
+     },
+     {
+      "marketId": "nottingham-gb",
+      "city": "Nottingham",
+      "real": [
+       "Nottingham Royal Concert Hall"
+      ],
+      "ranks": {
+       "qloo": 3,
+       "routedOrder": 2,
+       "popular": 2,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Motorpoint Arena Nottingham",
+        "Derby Arena",
+        "Nottingham Arts Theatre"
+       ],
+       "routedOrder": [
+        "Motorpoint Arena Nottingham",
+        "Theatre Royal & Royal Concert Hall",
+        "Derby Arena"
+       ],
+       "popular": [
+        "Motorpoint Arena Nottingham",
+        "Theatre Royal & Royal Concert Hall",
+        "Derby Arena"
+       ],
+       "ladder": [
+        "Derby Arena",
+        "Motorpoint Arena Nottingham",
+        "Derby Theatre"
+       ],
+       "model": [
+        "Rock City",
+        "Nottingham Forum",
+        "Rescue Rooms"
+       ]
+      },
+      "returned": {
+       "qloo": 9,
+       "popular": 7,
+       "ladder": 3
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.6666666666666666,
+     "routedOrder": 0.6666666666666666,
+     "popular": 0.6666666666666666,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.4444444444444444,
+     "routedOrder": 0.5,
+     "popular": 0.5,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    }
+   },
+   {
+    "artist": "Turnstile",
+    "set": "bench",
+    "region": "na",
+    "tour": "Never Enough Tour (fall 2025 North American leg)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Never_Enough_Tour&oldid=1381207118",
+    "draw": 7000,
+    "cities": [
+     {
+      "marketId": "des-moines-us-ia",
+      "city": "Des Moines",
+      "real": [
+       "Water Works Park"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "Val Air Ballroom",
+        "Hoyt Sherman Place",
+        "Knapp Center"
+       ],
+       "routedOrder": [
+        "Val Air Ballroom",
+        "Horizon Events Center",
+        "Hoyt Sherman Place"
+       ],
+       "popular": [
+        "Hoyt Sherman Place",
+        "Casey's Center",
+        "Knapp Center"
+       ],
+       "ladder": [
+        "Casey's Center",
+        "Buccaneer Arena"
+       ],
+       "model": [
+        "Wells Fargo Arena",
+        "Val Air Ballroom",
+        "Hoyt Sherman Place"
+       ]
+      },
+      "returned": {
+       "qloo": 6,
+       "popular": 8,
+       "ladder": 2
+      }
+     },
+     {
+      "marketId": "minneapolis-us-mn",
+      "city": "Minneapolis",
+      "real": [
+       "The Armory"
+      ],
+      "ranks": {
+       "qloo": 8,
+       "routedOrder": 17,
+       "popular": 2,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Skyway Theatre",
+        "The Cedar Cultural Center",
+        "Palace Theatre"
+       ],
+       "routedOrder": [
+        "Palace Theatre",
+        "Skyway Theatre",
+        "Varsity Theater"
+       ],
+       "popular": [
+        "First Avenue",
+        "The Armory",
+        "Palace Theatre"
+       ],
+       "ladder": [
+        "Williams Arena",
+        "3M Arena at Mariucci",
+        "Roy Wilkins Auditorium"
+       ],
+       "model": [
+        "The Armory",
+        "First Avenue",
+        "Palace Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 20,
+       "popular": 20,
+       "ladder": 11
+      }
+     },
+     {
+      "marketId": "san-francisco-us-ca",
+      "city": "San Francisco",
+      "real": [
+       "Bill Graham Civic Auditorium"
+      ],
+      "ranks": {
+       "qloo": 3,
+       "routedOrder": 3,
+       "popular": 3,
+       "ladder": 3,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Social Hall SF",
+        "Great American Music Hall",
+        "Bill Graham Civic Auditorium"
+       ],
+       "routedOrder": [
+        "Fox Theater",
+        "Oakland Arena",
+        "Bill Graham Civic Auditorium"
+       ],
+       "popular": [
+        "Fox Theater",
+        "Oakland Arena",
+        "Bill Graham Civic Auditorium"
+       ],
+       "ladder": [
+        "Cow Palace",
+        "Haas Pavilion",
+        "Bill Graham Civic Auditorium"
+       ],
+       "model": [
+        "Bill Graham Civic Auditorium",
+        "The Warfield",
+        "The Regency Ballroom"
+       ]
+      },
+      "returned": {
+       "qloo": 18,
+       "popular": 17,
+       "ladder": 15
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.6666666666666666,
+     "ladder": 0.3333333333333333,
+     "model": 0.6666666666666666
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0.1111111111111111,
+     "routedOrder": 0.1111111111111111,
+     "popular": 0.27777777777777773,
+     "ladder": 0.1111111111111111,
+     "model": 0.6666666666666666
+    }
+   },
+   {
+    "artist": "Kim Petras",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Feed the Beast World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Feed_the_Beast_World_Tour&oldid=1377726738",
+    "draw": 9400,
+    "cities": [
+     {
+      "marketId": "seattle-us-wa",
+      "city": "Seattle",
+      "real": [
+       "WaMu Theater"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "routedOrder": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "popular": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "ladder": [
+        "Climate Pledge Arena",
+        "Hec Edmundson Pavilion",
+        "accesso ShoWare Center"
+       ],
+       "model": [
+        "WaMu Theater",
+        "Paramount Theatre",
+        "Moore Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 2,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "washington-us-dc",
+      "city": "Washington",
+      "real": [
+       "The Anthem"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": null,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Capital One Arena",
+        "Washington Wizards",
+        "CareFirst Arena"
+       ],
+       "routedOrder": [
+        "Capital One Arena",
+        "CareFirst Arena",
+        "Bender Arena"
+       ],
+       "popular": [
+        "Capital One Arena",
+        "CareFirst Arena",
+        "DC Armory"
+       ],
+       "ladder": [
+        "Capital One Arena",
+        "Patriot Center",
+        "D.C. Armory"
+       ],
+       "model": [
+        "The Anthem",
+        "Warner Theatre",
+        "Lincoln Theatre"
+       ]
+      },
+      "returned": {
+       "qloo": 6,
+       "popular": 7,
+       "ladder": 20
+      }
+     },
+     {
+      "marketId": "san-francisco-us-ca",
+      "city": "San Francisco",
+      "real": [
+       "Bill Graham Civic Auditorium"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 5,
+       "model": null
+      },
+      "top": {
+       "qloo": [
+        "The Greek Theatre",
+        "Oakland Arena",
+        "Cow Palace Arena & Event Center"
+       ],
+       "routedOrder": [
+        "Oakland Arena",
+        "Cow Palace Arena & Event Center",
+        "The Greek Theatre"
+       ],
+       "popular": [
+        "Oakland Arena",
+        "Cow Palace Arena & Event Center",
+        "The Greek Theatre"
+       ],
+       "ladder": [
+        "Oakland Arena",
+        "Chase Center",
+        "Cow Palace"
+       ],
+       "model": [
+        "The Masonic",
+        "The Warfield",
+        "SF Masonic Auditorium"
+       ]
+      },
+      "returned": {
+       "qloo": 6,
+       "popular": 7,
+       "ladder": 15
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "hit1": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0,
+     "model": 0.6666666666666666
+    },
+    "mrr5": {
+     "qloo": 0,
+     "routedOrder": 0,
+     "popular": 0,
+     "ladder": 0.06666666666666667,
+     "model": 0.6666666666666666
+    }
+   },
+   {
+    "artist": "Tame Impala",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Deadbeat Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Deadbeat_Tour&oldid=1380752017",
+    "draw": 19100,
+    "cities": [
+     {
+      "marketId": "portland-us-or",
+      "city": "Portland",
+      "real": [
+       "Moda Center"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Chiles Center",
+        "The Rose Quarter",
+        "Oregon Airsoft Arena"
+       ],
+       "routedOrder": [
+        "Oregon Airsoft Arena",
+        "The Rose Quarter",
+        "Chiles Center"
+       ],
+       "popular": [
+        "The Rose Quarter",
+        "Chiles Center",
+        "Oregon Airsoft Arena"
+       ],
+       "ladder": [
+        "Moda Center",
+        "Veterans Memorial Coliseum",
+        "Arlene Schnitzer Concert Hall"
+       ],
+       "model": [
+        "Moda Center",
+        "Veterans Memorial Coliseum",
+        "Providence Park"
+       ]
+      },
+      "returned": {
+       "qloo": 3,
+       "popular": 4,
+       "ladder": 6
+      }
+     },
+     {
+      "marketId": "nashville-us-tn",
+      "city": "Nashville",
+      "real": [
+       "Bridgestone Arena"
+      ],
+      "ranks": {
+       "qloo": null,
+       "routedOrder": null,
+       "popular": null,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Ascend Federal Credit Union Amphitheater",
+        "Memorial Gymnasium",
+        "Allen Arena"
+       ],
+       "routedOrder": [
+        "Ascend Federal Credit Union Amphitheater",
+        "Allen Arena",
+        "Memorial Gymnasium"
+       ],
+       "popular": [
+        "Ascend Federal Credit Union Amphitheater",
+        "Memorial Gymnasium",
+        "Allen Arena"
+       ],
+       "ladder": [
+        "Bridgestone Arena",
+        "Nashville Municipal Auditorium",
+        "The Pinnacle"
+       ],
+       "model": [
+        "Bridgestone Arena",
+        "Nissan Stadium",
+        "Ascend Amphitheater"
+       ]
+      },
+      "returned": {
+       "qloo": 3,
+       "popular": 5,
+       "ladder": 5
+      }
+     },
+     {
+      "marketId": "seattle-us-wa",
+      "city": "Seattle",
+      "real": [
+       "Climate Pledge Arena"
+      ],
+      "ranks": {
+       "qloo": 1,
+       "routedOrder": 1,
+       "popular": 1,
+       "ladder": 1,
+       "model": 1
+      },
+      "top": {
+       "qloo": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "routedOrder": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "popular": [
+        "Climate Pledge Arena",
+        "Alaska Airlines Arena"
+       ],
+       "ladder": [
+        "Climate Pledge Arena",
+        "Hec Edmundson Pavilion",
+        "accesso ShoWare Center"
+       ],
+       "model": [
+        "Climate Pledge Arena",
+        "T-Mobile Park",
+        "Lumen Field"
+       ]
+      },
+      "returned": {
+       "qloo": 2,
+       "popular": 2,
+       "ladder": 5
+      }
+     }
+    ],
+    "hit3": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 1,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 1,
+     "model": 1
+    },
+    "mrr5": {
+     "qloo": 0.3333333333333333,
+     "routedOrder": 0.3333333333333333,
+     "popular": 0.3333333333333333,
+     "ladder": 1,
+     "model": 1
+    }
+   }
+  ],
+  "missing": [],
+  "skipped": [
+   {
+    "artist": "Zach Bryan",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Tyler Childers",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Caamp",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Waxahatchee",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Khruangbin",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Durand Jones & The Indications",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Knocked Loose",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Cuco",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "MJ Lenderman",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Parcels",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Alvvays",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Arlo Parks",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Wet Leg",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Fontaines D.C.",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "JPEGMAFIA",
+    "test": "venues",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   }
+  ]
+ },
+ "support": {
+  "n": 22,
+  "primary": [
+   {
+    "name": "Qloo's support pick (hit@5) vs the model's",
+    "n": 22,
+    "meanA": 0.045454545454545456,
+    "meanB": 0.2727272727272727,
+    "diff": -0.22727272727272727,
+    "lo": -0.4090909090909091,
+    "hi": -0.045454545454545456,
+    "wins": 0,
+    "losses": 5,
+    "ties": 17,
+    "p": 0.0625
+   }
+  ],
+  "secondary": [
+   {
+    "name": "Qloo's support pick (hit@1) vs the model's",
+    "n": 22,
+    "meanA": 0,
+    "meanB": 0.13636363636363635,
+    "diff": -0.13636363636363635,
+    "lo": -0.2727272727272727,
+    "hi": 0,
+    "wins": 0,
+    "losses": 3,
+    "ties": 19,
+    "p": 0.25
+   }
+  ],
+  "pooled": {
+   "qloo": 1,
+   "model": 6,
+   "qlooTop1": 0,
+   "modelTop1": 3,
+   "qlooUnderFive": 0
+  },
+  "rows": [
+   {
+    "artist": "Ledisi",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Good Life Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Good_Life_Tour&oldid=1293293249",
+    "from": "column",
+    "openers": [
+     "Raheem DeVaughn",
+     "BJ the Chicago Kid"
+    ],
+    "qloo": [
+     "Liv Warfield",
+     "Al B. Sure!",
+     "Lisa Fischer",
+     "Nicole Wray",
+     "Muhsinah"
+    ],
+    "model": [
+     "Sabrina Teitelbaum",
+     "Miya Folick",
+     "Lola Young",
+     "Megan Bülow",
+     "Hannah Jadagu"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "The 1975",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Still... At Their Very Best",
+    "source": "https://en.wikipedia.org/w/index.php?title=Still..._At_Their_Very_Best&oldid=1367276826",
+    "from": "column",
+    "openers": [
+     "Dora Jar"
+    ],
+    "qloo": [
+     "HOLYCHILD",
+     "Ryan Beatty",
+     "Wrabel",
+     "John the Ghost",
+     "Tor Miller"
+    ],
+    "model": [
+     "Beabadoobee",
+     "The Japanese House",
+     "No Vacation",
+     "The Happy Fits",
+     "Maya Hawke"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Omar Apollo",
+    "set": "held-out",
+    "region": "na",
+    "tour": "God Said No World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=God_Said_No_World_Tour&oldid=1360001122",
+    "from": "column",
+    "openers": [
+     "Malcolm Todd",
+     "Kevin Abstract",
+     "Ravyn Lenae"
+    ],
+    "qloo": [
+     "Hope Tala",
+     "Berhana",
+     "Kyle Dion",
+     "Black Party",
+     "Ama Lou"
+    ],
+    "model": [
+     "Masego",
+     "Ber",
+     "Kassa Overall",
+     "Tash",
+     "Mereba"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Flo",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Access All Areas Tour (Flo)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Access_All_Areas_Tour_(Flo)&oldid=1378984407",
+    "from": "column",
+    "openers": [
+     "Chxrry",
+     "Jae Stephens"
+    ],
+    "qloo": [
+     "Tayla Parx",
+     "Joyce Wrice",
+     "QUIN",
+     "VanJess",
+     "Alex Mali"
+    ],
+    "model": [
+     "Mallrat",
+     "Lola Young",
+     "Hatchie",
+     "Gia Margaret",
+     "Blusher"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Clairo",
+    "set": "bench",
+    "region": "na",
+    "tour": "Charm Tour (2024 North American leg)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Charm_Tour&oldid=1337886246",
+    "from": "column",
+    "openers": [
+     "Paris Texas",
+     "Frankie Cosmos",
+     "Alice Phoebe Lou"
+    ],
+    "qloo": [
+     "Claud",
+     "Deb Never",
+     "sasami",
+     "Ambar Lucid",
+     "Hana Vu"
+    ],
+    "model": [
+     "Jay Someday",
+     "Lomelda",
+     "Blondshell",
+     "Dazy",
+     "Faye Webster"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Doja Cat",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Tour Ma Vie World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Tour_Ma_Vie_World_Tour&oldid=1379654155",
+    "from": "column",
+    "openers": [
+     "Latto"
+    ],
+    "qloo": [
+     "Qveen Herby",
+     "Lolo Zouaï",
+     "Audrey Nuna",
+     "Destiny Rogers",
+     "Muni Long"
+    ],
+    "model": [
+     "Ice Spice",
+     "Latto",
+     "Rico Nasty",
+     "Kash Doll",
+     "Lola Brooke"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": 2
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Depeche Mode",
+    "set": "held-out",
+    "region": "eu",
+    "tour": "Memento Mori World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Memento_Mori_World_Tour&oldid=1357215827",
+    "from": "column",
+    "openers": [
+     "Cold Cave",
+     "Young Fathers",
+     "Jehnny Beth",
+     "Hælos",
+     "Hope",
+     "Nadine Shah",
+     "Humanist",
+     "Suzie Stapleton",
+     "Deeper"
+    ],
+    "qloo": [
+     "Andy Bell",
+     "Kat Von D",
+     "Prayers",
+     "B-Movie",
+     "Don Johnson"
+    ],
+    "model": [
+     "Nitzer Ebb",
+     "She Past Away",
+     "Keluar",
+     "Boy Harsher",
+     "Lebanon Hanover"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Green Day",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Saviors Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Saviors_Tour&oldid=1378500500",
+    "from": "column",
+    "openers": [
+     "The Smashing Pumpkins",
+     "Rancid",
+     "The Linda Lindas",
+     "The Paradox"
+    ],
+    "qloo": [
+     "The Dollyrots",
+     "Tom Morello",
+     "Tim Timebomb",
+     "The Bombpops",
+     "Evan Taubenfeld"
+    ],
+    "model": [
+     "The Interrupters",
+     "The Linda Lindas",
+     "Amyl and the Sniffers",
+     "The Hives",
+     "Bobby and the Strays"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": 2
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Dua Lipa",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Radical Optimism Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Radical_Optimism_Tour&oldid=1374098811",
+    "from": "column",
+    "openers": [
+     "Cil"
+    ],
+    "qloo": [
+     "CYN",
+     "Lolo Zouaï",
+     "Nile Rodgers",
+     "Miquela",
+     "Bronze Avery"
+    ],
+    "model": [
+     "Caroline Polachek",
+     "Griff",
+     "Lolo Zouaï",
+     "Remi Wolf",
+     "Tove Lo"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Bonnie Tyler",
+    "set": "held-out",
+    "region": "eu",
+    "tour": "40 Years \"Total Eclipse of the Heart\" Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=40_Years_%22Total_Eclipse_of_the_Heart%22_Tour&oldid=1362833570",
+    "from": "column",
+    "openers": [
+     "More Than Words",
+     "C.B. Green"
+    ],
+    "qloo": [
+     "Don Johnson",
+     "Dave Stewart",
+     "Sonia",
+     "Marcella Detroit",
+     "Sheila E."
+    ],
+    "model": [
+     "Megan O'Neill",
+     "Catherine McGrath",
+     "Emma Langford",
+     "Sarah Darling",
+     "Hannah Grace"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Travis Scott",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Circus Maximus Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Circus_Maximus_Tour&oldid=1366276511",
+    "from": "column",
+    "openers": [
+     "Teezo Touchdown",
+     "Don Toliver",
+     "Chase B",
+     "Sheck Wes",
+     "Veeze",
+     "Skilla Baby",
+     "Babyface Ray"
+    ],
+    "qloo": [
+     "Mike Dean",
+     "Chase B",
+     "Fivio Foreign",
+     "03 Greedo",
+     "Dave East"
+    ],
+    "model": [
+     "Don Toliver",
+     "Sheck Wes",
+     "Baby Keem",
+     "SoFaygo",
+     "Teezo Touchdown"
+    ],
+    "rank": {
+     "qloo": 2,
+     "model": 1
+    },
+    "hit5": {
+     "qloo": 1,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 1
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "21 Savage",
+    "set": "held-out",
+    "region": "na",
+    "tour": "American Dream Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=American_Dream_Tour&oldid=1330479410",
+    "from": "column",
+    "openers": [
+     "JID",
+     "Nardo Wick"
+    ],
+    "qloo": [
+     "03 Greedo",
+     "KILLY",
+     "88GLAM",
+     "Guapdad 4000",
+     "Jazz Cartier"
+    ],
+    "model": [
+     "Lil Tecca",
+     "Rob49",
+     "Kashdami",
+     "Yung Bans",
+     "BigWalkDog"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "SZA",
+    "set": "held-out",
+    "region": "na",
+    "tour": "SOS Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=SOS_Tour&oldid=1359128980",
+    "from": "column",
+    "openers": [
+     "Omar Apollo",
+     "D4vd"
+    ],
+    "qloo": [
+     "serpentwithfeet",
+     "Ama Lou",
+     "Lolo Zouaï",
+     "Jenevieve",
+     "OSHUN"
+    ],
+    "model": [
+     "Doechii",
+     "Ravyn Lenae",
+     "Muni Long",
+     "Ari Lennox",
+     "Amber Mark"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Halsey",
+    "set": "held-out",
+    "region": "na",
+    "tour": "For My Last Trick: The Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=For_My_Last_Trick%3A_The_Tour&oldid=1376678226",
+    "from": "column",
+    "openers": [
+     "Del Water Gap",
+     "The Warning",
+     "Evanescence",
+     "Julia Wolf",
+     "Alvvays",
+     "Hope Tala",
+     "Sir Chloe",
+     "Royel Otis",
+     "Flowerovlove",
+     "Magdalena Bay",
+     "Alemeda"
+    ],
+    "qloo": [
+     "CYN",
+     "Maty Noyes",
+     "JP Saxe",
+     "Wrabel",
+     "Transviolet"
+    ],
+    "model": [
+     "Beabadoobee",
+     "Ethel Cain",
+     "Suki Waterhouse",
+     "Lola Young",
+     "Abby Roberts"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Pink",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Summer Carnival (tour)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Summer_Carnival_(tour)&oldid=1376188311",
+    "from": "column",
+    "openers": [
+     "Grouplove",
+     "KidCutUp",
+     "Brandi Carlile",
+     "Pat Benatar",
+     "Neil Giraldo",
+     "Sheryl Crow",
+     "The Script",
+     "Noga Erez"
+    ],
+    "qloo": [
+     "Christina Vidal",
+     "Nicole Richie",
+     "AJ McLean",
+     "78Violet",
+     "Evan Taubenfeld"
+    ],
+    "model": [
+     "Brandi Carlile",
+     "KidCutUp",
+     "G Flip",
+     "Maren Morris",
+     "Emily Weisband"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": 1
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 1
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Pierce the Veil",
+    "set": "held-out",
+    "region": "na",
+    "tour": "I Can't Hear You World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=I_Can't_Hear_You_World_Tour&oldid=1376231105",
+    "from": "column",
+    "openers": [
+     "Sleeping with Sirens",
+     "Daisy Grenade",
+     "Beach Weather",
+     "Health",
+     "Ecca Vandal",
+     "Like Roses",
+     "Movements",
+     "Jack Kays"
+    ],
+    "qloo": [
+     "Nice Guys Finish First",
+     "FEVER 333",
+     "Paige",
+     "Cory Wells",
+     "Seven Story Fall"
+    ],
+    "model": [
+     "Casket",
+     "VCTMS",
+     "Distant",
+     "Kublai Khan TX",
+     "Orthodox"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Japanese Breakfast",
+    "set": "bench",
+    "region": "na",
+    "tour": "The Melancholy Tour (spring 2025 North American leg)",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Melancholy_Tour&oldid=1348731607",
+    "from": "column",
+    "openers": [
+     "Ginger Root"
+    ],
+    "qloo": [
+     "sasami",
+     "Miya Folick",
+     "Rostam",
+     "Luna Li",
+     "Vagabon"
+    ],
+    "model": [
+     "Ginger Root",
+     "Horse Jumper of Love",
+     "Tommy Lefroy",
+     "Makena",
+     "ahem"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": 1
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 1
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Nicki Minaj",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Pink Friday 2 World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Pink_Friday_2_World_Tour&oldid=1380477554",
+    "from": "column",
+    "openers": [
+     "Monica",
+     "Bia",
+     "Skillibeng",
+     "Tyga"
+    ],
+    "qloo": [
+     "Justine Skye",
+     "Lil Debbie",
+     "Colette Carr",
+     "Dai Burger",
+     "Snow tha Product"
+    ],
+    "model": [
+     "Ice Spice",
+     "Lola Brooke",
+     "Bia",
+     "Kash Doll",
+     "Rico Nasty"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": 3
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 1
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Twenty One Pilots",
+    "set": "held-out",
+    "region": "na",
+    "tour": "The Clancy World Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Clancy_World_Tour&oldid=1373076398",
+    "from": "column",
+    "openers": [
+     "Balu Brigada",
+     "Dayglow"
+    ],
+    "qloo": [
+     "Bohnes",
+     "Wrabel",
+     "morgxn",
+     "Goody Grace",
+     "Weathers"
+    ],
+    "model": [
+     "The Heavy Heavy Hits",
+     "The Velveteers",
+     "The Tontons",
+     "The Sh-Booms",
+     "Thee Commons"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Gary Barlow",
+    "set": "held-out",
+    "region": "uk",
+    "tour": "The Songbook Tour (2025)",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Songbook_Tour_(2025)&oldid=1318185932",
+    "from": "section",
+    "openers": [
+     "The Piano",
+     "Beverley Knight"
+    ],
+    "qloo": [
+     "Martine McCutcheon",
+     "Stacey Solomon",
+     "Sam Bailey",
+     "Luke Friend",
+     "Ray Quinn"
+    ],
+    "model": [
+     "Rhys Lewis",
+     "Callum Beattie",
+     "Niamh Regan",
+     "Megan O'Neill",
+     "Hannah Grace"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Turnstile",
+    "set": "bench",
+    "region": "na",
+    "tour": "Never Enough Tour (fall 2025 North American leg)",
+    "source": "https://en.wikipedia.org/w/index.php?title=Never_Enough_Tour&oldid=1381207118",
+    "from": "column",
+    "openers": [
+     "Speed",
+     "Jane Remover",
+     "Mannequin Pussy",
+     "Blood Orange",
+     "Amyl and the Sniffers"
+    ],
+    "qloo": [
+     "Culture Abuse",
+     "Gouge Away",
+     "Fury",
+     "Jesus Piece",
+     "Drain"
+    ],
+    "model": [
+     "Gulch",
+     "Drain",
+     "Scowl",
+     "Zulu",
+     "Koyo"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   },
+   {
+    "artist": "Tame Impala",
+    "set": "held-out",
+    "region": "na",
+    "tour": "Deadbeat Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Deadbeat_Tour&oldid=1380752017",
+    "from": "column",
+    "openers": [
+     "Fcukers",
+     "Djo",
+     "Dominic Fike"
+    ],
+    "qloo": [
+     "Kikagaku Moyo",
+     "Drugdealer",
+     "Levitation Room",
+     "Chicano Batman",
+     "Skaters"
+    ],
+    "model": [
+     "Unknown Mortal Orchestra",
+     "Pond",
+     "Mild High Club",
+     "Jay Watson",
+     "GUM"
+    ],
+    "rank": {
+     "qloo": null,
+     "model": null
+    },
+    "hit5": {
+     "qloo": 0,
+     "model": 0
+    },
+    "hit1": {
+     "qloo": 0,
+     "model": 0
+    },
+    "qlooReturned": 5
+   }
+  ],
+  "missing": [],
+  "skipped": [
+   {
+    "artist": "Zach Bryan",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Tyler Childers",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Caamp",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Waxahatchee",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Khruangbin",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Durand Jones & The Indications",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Ghost",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Knocked Loose",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Cuco",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "MJ Lenderman",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Parcels",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Alvvays",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Arlo Parks",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Wet Leg",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Fontaines D.C.",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "JPEGMAFIA",
+    "test": "support",
+    "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+   },
+   {
+    "artist": "Troye Sivan",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Queen + Adam Lambert",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Chappell Roan",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Billy Joel",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Kim Petras",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Queens of the Stone Age",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Nine Inch Nails",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Sugababes",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Ado",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "Addison Rae",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   },
+   {
+    "artist": "For King & Country",
+    "test": "support",
+    "reason": "no opener column in the scored rows and no opening-acts section"
+   }
+  ]
+ },
+ "postcut": {
+  "n": 13,
+  "qualifying": 13,
+  "walked": 185,
+  "of": 185,
+  "belowMinimum": false,
+  "primary": [
+   {
+    "name": "Qloo vs the model alone",
+    "n": 13,
+    "meanA": 0.4636257914330285,
+    "meanB": 0.5092222789860608,
+    "diff": -0.045596487553032174,
+    "lo": -0.11736104394486871,
+    "hi": 0.029622551361681793,
+    "wins": 4,
+    "losses": 8,
+    "ties": 1,
+    "p": 0.3876953125
+   },
+   {
+    "name": "Qloo + population vs population",
+    "n": 13,
+    "meanA": 0.5447698059115964,
+    "meanB": 0.4130789667691058,
+    "diff": 0.13169083914249058,
+    "lo": 0.08727035964887628,
+    "hi": 0.17368955830494295,
+    "wins": 11,
+    "losses": 0,
+    "ties": 2,
+    "p": 0.0009765625
+   }
+  ],
+  "secondary": [
+   {
+    "name": "The model alone vs population",
+    "n": 13,
+    "meanA": 0.5092222789860608,
+    "meanB": 0.4130789667691058,
+    "diff": 0.09614331221695488,
+    "lo": 0.02718763519471765,
+    "hi": 0.1636153316675257,
+    "wins": 10,
+    "losses": 1,
+    "ties": 2,
+    "p": 0.01171875
+   },
+   {
+    "name": "Qloo vs population",
+    "n": 13,
+    "meanA": 0.4636257914330285,
+    "meanB": 0.4130789667691058,
+    "diff": 0.0505468246639227,
+    "lo": -0.025600049567309338,
+    "hi": 0.12586385030555983,
+    "wins": 6,
+    "losses": 4,
+    "ties": 3,
+    "p": 0.75390625
+   },
+   {
+    "name": "Qloo + population vs the model alone",
+    "n": 13,
+    "meanA": 0.5447698059115964,
+    "meanB": 0.5092222789860608,
+    "diff": 0.03554752692553571,
+    "lo": -0.007625858304591333,
+    "hi": 0.08165226471344907,
+    "wins": 7,
+    "losses": 2,
+    "ties": 4,
+    "p": 0.1796875
+   }
+  ],
+  "exploratory": [
+   {
+    "name": "The model + Qloo vs the model alone",
+    "n": 13,
+    "meanA": 0.5673119913153953,
+    "meanB": 0.5092222789860608,
+    "diff": 0.0580897123293346,
+    "lo": 0.01949182039679777,
+    "hi": 0.1008742061270096,
+    "wins": 7,
+    "losses": 1,
+    "ties": 5,
+    "p": 0.0703125
+   }
+  ],
+  "pooled": {
+   "population": {
+    "hits": 121,
+    "of": 277,
+    "share": 0.4368231046931408
+   },
+   "model": {
+    "hits": 150,
+    "of": 277,
+    "share": 0.5415162454873647
+   },
+   "qloo": {
+    "hits": 129,
+    "of": 277,
+    "share": 0.4657039711191336
+   },
+   "blend": {
+    "hits": 159,
+    "of": 277,
+    "share": 0.5740072202166066
+   },
+   "modelQloo": {
+    "hits": 163,
+    "of": 277,
+    "share": 0.5884476534296029
+   }
+  },
+  "beyond": {
+   "model": {
+    "hits": 58,
+    "of": 156,
+    "share": 0.3717948717948718
+   },
+   "qloo": {
+    "hits": 56,
+    "of": 156,
+    "share": 0.358974358974359
+   },
+   "blend": {
+    "hits": 52,
+    "of": 156,
+    "share": 0.3333333333333333
+   }
+  },
+  "rows": [
+   {
+    "artist": "Flo",
+    "region": "na",
+    "tour": "Therapy at the Club Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Therapy_at_the_Club_Tour&oldid=1381016641",
+    "announced": "2026-10-05",
+    "created": "2026-10-05",
+    "R": 17,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 9,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Chicago",
+       "Houston",
+       "Phoenix",
+       "Philadelphia",
+       "San Diego",
+       "Dallas"
+      ]
+     },
+     "model": {
+      "hits": 10,
+      "of": 17,
+      "cities": [
+       "Los Angeles",
+       "New York",
+       "Chicago",
+       "Toronto",
+       "San Francisco",
+       "Seattle",
+       "Boston",
+       "Washington",
+       "Philadelphia",
+       "Atlanta"
+      ]
+     },
+     "qloo": {
+      "hits": 11,
+      "of": 17,
+      "cities": [
+       "Atlanta",
+       "New York",
+       "Los Angeles",
+       "Washington",
+       "Houston",
+       "Toronto",
+       "Chicago",
+       "Philadelphia",
+       "Orlando",
+       "San Francisco",
+       "Dallas"
+      ]
+     },
+     "blend": {
+      "hits": 12,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Houston",
+       "Chicago",
+       "Philadelphia",
+       "Dallas",
+       "Washington",
+       "San Diego",
+       "San Francisco",
+       "Atlanta",
+       "Boston"
+      ]
+     },
+     "modelQloo": {
+      "hits": 13,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Chicago",
+       "Washington",
+       "Atlanta",
+       "San Francisco",
+       "Philadelphia",
+       "Houston",
+       "Boston",
+       "Dallas",
+       "Seattle",
+       "San Diego"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 5,
+      "of": 8,
+      "cities": [
+       "Seattle",
+       "San Francisco",
+       "Atlanta",
+       "Boston",
+       "Washington"
+      ]
+     },
+     "qloo": {
+      "hits": 4,
+      "of": 8,
+      "cities": [
+       "San Francisco",
+       "Orlando",
+       "Atlanta",
+       "Washington"
+      ]
+     },
+     "blend": {
+      "hits": 4,
+      "of": 8,
+      "cities": [
+       "San Francisco",
+       "Atlanta",
+       "Boston",
+       "Washington"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Beabadoobee",
+    "region": "na",
+    "tour": "The Powerlines Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Powerlines_Tour&oldid=1379681392",
+    "announced": "2026-06-24",
+    "created": "2026-09-19",
+    "R": 17,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 7,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Montréal",
+       "Phoenix",
+       "Philadelphia",
+       "San Diego"
+      ]
+     },
+     "model": {
+      "hits": 10,
+      "of": 17,
+      "cities": [
+       "Los Angeles",
+       "New York",
+       "San Francisco",
+       "Seattle",
+       "Austin",
+       "Toronto",
+       "Vancouver",
+       "Boston",
+       "Philadelphia",
+       "Montréal"
+      ]
+     },
+     "qloo": {
+      "hits": 9,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "San Francisco",
+       "San Diego",
+       "Seattle",
+       "Boston",
+       "Toronto",
+       "Austin",
+       "Philadelphia"
+      ]
+     },
+     "blend": {
+      "hits": 11,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "San Diego",
+       "Philadelphia",
+       "San Francisco",
+       "Montréal",
+       "Seattle",
+       "Austin",
+       "Phoenix",
+       "Boston"
+      ]
+     },
+     "modelQloo": {
+      "hits": 11,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "San Francisco",
+       "Seattle",
+       "Boston",
+       "Toronto",
+       "San Diego",
+       "Austin",
+       "Philadelphia",
+       "Vancouver",
+       "Montréal"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 5,
+      "of": 10,
+      "cities": [
+       "Boston",
+       "Austin",
+       "San Francisco",
+       "Vancouver",
+       "Seattle"
+      ]
+     },
+     "qloo": {
+      "hits": 4,
+      "of": 10,
+      "cities": [
+       "Boston",
+       "Austin",
+       "San Francisco",
+       "Seattle"
+      ]
+     },
+     "blend": {
+      "hits": 4,
+      "of": 10,
+      "cities": [
+       "Boston",
+       "Austin",
+       "San Francisco",
+       "Seattle"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Lizzy McAlpine",
+    "region": "na",
+    "tour": "The Over Country Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Over_Country_Tour&oldid=1379962709",
+    "announced": "2026-09-24",
+    "created": "2026-09-29",
+    "R": 26,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 14,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Chicago",
+       "Houston",
+       "Philadelphia",
+       "San Diego",
+       "Dallas",
+       "Austin",
+       "Columbus",
+       "Indianapolis",
+       "San Francisco",
+       "Seattle",
+       "Denver"
+      ]
+     },
+     "model": {
+      "hits": 17,
+      "of": 26,
+      "cities": [
+       "Nashville",
+       "Austin",
+       "Los Angeles",
+       "New York",
+       "Chicago",
+       "Atlanta",
+       "Denver",
+       "Seattle",
+       "Portland",
+       "Boston",
+       "Philadelphia",
+       "San Francisco",
+       "Minneapolis",
+       "Dallas",
+       "Houston",
+       "San Diego",
+       "Toronto"
+      ]
+     },
+     "qloo": {
+      "hits": 14,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Boston",
+       "Los Angeles",
+       "Nashville",
+       "San Francisco",
+       "Chicago",
+       "Seattle",
+       "Philadelphia",
+       "San Diego",
+       "Portland",
+       "Austin",
+       "Toronto",
+       "Minneapolis",
+       "Denver"
+      ]
+     },
+     "blend": {
+      "hits": 18,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "Philadelphia",
+       "Toronto",
+       "San Diego",
+       "San Francisco",
+       "Seattle",
+       "Nashville",
+       "Austin",
+       "Boston",
+       "Dallas",
+       "Portland",
+       "Denver",
+       "Houston",
+       "Indianapolis",
+       "Atlanta",
+       "Minneapolis"
+      ]
+     },
+     "modelQloo": {
+      "hits": 17,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Nashville",
+       "Los Angeles",
+       "Chicago",
+       "Boston",
+       "Austin",
+       "Seattle",
+       "San Francisco",
+       "Philadelphia",
+       "Portland",
+       "San Diego",
+       "Denver",
+       "Toronto",
+       "Minneapolis",
+       "Atlanta",
+       "Dallas",
+       "Houston"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 5,
+      "of": 12,
+      "cities": [
+       "Atlanta",
+       "Minneapolis",
+       "Nashville",
+       "Boston",
+       "Portland"
+      ]
+     },
+     "qloo": {
+      "hits": 4,
+      "of": 12,
+      "cities": [
+       "Minneapolis",
+       "Nashville",
+       "Boston",
+       "Portland"
+      ]
+     },
+     "blend": {
+      "hits": 5,
+      "of": 12,
+      "cities": [
+       "Atlanta",
+       "Minneapolis",
+       "Nashville",
+       "Boston",
+       "Portland"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Karol G",
+    "region": "na",
+    "tour": "Viajando Por El Mundo Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Viajando_Por_El_Mundo_Tour&oldid=1381757296",
+    "announced": null,
+    "created": "2026-10-04",
+    "R": 17,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 9,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Chicago",
+       "Houston",
+       "Phoenix",
+       "San Antonio",
+       "Fort Worth",
+       "San Jose"
+      ]
+     },
+     "model": {
+      "hits": 10,
+      "of": 17,
+      "cities": [
+       "Miami",
+       "Los Angeles",
+       "New York",
+       "Houston",
+       "Chicago",
+       "San Antonio",
+       "Phoenix",
+       "Atlanta",
+       "Las Vegas",
+       "Tampa"
+      ]
+     },
+     "qloo": {
+      "hits": 7,
+      "of": 17,
+      "cities": [
+       "Miami",
+       "New York",
+       "El Paso",
+       "Las Vegas",
+       "Los Angeles",
+       "Houston",
+       "Tampa"
+      ]
+     },
+     "blend": {
+      "hits": 11,
+      "of": 17,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Houston",
+       "Chicago",
+       "San Antonio",
+       "El Paso",
+       "Las Vegas",
+       "Miami",
+       "Phoenix",
+       "Washington",
+       "Toronto"
+      ]
+     },
+     "modelQloo": {
+      "hits": 11,
+      "of": 17,
+      "cities": [
+       "Miami",
+       "New York",
+       "Los Angeles",
+       "Las Vegas",
+       "Houston",
+       "San Antonio",
+       "Chicago",
+       "Tampa",
+       "El Paso",
+       "Washington",
+       "Phoenix"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 4,
+      "of": 8,
+      "cities": [
+       "Las Vegas",
+       "Atlanta",
+       "Miami",
+       "Tampa"
+      ]
+     },
+     "qloo": {
+      "hits": 4,
+      "of": 8,
+      "cities": [
+       "Las Vegas",
+       "El Paso",
+       "Miami",
+       "Tampa"
+      ]
+     },
+     "blend": {
+      "hits": 4,
+      "of": 8,
+      "cities": [
+       "Washington",
+       "Las Vegas",
+       "El Paso",
+       "Miami"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Garth Brooks",
+    "region": "na",
+    "tour": "The Blame It All On My Roots Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Blame_It_All_On_My_Roots_Tour&oldid=1381769937",
+    "announced": "2026-07-07",
+    "created": "2026-07-07",
+    "R": 9,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 1,
+      "of": 9,
+      "cities": [
+       "Chicago"
+      ]
+     },
+     "model": {
+      "hits": 1,
+      "of": 9,
+      "cities": [
+       "Chicago"
+      ]
+     },
+     "qloo": {
+      "hits": 2,
+      "of": 9,
+      "cities": [
+       "Kansas City",
+       "Tulsa"
+      ]
+     },
+     "blend": {
+      "hits": 1,
+      "of": 9,
+      "cities": [
+       "Indianapolis"
+      ]
+     },
+     "modelQloo": {
+      "hits": 3,
+      "of": 9,
+      "cities": [
+       "Kansas City",
+       "Tulsa",
+       "Indianapolis"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 0,
+      "of": 8,
+      "cities": []
+     },
+     "qloo": {
+      "hits": 2,
+      "of": 8,
+      "cities": [
+       "Tulsa",
+       "Kansas City"
+      ]
+     },
+     "blend": {
+      "hits": 1,
+      "of": 8,
+      "cities": [
+       "Indianapolis"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Take That",
+    "region": "eu",
+    "tour": "Dreamers Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Dreamers_Tour&oldid=1378865921",
+    "announced": null,
+    "created": "2026-08-28",
+    "R": 23,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 9,
+      "of": 23,
+      "cities": [
+       "Berlin",
+       "Madrid",
+       "Rome",
+       "Paris",
+       "Warsaw",
+       "Vienna",
+       "Stockholm",
+       "Oslo",
+       "Brussels"
+      ]
+     },
+     "model": {
+      "hits": 5,
+      "of": 23,
+      "cities": [
+       "Berlin",
+       "Düsseldorf",
+       "Bremen",
+       "Amsterdam",
+       "Brussels"
+      ]
+     },
+     "qloo": {
+      "hits": 4,
+      "of": 23,
+      "cities": [
+       "Rome",
+       "Málaga",
+       "Berlin",
+       "Amsterdam"
+      ]
+     },
+     "blend": {
+      "hits": 10,
+      "of": 23,
+      "cities": [
+       "Rome",
+       "Berlin",
+       "Paris",
+       "Madrid",
+       "Vienna",
+       "Amsterdam",
+       "Málaga",
+       "Stockholm",
+       "Brussels",
+       "Valencia"
+      ]
+     },
+     "modelQloo": {
+      "hits": 8,
+      "of": 23,
+      "cities": [
+       "Berlin",
+       "Amsterdam",
+       "Düsseldorf",
+       "Paris",
+       "Rome",
+       "Vienna",
+       "Brussels",
+       "Madrid"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 3,
+      "of": 14,
+      "cities": [
+       "Düsseldorf",
+       "Bremen",
+       "Amsterdam"
+      ]
+     },
+     "qloo": {
+      "hits": 2,
+      "of": 14,
+      "cities": [
+       "Amsterdam",
+       "Málaga"
+      ]
+     },
+     "blend": {
+      "hits": 3,
+      "of": 14,
+      "cities": [
+       "Amsterdam",
+       "Valencia",
+       "Málaga"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Role Model",
+    "region": "na",
+    "tour": "Chuck On Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Chuck_On_Tour&oldid=1380941441",
+    "announced": "2026-06-18",
+    "created": "2026-08-31",
+    "R": 22,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 9,
+      "of": 22,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "Houston",
+       "Phoenix",
+       "Philadelphia",
+       "Dallas",
+       "Austin",
+       "San Francisco"
+      ]
+     },
+     "model": {
+      "hits": 17,
+      "of": 22,
+      "cities": [
+       "Los Angeles",
+       "New York",
+       "Chicago",
+       "San Francisco",
+       "Seattle",
+       "Austin",
+       "Denver",
+       "Boston",
+       "Washington",
+       "Philadelphia",
+       "Vancouver",
+       "Minneapolis",
+       "Atlanta",
+       "Nashville",
+       "Dallas",
+       "Houston",
+       "Phoenix"
+      ]
+     },
+     "qloo": {
+      "hits": 13,
+      "of": 22,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "Boston",
+       "San Francisco",
+       "Austin",
+       "Phoenix",
+       "Pittsburgh",
+       "Seattle",
+       "Dallas",
+       "Washington",
+       "Nashville",
+       "Atlanta"
+      ]
+     },
+     "blend": {
+      "hits": 14,
+      "of": 22,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "Phoenix",
+       "Dallas",
+       "Austin",
+       "San Francisco",
+       "Houston",
+       "Boston",
+       "Seattle",
+       "Philadelphia",
+       "Washington",
+       "Nashville",
+       "Denver"
+      ]
+     },
+     "modelQloo": {
+      "hits": 16,
+      "of": 22,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "San Francisco",
+       "Boston",
+       "Austin",
+       "Seattle",
+       "Washington",
+       "Phoenix",
+       "Dallas",
+       "Nashville",
+       "Pittsburgh",
+       "Atlanta",
+       "Minneapolis",
+       "Denver",
+       "Philadelphia"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 8,
+      "of": 13,
+      "cities": [
+       "Seattle",
+       "Vancouver",
+       "Denver",
+       "Minneapolis",
+       "Washington",
+       "Boston",
+       "Atlanta",
+       "Nashville"
+      ]
+     },
+     "qloo": {
+      "hits": 6,
+      "of": 13,
+      "cities": [
+       "Seattle",
+       "Washington",
+       "Boston",
+       "Pittsburgh",
+       "Atlanta",
+       "Nashville"
+      ]
+     },
+     "blend": {
+      "hits": 5,
+      "of": 13,
+      "cities": [
+       "Seattle",
+       "Denver",
+       "Washington",
+       "Boston",
+       "Nashville"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Sugarland",
+    "region": "na",
+    "tour": "Ride or Die Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Ride_or_Die_Tour&oldid=1381367254",
+    "announced": null,
+    "created": "2026-08-18",
+    "R": 21,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 1,
+      "of": 21,
+      "cities": [
+       "Dallas"
+      ]
+     },
+     "model": {
+      "hits": 1,
+      "of": 21,
+      "cities": [
+       "Dallas"
+      ]
+     },
+     "qloo": {
+      "hits": 1,
+      "of": 21,
+      "cities": [
+       "Charleston"
+      ]
+     },
+     "blend": {
+      "hits": 1,
+      "of": 21,
+      "cities": [
+       "Dallas"
+      ]
+     },
+     "modelQloo": {
+      "hits": 1,
+      "of": 21,
+      "cities": [
+       "Dallas"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 0,
+      "of": 20,
+      "cities": []
+     },
+     "qloo": {
+      "hits": 1,
+      "of": 20,
+      "cities": [
+       "Charleston"
+      ]
+     },
+     "blend": {
+      "hits": 0,
+      "of": 20,
+      "cities": []
+     }
+    }
+   },
+   {
+    "artist": "Victoria Monét",
+    "region": "na",
+    "tour": "Frequency of Love Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Frequency_of_Love_Tour&oldid=1381387745",
+    "announced": "2026-09-10",
+    "created": "2026-09-12",
+    "R": 26,
+    "modelUnplaced": 1,
+    "rp": {
+     "population": {
+      "hits": 13,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Chicago",
+       "Houston",
+       "Phoenix",
+       "Philadelphia",
+       "Dallas",
+       "Austin",
+       "Charlotte",
+       "San Francisco",
+       "Seattle",
+       "Washington"
+      ]
+     },
+     "model": {
+      "hits": 15,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "Atlanta",
+       "Houston",
+       "Toronto",
+       "Dallas",
+       "Washington",
+       "Philadelphia",
+       "Vancouver",
+       "Detroit",
+       "Charlotte",
+       "Nashville",
+       "New Orleans",
+       "Raleigh"
+      ]
+     },
+     "qloo": {
+      "hits": 18,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Atlanta",
+       "Las Vegas",
+       "Washington",
+       "Chicago",
+       "Philadelphia",
+       "New Orleans",
+       "Houston",
+       "Sacramento",
+       "San Francisco",
+       "Boston",
+       "Dallas",
+       "Detroit",
+       "Toronto",
+       "Charlotte",
+       "Phoenix",
+       "Tampa"
+      ]
+     },
+     "blend": {
+      "hits": 18,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "Houston",
+       "Philadelphia",
+       "Toronto",
+       "Dallas",
+       "Washington",
+       "Phoenix",
+       "San Francisco",
+       "Las Vegas",
+       "Charlotte",
+       "Austin",
+       "Boston",
+       "Atlanta",
+       "Detroit",
+       "Seattle",
+       "Sacramento"
+      ]
+     },
+     "modelQloo": {
+      "hits": 17,
+      "of": 26,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Atlanta",
+       "Chicago",
+       "Washington",
+       "Houston",
+       "Philadelphia",
+       "Dallas",
+       "New Orleans",
+       "Toronto",
+       "Detroit",
+       "Charlotte",
+       "Raleigh",
+       "Nashville",
+       "Las Vegas",
+       "San Francisco",
+       "Phoenix"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 6,
+      "of": 13,
+      "cities": [
+       "Raleigh",
+       "New Orleans",
+       "Atlanta",
+       "Detroit",
+       "Nashville",
+       "Vancouver"
+      ]
+     },
+     "qloo": {
+      "hits": 7,
+      "of": 13,
+      "cities": [
+       "New Orleans",
+       "Atlanta",
+       "Tampa",
+       "Boston",
+       "Detroit",
+       "Las Vegas",
+       "Sacramento"
+      ]
+     },
+     "blend": {
+      "hits": 5,
+      "of": 13,
+      "cities": [
+       "Atlanta",
+       "Boston",
+       "Detroit",
+       "Las Vegas",
+       "Sacramento"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Phoebe Bridgers",
+    "region": "na",
+    "tour": "The Lost Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Lost_Tour&oldid=1381404619",
+    "announced": null,
+    "created": "2026-06-06",
+    "R": 21,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 10,
+      "of": 21,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Chicago",
+       "Philadelphia",
+       "Fort Worth",
+       "Austin",
+       "Columbus",
+       "Charlotte",
+       "Indianapolis"
+      ]
+     },
+     "model": {
+      "hits": 15,
+      "of": 21,
+      "cities": [
+       "Los Angeles",
+       "New York",
+       "Chicago",
+       "Seattle",
+       "San Francisco",
+       "Boston",
+       "Philadelphia",
+       "Washington",
+       "Austin",
+       "Denver",
+       "Minneapolis",
+       "Nashville",
+       "Atlanta",
+       "Toronto",
+       "Vancouver"
+      ]
+     },
+     "qloo": {
+      "hits": 10,
+      "of": 21,
+      "cities": [
+       "Boston",
+       "San Francisco",
+       "Seattle",
+       "Minneapolis",
+       "Austin",
+       "Chicago",
+       "Denver",
+       "Vancouver",
+       "Nashville",
+       "Los Angeles"
+      ]
+     },
+     "blend": {
+      "hits": 15,
+      "of": 21,
+      "cities": [
+       "Chicago",
+       "Los Angeles",
+       "Austin",
+       "San Francisco",
+       "Seattle",
+       "New York",
+       "Boston",
+       "Philadelphia",
+       "Denver",
+       "Nashville",
+       "Vancouver",
+       "Toronto",
+       "Columbus",
+       "Minneapolis",
+       "Washington"
+      ]
+     },
+     "modelQloo": {
+      "hits": 15,
+      "of": 21,
+      "cities": [
+       "Seattle",
+       "San Francisco",
+       "Boston",
+       "Chicago",
+       "Austin",
+       "Minneapolis",
+       "Los Angeles",
+       "Denver",
+       "Nashville",
+       "New York",
+       "Vancouver",
+       "Philadelphia",
+       "Washington",
+       "Toronto",
+       "Columbus"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 9,
+      "of": 11,
+      "cities": [
+       "Minneapolis",
+       "Washington",
+       "Boston",
+       "Nashville",
+       "Atlanta",
+       "Denver",
+       "Seattle",
+       "Vancouver",
+       "San Francisco"
+      ]
+     },
+     "qloo": {
+      "hits": 7,
+      "of": 11,
+      "cities": [
+       "Minneapolis",
+       "Boston",
+       "Nashville",
+       "Denver",
+       "Seattle",
+       "Vancouver",
+       "San Francisco"
+      ]
+     },
+     "blend": {
+      "hits": 8,
+      "of": 11,
+      "cities": [
+       "Minneapolis",
+       "Washington",
+       "Boston",
+       "Nashville",
+       "Denver",
+       "Seattle",
+       "Vancouver",
+       "San Francisco"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "James Blunt",
+    "region": "eu",
+    "tour": "Airplane Mode Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Airplane_Mode_Tour&oldid=1374992448",
+    "announced": "2026-09-01",
+    "created": "2026-09-07",
+    "R": 26,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 11,
+      "of": 26,
+      "cities": [
+       "Berlin",
+       "Paris",
+       "Hamburg",
+       "Budapest",
+       "Vienna",
+       "Munich",
+       "Milan",
+       "Prague",
+       "Copenhagen",
+       "Oslo",
+       "Brussels"
+      ]
+     },
+     "model": {
+      "hits": 12,
+      "of": 26,
+      "cities": [
+       "Berlin",
+       "Paris",
+       "Amsterdam",
+       "Copenhagen",
+       "Vienna",
+       "Munich",
+       "Hamburg",
+       "Brussels",
+       "Zürich",
+       "Oslo",
+       "Prague",
+       "Milan"
+      ]
+     },
+     "qloo": {
+      "hits": 10,
+      "of": 26,
+      "cities": [
+       "Budapest",
+       "Milan",
+       "Florence",
+       "Zürich",
+       "Vienna",
+       "Munich",
+       "Prague",
+       "Amsterdam",
+       "Berlin",
+       "Copenhagen"
+      ]
+     },
+     "blend": {
+      "hits": 13,
+      "of": 26,
+      "cities": [
+       "Budapest",
+       "Vienna",
+       "Milan",
+       "Berlin",
+       "Munich",
+       "Prague",
+       "Hamburg",
+       "Paris",
+       "Copenhagen",
+       "Amsterdam",
+       "Brussels",
+       "Zürich",
+       "Florence"
+      ]
+     },
+     "modelQloo": {
+      "hits": 14,
+      "of": 26,
+      "cities": [
+       "Vienna",
+       "Munich",
+       "Zürich",
+       "Amsterdam",
+       "Berlin",
+       "Milan",
+       "Prague",
+       "Copenhagen",
+       "Paris",
+       "Hamburg",
+       "Brussels",
+       "Budapest",
+       "Oslo",
+       "Florence"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 2,
+      "of": 15,
+      "cities": [
+       "Amsterdam",
+       "Zürich"
+      ]
+     },
+     "qloo": {
+      "hits": 3,
+      "of": 15,
+      "cities": [
+       "Amsterdam",
+       "Florence",
+       "Zürich"
+      ]
+     },
+     "blend": {
+      "hits": 3,
+      "of": 15,
+      "cities": [
+       "Amsterdam",
+       "Florence",
+       "Zürich"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Jonas Brothers",
+    "region": "na",
+    "tour": "The Burning Up Tour All Over Again",
+    "source": "https://en.wikipedia.org/w/index.php?title=The_Burning_Up_Tour_All_Over_Again&oldid=1379636154",
+    "announced": "2026-07-07",
+    "created": "2026-08-21",
+    "R": 43,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 24,
+      "of": 43,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Chicago",
+       "Houston",
+       "Phoenix",
+       "Philadelphia",
+       "San Antonio",
+       "San Diego",
+       "Dallas",
+       "Austin",
+       "Columbus",
+       "Charlotte",
+       "Indianapolis",
+       "San Francisco",
+       "Seattle",
+       "Denver",
+       "Washington",
+       "Nashville",
+       "Oklahoma City",
+       "Boston",
+       "Detroit",
+       "Las Vegas",
+       "Milwaukee"
+      ]
+     },
+     "model": {
+      "hits": 32,
+      "of": 43,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Chicago",
+       "Toronto",
+       "Dallas",
+       "Houston",
+       "Atlanta",
+       "Philadelphia",
+       "Phoenix",
+       "Miami",
+       "Washington",
+       "Boston",
+       "San Francisco",
+       "Seattle",
+       "San Diego",
+       "Tampa",
+       "Denver",
+       "Orlando",
+       "Minneapolis",
+       "Charlotte",
+       "Nashville",
+       "San Antonio",
+       "Sacramento",
+       "Las Vegas",
+       "Austin",
+       "Cleveland",
+       "Kansas City",
+       "Columbus",
+       "Indianapolis",
+       "Raleigh",
+       "Milwaukee",
+       "Oklahoma City"
+      ]
+     },
+     "qloo": {
+      "hits": 23,
+      "of": 43,
+      "cities": [
+       "Orlando",
+       "New York",
+       "Boston",
+       "Nashville",
+       "Chicago",
+       "San Diego",
+       "Pittsburgh",
+       "Seattle",
+       "Irvine",
+       "Austin",
+       "Minneapolis",
+       "Phoenix",
+       "Los Angeles",
+       "Milwaukee",
+       "Salt Lake City",
+       "Columbus",
+       "San Antonio",
+       "Indianapolis",
+       "Toronto",
+       "Kansas City",
+       "Tampa",
+       "Washington",
+       "Palm Springs"
+      ]
+     },
+     "blend": {
+      "hits": 30,
+      "of": 43,
+      "cities": [
+       "New York",
+       "Chicago",
+       "San Diego",
+       "Los Angeles",
+       "Phoenix",
+       "Austin",
+       "Nashville",
+       "Toronto",
+       "Seattle",
+       "Boston",
+       "San Antonio",
+       "Columbus",
+       "Indianapolis",
+       "Dallas",
+       "Philadelphia",
+       "Milwaukee",
+       "Orlando",
+       "Washington",
+       "Minneapolis",
+       "Denver",
+       "Pittsburgh",
+       "Kansas City",
+       "San Francisco",
+       "Oklahoma City",
+       "Las Vegas",
+       "Tampa",
+       "Irvine",
+       "Sacramento",
+       "Miami",
+       "Salt Lake City"
+      ]
+     },
+     "modelQloo": {
+      "hits": 32,
+      "of": 43,
+      "cities": [
+       "New York",
+       "Chicago",
+       "Boston",
+       "Orlando",
+       "Los Angeles",
+       "San Diego",
+       "Phoenix",
+       "Seattle",
+       "Nashville",
+       "Toronto",
+       "Minneapolis",
+       "Austin",
+       "Dallas",
+       "Washington",
+       "San Antonio",
+       "Tampa",
+       "Philadelphia",
+       "Columbus",
+       "Indianapolis",
+       "Milwaukee",
+       "Kansas City",
+       "Denver",
+       "San Francisco",
+       "Miami",
+       "Las Vegas",
+       "Sacramento",
+       "Pittsburgh",
+       "Oklahoma City",
+       "Irvine",
+       "Cleveland",
+       "Raleigh",
+       "Salt Lake City"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 9,
+      "of": 19,
+      "cities": [
+       "Raleigh",
+       "Miami",
+       "Orlando",
+       "Atlanta",
+       "Tampa",
+       "Cleveland",
+       "Minneapolis",
+       "Kansas City",
+       "Sacramento"
+      ]
+     },
+     "qloo": {
+      "hits": 8,
+      "of": 19,
+      "cities": [
+       "Orlando",
+       "Tampa",
+       "Pittsburgh",
+       "Minneapolis",
+       "Kansas City",
+       "Palm Springs",
+       "Irvine",
+       "Salt Lake City"
+      ]
+     },
+     "blend": {
+      "hits": 9,
+      "of": 19,
+      "cities": [
+       "Miami",
+       "Orlando",
+       "Tampa",
+       "Pittsburgh",
+       "Minneapolis",
+       "Kansas City",
+       "Sacramento",
+       "Irvine",
+       "Salt Lake City"
+      ]
+     }
+    }
+   },
+   {
+    "artist": "Charli XCX",
+    "region": "na",
+    "tour": "Music, Fashion, Film Tour",
+    "source": "https://en.wikipedia.org/w/index.php?title=Music%2C_Fashion%2C_Film_Tour&oldid=1381374019",
+    "announced": "2026-06-08",
+    "created": "2026-06-08",
+    "R": 9,
+    "modelUnplaced": 0,
+    "rp": {
+     "population": {
+      "hits": 4,
+      "of": 9,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Philadelphia"
+      ]
+     },
+     "model": {
+      "hits": 5,
+      "of": 9,
+      "cities": [
+       "Los Angeles",
+       "New York",
+       "Toronto",
+       "Boston",
+       "Washington"
+      ]
+     },
+     "qloo": {
+      "hits": 7,
+      "of": 9,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Las Vegas",
+       "Toronto",
+       "Boston",
+       "San Diego",
+       "Washington"
+      ]
+     },
+     "blend": {
+      "hits": 5,
+      "of": 9,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "San Diego",
+       "Philadelphia"
+      ]
+     },
+     "modelQloo": {
+      "hits": 5,
+      "of": 9,
+      "cities": [
+       "New York",
+       "Los Angeles",
+       "Toronto",
+       "Boston",
+       "Washington"
+      ]
+     }
+    },
+    "beyond": {
+     "model": {
+      "hits": 2,
+      "of": 5,
+      "cities": [
+       "Boston",
+       "Washington"
+      ]
+     },
+     "qloo": {
+      "hits": 4,
+      "of": 5,
+      "cities": [
+       "Boston",
+       "Washington",
+       "San Diego",
+       "Las Vegas"
+      ]
+     },
+     "blend": {
+      "hits": 1,
+      "of": 5,
+      "cities": [
+       "San Diego"
+      ]
+     }
+    }
+   }
+  ],
+  "missing": []
+ }
+}

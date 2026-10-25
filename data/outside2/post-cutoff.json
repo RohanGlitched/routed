@@ -1,0 +1,1131 @@
+{
+ "rule": "data/outside2/PROTOCOL.md, test 3",
+ "cutoff": "2026-06-04",
+ "size": 20,
+ "walked": 185,
+ "of": 185,
+ "taken": [
+  {
+   "artist": "Flo",
+   "qlooId": "D3AE84B1-C633-4902-A510-6785D10DB16B",
+   "title": "Therapy at the Club Tour",
+   "revid": 1381016641,
+   "created": "2026-10-05",
+   "announced": "2026-10-05",
+   "region": "na",
+   "markets": [
+    "seattle-us-wa",
+    "sacramento-us-ca",
+    "san-francisco-us-ca",
+    "los-angeles-us-ca",
+    "san-diego-us-ca",
+    "phoenix-us-az",
+    "houston-us-tx",
+    "dallas-us-tx",
+    "birmingham-us-al",
+    "orlando-us-fl",
+    "atlanta-us-ga",
+    "boston-us-ma",
+    "new-york-city-us-ny",
+    "philadelphia-us-pa",
+    "washington-us-dc",
+    "chicago-us-il",
+    "toronto-ca"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Therapy_at_the_Club_Tour&oldid=1381016641"
+  },
+  {
+   "artist": "Beabadoobee",
+   "qlooId": "21E391CC-71CD-480F-B8BA-049BD36C6DA5",
+   "title": "The Powerlines Tour",
+   "revid": 1379681392,
+   "created": "2026-09-19",
+   "announced": "2026-06-24",
+   "region": "na",
+   "markets": [
+    "philadelphia-us-pa",
+    "boston-us-ma",
+    "new-york-city-us-ny",
+    "toronto-ca",
+    "montreal-ca",
+    "columbia-us-sc",
+    "raleigh-us-nc",
+    "orlando-us-fl",
+    "duluth-us-mn",
+    "conroe-us-tx",
+    "austin-us-tx",
+    "phoenix-us-az",
+    "los-angeles-us-ca",
+    "san-diego-us-ca",
+    "san-francisco-us-ca",
+    "vancouver-ca",
+    "seattle-us-wa"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Powerlines_Tour&oldid=1379681392"
+  },
+  {
+   "artist": "Lizzy McAlpine",
+   "qlooId": "3662851D-81E9-4D42-941F-486B87B101CA",
+   "title": "The Over Country Tour",
+   "revid": 1379962709,
+   "created": "2026-09-29",
+   "announced": "2026-09-24",
+   "region": "na",
+   "markets": [
+    "dallas-us-tx",
+    "houston-us-tx",
+    "atlanta-us-ga",
+    "durham-us-nc",
+    "columbus-us-oh",
+    "detroit-us-mi",
+    "indianapolis-us-in",
+    "milwaukee-us-wi",
+    "minneapolis-us-mn",
+    "st-louis-us-mo",
+    "kansas-city-us-mo",
+    "oklahoma-city-us-ok",
+    "nashville-us-tn",
+    "philadelphia-us-pa",
+    "boston-us-ma",
+    "new-york-city-us-ny",
+    "columbia-us-sc",
+    "toronto-ca",
+    "chicago-us-il",
+    "austin-us-tx",
+    "denver-us-co",
+    "san-diego-us-ca",
+    "los-angeles-us-ca",
+    "san-francisco-us-ca",
+    "portland-us-or",
+    "seattle-us-wa"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Over_Country_Tour&oldid=1379962709"
+  },
+  {
+   "artist": "Karol G",
+   "qlooId": "658495BB-DF77-472E-A6B2-9E37FF248FB3",
+   "title": "Viajando Por El Mundo Tour",
+   "revid": 1381757296,
+   "created": "2026-10-04",
+   "region": "na",
+   "markets": [
+    "chicago-us-il",
+    "toronto-ca",
+    "washington-us-dc",
+    "las-vegas-us-nv",
+    "los-angeles-us-ca",
+    "san-jose-us-ca",
+    "seattle-us-wa",
+    "phoenix-us-az",
+    "san-antonio-us-tx",
+    "el-paso-us-tx",
+    "brockton-us-ma",
+    "new-york-city-us-ny",
+    "atlanta-us-ga",
+    "houston-us-tx",
+    "miami-us-fl",
+    "tampa-us-fl",
+    "fort-worth-us-tx"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Viajando_Por_El_Mundo_Tour&oldid=1381757296"
+  },
+  {
+   "artist": "Garth Brooks",
+   "qlooId": "35332365-7A8F-4AC0-8EB4-A842673C3AF9",
+   "title": "The Blame It All On My Roots Tour",
+   "revid": 1381769937,
+   "created": "2026-07-07",
+   "announced": "2026-07-07",
+   "region": "na",
+   "markets": [
+    "indianapolis-us-in",
+    "denver-us-co",
+    "chicago-us-il",
+    "washington-us-dc",
+    "orlando-us-fl",
+    "salt-lake-city-us-ut",
+    "tulsa-us-ok",
+    "kansas-city-us-mo",
+    "seattle-us-wa"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Blame_It_All_On_My_Roots_Tour&oldid=1381769937"
+  },
+  {
+   "artist": "Take That",
+   "qlooId": "954DB60E-FF0C-42E7-BDB4-C222968985E6",
+   "title": "Dreamers Tour",
+   "revid": 1378865921,
+   "created": "2026-08-28",
+   "region": "eu",
+   "markets": [
+    "zuerich-ch",
+    "koblenz-de",
+    "duesseldorf-de",
+    "mannheim-de",
+    "berlin-de",
+    "warsaw-pl",
+    "vilnius-lt",
+    "oslo-no",
+    "bergen-no",
+    "gothenburg-se",
+    "stockholm-se",
+    "bremen-de",
+    "amsterdam-nl",
+    "brussels-be",
+    "paris-fr",
+    "trier-de",
+    "valencia-es",
+    "malaga-es",
+    "madrid-es",
+    "ourense-es",
+    "rome-it",
+    "vienna-at",
+    "salzburg-at"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Dreamers_Tour&oldid=1378865921"
+  },
+  {
+   "artist": "Role Model",
+   "qlooId": "57561E57-C20F-4F07-8BE8-4775966F9EF6",
+   "title": "Chuck On Tour",
+   "revid": 1380941441,
+   "created": "2026-08-31",
+   "announced": "2026-06-18",
+   "region": "na",
+   "markets": [
+    "bend-us-or",
+    "seattle-us-wa",
+    "vancouver-ca",
+    "salt-lake-city-us-ut",
+    "denver-us-co",
+    "minneapolis-us-mn",
+    "chicago-us-il",
+    "washington-us-dc",
+    "philadelphia-us-pa",
+    "new-york-city-us-ny",
+    "boston-us-ma",
+    "clinton-township-us-mi",
+    "pittsburgh-us-pa",
+    "atlanta-us-ga",
+    "nashville-us-tn",
+    "houston-us-tx",
+    "austin-us-tx",
+    "dallas-us-tx",
+    "oklahoma-city-us-ok",
+    "phoenix-us-az",
+    "los-angeles-us-ca",
+    "san-francisco-us-ca"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Chuck_On_Tour&oldid=1380941441"
+  },
+  {
+   "artist": "Sugarland",
+   "qlooId": "1825DF95-19AE-465C-B301-400DB4E3F7CD",
+   "title": "Ride or Die Tour",
+   "revid": 1381367254,
+   "created": "2026-08-18",
+   "region": "na",
+   "markets": [
+    "palm-coast-us-fl",
+    "charleston-us-sc",
+    "greensboro-us-nc",
+    "champaign-us-il",
+    "green-bay-us-wi",
+    "la-crosse-us-wi",
+    "sioux-city-us-ia",
+    "rapid-city-us-sd",
+    "grand-forks-us-nd",
+    "duluth-us-mn",
+    "cedar-rapids-us-ia",
+    "rockford-us-il",
+    "battle-creek-us-mi",
+    "clarksville-us-tn",
+    "youngstown-us-oh",
+    "vineland-us-nj",
+    "reading-us-pa",
+    "toledo-us-oh",
+    "o-fallon-us-mo",
+    "tulsa-us-ok",
+    "dallas-us-tx"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Ride_or_Die_Tour&oldid=1381367254"
+  },
+  {
+   "artist": "Victoria Monét",
+   "qlooId": "94E61B56-1EFA-4EDD-8F98-E15375EAE92B",
+   "title": "Frequency of Love Tour",
+   "revid": 1381387745,
+   "created": "2026-09-12",
+   "announced": "2026-09-10",
+   "region": "na",
+   "markets": [
+    "raleigh-us-nc",
+    "charlotte-us-nc",
+    "new-orleans-us-la",
+    "houston-us-tx",
+    "dallas-us-tx",
+    "atlanta-us-ga",
+    "fort-lauderdale-us-fl",
+    "tampa-us-fl",
+    "philadelphia-us-pa",
+    "boston-us-ma",
+    "detroit-us-mi",
+    "milwaukee-us-wi",
+    "chicago-us-il",
+    "toronto-ca",
+    "pittsburgh-us-pa",
+    "new-york-city-us-ny",
+    "washington-us-dc",
+    "nashville-us-tn",
+    "austin-us-tx",
+    "phoenix-us-az",
+    "los-angeles-us-ca",
+    "las-vegas-us-nv",
+    "vancouver-ca",
+    "seattle-us-wa",
+    "sacramento-us-ca",
+    "san-francisco-us-ca"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Frequency_of_Love_Tour&oldid=1381387745"
+  },
+  {
+   "artist": "Phoebe Bridgers",
+   "qlooId": "AFBC71A7-9439-4AB0-AB68-D14B11AAF836",
+   "title": "The Lost Tour",
+   "revid": 1381404619,
+   "created": "2026-06-06",
+   "region": "na",
+   "markets": [
+    "indianapolis-us-in",
+    "minneapolis-us-mn",
+    "chicago-us-il",
+    "columbus-us-oh",
+    "new-york-city-us-ny",
+    "philadelphia-us-pa",
+    "washington-us-dc",
+    "toronto-ca",
+    "detroit-us-mi",
+    "boston-us-ma",
+    "charlotte-us-nc",
+    "nashville-us-tn",
+    "atlanta-us-ga",
+    "austin-us-tx",
+    "fort-worth-us-tx",
+    "denver-us-co",
+    "salt-lake-city-us-ut",
+    "seattle-us-wa",
+    "vancouver-ca",
+    "san-francisco-us-ca",
+    "los-angeles-us-ca"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Lost_Tour&oldid=1381404619"
+  },
+  {
+   "artist": "James Blunt",
+   "qlooId": "A1165050-9298-4DFC-BB5D-2454749C83AB",
+   "title": "Airplane Mode Tour",
+   "revid": 1374992448,
+   "created": "2026-09-07",
+   "announced": "2026-09-01",
+   "region": "eu",
+   "markets": [
+    "metz-fr",
+    "brussels-be",
+    "amsterdam-nl",
+    "paris-fr",
+    "nuremberg-de",
+    "hannover-de",
+    "munich-de",
+    "milan-it",
+    "florence-it",
+    "geneva-ch",
+    "zuerich-ch",
+    "prague-cz",
+    "innsbruck-at",
+    "vienna-at",
+    "budapest-hu",
+    "wroclaw-pl",
+    "leipzig-de",
+    "duesseldorf-de",
+    "hamburg-de",
+    "oslo-no",
+    "gothenburg-se",
+    "copenhagen-dk",
+    "berlin-de",
+    "stuttgart-de",
+    "freiburg-de",
+    "mannheim-de"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Airplane_Mode_Tour&oldid=1374992448"
+  },
+  {
+   "artist": "Jonas Brothers",
+   "qlooId": "FF0F07D1-47B1-403A-975C-04BF98EAD8F9",
+   "title": "The Burning Up Tour All Over Again",
+   "revid": 1379636154,
+   "created": "2026-08-21",
+   "announced": "2026-07-07",
+   "region": "na",
+   "markets": [
+    "new-york-city-us-ny",
+    "boston-us-ma",
+    "manchester-us-nh",
+    "toronto-ca",
+    "washington-us-dc",
+    "raleigh-us-nc",
+    "philadelphia-us-pa",
+    "miami-us-fl",
+    "orlando-us-fl",
+    "atlanta-us-ga",
+    "tampa-us-fl",
+    "charlotte-us-nc",
+    "indianapolis-us-in",
+    "columbus-us-oh",
+    "lexington-us-ky",
+    "cleveland-us-oh",
+    "buffalo-us-ny",
+    "chicago-us-il",
+    "detroit-us-mi",
+    "pittsburgh-us-pa",
+    "milwaukee-us-wi",
+    "minneapolis-us-mn",
+    "kansas-city-us-mo",
+    "nashville-us-tn",
+    "houston-us-tx",
+    "oklahoma-city-us-ok",
+    "dallas-us-tx",
+    "austin-us-tx",
+    "san-antonio-us-tx",
+    "palm-springs-us-ca",
+    "los-angeles-us-ca",
+    "san-francisco-us-ca",
+    "sacramento-us-ca",
+    "phoenix-us-az",
+    "las-vegas-us-nv",
+    "san-diego-us-ca",
+    "irvine-us-ca",
+    "seattle-us-wa",
+    "salt-lake-city-us-ut",
+    "denver-us-co",
+    "lincoln-us-ne",
+    "sioux-falls-us-sd",
+    "grand-rapids-us-mi"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Burning_Up_Tour_All_Over_Again&oldid=1379636154"
+  },
+  {
+   "artist": "Charli XCX",
+   "qlooId": "B4A3F0F0-354D-4CAD-9F96-11A20709CB9C",
+   "title": "Music, Fashion, Film Tour",
+   "revid": 1381374019,
+   "created": "2026-06-08",
+   "announced": "2026-06-08",
+   "region": "na",
+   "markets": [
+    "philadelphia-us-pa",
+    "new-york-city-us-ny",
+    "toronto-ca",
+    "boston-us-ma",
+    "washington-us-dc",
+    "atlanta-us-ga",
+    "san-diego-us-ca",
+    "los-angeles-us-ca",
+    "las-vegas-us-nv"
+   ],
+   "source": "https://en.wikipedia.org/w/index.php?title=Music%2C_Fashion%2C_Film_Tour&oldid=1381374019"
+  }
+ ],
+ "skipped": [
+  {
+   "title": "Sing Love Again Tour",
+   "reason": "Stephen Sanchez: the article was created 2026-04-26, not after 2026-06-04"
+  },
+  {
+   "title": "The Art of Loving Live",
+   "reason": "Olivia Dean: the article was created 2025-08-24, not after 2026-06-04"
+  },
+  {
+   "title": "Little Miss Drama Tour",
+   "reason": "Cardi B: the article was created 2025-09-16, not after 2026-06-04"
+  },
+  {
+   "title": "The Lucky Me Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "XX: Cosmos World Tour",
+   "reason": "BigBang: 2 touring markets in one region (fewer than 8; 39 show rows read)"
+  },
+  {
+   "title": "The Gathering (tour)",
+   "reason": "Weezer: a sentence about the announcement gives 2026-03-26, not after 2026-06-04"
+  },
+  {
+   "title": "Deadbeat Tour",
+   "reason": "Tame Impala: the article was created 2025-10-18, not after 2026-06-04"
+  },
+  {
+   "title": "Choom World Tour",
+   "reason": "Babymonster: the article was created 2026-03-31, not after 2026-06-04"
+  },
+  {
+   "title": "Peel It Back Tour",
+   "reason": "Nine Inch Nails: the article was created 2025-01-13, not after 2026-06-04"
+  },
+  {
+   "title": "The Great Divide Tour",
+   "reason": "Noah Kahan: the article was created 2026-02-02, not after 2026-06-04"
+  },
+  {
+   "title": "Everyone's a Star! World Tour",
+   "reason": "5 Seconds of Summer: the article was created 2026-02-10, not after 2026-06-04"
+  },
+  {
+   "title": "Deadline World Tour",
+   "reason": "Blackpink: the article was created 2025-02-19, not after 2026-06-04"
+  },
+  {
+   "title": "The Locket Tour",
+   "reason": "Madison Beer: the article was created 2026-01-13, not after 2026-06-04"
+  },
+  {
+   "title": "Tour Ma Vie World Tour",
+   "reason": "Doja Cat: the article was created 2025-08-22, not after 2026-06-04"
+  },
+  {
+   "title": "Land of Hope and Dreams American Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Synk: Complaexity",
+   "reason": "Aespa: the article was created 2026-04-28, not after 2026-06-04"
+  },
+  {
+   "title": "With Heaven on Tour",
+   "reason": "Zach Bryan: the article was created 2026-01-10, not after 2026-06-04"
+  },
+  {
+   "title": "You Are the Reason Tour",
+   "reason": "Sombr: the article was created 2026-05-12, not after 2026-06-04"
+  },
+  {
+   "title": "Different Night Same Rodeo Tour",
+   "reason": "Bailey Zimmerman: the article was created 2026-04-29, not after 2026-06-04"
+  },
+  {
+   "title": "Do That Again World Tour",
+   "reason": "Malcolm Todd: a sentence about the announcement gives 2026-06-01, not after 2026-06-04"
+  },
+  {
+   "title": "Stadi 26 Tour",
+   "reason": "Tiziano Ferro: the article was created 2026-01-09, not after 2026-06-04"
+  },
+  {
+   "title": "Back to Badlands Tour",
+   "reason": "Halsey: the article was created 2025-08-28, not after 2026-06-04"
+  },
+  {
+   "title": "Long Hot Summer Tour '26",
+   "reason": "Bob Dylan: a sentence about the announcement gives 2026-03-17, not after 2026-06-04"
+  },
+  {
+   "title": "My House Tour",
+   "reason": "Sienna Spiro: no exact artist match on Qloo"
+  },
+  {
+   "title": "Soy Luna Tour - El Ultimo Show",
+   "reason": "Soy Luna: 0 touring markets in one region (fewer than 8; 21 show rows read)"
+  },
+  {
+   "title": "Kehlani World Tour",
+   "reason": "Kehlani: the article was created 2026-05-27, not after 2026-06-04"
+  },
+  {
+   "title": "From Zero World Tour",
+   "reason": "Linkin Park: the article was created 2024-09-05, not after 2026-06-04"
+  },
+  {
+   "title": "New World Tour",
+   "reason": "Seventeen: the article was created 2025-07-27, not after 2026-06-04"
+  },
+  {
+   "title": "Cuarto Azul World Tour",
+   "reason": "Aitana: the article was created 2025-08-05, not after 2026-06-04"
+  },
+  {
+   "title": "Latin America Tour 2026",
+   "reason": "Jamiroquai: the article was created 2026-05-14, not after 2026-06-04"
+  },
+  {
+   "title": "Solaris Tour",
+   "reason": "Joji: the article was created 2026-02-27, not after 2026-06-04"
+  },
+  {
+   "title": "I-Will",
+   "reason": "Irene: the article was created 2026-03-25, not after 2026-06-04"
+  },
+  {
+   "title": "Janet Jackson Japan 2026",
+   "reason": "Janet Jackson: the article was created 2026-02-18, not after 2026-06-04"
+  },
+  {
+   "title": "Stardew Valley: Symphony of Seasons",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "K-Pop Forever!",
+   "reason": "| location = Europe: the article was created 2026-03-02, not after 2026-06-04"
+  },
+  {
+   "title": "To Be Free (concert tour)",
+   "reason": "Sam Smith: a sentence about the announcement gives 2025-07-24, not after 2026-06-04"
+  },
+  {
+   "title": "Carnival of Chaos Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "A Matter of Time Tour",
+   "reason": "Laufey: the article was created 2025-05-29, not after 2026-06-04"
+  },
+  {
+   "title": "Super Show 10",
+   "reason": "Super Junior: the article was created 2025-08-27, not after 2026-06-04"
+  },
+  {
+   "title": "Ye Live Concert Tour",
+   "reason": "Kanye West: the article was created 2026-03-22, not after 2026-06-04"
+  },
+  {
+   "title": "A Night with Nick",
+   "reason": "Nick Jonas: the article was created 2026-04-25, not after 2026-06-04"
+  },
+  {
+   "title": "Deep End World Tour",
+   "reason": "Julia Wolf: the article was created 2026-04-20, not after 2026-06-04"
+  },
+  {
+   "title": "Riizing Loud",
+   "reason": "Riize: the article was created 2025-05-24, not after 2026-06-04"
+  },
+  {
+   "title": "4ward World Tour",
+   "reason": "Mamamoo: a sentence about the announcement gives 2026-04-03, not after 2026-06-04"
+  },
+  {
+   "title": "K3 Originals",
+   "reason": "K3: the article was created 2026-04-19, not after 2026-06-04"
+  },
+  {
+   "title": "The Final Frontier Tour (Journey)",
+   "reason": "Journey: the article was created 2025-12-10, not after 2026-06-04"
+  },
+  {
+   "title": "Ultrasound World Tour",
+   "reason": "Lorde: the article was created 2025-05-08, not after 2026-06-04"
+  },
+  {
+   "title": "Fifty Something tour",
+   "reason": "Rush: the article was created 2025-10-07, not after 2026-06-04"
+  },
+  {
+   "title": "The Freedom Tour (Kesha)",
+   "reason": "Kesha: the article was created 2026-03-23, not after 2026-06-04"
+  },
+  {
+   "title": "Mejor Tarde Que Nunca",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "The King of Beasts Tour",
+   "reason": "Joker Xue: the article was created 2026-06-04, not after 2026-06-04"
+  },
+  {
+   "title": "Undertale: The Determination Symphony",
+   "reason": "Toby Fox: the article was created 2026-05-14, not after 2026-06-04"
+  },
+  {
+   "title": "Exo Planet 6 – Exhorizon",
+   "reason": "Exo: the article was created 2026-03-05, not after 2026-06-04"
+  },
+  {
+   "title": "Hayley Williams at a Bachelorette Party",
+   "reason": "Hayley Williams: the article was created 2025-11-10, not after 2026-06-04"
+  },
+  {
+   "title": "Neo City – The Redline",
+   "reason": "NCT 127: a sentence about the announcement gives 2026-04-01, not after 2026-06-04"
+  },
+  {
+   "title": "Everyone's Talking! The World Tour",
+   "reason": "All Time Low: the article was created 2026-01-29, not after 2026-06-04"
+  },
+  {
+   "title": "The Greatest Show on Earth Tour",
+   "reason": "U2: 0 touring markets in one region (fewer than 8; 9 show rows read)"
+  },
+  {
+   "title": "Meine Welt Tour",
+   "reason": "Till Lindemann: the article was created 2024-11-13, not after 2026-06-04"
+  },
+  {
+   "title": "Whatever's Clever! World Tour",
+   "reason": "Charlie Puth: the article was created 2026-01-15, not after 2026-06-04"
+  },
+  {
+   "title": "Bite Me Tour (Reneé Rapp)",
+   "reason": "Reneé Rapp: the article was created 2025-07-01, not after 2026-06-04"
+  },
+  {
+   "title": "American Heart World Tour",
+   "reason": "Benson Boone: the article was created 2025-05-05, not after 2026-06-04"
+  },
+  {
+   "title": "Together, Together",
+   "reason": "Harry Styles: the article was created 2026-01-22, not after 2026-06-04"
+  },
+  {
+   "title": "Long Live The Black Parade",
+   "reason": "My Chemical Romance: the article was created 2024-11-12, not after 2026-06-04"
+  },
+  {
+   "title": "The Fall-Off World Tour",
+   "reason": "J. Cole: the article was created 2026-02-18, not after 2026-06-04"
+  },
+  {
+   "title": "The Wildworld Tour",
+   "reason": "Katseye: a sentence about the announcement gives 2026-05-13, not after 2026-06-04"
+  },
+  {
+   "title": "Sugar High World Tour",
+   "reason": "Cyndi Wang: the article was created 2024-07-22, not after 2026-06-04"
+  },
+  {
+   "title": "Joy Splash",
+   "reason": "Joy: a sentence about the announcement gives 2026-01-01, not after 2026-06-04"
+  },
+  {
+   "title": "Body High Tour",
+   "reason": "FKA Twigs: the article was created 2026-02-07, not after 2026-06-04"
+  },
+  {
+   "title": "Jay-Z 30 Tour",
+   "reason": "Jay-Z: a sentence about the announcement gives 2026-03-01, not after 2026-06-04"
+  },
+  {
+   "title": "The Sexistential Tour",
+   "reason": "Robyn: the article was created 2026-02-06, not after 2026-06-04"
+  },
+  {
+   "title": "Wourld Tour",
+   "reason": "The Neighbourhood: the article was created 2026-02-22, not after 2026-06-04"
+  },
+  {
+   "title": "Lux Tour",
+   "reason": "Rosalía: the article was created 2025-12-04, not after 2026-06-04"
+  },
+  {
+   "title": "Run It World Tour",
+   "reason": "Stray Kids: 0 touring markets in one region (fewer than 8; 21 show rows read)"
+  },
+  {
+   "title": "5ive Alive Tour",
+   "reason": "Davido: a sentence about the announcement gives 2024-04-01, not after 2026-06-04"
+  },
+  {
+   "title": "The Willoughby Tucker Forever Tour",
+   "reason": "Ethel Cain: the article was created 2025-03-24, not after 2026-06-04"
+  },
+  {
+   "title": "5525 Back to That Day Tour",
+   "reason": "Mayday: the article was created 2025-07-16, not after 2026-06-04"
+  },
+  {
+   "title": "Jonas20: Greetings from Your Hometown Tour",
+   "reason": "Jonas Brothers: the article was created 2025-03-23, not after 2026-06-04"
+  },
+  {
+   "title": "The Visitor Tour",
+   "reason": "Sienna Spiro: no exact artist match on Qloo"
+  },
+  {
+   "title": "Loom World Tour",
+   "reason": "Imagine Dragons: the article was created 2024-04-25, not after 2026-06-04"
+  },
+  {
+   "title": "TwentyFive Live 2026",
+   "reason": "No Angels: the article was created 2025-10-30, not after 2026-06-04"
+  },
+  {
+   "title": "Carnival II World Tour",
+   "reason": "Jay Chou: the article was created 2026-05-20, not after 2026-06-04"
+  },
+  {
+   "title": "Visions of Damsels & Other Dangerous Things Tour",
+   "reason": "Chappell Roan: the article was created 2025-06-01, not after 2026-06-04"
+  },
+  {
+   "title": "The Art of Personal Chaos",
+   "reason": "Lady Gaga: the article was created 2025-03-26, not after 2026-06-04"
+  },
+  {
+   "title": "Power Up Tour",
+   "reason": "AC/DC: the article was created 2022-07-02, not after 2026-06-04"
+  },
+  {
+   "title": "The Sincerely, Tour",
+   "reason": "Kali Uchis: the article was created 2025-05-13, not after 2026-06-04"
+  },
+  {
+   "title": "Never Ending Stories Tour",
+   "reason": "Yoasobi: a sentence about the announcement gives 2026-04-15, not after 2026-06-04"
+  },
+  {
+   "title": "Day and Night Tour",
+   "reason": "Carly Rae Jepsen: a sentence about the announcement gives 2026-06-01, not after 2026-06-04"
+  },
+  {
+   "title": "Son of Spergy Tour",
+   "reason": "Daniel Caesar: the article was created 2026-05-20, not after 2026-06-04"
+  },
+  {
+   "title": "Onew the Live: Percent (%)",
+   "reason": "Onew: the article was created 2025-09-11, not after 2026-06-04"
+  },
+  {
+   "title": "Take Cover Tour",
+   "reason": "Foo Fighters: the article was created 2026-01-18, not after 2026-06-04"
+  },
+  {
+   "title": "\"The Hayley Williams Show\"",
+   "reason": "Hayley Williams: a sentence about the announcement gives 2026-04-01, not after 2026-06-04"
+  },
+  {
+   "title": "The 25th Anniversary World Tour",
+   "reason": "Westlife: the article was created 2025-12-08, not after 2026-06-04"
+  },
+  {
+   "title": "Luis Miguel Tour 2027",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Sugababes 2027 UK Tour",
+   "reason": "Sugababes: 4 touring markets in one region (fewer than 8; 8 show rows read)"
+  },
+  {
+   "title": "Lily Allen Performs West End Girl",
+   "reason": "Lily Allen: the article was created 2025-11-27, not after 2026-06-04"
+  },
+  {
+   "title": "Grasa Tour",
+   "reason": "Nathy Peluso: the article was created 2025-08-09, not after 2026-06-04"
+  },
+  {
+   "title": "Debí Tirar Más Fotos World Tour",
+   "reason": "Bad Bunny: the article was created 2025-05-05, not after 2026-06-04"
+  },
+  {
+   "title": "How Did We Get Here? World Tour",
+   "reason": "Louis Tomlinson: the article was created 2025-10-01, not after 2026-06-04"
+  },
+  {
+   "title": "House Party Tour (The All-American Rejects)",
+   "reason": "The All-American Rejects: the article was created 2026-03-30, not after 2026-06-04"
+  },
+  {
+   "title": "Imam pesmu da vam pevam Tour",
+   "reason": "Lepa Brena: the article was created 2024-08-01, not after 2026-06-04"
+  },
+  {
+   "title": "One Assassination Under God Tour",
+   "reason": "Marilyn Manson: the article was created 2025-05-11, not after 2026-06-04"
+  },
+  {
+   "title": "Synk: Aexis Line",
+   "reason": "Aespa: the article was created 2025-06-11, not after 2026-06-04"
+  },
+  {
+   "title": "Dreamworld: The Greatest Hits Live",
+   "reason": "Pet Shop Boys: the article was created 2024-01-16, not after 2026-06-04"
+  },
+  {
+   "title": "Tha Carter VI Tour",
+   "reason": "Lil Wayne: the article was created 2025-06-03, not after 2026-06-04"
+  },
+  {
+   "title": "Syncopation World Tour",
+   "reason": "I-dle: the article was created 2026-01-19, not after 2026-06-04"
+  },
+  {
+   "title": "Midnight Sun Tour",
+   "reason": "Zara Larsson: the article was created 2025-06-05, not after 2026-06-04"
+  },
+  {
+   "title": "After Hours til Dawn Tour",
+   "reason": "the Weeknd: the article was created 2020-02-20, not after 2026-06-04"
+  },
+  {
+   "title": "Free Palestine Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Stars Align Tour",
+   "reason": "Freya Skye: the article was created 2026-02-08, not after 2026-06-04"
+  },
+  {
+   "title": "The Dream Show 4: Dream the Future",
+   "reason": "NCT Dream: the article was created 2025-07-16, not after 2026-06-04"
+  },
+  {
+   "title": "Octane World Tour",
+   "reason": "Don Toliver: the article was created 2026-02-18, not after 2026-06-04"
+  },
+  {
+   "title": "The Eternal Sunshine Tour",
+   "reason": "Ariana Grande: the article was created 2025-08-28, not after 2026-06-04"
+  },
+  {
+   "title": "The Late Nights & Young Romance Tour",
+   "reason": "Sombr: the article was created 2025-09-21, not after 2026-06-04"
+  },
+  {
+   "title": "Perimenopop Tour",
+   "reason": "Sophie Ellis-Bextor: the article was created 2026-02-10, not after 2026-06-04"
+  },
+  {
+   "title": "Small Rooms, Big Nerves Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Arirang World Tour",
+   "reason": "BTS: the article was created 2026-01-13, not after 2026-06-04"
+  },
+  {
+   "title": "The Cloud 9 Tour",
+   "reason": "Megan Moroney: the article was created 2026-01-18, not after 2026-06-04"
+  },
+  {
+   "title": "Pureflow Tour",
+   "reason": "Le Sserafim: the article was created 2026-05-03, not after 2026-06-04"
+  },
+  {
+   "title": "World's First World Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Futttura World Tour",
+   "reason": "Tini: the article was created 2025-12-07, not after 2026-06-04"
+  },
+  {
+   "title": "Persona Live 2026: Awakenings",
+   "reason": "Sega: the article was created 2026-01-29, not after 2026-06-04"
+  },
+  {
+   "title": "Pleasure World Tour",
+   "reason": "Jolin Tsai: the article was created 2025-11-02, not after 2026-06-04"
+  },
+  {
+   "title": "Más Cara World Tour",
+   "reason": "Bad Gyal: the article was created 2026-05-09, not after 2026-06-04"
+  },
+  {
+   "title": "Here Comes More Tour",
+   "reason": "Pulp: the article was created 2025-11-14, not after 2026-06-04"
+  },
+  {
+   "title": "Can't Rush Greatness World Tour",
+   "reason": "Central Cee: the article was created 2025-01-28, not after 2026-06-04"
+  },
+  {
+   "title": "The Unraveled Tour",
+   "reason": "Olivia Rodrigo: the article was created 2026-04-30, not after 2026-06-04"
+  },
+  {
+   "title": "That's Showbiz Baby: the Tour",
+   "reason": "Jade: the article was created 2025-09-23, not after 2026-06-04"
+  },
+  {
+   "title": "Super Planet Dome & Stadium Tour",
+   "reason": "Yoasobi: a sentence about the announcement gives 2025-11-30, not after 2026-06-04"
+  },
+  {
+   "title": "Middle of Nowhere Tour",
+   "reason": "Kacey Musgraves: the article was created 2026-05-09, not after 2026-06-04"
+  },
+  {
+   "title": "Never Enough Tour",
+   "reason": "Turnstile: the article was created 2025-07-04, not after 2026-06-04"
+  },
+  {
+   "title": "It's Not That Deep Tour",
+   "reason": "Demi Lovato: the article was created 2025-10-27, not after 2026-06-04"
+  },
+  {
+   "title": "Oasis Live '27 Tour",
+   "reason": "Oasis: 5 touring markets in one region (fewer than 8; 42 show rows read)"
+  },
+  {
+   "title": "Run for Your Lives World Tour",
+   "reason": "Iron Maiden: the article was created 2024-09-19, not after 2026-06-04"
+  },
+  {
+   "title": "The Tits Out Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "The Circus Live – Summer 2026",
+   "reason": "Take That already has a tour in the set"
+  },
+  {
+   "title": "M72 World Tour",
+   "reason": "Metallica: the article was created 2022-12-01, not after 2026-06-04"
+  },
+  {
+   "title": "Las Mujeres Ya No Lloran World Tour",
+   "reason": "Shakira: the article was created 2024-04-16, not after 2026-06-04"
+  },
+  {
+   "title": "Worlds Collide Concert Tour",
+   "reason": "Worlds Collide Concert Tour: the article was created 2026-04-01, not after 2026-06-04"
+  },
+  {
+   "title": "Rough and Rowdy Ways World Wide Tour",
+   "reason": "Bob Dylan: the article was created 2021-10-16, not after 2026-06-04"
+  },
+  {
+   "title": "Finding Family on the Road",
+   "reason": "Alex Warren: the article was created 2026-03-16, not after 2026-06-04"
+  },
+  {
+   "title": "Don't Be Dumb Tour",
+   "reason": "A$AP Rocky: the article was created 2026-01-23, not after 2026-06-04"
+  },
+  {
+   "title": "Skeletour",
+   "reason": "Ghost: the article was created 2025-09-16, not after 2026-06-04"
+  },
+  {
+   "title": "Lost Americana Tour",
+   "reason": "MGK: the article was created 2025-09-18, not after 2026-06-04"
+  },
+  {
+   "title": "Wanted Man Tour",
+   "reason": "Benson Boone: the article was created 2026-03-29, not after 2026-06-04"
+  },
+  {
+   "title": "The Look at My Life Tour",
+   "reason": "Gracie Abrams: the article was created 2026-05-28, not after 2026-06-04"
+  },
+  {
+   "title": "The Mountain Tour",
+   "reason": "Gorillaz: the article was created 2026-03-12, not after 2026-06-04"
+  },
+  {
+   "title": "GOAT Tour Jala Brat & Buba Corelli",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Nothing's About to Happen to Me Live 2026",
+   "reason": "Mitski: the article was created 2026-05-05, not after 2026-06-04"
+  },
+  {
+   "title": "Freaks on Parade Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "The Romantic Tour",
+   "reason": "Bruno Mars: the article was created 2026-01-08, not after 2026-06-04"
+  },
+  {
+   "title": "PCD Forever Tour",
+   "reason": "the Pussycat Dolls: the article was created 2026-03-12, not after 2026-06-04"
+  },
+  {
+   "title": "The Konnakol Tour",
+   "reason": "Zayn: the article was created 2026-02-05, not after 2026-06-04"
+  },
+  {
+   "title": "Britpop Tour",
+   "reason": "Robbie Williams: the article was created 2024-12-31, not after 2026-06-04"
+  },
+  {
+   "title": "In Real Life Worldwide Tour",
+   "reason": "Big Time Rush: the article was created 2025-02-20, not after 2026-06-04"
+  },
+  {
+   "title": "The Boy Who Played the Harp Tour",
+   "reason": "Dave: the article was created 2026-01-01, not after 2026-06-04"
+  },
+  {
+   "title": "This Is For World Tour",
+   "reason": "Twice: the article was created 2025-06-08, not after 2026-06-04"
+  },
+  {
+   "title": "The R&B Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Loop Tour",
+   "reason": "Ed Sheeran: the article was created 2025-09-03, not after 2026-06-04"
+  },
+  {
+   "title": "My Kinda Saturday Night Tour",
+   "reason": "Luke Combs: the article was created 2026-01-26, not after 2026-06-04"
+  },
+  {
+   "title": "Getting Killed World Tour",
+   "reason": "Geese: the article was created 2025-10-28, not after 2026-06-04"
+  },
+  {
+   "title": "The Last King World Tour",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "Signals World Tour 2026",
+   "reason": "Bini: the article was created 2026-04-25, not after 2026-06-04"
+  },
+  {
+   "title": "It's Me Tour",
+   "reason": "Ella Chen: a sentence about the announcement gives 2025-09-10, not after 2026-06-04"
+  },
+  {
+   "title": "Stardew Valley: Festival of Seasons",
+   "reason": "the infobox doesn't name exactly one artist"
+  },
+  {
+   "title": "An Evening With... PinkPantheress",
+   "reason": "PinkPantheress: the article was created 2025-10-18, not after 2026-06-04"
+  },
+  {
+   "title": "Chris Stapleton's All-American Road Show Tour",
+   "reason": "Chris Stapleton: the article was created 2017-07-19, not after 2026-06-04"
+  },
+  {
+   "title": "Everybody Scream Tour",
+   "reason": "Florence and the Machine: the article was created 2025-11-24, not after 2026-06-04"
+  },
+  {
+   "title": "Dinner Party: Live on Tour",
+   "reason": "Niall Horan: the article was created 2026-03-27, not after 2026-06-04"
+  },
+  {
+   "title": "Proper Massive Stadium Tour",
+   "reason": "Sam Fender: 6 touring markets in one region (fewer than 8; 9 show rows read)"
+  },
+  {
+   "title": "Ledisi for Dinah Tour",
+   "reason": "Ledisi: the article was created 2025-10-29, not after 2026-06-04"
+  },
+  {
+   "title": "Worst Girl in the World Tour",
+   "reason": "Slayyyter: the article was created 2026-05-26, not after 2026-06-04"
+  },
+  {
+   "title": "This Tour May Contain New Music",
+   "reason": "Raye: the article was created 2025-09-19, not after 2026-06-04"
+  }
+ ],
+ "alsoInHeadToHead": [
+  "Flo"
+ ]
+}

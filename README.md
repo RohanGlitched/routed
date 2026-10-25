@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://routed-tours.vercel.app"><img alt="Live demo" src="https://img.shields.io/badge/live-routed--tours.vercel.app-ff3b7a?style=flat-square"></a>
-  <a href="https://youtu.be/UpdV5WY_UaM"><img alt="Demo video" src="https://img.shields.io/badge/demo-video-ff3b7a?style=flat-square"></a>
+  <a href="https://youtu.be/Ck4u-36QRPY"><img alt="Demo video" src="https://img.shields.io/badge/demo-video-ff3b7a?style=flat-square"></a>
   <img alt="Qloo Insights API" src="https://img.shields.io/badge/Qloo-taste%20graph-1747d6?style=flat-square">
   <img alt="NVIDIA Nemotron 3 Ultra" src="https://img.shields.io/badge/agent-Nemotron%203%20Ultra-16151b?style=flat-square">
   <img alt="Next.js 15" src="https://img.shields.io/badge/Next.js-15-16151b?style=flat-square">

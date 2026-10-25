@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { checkPlan, planTour, type Ask, type BookStop, type PlanDeps } from "../lib/agent/plan.ts";
+import { checkPlan, planTour, sameRoomName, type Ask, type BookStop, type PlanDeps } from "../lib/agent/plan.ts";
 import { findMarket, marketId, marketLabel } from "../lib/geo/markets.ts";
 import { longLegs, MAX_LEG_KM, orderStops } from "../lib/geo/route.ts";
 import type { Msg } from "../lib/nebius.ts";
@@ -70,7 +70,7 @@ test("Boulder booked next to Denver: check_plan sends the radius clause back, an
   assert.equal(r.planned, "model");
   assert.deepEqual(r.picks.map((x) => x.marketId).sort(), [id("Albuquerque"), id("Denver"), id("Salt Lake City")].sort());
   assert.deepEqual(calls, ["shortlist", "book", "rebook"], "one revision, and no reasons call when nothing went stale");
-  assert.deepEqual(r.check, { before: 1, after: 0, rounds: 1, revised: 1, ruled: 0, stops: 3 });
+  assert.deepEqual(r.check, { before: 1, after: 0, rounds: 1, revised: 1, ruled: 0, stops: 3, suggested: 0 });
   const revision = lines.find((l) => l.swaps?.length);
   assert.ok(revision, "the call sheet shows the revision");
   assert.deepEqual(revision!.swaps, [{ proposed: "Boulder", objection: "39 km from Denver (radius clause)", chose: "Albuquerque" }]);
@@ -127,7 +127,7 @@ test("rooms are measured before booking, and after the rules settle the agent wr
   const denver = r.picks.find((x) => x.marketId === id("Denver"))!;
   assert.equal(denver.roomId, `${id("Denver")}-f`, "the room rule books the room that fits");
   assert.equal(denver.why, "Denver is #1 on Qloo for these fans, and Hall F holds 1400.");
-  assert.deepEqual(r.check, { before: 0, after: 0, rounds: 0, revised: 0, ruled: 1, stops: 3 });
+  assert.deepEqual(r.check, { before: 0, after: 0, rounds: 0, revised: 0, ruled: 1, stops: 3, suggested: 0 });
 });
 
 test("a room that doesn't fit is objected to before the rules step in, and the agent re-books it", async () => {
@@ -146,7 +146,7 @@ test("a room that doesn't fit is objected to before the rules step in, and the a
   const r = await p;
   assert.deepEqual(calls, ["shortlist", "book", "rebook"]);
   assert.equal(r.picks.find((x) => x.marketId === id("Denver"))!.roomId, `${id("Denver")}-b`);
-  assert.deepEqual(r.check, { before: 1, after: 0, rounds: 1, revised: 1, ruled: 0, stops: 3 });
+  assert.deepEqual(r.check, { before: 1, after: 0, rounds: 1, revised: 1, ruled: 0, stops: 3, suggested: 0 });
   assert.deepEqual(lines.find((l) => l.swaps?.length)!.swaps, [{ proposed: "denver-us-co Hall A, Denver", objection: "denver-us-co Hall A holds 300, too small", chose: "denver-us-co Hall B" }]);
 });
 
@@ -308,4 +308,75 @@ test("the fixed plan reaches Portland with every leg under the cap, pulling in a
   assert.equal(r.picks.length, 8);
   assert.deepEqual(overCap(r, nash), [], ids.join(", "));
   assert.ok(!lines.some((l) => /still over/.test(l.text)), "no leg left to flag");
+});
+
+/* ───────────── rooms the agent names, found on Qloo ───────────── */
+
+function namedTools(ask: Ask, places: Record<string, Room>, calls: { find: string[]; score: string[][] }): PlanDeps {
+  return {
+    ...tools(ask, { mission: 2000 }),
+    findPlace: async (_a, name) => {
+      calls.find.push(name);
+      return places[name] ?? null;
+    },
+    scoreRooms: async (_a, ids) => {
+      calls.score.push(ids);
+      return new Map(ids.map((x) => [x, 0.97]));
+    },
+  };
+}
+
+test("a room the agent names, found on Qloo and measured to fit, beats Qloo's unmeasured rooms", async () => {
+  const calls = { find: [] as string[], score: [] as string[][] };
+  const mission: Room = { id: "mission", name: "Mission Ballroom", tags: ["Music venue"], popularity: 0.9, lat: DENVER.lat, lon: DENVER.lon };
+  const models: string[] = [];
+  const ask = model((name, messages) => {
+    if (name === "shortlist") {
+      assert.match(lastUser(messages), /also give "rooms": up to 2 music rooms there/);
+      return { cities: [{ city_id: id("Denver"), why: "strong", rooms: ["Mission Ballroom", "Ogden Theatre"] }, { city_id: id("Salt Lake City"), why: "strong", rooms: [] }, { city_id: id("Albuquerque"), why: "strong", rooms: [] }], alternates: [] };
+    }
+    if (name === "book") {
+      assert.match(lastUser(messages), /"id":"mission","name":"Mission Ballroom","affinity":97,[^}]*"capacity":2000,"size":"fits","rule_pick":true,"named_by_you":true/);
+      return { stops: [stop(id("Denver")), stop(id("Salt Lake City")), stop(id("Albuquerque"))] };
+    }
+    if (name === "rebook") return { stops: [{ ...stop(id("Denver")), room_id: "mission" }, stop(id("Salt Lake City")), stop(id("Albuquerque"))] };
+    return { reasons: [] };
+  }, models);
+  const { p, lines } = run(namedTools(ask, { "Mission Ballroom": mission }, calls), { draw: 1500 });
+  const r = await p;
+  assert.deepEqual(calls.find, ["Mission Ballroom", "Ogden Theatre"], "one place search per name");
+  assert.deepEqual(calls.score, [["mission"]], "one affinity call for what was found");
+  const denver = r.picks.find((x) => x.marketId === id("Denver"))!;
+  assert.equal(denver.roomId, "mission");
+  assert.equal(denver.rooms.find((x) => x.id === "mission")!.origin, "agent");
+  assert.equal(r.check!.suggested, 1);
+  assert.ok(lines.some((l) => l.failed && l.text === "The agent suggested Ogden Theatre in Denver; Qloo has no such room here."));
+  assert.ok(lines.some((l) => /^Looked up the rooms the agent named on Qloo/.test(l.text) && /1 found and added: Mission Ballroom \(Denver\)/.test(l.result ?? "")));
+  assert.deepEqual(models, ["shortlist", "book", "rebook"], "the names ride on the shortlist call: no extra model call");
+});
+
+test("a room name Qloo can't find in the city is dropped, never booked, and said so", async () => {
+  const calls = { find: [] as string[], score: [] as string[][] };
+  const ask = model((name) => {
+    if (name === "shortlist") return { cities: [{ city_id: id("Denver"), why: "strong", rooms: ["Atlantis Hall"] }, { city_id: id("Salt Lake City"), why: "strong", rooms: [] }, { city_id: id("Albuquerque"), why: "strong", rooms: [] }], alternates: [] };
+    if (name === "book" || name === "rebook") return { stops: [{ ...stop(id("Denver")), room_id: "atlantis" }, stop(id("Salt Lake City")), stop(id("Albuquerque"))] };
+    return { reasons: [] };
+  });
+  // Qloo's place search returns a different room for the name: it doesn't count as found.
+  const { p, lines } = run(namedTools(ask, { "Atlantis Hall": { id: "other", name: "Bluebird Theater", tags: [] } }, calls));
+  const r = await p;
+  const denver = r.picks.find((x) => x.marketId === id("Denver"))!;
+  assert.ok(!denver.rooms.some((x) => x.origin === "agent" || x.id === "other" || x.id === "atlantis"));
+  assert.ok(denver.roomId?.startsWith(id("Denver")), "a room with a Qloo id from the city's own list");
+  assert.deepEqual(calls.score, [], "nothing found, nothing to score");
+  assert.ok(lines.some((l) => l.failed && l.text === "The agent suggested Atlantis Hall in Denver; Qloo has no such room here."));
+  assert.equal(r.check!.suggested, 0);
+});
+
+test("room names match the way venues are written, without merging two rooms", () => {
+  assert.ok(sameRoomName("Ryman", "Ryman Auditorium"));
+  assert.ok(sameRoomName("The Basement East", "Basement East"));
+  assert.ok(sameRoomName("Mission Ballroom", "The Mission Ballroom"));
+  assert.ok(!sameRoomName("The Basement", "The Basement East"));
+  assert.ok(!sameRoomName("Ogden Theatre", "Bluebird Theater"));
 });

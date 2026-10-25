@@ -15,7 +15,7 @@ import { askWithoutQloo, scoreGuess } from "./guess";
 import { planTour, type Ask, type PlanDeps } from "./plan";
 import { lookUpLocal, lookUpShared, placeLocal } from "./local";
 import { genresOf, pickArtist } from "./rooms";
-import { lookUpOpeners, lookUpRooms, lookUpSoundsLike, lookUpSpots } from "./tools";
+import { findPlace, lookUpOpeners, lookUpRooms, lookUpSoundsLike, lookUpSpots, scoreRooms } from "./tools";
 import { newUsage, withUsage } from "../usage";
 import { addDays } from "../geo/route";
 
@@ -43,7 +43,7 @@ export const THIN_CITIES = 6;
 export const isThin = (cities: CityScore[], shows: number) => cities.length < Math.max(THIN_CITIES, shows + 2);
 
 /** The agent's tools: its model chain, Qloo's per-city lookups and the room capacity reader. */
-const AGENT: PlanDeps = { ask: <T,>(o: Parameters<Ask>[0]) => structured<T>(MODELS.agent, o), lookUpRooms, lookUpOpeners, roomCapacity };
+const AGENT: PlanDeps = { ask: <T,>(o: Parameters<Ask>[0]) => structured<T>(MODELS.agent, o), lookUpRooms, lookUpOpeners, roomCapacity, findPlace, scoreRooms };
 
 function channel<T>() {
   const buf: T[] = [];

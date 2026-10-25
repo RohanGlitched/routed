@@ -3,8 +3,9 @@ import { marketById, type Market } from "../geo/markets";
 import { CHAINS } from "../chains";
 import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isMember, isRoom, nearCity, openerProblem, orchestraHallFor, placeTagIds, sharesName, venueTier } from "./rooms";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
-import { describeRequest, recommend, type Entity } from "../qloo";
+import { describeRequest, qlooGet, recommend, searchNear, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
+import { sameRoomName } from "./plan";
 
 /**
  * The per-city Qloo lookups the agent can call, each logged with its plain question and exact request. Every
@@ -127,6 +128,36 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
     log({ kind: "qloo", text: `Who could open in ${m.name}?`, result: (e as Error).message, failed: true });
     return [];
   }
+}
+
+/**
+ * A room the agent named, found on Qloo: a place search for the name near the city's centre, kept only when Qloo's
+ * match is in the city, is a room by the same rules as Qloo's own list, and carries the name (plan.ts sameRoomName
+ * decides). Returns the place as a room, or null. One Qloo call.
+ */
+export async function findPlace(_artist: Artist, name: string, marketId: string, draw?: number): Promise<Room | null> {
+  const m = marketById(marketId);
+  if (!m) return null;
+  const r = await searchNear(`${name} ${m.name}`, "urn:entity:place", cityArea(m), 5).catch(() => null);
+  const e = r?.entities.find((x) => nearCity(x, m) && isRoom(x, draw) && sameRoomName(cleanName(x.name), name));
+  return e ? { ...toRoom(e), origin: "agent" } : null;
+}
+
+/**
+ * The artist's fans' affinity for named places, in one Qloo call (filter.results.entities), so a room the agent
+ * named is ranked on the same taste graph as the rooms Qloo listed.
+ */
+export async function scoreRooms(artist: Artist, ids: string[]): Promise<Map<string, number>> {
+  const out = new Map<string, number>();
+  if (!ids.length) return out;
+  const { body } = await qlooGet<{ results?: { entities?: { entity_id: string; query?: { affinity?: number } }[] } }>("/v2/insights", {
+    "filter.type": "urn:entity:place",
+    "signal.interests.entities": artist.id,
+    "filter.results.entities": ids.join(","),
+    take: Math.min(50, ids.length),
+  });
+  for (const e of body.results?.entities ?? []) if (typeof e.query?.affinity === "number") out.set(e.entity_id, e.query.affinity);
+  return out;
 }
 
 /**

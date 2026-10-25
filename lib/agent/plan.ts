@@ -56,6 +56,10 @@ export type PlanDeps = {
   ask: Ask;
   lookUpRooms: (artist: Artist, marketId: string, log: Log, draw?: number) => Promise<Room[]>;
   lookUpOpeners: (artist: Artist, marketId: string, log: Log) => Promise<Opener[]>;
+  /** A room the agent named, searched for on Qloo in that city; null when Qloo has no such room there. */
+  findPlace?: (artist: Artist, name: string, marketId: string, draw?: number) => Promise<Room | null>;
+  /** The artist's fans' affinity for these places, in one call. */
+  scoreRooms?: (artist: Artist, ids: string[]) => Promise<Map<string, number>>;
   roomCapacity: (room: Room, city: string) => Promise<Capacity | null>;
 };
 
@@ -81,6 +85,10 @@ export const FAN_KEEP = 3;
  * it, a city is booked only when it closes a leg, or when the fan cities can't fill the run.
  */
 export const FAN_CAP = 25;
+/** Rooms the agent may name per shortlisted city, and the place searches a tour may spend finding them on Qloo (one
+ *  more call scores their fan affinity). */
+export const NAMED_PER_CITY = 2;
+export const NAMED_SEARCHES = 15;
 /** Bridge cities tried (with their room lookups) to reach a fan city the run can't reach within the leg cap. */
 export const BRIDGE_TRIES = 3;
 /** A city within the fan cap, or a major market in the artist's top ten. */
@@ -92,6 +100,32 @@ const MIN_MODEL_MS = 8000;
 
 const popOf = (id: string) => marketById(id)?.pop ?? 0;
 const n = (v: number) => v.toLocaleString("en-US");
+
+/**
+ * Two room names are the same room: folded, without "the", punctuation and words like "theatre" or "hall"
+ * that sites add or drop ("Ryman" and "Ryman Auditorium"; "The Basement East" and "Basement East", but never
+ * "The Basement" and "The Basement East").
+ */
+export function sameRoomName(a: string, b: string): boolean {
+  const words = (s: string) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").split(" ").filter((w) => w && !["the", "a", "at", "of", "and", "theatre", "theater", "hall", "auditorium", "music", "venue", "club", "live", "center", "centre", "arena", "ballroom", "amphitheatre", "amphitheater"].includes(w));
+  const x = words(a), y = words(b);
+  if (!x.length || !y.length) return a.trim().toLowerCase() === b.trim().toLowerCase();
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  // Equal, or a longer name that adds a word to a two-word one; "Basement" and "Basement East" are two rooms.
+  return (short.length === long.length || short.length >= 2) && short.every((w) => long.includes(w));
+}
+
+/** The live shortlist also asks for the rooms the agent would book in each city (names only; Qloo finds them). The
+ *  head-to-head keeps SHORTLIST_SCHEMA, its pre-registered protocol. */
+const LIVE_SHORTLIST_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    cities: { type: "array", items: { type: "object", additionalProperties: false, properties: { city_id: { type: "string" }, why: { type: "string" }, rooms: { type: "array", items: { type: "string" } } }, required: ["city_id", "why", "rooms"] } },
+    alternates: { type: "array", items: { type: "string" } },
+  },
+  required: ["cities", "alternates"],
+};
 
 export const SHORTLIST_SCHEMA = {
   type: "object",
@@ -173,7 +207,7 @@ const p100 = (v?: number) => (v === undefined ? null : Math.round(v * 100));
  *  measured fit beats any unmeasured room), so the agent books knowing what the rule would do. */
 const compactRooms = (rooms: Room[], draw?: number) => {
   const pick = draw ? chooseRoom(rooms, undefined, draw)?.id : undefined;
-  return rooms.map((r) => ({ id: r.id, name: r.name, affinity: p100(r.affinity), popularity: p100(r.popularity), kind: r.tags.slice(0, 3).join(", ") || null, capacity: r.capacity?.value ?? null, ...(draw ? { size: fit(r, draw) } : {}), ...(pick === r.id ? { rule_pick: true } : {}) }));
+  return rooms.map((r) => ({ id: r.id, name: r.name, affinity: p100(r.affinity), popularity: p100(r.popularity), kind: r.tags.slice(0, 3).join(", ") || null, capacity: r.capacity?.value ?? null, ...(draw ? { size: fit(r, draw) } : {}), ...(pick === r.id ? { rule_pick: true } : {}), ...(r.origin === "agent" ? { named_by_you: true } : {}) }));
 };
 const compactOpeners = (o: Opener[]) => o.map((x) => ({ id: x.id, name: x.name, affinity: p100(x.affinity), ...(x.genres?.length ? { genres: x.genres.slice(0, 3) } : {}) }));
 
@@ -573,14 +607,68 @@ export async function planTour(
     if (cap) room.capacity = cap;
     log({ kind: "web", text: `How many does ${room.name} hold?`, result: cap ? `${n(cap.value)}, per ${host(cap.source)}` : "Not found; ask the room." });
   };
-  /** Before booking: the likeliest rooms of a city, in the order the room rule measures them, until one fits. */
+  /** Before booking: the rooms the agent named, then the likeliest of the rest in the order the room rule measures
+   *  them, until one fits. */
   const premeasure = async (id: string) => {
     const c = allById.get(id) ?? byId.get(id);
     if (!draw || !c) return;
-    for (const r of candidatesBySize(rooms.get(id) ?? [], draw).slice(0, PRE_MEASURE)) {
+    const all = rooms.get(id) ?? [];
+    const order = [...all.filter((r) => r.origin === "agent"), ...candidatesBySize(all.filter((r) => r.origin !== "agent"), draw).slice(0, PRE_MEASURE)];
+    for (const r of order) {
       await measure(r, c.label);
       if (fit(r, draw) === "fits") break;
     }
+  };
+
+  /**
+   * The agent's room names, each looked for on Qloo in its city (one place search each, NAMED_SEARCHES a tour at
+   * most), then scored for this artist's fans in one call. A found room joins the city's list in fan-affinity order
+   * and keeps its Qloo id; a name Qloo can't find there is dropped and said so. A name already on Qloo's list costs
+   * nothing.
+   */
+  const addNamedRooms = async (named: { id: string; names: string[] }[]) => {
+    const t = Date.now();
+    let searches = 0;
+    const found: { id: string; room: Room; asked: string }[] = [];
+    const missed: string[] = [];
+    const already: string[] = [];
+    await Promise.all(
+      named.map(async ({ id, names }) => {
+        const list = rooms.get(id) ?? [];
+        const city = allById.get(id)?.name ?? id;
+        for (const name of names) {
+          if (list.some((r) => sameRoomName(r.name, name))) {
+            already.push(`${name} (${city})`);
+            continue;
+          }
+          if (searches >= NAMED_SEARCHES) break;
+          searches++;
+          const r = await deps.findPlace!(artist, name, id, draw).catch(() => null);
+          if (!r || !sameRoomName(r.name, name)) {
+            missed.push(`${name} in ${city}`);
+            log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo has no such room here.`, failed: true });
+            continue;
+          }
+          if (list.some((x) => x.id === r.id) || found.some((f) => f.room.id === r.id)) {
+            already.push(`${name} (${city})`);
+            continue;
+          }
+          found.push({ id, room: { ...r, origin: "agent" }, asked: name });
+        }
+      }),
+    );
+    if (found.length && deps.scoreRooms) {
+      const aff = await deps.scoreRooms(artist, found.map((f) => f.room.id)).catch(() => new Map<string, number>());
+      for (const f of found) if (aff.has(f.room.id)) f.room.affinity = aff.get(f.room.id);
+    }
+    for (const f of found) {
+      const list = rooms.get(f.id) ?? [];
+      if (!rooms.has(f.id)) rooms.set(f.id, list);
+      // In fan-affinity order among Qloo's own rooms (the list arrives strongest first); unscored goes last.
+      const at = f.room.affinity === undefined ? list.length : list.findIndex((x) => (x.affinity ?? 0) < f.room.affinity!);
+      list.splice(at < 0 ? list.length : at, 0, f.room);
+    }
+    log({ kind: "qloo", text: `Looked up the rooms the agent named on Qloo, in their cities.`, result: `${found.length} found and added: ${found.map((f) => `${f.room.name} (${allById.get(f.id)?.name ?? f.id})`).join(", ") || "none"}${already.length ? `; already on Qloo's list: ${already.join(", ")}` : ""}${missed.length ? `; not found: ${missed.join(", ")}` : ""}`, ms: Date.now() - t });
   };
 
   let booked: BookStop[] | null = null;
@@ -594,16 +682,16 @@ export async function planTour(
       if (left() < minCall) throw new Error("no time left for the agent");
       // 1. Shortlist.
       const t1 = Date.now();
-      const short = await ask<{ cities: { city_id: string; why: string }[]; alternates: string[] }>({
+      const short = await ask<{ cities: { city_id: string; why: string; rooms?: string[] }[]; alternates: string[] }>({
         name: "shortlist",
-        schema: SHORTLIST_SCHEMA,
+        schema: deps.findPlace ? LIVE_SHORTLIST_SCHEMA : SHORTLIST_SCHEMA,
         maxTokens: 6000,
         timeoutMs: 90_000,
         messages: [
           { role: "system", content: role(artist.name) },
           {
             role: "user",
-            content: shortlistPrompt({
+            content: `${shortlistPrompt({
               brief: brief(artist, opts.audience),
               from: opts.from,
               shows,
@@ -611,7 +699,7 @@ export async function planTour(
               source: blend ? `Candidate cities for ${artist.name}, in blend order: Qloo's fan rank (where these fans over-index) averaged with size rank (metro population), the ranking that beat city size alone on real tours` : `Candidate cities from Qloo's heatmap for ${artist.name}, strongest first`,
               table: table(candidates, opts.from, RADIUS_KM, blend?.ranks, mustKeep),
               prefer: blend ? "always including the cities marked MUST KEEP (the artist's strongest fan cities on Qloo), then weighing fan rank against city size (the blend order is a good guide; a city high on Qloo's fan rank is worth a stop even when it is small)" : "preferring stronger cities",
-            }),
+            })}${deps.findPlace ? `\n\nFor each shortlisted city, also give "rooms": up to ${NAMED_PER_CITY} music rooms there you would book for ${artist.name}${draw ? ` with a crowd of about ${draw}` : ""} (the venue's name only, as it is usually written; a theatre, hall, ballroom or arena that holds about that many). Qloo looks each one up; a name it can't find is dropped.` : ""}`,
           },
         ],
       });
@@ -627,6 +715,10 @@ export async function planTour(
       // The must-keep cities are scouted even when the shortlist left one out, so the agent can book it.
       const kept = [...mustKeep].filter((id) => byId.has(id) && !shortlist.includes(id) && !alternates.includes(id));
       await Promise.all([...shortlist, ...alternates, ...kept].map(scout));
+      // The rooms the agent named, found on Qloo and merged into each city's candidates (C: Qloo's own room list
+      // missed the real tour's room in most cities, Oct 26). Size decides first; fan affinity orders within a size.
+      const named = (short.data.cities ?? []).filter((c) => shortlist.includes(c.city_id)).map((c) => ({ id: c.city_id, names: [...new Set((c.rooms ?? []).map((x) => x.trim()).filter(Boolean))].slice(0, NAMED_PER_CITY) }));
+      if (deps.findPlace && named.some((c) => c.names.length)) await addNamedRooms(named);
       if (draw) {
         const before = measured.size;
         await Promise.all([...shortlist, ...kept].map(premeasure));
@@ -855,6 +947,7 @@ export async function planTour(
   }
   if (check) {
     check.ruled = picks.filter((p) => !p.modelRoomId || p.roomId !== p.modelRoomId).length;
+    check.suggested = picks.filter((p) => p.rooms.find((x) => x.id === p.roomId)?.origin === "agent").length;
     check.stops = picks.length;
   }
   if (planned === "model" && stale.length && extra < EXTRA_CALLS && left() >= minCall) {

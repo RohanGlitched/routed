@@ -58,6 +58,8 @@ export type Room = {
   capacity?: Capacity;
   /** The neighbourhood Qloo files the room under ("Buckman"). */
   area?: string;
+  /** "agent": the agent named this room and Qloo's place search found it in the city (with its fan affinity). */
+  origin?: "agent";
 };
 
 export type Opener = {
@@ -211,6 +213,8 @@ export type AgentCheck = {
   /** Final stops where a rule still replaced the agent's city or room after its last answer. */
   ruled: number;
   stops: number;
+  /** Booked rooms the agent named itself, found on Qloo (absent on tours before Oct 26). */
+  suggested?: number;
 };
 
 export type Plan = {

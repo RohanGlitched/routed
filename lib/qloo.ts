@@ -356,6 +356,17 @@ export async function sharedTastes(a: string, b: string, take = 40): Promise<{ t
   return { tags, request };
 }
 
+/** describe, placed: a name searched for near a point (POINT and radius), so "The Basement" means Nashville's. */
+export async function searchNear(query: string, type: string, near: { lat: number; lon: number; radiusM: number }, take = 5) {
+  try {
+    const { body, request } = await qlooGet("/search", { query, types: type, "filter.location": `POINT(${near.lon} ${near.lat})`, "filter.radius": near.radiusM, take });
+    return { entities: entitiesOf(body).map(toEntity).filter((e) => e.id), request };
+  } catch (e) {
+    if (e instanceof QlooError && e.status === 404) return { entities: [], request: e.request };
+    throw e;
+  }
+}
+
 /** find_tags: tag URNs for a natural-language concept ("music venue"). */
 export async function findTags(query: string, opts: { tagTypes?: string[]; semantic?: boolean; take?: number } = {}) {
   const { body, request } = await qlooGet("/v2/tags", {

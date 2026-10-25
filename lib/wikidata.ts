@@ -112,13 +112,18 @@ const ladderMemo = new Map<string, LadderRoom[]>();
 export async function wikidataRoomsNear(near: { lat: number; lon: number }, radiusKm = 30): Promise<LadderRoom[] | undefined> {
   const key = `${near.lat.toFixed(2)},${near.lon.toFixed(2)},${radiusKm}`;
   if (ladderMemo.has(key)) return ladderMemo.get(key)!;
-  const query = `SELECT ?item ?itemLabel ?itemDescription ?cap ?coord WHERE {
+  // Paris has hundreds of bike stations with a "capacity" of 15 to 70, which once filled the 400 rows before the Zénith
+  // or the Accor Arena: rooms start at 50, and up to 1,000 rows come back. Each item's instance-of types come along, so an ice rink called an arena
+  // can be told from one (Richard J. Codey Arena, West Orange: "ice skating arena").
+  const query = `SELECT ?item ?itemLabel ?itemDescription ?cap ?coord (GROUP_CONCAT(DISTINCT ?typeLabel; separator="|") AS ?types) WHERE {
   SERVICE wikibase:around { ?item wdt:P625 ?coord . bd:serviceParam wikibase:center "Point(${near.lon} ${near.lat})"^^geo:wktLiteral . bd:serviceParam wikibase:radius "${radiusKm}" . }
   ?item wdt:P1083 ?cap .
+  FILTER(?cap >= 50)
   FILTER NOT EXISTS { ?item wdt:P576 ?gone . }
+  OPTIONAL { ?item wdt:P31 ?type . ?type rdfs:label ?typeLabel . FILTER(LANG(?typeLabel) = "en") }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
-} LIMIT 400`;
-  type Row = { item: { value: string }; itemLabel?: { value: string }; itemDescription?: { value: string }; cap: { value: string }; coord?: { value: string } };
+} GROUP BY ?item ?itemLabel ?itemDescription ?cap ?coord LIMIT 1000`;
+  type Row = { item: { value: string }; itemLabel?: { value: string }; itemDescription?: { value: string }; cap: { value: string }; coord?: { value: string }; types?: { value: string } };
   try {
     const j = await getJson<{ results?: { bindings?: Row[] } }>(`${SPARQL}?${new URLSearchParams({ query, format: "json" })}`);
     const rows: LadderRoom[] = [];
@@ -129,7 +134,8 @@ export async function wikidataRoomsNear(near: { lat: number; lon: number }, radi
       // An item with no English label comes back labelled with its own id.
       if (!name || name === qid || !Number.isFinite(capacity)) continue;
       const pt = b.coord?.value.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
-      rows.push({ qid, name, description: b.itemDescription?.value, capacity, ...(pt ? { lon: Number(pt[1]), lat: Number(pt[2]) } : {}) });
+      const types = b.types?.value ? b.types.value.split("|").filter(Boolean) : [];
+      rows.push({ qid, name, description: b.itemDescription?.value, capacity, ...(pt ? { lon: Number(pt[1]), lat: Number(pt[2]) } : {}), ...(types.length ? { types } : {}) });
     }
     ladderMemo.set(key, rows);
     if (ladderMemo.size > 300) ladderMemo.delete(ladderMemo.keys().next().value!);

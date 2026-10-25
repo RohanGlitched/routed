@@ -94,7 +94,7 @@ const VENUE_TAG = /:(arena|concert_hall|amphitheater|live_music_venue|performing
 export const placeTagIds = (e: Pick<Entity, "tags">) => e.tags.filter((t) => /genre:place|category:place/.test(t.id)).map((t) => t.id);
 
 /** Whether a Qloo place is a room this crowd could be booked into, by its tags and name. */
-export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number): boolean {
+export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number, opts: { stadiumOk?: boolean } = {}): boolean {
   if (e.place?.isClosed) return false;
   const ids = placeTagIds(e);
   if (ids.some((id) => NOT_A_ROOM_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id) && !/stadium/.test(id))) return false;
@@ -103,7 +103,7 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
   if (isPark(e.name, e.tags)) return false;
   if (draw && draw >= BAR_TAG_DRAW && ids.some((id) => BAR_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id))) return false;
   // A stadium below a stadium crowd, unless it is also an arena or a concert venue (an arena is a stadium to Qloo).
-  if (!(draw && draw >= STADIUM_MIN_DRAW) && ids.some((id) => /stadium/.test(id)) && !venue) return false;
+  if (!(draw && draw >= STADIUM_MIN_DRAW) && ids.some((id) => /stadium/.test(id)) && !venue && !opts.stadiumOk) return false;
   return true;
 }
 
@@ -256,17 +256,21 @@ export function roomCheck(rooms: Room[], wanted: string | undefined, draw?: numb
  * arena can be missing from its answer (Munich came back with no Olympiahalle or Zenith); the ladder says what
  * sizes the market has. It never ranks: Qloo's affinity order decides within a size tier.
  */
-export type LadderRoom = { qid: string; name: string; description?: string; lat?: number; lon?: number; capacity: number };
+export type LadderRoom = { qid: string; name: string; description?: string; lat?: number; lon?: number; capacity: number; /** Wikidata instance-of labels (P31): "indoor arena", "concert hall", "ice rink". */ types?: string[] };
 
 /** A Wikidata item counts as a room when its name or description says venue, and the room rules allow it. */
 const LADDER_KIND = /\b(music venue|concert (hall|venue)|arena|amphithea(tre|ter)|theat(re|er)|auditorium|ballroom|opera house|coliseum|colosseum|pavilion|event venue|performing arts|nightclub|music hall|multi-purpose)\b/i;
-const LADDER_NOT = /\b(stadium|ballpark|church|cathedral|school|university|college|museum|cinema|movie theat(re|er)|racecourse|velodrome|swimming|ice rink|demolished|former|defunct)\b/i;
+const LADDER_NOT = /\b(stadium|ballpark|church|cathedral|school|university|college|museum|cinema|movie theat(re|er)|racecourse|velodrome|swimming|ice rink|ice (skating|hockey) (arena|rink|venue)|skating (arena|rink)|curling|demolished|former|defunct)\b/i;
+/** Instance-of types that make an item a sports floor, not a room (Richard J. Codey Arena: "ice skating arena"). */
+const LADDER_NOT_TYPE = /ice rink|skating rink|ice hockey|bicycle|sports hall|gymnasium|natatorium/i;
+/** A room built for music or stage first: looked up before a sports arena of the same size. */
+export const concertRoom = (l: LadderRoom) => /concert|music venue|music hall|theat|opera|amphithea|multi-purpose|event venue|entertainment venue|performing arts/i.test(`${l.description ?? ""} ${(l.types ?? []).join(" ")}`);
 
 /** The ladder: Wikidata rows that are rooms for this crowd, one per item, smallest first. */
 export function roomLadder(rows: LadderRoom[], draw?: number): LadderRoom[] {
   const seen = new Set<string>();
   return rows
-    .filter((r) => r.capacity >= 50 && r.capacity <= 120_000 && LADDER_KIND.test(`${r.name} ${r.description ?? ""}`) && !LADDER_NOT.test(r.description ?? "") && roomNameOk(r.name, draw))
+    .filter((r) => r.capacity >= 50 && r.capacity <= 120_000 && LADDER_KIND.test(`${r.name} ${r.description ?? ""} ${(r.types ?? []).join(" ")}`) && !LADDER_NOT.test(r.description ?? "") && !(r.types ?? []).some((t) => LADDER_NOT_TYPE.test(t)) && roomNameOk(r.name, draw))
     .filter((r) => !seen.has(r.qid) && Boolean(seen.add(r.qid)))
     .sort((a, b) => a.capacity - b.capacity);
 }

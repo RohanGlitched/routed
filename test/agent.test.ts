@@ -600,3 +600,72 @@ test("Milan at 8,000: a room the fans sell out (5,400 = 68%) is looked up first 
   const m = r.picks.find((x) => x.marketId === mil.marketId)!;
   assert.equal(m.rooms.find((x) => x.id === m.roomId)!.name, "Allianz Cloud");
 });
+
+/* ───────────── Oct 26, second wall pass: European names, ice rinks on the ladder, the hometown against a fan city ───────────── */
+
+test("European room names match after accents, the city's own names and known renames; namesakes still don't", async () => {
+  const { roomNameMatches, placeWords } = await import("../lib/agent/plan.ts");
+  const milan = placeWords(findMarket("Milan")!), paris = placeWords(findMarket("Paris")!), london = placeWords(findMarket("London")!);
+  assert.ok(milan.includes("milano"));
+  assert.ok(roomNameMatches("Alcatraz Milano", "Alcatraz", milan), "Alcatraz is on Qloo's Milan list as Alcatraz");
+  assert.ok(roomNameMatches("Mediolanum Forum", "Unipol Forum", milan), "renamed: Qloo lists it as the Unipol Forum");
+  assert.ok(roomNameMatches("Forum di Milano", "Unipol Forum", milan), "Wikidata's name for it");
+  assert.ok(roomNameMatches("Accor Arena Paris", "Accor Arena", paris));
+  assert.ok(roomNameMatches("Le Zénith Paris", "Zénith Paris – La Villette", paris));
+  assert.ok(!roomNameMatches("Le Zénith Paris", "Le Zénith Sud", paris), "Montpellier's Zénith is another room");
+  assert.ok(!roomNameMatches("Accor Arena Paris", "Paris Las Vegas", paris));
+  assert.ok(!roomNameMatches("Alcatraz Milano", "Spirit de Milan", milan));
+  assert.ok(!roomNameMatches("Bush Hall", "Shepherd's Bush Empire", london));
+});
+
+test("a room named as a room keeps its place with a stadium tag (Qloo files the Unipol Forum as a stadium)", async () => {
+  const { isRoom } = await import("../lib/agent/rooms.ts");
+  const forum = { name: "Unipol Forum", place: { lat: 45.4, lon: 9.14 }, tags: [{ id: "urn:tag:genre:place:stadium", name: "stadium" }, { id: "urn:tag:genre:place:sports_complex", name: "sports complex" }] };
+  assert.equal(isRoom(forum, 8000), false, "Qloo's own list still drops a bare stadium");
+  assert.equal(isRoom(forum, 8000, { stadiumOk: true }), true);
+});
+
+test("the Wikidata ladder drops ice rinks and puts concert rooms first; a list room Wikidata measures is booked without a search", async () => {
+  const { roomLadder, ladderTier, concertRoom } = await import("../lib/agent/rooms.ts");
+  // Rows as the ladder query returned them for New York (Oct 26): description and instance-of types.
+  const rows = [
+    { qid: "Q1", name: "Richard J. Codey Arena", description: "ice skating arena in West Orange, New Jersey", capacity: 2500, types: ["arena"] },
+    { qid: "Q2", name: "Steinberg Wellness Center", description: "2,500-seat multi-purpose arena", capacity: 2500, types: ["arena"] },
+    { qid: "Q3", name: "Terminal 5", description: "music venue in New York City", capacity: 3000, types: ["music venue"] },
+    { qid: "Q4", name: "Forum di Milano", description: "indoor sports arena located in Assago, near Milan, Italy", capacity: 15800, types: ["arena"] },
+  ];
+  const ladder = roomLadder(rows, 2500);
+  assert.ok(!ladder.some((l) => l.name === "Richard J. Codey Arena"), "an ice rink is not a rung");
+  assert.ok(ladder.some((l) => l.name === "Forum di Milano"), "a sports arena that hosts concerts still is");
+  assert.equal(concertRoom(rows[2]!), true);
+  assert.equal(concertRoom(rows[3]!), false);
+
+  const nyc = city("New York", 1), phl = city("Philadelphia", 2), bos = city("Boston", 3);
+  const searched: string[] = [];
+  const deps: PlanDeps = {
+    ask: (async () => {
+      throw new Error("fixed plan");
+    }) as Ask,
+    lookUpRooms: async (_a, m) => (m === nyc.marketId ? [{ id: "bowery", name: "The Bowery Ballroom", tags: [] }, { id: "t5", name: "Terminal 5", tags: [] }] : [{ id: `${m}-hall`, name: `${m} Hall`, tags: [], capacity: { value: 2400, source: "https://example.org/", quote: "capacity 2,400" } }]),
+    lookUpOpeners: async () => [],
+    roomCapacity: async () => null,
+    findPlace: async (_a, name) => {
+      searched.push(name);
+      return null;
+    },
+    scoreRooms: async () => new Map(),
+    ladderRooms: async (m, draw) => (m === nyc.marketId ? ladderTier(roomLadder(rows, draw), draw) : []),
+  };
+  const r = await planTour({ artist, audience, cities: [nyc, phl, bos], from: { lat: phl.lat, lon: phl.lon, label: phl.label }, region: "na", shows: 3, draw: 2500, useModel: false, log: () => {} }, deps);
+  const ny = r.picks.find((x) => x.marketId === nyc.marketId)!;
+  assert.equal(ny.roomId, "t5", "Terminal 5, measured by Wikidata, not an ice rink");
+  assert.equal(ny.rooms.find((x) => x.id === "t5")!.capacity!.value, 3000);
+  assert.ok(!searched.includes("Richard J. Codey Arena"));
+});
+
+test("the hometown objection isn't raised against a fan city inside its radius (Baltimore #12 against Philadelphia #1)", () => {
+  const phl = city("Philadelphia", 1), bal = city("Baltimore", 12), la = city("Los Angeles", 2);
+  const rooms = new Map([phl, la].map((c) => [c.marketId, [{ id: `${c.marketId}-a`, name: "Hall", tags: [] } as Room]]));
+  const out = checkPlan([phl, la].map((c) => ({ city_id: c.marketId, room_id: `${c.marketId}-a`, opener_id: "o", why: "" })), { byId: new Map([phl, bal, la].map((c) => [c.marketId, c])), rooms, shows: 2, from: bal, radius: 150, mustKeep: new Set([phl.marketId, la.marketId]) });
+  assert.ok(!out.some((o) => o.rule === "home"), out.map((o) => o.text).join(" | "));
+});

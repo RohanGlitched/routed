@@ -6,7 +6,7 @@ import { wikidataRoomsNear } from "../wikidata";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
 import { describeRequest, qlooGet, recommend, search, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
-import { roomNameMatches } from "./plan";
+import { aliasesOf, placeWords, roomNameMatches } from "./plan";
 
 /**
  * The per-city Qloo lookups the agent can call, each logged with its plain question and exact request. Every
@@ -141,11 +141,21 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
 export async function findPlace(artist: Artist, name: string, marketId: string, draw?: number): Promise<Room | null> {
   const m = marketById(marketId);
   if (!m) return null;
-  // A failed search throws, so the call sheet can tell "Qloo didn't answer" from "no such room".
-  const r = await search(`${name} ${m.name}`, "urn:entity:place", 10);
+  const place = placeWords(m);
   const genres = artist.genreKeys ?? artist.genres;
-  const e = r?.entities.find((x) => nearCity(x, m) && x.place?.lat !== undefined && isRoom(x, draw) && !orchestraHallFor(x.name, genres) && roomNameMatches(name, x.name));
-  return e ? { ...toRoom(e), origin: "agent" } : null;
+  // The room was named as a room (by the agent or Wikidata) and must carry the name, so a stadium tag alone doesn't
+  // rule it out (Qloo files the Unipol Forum as a stadium).
+  const ok = (x: Entity, asked: string) => nearCity(x, m) && x.place?.lat !== undefined && isRoom(x, draw, { stadiumOk: true }) && !orchestraHallFor(x.name, genres) && roomNameMatches(asked, x.name, place);
+  // The name without the city's own words, then the city ("Alcatraz Milano" is searched as "Alcatraz Milan"); then,
+  // for a renamed room, its current name once (Qloo lists the Mediolanum Forum as the Unipol Forum).
+  const bare = name.split(/\s+/).filter((w) => !place.includes(w.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase())).join(" ") || name;
+  for (const q of [bare, ...aliasesOf(name).slice(0, 1)]) {
+    // A failed search throws, so the call sheet can tell "Qloo didn't answer" from "no such room".
+    const r = await search(`${q} ${m.name}`, "urn:entity:place", 10);
+    const e = r.entities.find((x) => ok(x, name));
+    if (e) return { ...toRoom(e), origin: "agent" };
+  }
+  return null;
 }
 
 /**

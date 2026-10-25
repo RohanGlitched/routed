@@ -9,7 +9,7 @@ import { fit } from "./evidence";
 import { blendOrder, diffLine, qlooDiff, sizeRanks, type Ranks } from "./qloodiff";
 import { candidatesBySize, chooseRoom, fitWord, pickSupport, roomFit, REDUCED_MAX, reducedHouse, roomCheck, roomGrade, twoNights } from "./rooms";
 import type { Log } from "./tools";
-import type { LadderRoom } from "./rooms";
+import { concertRoom, type LadderRoom } from "./rooms";
 
 /**
  * The agent, in the moves a booking agent would make:
@@ -106,13 +106,53 @@ const MIN_MODEL_MS = 8000;
 const popOf = (id: string) => marketById(id)?.pop ?? 0;
 const n = (v: number) => v.toLocaleString("en-US");
 
+/** Words that don't tell two rooms apart: articles and connectors in the languages tours play, and room kinds. */
+const ROOM_WORDS = new Set(["the", "at", "of", "and", "le", "la", "les", "l", "il", "lo", "el", "los", "las", "di", "de", "du", "des", "del", "della", "dei", "der", "den", "das", "het", "theatre", "theater", "teatro", "theatro", "hall", "auditorium", "music", "venue", "club", "live", "center", "centre", "arena", "ballroom", "amphitheatre", "amphitheater"]);
+
+const fold = (s: string) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").trim();
+
+/** A city's names as rooms carry them ("Alcatraz Milano", "Le Zénith Paris"): its English and ASCII names and the
+ *  local name. They are dropped before two room names are compared. */
+const LOCAL_NAMES: Record<string, string[]> = { milan: ["milano"], munich: ["munchen", "muenchen"], cologne: ["koln", "koeln"], vienna: ["wien"], rome: ["roma"], naples: ["napoli"], turin: ["torino"], florence: ["firenze"], venice: ["venezia"], prague: ["praha"], lisbon: ["lisboa"], brussels: ["bruxelles", "brussel"], copenhagen: ["kobenhavn"], warsaw: ["warszawa"], geneva: ["geneve", "genf"], zurich: ["zuerich"], gothenburg: ["goteborg"], antwerp: ["antwerpen"], seville: ["sevilla"], athens: ["athina"], "the hague": ["den haag"], "new york": ["nyc"] };
+export function placeWords(m?: { name: string; ascii?: string }): string[] {
+  if (!m) return [];
+  const names = [m.name, m.ascii ?? "", ...(LOCAL_NAMES[fold(m.name)] ?? [])].map(fold).filter(Boolean);
+  return [...new Set(names.flatMap((x) => x.split(" ")))].filter((w) => w.length > 2);
+}
+
+/**
+ * Rooms known under more than one name (a sponsor's rename, a local name): two names in one group are one room.
+ * Hand-checked; the first name is the one Qloo lists today where we've seen it (Unipol Forum, Oct 26).
+ */
+export const ROOM_ALIASES: string[][] = [
+  ["Unipol Forum", "Mediolanum Forum", "Forum di Milano", "Forum di Assago", "Forum Assago", "Assago Forum"],
+  ["Accor Arena", "AccorHotels Arena", "Bercy Arena", "Palais Omnisports de Paris-Bercy", "Paris Bercy"],
+  ["Zénith Paris – La Villette", "Le Zénith", "Zénith Paris", "Zénith de Paris"],
+  ["OVO Arena Wembley", "Wembley Arena", "SSE Arena Wembley"],
+  ["Uber Arena", "Mercedes-Benz Arena Berlin", "O2 World Berlin"],
+  ["Lanxess Arena", "Kölnarena"],
+  ["AFAS Live", "Heineken Music Hall"],
+  ["Crypto.com Arena", "Staples Center"],
+  ["Kia Forum", "The Forum Inglewood", "Great Western Forum"],
+  ["Ball Arena", "Pepsi Center"],
+  ["Paycom Center", "Chesapeake Energy Arena"],
+  ["Climate Pledge Arena", "KeyArena"],
+  ["Moda Center", "Rose Garden Arena"],
+];
+/** The other names a room is known by (folded), or none. */
+export function aliasesOf(name: string): string[] {
+  const key = (s: string) => fold(s).split(" ").filter((w) => !ROOM_WORDS.has(w)).join(" ");
+  const k = key(name);
+  return ROOM_ALIASES.find((g) => g.some((x) => key(x) === k))?.filter((x) => key(x) !== k) ?? [];
+}
+
 /**
  * Two room names are the same room: folded, without "the", punctuation and words like "theatre" or "hall"
  * that sites add or drop ("Ryman" and "Ryman Auditorium"; "The Basement East" and "Basement East", but never
  * "The Basement" and "The Basement East").
  */
-export function sameRoomName(a: string, b: string): boolean {
-  const words = (s: string) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").split(" ").filter((w) => w.length > 1 && !["the", "at", "of", "and", "theatre", "theater", "hall", "auditorium", "music", "venue", "club", "live", "center", "centre", "arena", "ballroom", "amphitheatre", "amphitheater"].includes(w));
+export function sameRoomName(a: string, b: string, place: string[] = []): boolean {
+  const words = (s: string) => fold(s).split(" ").filter((w) => w.length > 1 && !ROOM_WORDS.has(w) && !place.includes(w));
   const x = [...new Set(words(a))], y = [...new Set(words(b))];
   if (!x.length || !y.length) return a.trim().toLowerCase() === b.trim().toLowerCase();
   const [short, long] = x.length <= y.length ? [x, y] : [y, x];
@@ -126,11 +166,11 @@ export function sameRoomName(a: string, b: string): boolean {
  * "at the …" (the "ACL Live" of "ACL Live at the Moody Theater"), and the aliases Qloo lists in parentheses
  * ("Austin City Limits Live (ACL Live & 3TEN ACL Live)").
  */
-export function roomNameMatches(asked: string, qloo: string): boolean {
-  const mine = [asked, asked.split(/\s+at\s+(?:the\s+)?/i)[0]!].filter((x) => x.trim());
+export function roomNameMatches(asked: string, qloo: string, place: string[] = []): boolean {
+  const mine = [asked, asked.split(/\s+at\s+(?:the\s+)?/i)[0]!, ...aliasesOf(asked)].filter((x) => x.trim());
   const inner = [...qloo.matchAll(/\(([^)]*)\)/g)].flatMap((m) => m[1]!.split(/\s*(?:&|,|\/|\band\b)\s*/i));
   const theirs = [qloo, qloo.replace(/\s*\([^)]*\)/g, ""), ...inner].map((x) => x.trim()).filter(Boolean);
-  return mine.some((a) => theirs.some((b) => sameRoomName(a, b)));
+  return mine.some((a) => theirs.some((b) => sameRoomName(a, b, place)));
 }
 
 /** The live shortlist also asks for the rooms the agent would book in each city (names only; Qloo finds them). The
@@ -342,7 +382,11 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
 
   // The starting city, when it is in the artist's top HOME_RANK, opens the run (keepHome).
   const home = homeCity(c.from, [...c.byId.values()].map((x) => ({ ...x, id: x.marketId, pop: popOf(x.marketId) })));
-  if (home && !kept.some((k) => k.score.marketId === home.id)) out.push({ city_id: home.id, rule: "home", text: `${home.name} (${home.id}) is where the tour starts and #${home.rank} on the fan map (top ${HOME_RANK}): the hometown rule opens the run there, so book it in place of your weakest stop.`, short: `${home.name} is the hometown, #${home.rank}` });
+  // Not when the hometown sits inside the radius of a city the anchor or fan rule keeps (Baltimore, #12, against
+  // Philadelphia, #1): the stronger city stays, and the agent isn't sent round in circles.
+  const guarded = (x: CityScore) => c.mustKeep?.has(x.marketId) || isAnchor({ rank: x.rank, pop: popOf(x.marketId) });
+  const blocked = home && kept.some((k) => guarded(k.score) && tooClose(placed(k.score), placed(c.byId.get(home.id)!), c.radius));
+  if (home && !blocked && !kept.some((k) => k.score.marketId === home.id)) out.push({ city_id: home.id, rule: "home", text: `${home.name} (${home.id}) is where the tour starts and #${home.rank} on the fan map (top ${HOME_RANK}): the hometown rule opens the run there, so book it in place of your weakest stop.`, short: `${home.name} is the hometown, #${home.rank}` });
 
   const replaced = out.filter((o) => ["candidate", "duplicate", "radius", "rooms"].includes(o.rule)).length;
   if (kept.length + replaced < c.shows) out.push({ rule: "count", text: `Only ${kept.length} of the ${c.shows} stops can be booked: book ${c.shows}.`, short: `${kept.length} of ${c.shows} stops usable` });
@@ -371,8 +415,8 @@ export function bookingSwaps(prev: BookStop[], next: BookStop[], objections: Obj
 /** Stops whose city or room differ between two bookings. */
 const changedStops = (a: BookStop[], b: BookStop[]) => b.filter((x) => !a.some((y) => y.city_id === x.city_id && y.room_id === x.room_id)).length;
 
-function revisePrompt(objections: Objection[], shows: number, others: CityScore[]): string {
-  return `check_plan ran the tour's rules over your booking and objects to ${objections.length === 1 ? "one thing" : `${objections.length} things`}:\n${objections.map((o) => `- ${o.text}`).join("\n")}\n\n${others.length ? `Other candidate cities (not scouted yet; their rooms are looked up if you book one): ${others.map((c) => `${c.marketId} (${c.name}, fan #${c.rank})`).join(", ")}.\n\n` : ""}Re-book exactly ${shows} stops in the same JSON shape. Keep every stop the check didn't object to; change only what an objection names, using city_ids from the candidates and room_ids from that city's rooms. Write each "why" for the stop as you now book it.`;
+function revisePrompt(objections: Objection[], shows: number, others: CityScore[], scouted: { city_id: string }[] = []): string {
+  return `check_plan ran the tour's rules over your booking and objects to ${objections.length === 1 ? "one thing" : `${objections.length} things`}:\n${objections.map((o) => `- ${o.text}`).join("\n")}\n\n${scouted.length ? `Scouting results for the cities the check asks you to book (use these room_ids):\n${JSON.stringify(scouted)}\n\n` : ""}${others.length ? `Other candidate cities (not scouted yet; their rooms are looked up if you book one): ${others.map((c) => `${c.marketId} (${c.name}, fan #${c.rank})`).join(", ")}.\n\n` : ""}Re-book exactly ${shows} stops in the same JSON shape. Keep every stop the check didn't object to; change only what an objection names, using city_ids from the candidates and room_ids from that city's rooms. Write each "why" for the stop as you now book it.`;
 }
 
 /* ───────────────────────── the city rules ───────────────────────── */
@@ -550,7 +594,10 @@ export async function settleCities<T extends { score: CityScore }>(o: {
     fans++;
   }
 
-  const homed = await keepHome({ from: o.from, stops: chosen.map((c) => onFanMap(c.score)), ranked: deep.map(onFanMap), shows, usable, radius, max });
+  // The hometown doesn't push out a city the anchor or fan rule keeps inside its radius.
+  const homeCityScore = homeId ? allById.get(homeId) : undefined;
+  const homeBlocked = Boolean(homeCityScore && chosen.some((x) => x.score.marketId !== homeId && kept(x.score) && clash(x.score, homeCityScore)));
+  const homed = homeBlocked ? { stops: [], home: null, out: [], added: false } : await keepHome({ from: o.from, stops: chosen.map((c) => onFanMap(c.score)), ranked: deep.map(onFanMap), shows, usable, radius, max });
   if (homed.added && homed.home) {
     o.on?.({ t: "home", home: allById.get(homed.home.id)!, out: homed.out.map((x) => allById.get(x.id)!) });
     rebuild(homed.stops);
@@ -705,8 +752,9 @@ export async function planTour(
       named.map(async ({ id, names }) => {
         const list = rooms.get(id) ?? [];
         const city = allById.get(id)?.name ?? id;
+        const place = placeWords(marketById(id));
         for (const name of names) {
-          if (list.some((r) => roomNameMatches(name, r.name))) {
+          if (list.some((r) => roomNameMatches(name, r.name, place))) {
             already.push(`${name} (${city})`);
             continue;
           }
@@ -719,7 +767,7 @@ export async function planTour(
             log({ kind: "qloo", text: `Couldn't look up ${name} in ${city}: Qloo didn't answer.`, failed: true });
             continue;
           }
-          if (!r || !roomNameMatches(name, r.name)) {
+          if (!r || !roomNameMatches(name, r.name, place)) {
             missed.push(`${name} in ${city}`);
             log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo has no such room here.`, failed: true });
             continue;
@@ -851,8 +899,16 @@ export async function planTour(
       rounds++;
       extra++;
       const t = Date.now();
+      // A city the check asks the agent to add (a hometown, an anchor, a fan city) is scouted first, so the agent can
+      // book a real room there instead of inventing one (Turnstile's Baltimore, Oct 26).
+      const asked = [...new Set(objections.filter((o) => o.city_id && ["home", "anchor", "fan"].includes(o.rule) && byId.has(o.city_id)).map((o) => o.city_id!))];
+      await Promise.all(asked.map(async (id) => {
+        await scout(id);
+        await premeasure(id);
+      }));
+      const scouted = asked.map((id) => ({ city_id: id, rooms: compactRooms(rooms.get(id) ?? [], draw), openers: compactOpeners(openers.get(id) ?? []) }));
       const others = candidates.filter((c) => !rooms.has(c.marketId)).slice(0, 12);
-      messages = [...messages, { role: "assistant", content: JSON.stringify({ stops: booked }) }, { role: "user", content: revisePrompt(objections, shows, others) }];
+      messages = [...messages, { role: "assistant", content: JSON.stringify({ stops: booked }) }, { role: "user", content: revisePrompt(objections, shows, others, scouted) }];
       let next: BookStop[];
       try {
         const r = await ask<{ stops: BookStop[] }>({ name: "rebook", schema: BOOK_SCHEMA, maxTokens: 8000, timeoutMs: 90_000, messages });
@@ -951,9 +1007,22 @@ export async function planTour(
     if (!draw || !deps.ladderRooms || !deps.findPlace) return 0;
     // In the booker's order (a close fit, then one the fans sell out, then a loose fit), nearest the crowd within each.
     const grade = (l: LadderRoom) => roomGrade({ id: l.qid, name: l.name, tags: [], capacity: { value: l.capacity, source: "", quote: "" } }, draw);
-    const rungs = (await deps.ladderRooms(score.marketId, draw).catch(() => [] as LadderRoom[]))
-      .filter((l) => !list.some((x) => roomNameMatches(l.name, x.name)))
-      .sort((a, b) => grade(a) - grade(b) || Math.abs(Math.log(a.capacity / draw)) - Math.abs(Math.log(b.capacity / draw)))
+    const place = placeWords(marketById(score.marketId));
+    const all = await deps.ladderRooms(score.marketId, draw).catch(() => [] as LadderRoom[]);
+    // A room already on the list that nobody could measure takes the number Wikidata has for it (Terminal 5).
+    let measuredNow = 0;
+    for (const x of list) {
+      if (x.capacity) continue;
+      const l = all.find((y) => roomNameMatches(y.name, x.name, place));
+      if (!l) continue;
+      x.capacity = { value: l.capacity, source: `https://www.wikidata.org/wiki/${l.qid}`, quote: `${l.name}${l.description ? `: ${l.description}` : ""}; maximum capacity ${n(l.capacity)} (Wikidata P1083)` };
+      measuredNow++;
+    }
+    // In the booker's order (a close fit, then one the fans sell out, then a loose fit); within it, a room built for
+    // music or the stage before a sports arena, then nearest the crowd.
+    const rungs = all
+      .filter((l) => !list.some((x) => roomNameMatches(l.name, x.name, place)))
+      .sort((a, b) => grade(a) - grade(b) || Number(concertRoom(b)) - Number(concertRoom(a)) || Math.abs(Math.log(a.capacity / draw)) - Math.abs(Math.log(b.capacity / draw)))
       .slice(0, 2);
     const added: Room[] = [];
     for (const l of rungs) {
@@ -969,8 +1038,9 @@ export async function planTour(
       for (const x of added) if (aff.has(x.id)) x.affinity = aff.get(x.id);
     }
     list.push(...added);
+    if (measuredNow) log({ kind: "web", text: `Wikidata measured ${measuredNow === 1 ? "a room" : `${measuredNow} rooms`} on ${score.name}'s list that the first lookups couldn't.` });
     if (added.length) log({ kind: "qloo", text: `No room on Qloo's list for ${score.name} fits the crowd for one night, so the rooms Wikidata lists there at that size were looked up on Qloo.`, result: added.map((x) => `${x.name} (holds ${n(x.capacity!.value)})`).join(", ") });
-    return added.length;
+    return added.length + measuredNow;
   };
 
   const pickFor = async (c: Chosen): Promise<{ pick: Pick; bookable: boolean; reason?: string }> => {

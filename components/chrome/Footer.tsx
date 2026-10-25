@@ -12,7 +12,7 @@ export function Footer() {
           <span>Routed</span>
         </div>
         <p className={s.credits}>
-          Taste data from <a href="https://www.qloo.com">Qloo</a>. Agent and pitches by NVIDIA Nemotron on Nebius Token Factory. Room capacities from the web via Tavily, with their source. Cities from{" "}
+          Taste data from <a href="https://www.qloo.com">Qloo</a>. Agent and pitches by NVIDIA Nemotron on Nebius Token Factory. Room capacities from Wikidata and the web (Tavily), with their source. Cities from{" "}
           <a href="https://www.geonames.org">GeoNames</a> (CC BY 4.0); coastlines from Natural Earth.
         </p>
         <nav className={s.footNav} aria-label="Footer">

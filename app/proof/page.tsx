@@ -2,22 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { controlPrompt } from "@/lib/agent/guess";
 import { RADIUS_BY_REGION } from "@/lib/geo/route";
-import { findMarket, marketId, unrankedLabel } from "@/lib/geo/markets";
+import { findMarket, marketId, unrankedLabel, type RegionId } from "@/lib/geo/markets";
 import { outsideRow, REAL_TOURS, realTourFor } from "@/lib/outside";
 import { benchTours } from "@/lib/showcase";
 import type { TourRecord } from "@/lib/types";
-import { HeadToHead, H2H_ARTISTS as R_ALL } from "@/components/proof/HeadToHead";
+import { HeadToHead, H2H_ARTISTS as R_ALL, H2H_BLEND } from "@/components/proof/HeadToHead";
+import { POST, PostCutoff } from "@/components/proof/PostCutoff";
 import s from "./proof.module.css";
 
 export const metadata: Metadata = {
   title: "With and without Qloo",
-  description: "The same model routed the same tours with and without Qloo's taste graph. Here is what changed, artist by artist.",
+  description: "Qloo against population and against the model alone, on tours announced after the model's release, on 49 real tours, and on Qloo's own fan map, artist by artist.",
 };
 export const revalidate = 300;
 
 type Row = {
   id: string;
   artist: string;
+  region: RegionId;
   from: string;
   ranked: number;
   routed: number;
@@ -48,6 +50,7 @@ function rows(tours: TourRecord[]): Row[] {
       return {
         id: t.id,
         artist: p.artist.name,
+        region: p.region,
         from: t.input.from,
         ranked: g.ranked,
         routed: g.rankMean.routed ?? 0,
@@ -77,6 +80,13 @@ export default async function Proof() {
   const homes = r.filter((x) => x.home !== undefined);
   const cap = Math.max(40, ...r.map((x) => Math.ceil(x.guess / 10) * 10));
   const close = r.filter((x) => x.guess - x.routed < 2);
+  // Where the gap on Qloo's own ruler is smallest, by region (mean of each artist's model-alone minus Routed rank).
+  const byRegion = (["na", "uk", "eu"] as const)
+    .map((g) => ({ g, xs: r.filter((x) => x.region === g) }))
+    .filter((x) => x.xs.length)
+    .map(({ g, xs }) => ({ g, n: xs.length, routed: mean(xs.map((x) => x.routed)), guess: mean(xs.map((x) => x.guess)) }))
+    .sort((a, b) => a.guess - a.routed - (b.guess - b.routed));
+  const smallest = byRegion.length > 1 ? byRegion[0] : undefined;
   // Every stop pooled: the median rank (one #204 can't pull it) and how many stops sat in the artist's top ten.
   const ranksRouted = tours.flatMap((t) => t.plan?.stops.map((s) => s.score.rank) ?? []);
   const ranksGuess = tours.flatMap((t) => t.plan?.guess?.stops.filter((x) => x.rank || x.outside).map((x) => x.rank ?? (t.plan?.cities.length ?? 0) + 1) ?? []);
@@ -107,14 +117,26 @@ export default async function Proof() {
       <header className={s.head}>
         <h1 className={s.h1}>With and without Qloo</h1>
         <p className={s.lede}>
-          Every tour on Routed runs twice. Before the agent looks anything up, the same model is asked to route the same shows from what it already knows. Both tours are then scored on the artist&apos;s own Qloo evidence. Here are {r.length || "the"} artists, run on the live site. That ruler is Qloo&apos;s own, so <a href="#head-to-head">the head-to-head</a> below scores Qloo, the model alone and population against the cities {R_ALL} artists really played.
+          Three rulers, the fairest first. On {POST.n} tours announced after the model&apos;s release, the city ranking Routed ships (Qloo + population) found {(POST.blendVsPop.diff * 100).toFixed(1)} pts more of the real cities than population alone, better for {POST.blendVsPop.wins} artists and worse for {POST.blendVsPop.losses || "none"}. On {R_ALL} artists&apos; older real tours it found {(H2H_BLEND.diff * 100).toFixed(1)} pts more (better for {H2H_BLEND.wins}, worse for {H2H_BLEND.losses}); there the model alone, which may have read those tours, did better. Last, every tour on Routed runs twice, with and without Qloo, scored on Qloo&apos;s own fan map. Each test shows its losses next to its wins.
         </p>
       </header>
+
+      <PostCutoff />
+
+      <HeadToHead />
 
       {r.length === 0 ? (
         <p className={s.empty}>The benchmark hasn&apos;t run on this deployment yet.</p>
       ) : (
         <>
+          <section className={s.sec} aria-labelledby="own-ruler">
+            <h2 id="own-ruler" className={s.h2}>
+              On Qloo&apos;s own fan map
+            </h2>
+            <p className={s.lede2}>
+              Every tour on Routed runs twice. Before the agent looks anything up, the same model routes the same number of shows from what it already knows, and both tours are ranked on the artist&apos;s Qloo heatmap. Routed chooses from that ranking, so this measures how far a model routing from memory strays from where Qloo puts the fans, not that Qloo is right. {r.length} artists, run on the live site.
+            </p>
+          </section>
           <section className={s.stats} aria-label="Totals">
             <div className={`${s.stat} ${s.fire}`}>
               <b>#{Math.round(mean(r.map((x) => x.routed)))}</b>
@@ -140,9 +162,14 @@ export default async function Proof() {
               Artist by artist
             </h2>
             <p className={s.note}>Average rank of each tour&apos;s cities among every city where Qloo found fans. Left is stronger.</p>
-            {close.length > 0 && (
+            {(smallest || close.length > 0) && (
               <p className={s.close}>
-                The gap closes where touring cities are few and the biggest ones are also where the fans are: for {close.map((x) => x.artist).join(", ")}, the model alone did about as well or better. Qloo earns its keep where an artist&apos;s audience doesn&apos;t follow the population.
+                {smallest && (
+                  <>
+                    By region, the gap is smallest in {REGION_NAME[smallest.g]}{smallest.g === "uk" ? ", where touring cities are few and the biggest are also where the fans are" : ""} (#{smallest.routed.toFixed(1)} against #{smallest.guess.toFixed(1)} on average).{" "}
+                  </>
+                )}
+                {close.length > 0 && <>For {andList(close.map((x) => x.artist))}, the model alone did about as well or better.</>}
               </p>
             )}
             <ul className={s.dumbbells}>
@@ -217,8 +244,6 @@ export default async function Proof() {
               </table>
             </div>
           </section>
-
-          <HeadToHead />
 
           {realRows.length > 0 && (
             <section className={s.sec} aria-labelledby="outside-title">
@@ -306,7 +331,7 @@ export default async function Proof() {
                 How it&apos;s measured
               </h2>
               <p>
-                Both tours use the same model (NVIDIA Nemotron 3 Ultra), the same number of shows, the same starting city and the same crowd size. The model alone gets the artist&apos;s name and nothing else; Routed&apos;s agent gets Qloo&apos;s heatmap ranking and its per-city lookups.
+                Both tours use the same model (NVIDIA Nemotron 3 Ultra), the same number of shows, the same starting city and the same crowd size. The model alone gets the artist&apos;s name and nothing else; Routed&apos;s agent gets Qloo&apos;s heatmap ranking and its per-city lookups (these tours were routed on Oct 15, before Routed read cities in Qloo + population order).
               </p>
               <p>
                 A city&apos;s rank is its place among every touring city in the region (a city of 50,000 or more with its suburbs) on this artist&apos;s heatmap, ordered by how far fans over-index there times how much taste signal the place carries, all from one heatmap call so every tile shares one scale. A model-alone city is placed by its name, then by the named room&apos;s coordinates on Qloo, then by Qloo&apos;s locality search; a stop that resolves to a real town with no touring city within 60 km counts last, and one that can&apos;t be placed at all is left out rather than counted against the model. Rooms on both sides are scored in one Qloo call, restricted to exactly those rooms, so they share a scale.
@@ -320,7 +345,7 @@ export default async function Proof() {
             <div>
               <h2 className={s.h2}>What this does and doesn&apos;t show</h2>
               <p>
-                It measures with Qloo&apos;s own ruler, and says so: Routed chooses from the heatmap ranking it is then scored on, so what the number shows is how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. It can&apos;t show ticket sales: those aren&apos;t public. The rulers Qloo didn&apos;t make are above (the head-to-head, and the first outside check) and here: the home base each benchmark tour starts from, which the heatmap knows nothing about; it ranks the home base here:
+                It measures with Qloo&apos;s own ruler, and says so: Routed chooses from the heatmap ranking it is then scored on, so what the number shows is how far a model routing from memory strays from where the taste graph puts the fans, not that the graph is right. It can&apos;t show ticket sales: those aren&apos;t public. The rulers Qloo didn&apos;t make are above (the tours announced after the model&apos;s release, the head-to-head, and the first outside check) and here: the home base each benchmark tour starts from, which the heatmap knows nothing about; it ranks the home base here:
               </p>
               {homes.length > 0 && (
                 <ul className={s.homes}>
@@ -339,6 +364,8 @@ export default async function Proof() {
   );
 }
 
+const REGION_NAME = { na: "North America", uk: "the UK and Ireland", eu: "mainland Europe" } as const;
+const andList = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 const pct = (v?: number) => (v === undefined ? "–" : String(Math.round(v * 100)));
 const pctOf = (x: { hits: number; of: number }) => (x.of ? Math.round((100 * x.hits) / x.of) : 0);
 const hostOf = (u: string) => {

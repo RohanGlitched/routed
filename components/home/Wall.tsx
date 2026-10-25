@@ -53,7 +53,7 @@ export function Wall({ items }: { items: WallEntry[] }) {
           <Link href={`/tour/${t.id}`} className={s.link}>
             <Sheet artist={t.artist} poster={posters?.[t.id]} />
             <span>
-              {t.artist}, {t.shows} shows from {t.from.split(",")[0]}
+              {t.artist}, {t.shows} cities from {t.from.split(",")[0]}
             </span>
           </Link>
         </li>

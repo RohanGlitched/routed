@@ -11,6 +11,7 @@ import { MARKETS, type RegionId } from "@/lib/geo/markets";
 import { independents } from "@/lib/chains";
 import { posterFor } from "@/lib/poster";
 import { homeData } from "@/lib/showcase";
+import { POST } from "@/components/proof/PostCutoff";
 import s from "./home.module.css";
 
 /**
@@ -41,6 +42,12 @@ function pitchLine(body: string): string {
   return sentences.slice(0, 2).join(" ").trim();
 }
 
+/** "8 cities (12 shows)" when two-night stands add shows, else "8 shows": one convention for every count. */
+function showCount(stops: { nights?: number }[]): string {
+  const shows = stops.reduce((n, x) => n + (x.nights ?? 1), 0);
+  return shows > stops.length ? `${stops.length} cities (${shows} shows)` : `${shows} shows`;
+}
+
 export default async function Home() {
   const { hero, wall, bench: b } = await homeData().catch(() => ({ hero: null, wall: [], bench: null }));
   const plan = hero?.plan;
@@ -61,8 +68,8 @@ export default async function Home() {
             <PrefilledForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />
           </Suspense>
           <p className={s.lede}>
-            Name an artist. An agent reads Qloo&apos;s taste graph for the cities where their fans are unusually dense and the rooms those fans go to, picks one support act whose audience overlaps for the whole run, then routes the dates,
-            sizes every room to the crowd and drafts a checked pitch for each venue.
+            Which city, which neighbourhood, which room. Name an artist and an agent reads Qloo&apos;s taste graph for the cities where their fans over-index, the blocks inside each city where they live and the rooms they go to, sized to the crowd. It picks one support act for the run, routes and dates the shows, and drafts a checked pitch for each venue. On {POST.n} tours announced after the model&apos;s release, the city ranking Routed ships found{" "}
+            <Link href="/proof#unread">{(POST.blendVsPop.diff * 100).toFixed(1)} pts more of the real cities</Link> than a big-city list.
           </p>
           <StickyRoute />
         </div>
@@ -75,7 +82,7 @@ export default async function Home() {
                 </div>
               </Link>
               <figcaption className={s.caption}>
-                A real route, from live Qloo data: {poster.artist} from {plan!.from.label}, {plan!.stops.length} shows.{" "}
+                A real route, from live Qloo data: {poster.artist} from {plan!.from.label}, {showCount(plan!.stops)}.{" "}
                 <Link href={`/tour/${hero.id}`}>Open the tour book</Link>
               </figcaption>
             </>
@@ -137,10 +144,10 @@ export default async function Home() {
               <h3>Route and date it by rule</h3>
               <p>The shortest drive from {plan.from.label.split(",")[0]}, no two shows within 150 km, at most 8 hours behind the wheel on a show day, a day off after five in a row.</p>
               <ul className={s.legs}>
-                {plan.stops.slice(0, 5).map((x) => (
+                {plan.stops.slice(0, 5).map((x, i) => (
                   <li key={x.marketId}>
                     <b>{x.date.slice(5).replace("-", "/")}</b> {x.city}
-                    <span>{x.fromKm.toLocaleString("en-US")} km</span>
+                    <span>{i === 0 ? "Opening night" : `${x.fromKm.toLocaleString("en-US")} km`}</span>
                   </li>
                 ))}
               </ul>
@@ -201,7 +208,7 @@ export default async function Home() {
             <div className={s.duelNote}>
               {b ? (
                 <p>
-                  Across <b>{b.n}</b> artists in the benchmark, Routed&apos;s cities averaged <b>#{Math.round(b.routed)}</b> on each artist&apos;s fan map. The same model alone averaged <b>#{Math.round(b.guess)}</b>.
+                  Across <b>{b.n}</b> artists in the benchmark, Routed&apos;s cities averaged <b>#{Math.round(b.routed)}</b> on each artist&apos;s Qloo fan map, the same model alone <b>#{Math.round(b.guess)}</b>. That is Qloo&apos;s own ruler; on real tours announced after the model&apos;s release, Qloo + population beat population for {POST.blendVsPop.wins} of {POST.n} artists.
                 </p>
               ) : (
                 <p>Cities in grey sit outside the artist&apos;s top 25 on Qloo&apos;s heatmap.</p>

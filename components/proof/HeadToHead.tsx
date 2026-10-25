@@ -9,7 +9,7 @@ import s from "@/app/proof/proof.module.css";
  */
 
 type HitRow = { hits: number; of: number; cities: string[] };
-type Contrast = { name: string; n: number; meanA: number; meanB: number; diff: number; lo: number; hi: number; wins: number; losses: number; ties: number; p: number };
+export type Contrast = { name: string; n: number; meanA: number; meanB: number; diff: number; lo: number; hi: number; wins: number; losses: number; ties: number; p: number };
 type Row = {
   artist: string;
   set: "bench" | "held-out";
@@ -34,13 +34,16 @@ type Results = {
 const R = raw as unknown as Results;
 /** How many artists the head-to-head scored. */
 export const H2H_ARTISTS = R.test1.all.n;
+/** Qloo + population against population on all of them: the head-to-head's first primary comparison. */
+export const H2H_BLEND = R.test1.all.primary[0]!;
 
-const pc = (v: number) => `${Math.round(v * 100)}%`;
+const pc = (v: number, digits = 0) => `${(v * 100).toFixed(digits)}%`;
 const pts = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(1)}`;
+const abs1 = (v: number) => Math.abs(v * 100).toFixed(1);
 const pv = (p: number) => (p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(p < 0.01 ? 3 : 2)}`);
 const REGION = { na: "N. America", uk: "UK & Ireland", eu: "Europe" } as const;
 
-function ContrastTable({ rows, caption }: { rows: Contrast[]; caption: string }) {
+export function ContrastTable({ rows, caption, digits = 0 }: { rows: Contrast[]; caption: string; digits?: number }) {
   return (
     <div className={s.tableWrap}>
       <table className={`${s.table} ${s.narrow}`}>
@@ -61,7 +64,7 @@ function ContrastTable({ rows, caption }: { rows: Contrast[]; caption: string })
               <th scope="row">{c.name}</th>
               <td>{c.n}</td>
               <td>
-                {pc(c.meanA)} / {pc(c.meanB)}
+                {pc(c.meanA, digits)} / {pc(c.meanB, digits)}
               </td>
               <td>
                 <b>{pts(c.diff)} pts</b> ({pts(c.lo)} to {pts(c.hi)})
@@ -81,8 +84,9 @@ function ContrastTable({ rows, caption }: { rows: Contrast[]; caption: string })
 export function HeadToHead() {
   const { test1, test1Rows, test2, test2Rows } = R;
   const all = test1.all;
-  const [blendVsPop, qlooVsModel] = all.primary as [Contrast, Contrast];
-  const abl = test2.primary;
+  const [blendVsPop] = all.primary as [Contrast, Contrast];
+  const held = test1.heldOut.primary[0]!;
+  const bench = test1.bench.primary[0]!;
   const rows = [...test1Rows].filter((r) => r.rp.model).sort((a, b) => (a.set === b.set ? a.artist.localeCompare(b.artist) : a.set === "bench" ? -1 : 1));
   const hits = (h: HitRow | null, best: number) => (h ? <span className={h.hits === best ? s.best : undefined} title={h.cities.join(", ")}>{h.hits}</span> : "–");
   return (
@@ -91,7 +95,7 @@ export function HeadToHead() {
         The head-to-head: what Qloo changes, on a ruler Qloo didn&apos;t make
       </h2>
       <p className={s.lede2}>
-        {all.n} artists, each with a real headline tour: the {test1.bench.n} benchmark artists, and {test1.heldOut.n} held-out artists nobody here picked (the first {test1.heldOut.n} single-artist tours in Wikipedia&apos;s 2024 and 2025 tour categories, taken in a hash order, with eight or more cities in one region). Four rankings of every touring city in the tour&apos;s region: by population, by the model alone, by Qloo&apos;s heatmap, and Qloo and population averaged. Each picks as many cities as the artist really played; the score is how many were right. The test was{" "}
+        {all.n} artists, each with a real headline tour from 2024 or 2025, so the model may have read their announcements: the {test1.bench.n} benchmark artists, and {test1.heldOut.n} held-out artists nobody here picked (the first {test1.heldOut.n} single-artist tours in Wikipedia&apos;s 2024 and 2025 tour categories, taken in a hash order, with eight or more cities in one region). Four rankings of every touring city in the tour&apos;s region: by population, by the model alone, by Qloo&apos;s heatmap, and Qloo and population averaged (the order Routed now reads cities in). Each picks as many cities as the artist really played; the score is how many were right. The test was{" "}
         <a href={`${REPO}/commit/${PROTOCOL_COMMIT}`} target="_blank" rel="noreferrer">
           committed before it ran
         </a>
@@ -110,20 +114,20 @@ export function HeadToHead() {
         </div>
         <div className={s.stat}>
           <b>
-            {pts(qlooVsModel.diff)}
+            {pts(held.diff)}
             <small> pts</small>
           </b>
           <span>
-            Qloo&apos;s ranking against the model&apos;s own: {pc(qlooVsModel.meanA)} against {pc(qlooVsModel.meanB)}. Better for {qlooVsModel.wins}, worse for {qlooVsModel.losses}, level for {qlooVsModel.ties} ({pv(qlooVsModel.p)}).
+            The same comparison on the {test1.heldOut.n} held-out artists nobody here picked: better for {held.wins}, worse for {held.losses} ({pv(held.p)}).
           </span>
         </div>
         <div className={s.stat}>
           <b>
-            {pts(abl.diff)}
+            {pts(bench.diff)}
             <small> pts</small>
           </b>
           <span>
-            The agent itself, Qloo&apos;s table swapped for population (same model, prompt and rules, {test2.n} benchmark tours, {test2.runs} runs each): {pc(abl.meanA)} of its eight cities on the real tour with Qloo, {pc(abl.meanB)} without ({abl.wins}–{abl.losses}–{abl.ties}, {pv(abl.p)}).
+            On the {test1.bench.n} benchmark artists, mid-size acts closer to who Routed is for: better for {bench.wins}, worse for {bench.losses} ({pv(bench.p)}).
           </span>
         </div>
       </div>
@@ -135,7 +139,7 @@ export function HeadToHead() {
 
       <h3 className={s.h3}>Artist by artist</h3>
       <p className={s.note}>
-        Real-tour cities found by each ranking&apos;s top R (R = cities on the real tour in that region; hover for which). &ldquo;Beyond the biggest&rdquo;: of the real tour&apos;s cities that aren&apos;t among the region&apos;s R biggest, how many Qloo&apos;s ranking found, and the model&apos;s.
+        Real-tour cities found by each ranking&apos;s top R (R = cities on the real tour in that region). On a computer, hover a number for its cities; every list is in data/head-to-head/results.json. &ldquo;Beyond the biggest&rdquo;: of the real tour&apos;s cities that aren&apos;t among the region&apos;s R biggest, how many Qloo&apos;s ranking found, and the model&apos;s.
       </p>
       <div className={s.tableWrap}>
         <table className={s.table}>
@@ -262,19 +266,21 @@ export function HeadToHead() {
 function H2HReading() {
   const { all, bench, heldOut } = R.test1;
   const [bp, qm] = all.primary as [Contrast, Contrast];
-  const [, mp, bm] = all.secondary as [Contrast, Contrast, Contrast];
+  const [qp, mp, bm] = all.secondary as [Contrast, Contrast, Contrast];
   const mq = all.exploratory[0]!;
   const a = R.test2.primary;
+  const b0 = bench.primary[0]!;
+  const h0 = heldOut.primary[0]!;
   return (
     <div className={s.reading}>
       <p>
-        <b>Qloo&apos;s taste data knows something population doesn&apos;t.</b> Added to population, it found {pc(bp.meanA)} of the cities artists really played, against {pc(bp.meanB)}: better for {bp.wins} of {bp.n} artists, worse for {bp.losses} ({pv(bp.p)}). It holds on both sets: {pts(bench.primary[0]!.diff)} points on the benchmark artists ({bench.primary[0]!.wins}–{bench.primary[0]!.losses}) and {pts(heldOut.primary[0]!.diff)} on the held-out ones ({heldOut.primary[0]!.wins}–{heldOut.primary[0]!.losses}). Nothing Qloo made went into the ruler, so this is not Qloo grading Qloo.
+        <b>Qloo&apos;s taste data knows something population doesn&apos;t.</b> Added to population, it found {pc(bp.meanA)} of the cities artists really played, against {pc(bp.meanB)}: better for {bp.wins} of {bp.n} artists, worse for {bp.losses} ({pv(bp.p)}). Split by set: {pts(h0.diff)} pts on the {heldOut.n} held-out artists ({h0.wins}–{h0.losses}, {pv(h0.p)}) and {pts(b0.diff)} pts on the {bench.n} benchmark artists ({b0.wins}–{b0.losses}, {pv(b0.p)}). Nothing Qloo made went into the ruler, so this is not Qloo grading Qloo.
       </p>
       <p>
-        <b>The model alone knows more.</b> Its own ranking found {pc(qm.meanB)}, ahead of Qloo&apos;s ranking for {qm.losses} artists ({pts(-qm.diff)} points) and of Qloo and population together for {bm.losses} ({pts(-bm.diff)} points); against population alone it is {pts(mp.diff)}. A model that has read these tours&apos; announcements can recite where artists play. Averaged with Qloo&apos;s ranking it found {pc(mq.meanA)} ({pts(mq.diff)} points, {pv(mq.p)}; added after the results): on this ruler, Qloo doesn&apos;t add to what the model already knows.
+        <b>How we checked, including what doesn&apos;t flatter us.</b> On these older tours the model alone scores higher. Its own ranking found {pc(qm.meanB)}: {abs1(qm.diff)} pts ahead of Qloo&apos;s ranking ({qm.losses} artists to {qm.wins}), {abs1(bm.diff)} ahead of Qloo and population together, and {abs1(mp.diff)} ahead of population. Qloo&apos;s ranking alone is level with population ({pts(qp.diff)} pts, {pv(qp.p)}), and averaging Qloo into the model&apos;s ranking changed nothing measurable ({pts(mq.diff)} pts, {pv(mq.p)}; added after the results). A model that has read these tours&apos; announcements can recite where artists played; on the tours announced after its release (above), its lead over Qloo is not significant.
       </p>
       <p>
-        <b>Inside the agent, eight picks can&apos;t tell them apart.</b> With Qloo&apos;s table swapped for the biggest cities, {pc(a.meanB)} of the agent&apos;s cities were on the real tour; with Qloo&apos;s, {pc(a.meanA)} ({pts(a.diff)} points, {a.wins}–{a.losses}–{a.ties}, {pv(a.p)}). What Qloo changes in a Routed tour is what this ruler doesn&apos;t score: cities where the fans over-index rather than where bookers have gone, the rooms those fans go to, the neighbourhood and the support act.
+        <b>Inside the agent, eight picks can&apos;t tell them apart.</b> With Qloo&apos;s table, {pc(a.meanA)} of the agent&apos;s cities were on the real tour; with the biggest cities instead, {pc(a.meanB)} ({pts(a.diff)} pts, {a.wins}–{a.losses}–{a.ties}, {pv(a.p)}). This ablation ran before Routed read cities in the Qloo + population order. What a past tour can&apos;t score is where the fans over-index today, and which blocks of each city they live on.
       </p>
     </div>
   );

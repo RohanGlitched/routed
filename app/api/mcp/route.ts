@@ -13,7 +13,7 @@ async function get(req: Request) {
 <h1>This is Routed's MCP server</h1>
 <p>It speaks the Model Context Protocol over Streamable HTTP, so there is nothing to see in a browser. Add this address to an assistant that supports remote MCP servers, such as Claude, ChatGPT or VS Code:</p>
 <p><code>${url}</code></p>
-<p>Tools: <b>fan_map</b> (where an artist's fans over-index), <b>fan_profile</b> (who they are and what else they love), <b>route_tour</b> (a whole tour, about a minute) and <b>get_tour</b>.</p>
+<p>Five tools: <b>fan_map</b> (where an artist's fans over-index), <b>fan_neighbourhoods</b> (where inside one city, with the record stores and cafés there for a poster run), <b>fan_profile</b> (who they are and what else they love), <b>route_tour</b> (a whole tour, about a minute) and <b>get_tour</b>.</p>
 <p>Then ask: "Where should MJ Lenderman play in the UK?" or "Route 8 shows for Waxahatchee from Birmingham, AL."</p>
 <p><a href="/">Routed home</a></p>`;
     return new Response(html, { headers: { "content-type": "text/html; charset=utf-8" } });

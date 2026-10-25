@@ -9,7 +9,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const rec = await loadTour((await params).id).catch(() => null);
   if (!rec) return { title: "Tour not found" };
   const p = rec.plan;
-  const title = p?.artist ? `${p.artist.name}: ${p.stops?.length ?? rec.input.shows} shows from ${p.from?.label ?? rec.input.from}` : `Routing ${rec.input.artist}`;
+  const shows = p?.stops?.reduce((n, s) => n + (s.nights ?? 1), 0);
+  const count = p?.stops?.length ? (shows! > p.stops.length ? `${p.stops.length} cities (${shows} shows)` : `${shows} shows`) : `${rec.input.shows} shows`;
+  const title = p?.artist ? `${p.artist.name}: ${count} from ${p.from?.label ?? rec.input.from}` : `Routing ${rec.input.artist}`;
   return { title, description: p?.stops?.length ? `Routed by fan affinity on Qloo's taste graph: ${p.stops.map((s) => s.city).join(", ")}.` : undefined };
 }
 

@@ -49,7 +49,7 @@ const STEPS: Step[] = [
   { lane: "qloo", title: "The fan map", note: "A heatmap of the region, about 6,000 tiles (and a second through acts who sound alike when the artist's own map is thin). Kept in the store for a week, so routing the same artist again costs no call.", count: (c) => String((c.heat ?? 0) - (c.stored ?? 0)) },
   { lane: "qloo", title: "Who the fans are", note: "Age and gender, momentum, the sound and the mood, and what else they love: podcasts, brands, films, TV and books.", count: (c) => n(c, "audience") },
   { lane: "rule", title: "Tiles into cities", note: "Each tile goes to the city it sits in; cities are ranked by how far the fans over-index, weighed against size." },
-  { lane: "model", title: "Shortlist", note: "From Qloo's ranking, the cities worth a look, plus a few alternates.", count: (c) => n(c, "shortlist") },
+  { lane: "model", title: "Shortlist", note: "From Qloo's fan cities, read in Qloo + population order, the cities worth a look, plus a few alternates.", count: (c) => n(c, "shortlist") },
   { lane: "qloo", title: "Scout every city", note: "The rooms these fans go to, of the kind the crowd needs, and the artists who share the audience. What each room holds is read from Wikidata and the web.", count: (c) => n(c, "scout") },
   { lane: "model", title: "Book", note: "One room per city and one support act for the whole run, each with a reason that cites the evidence.", count: (c) => n(c, "book") },
   { lane: "rule", title: "check_plan", note: `Radius clause, no leg over ${MAX_LEG_KM.toLocaleString("en-US")} km, room size, major markets. Every objection goes back to the agent.` },

@@ -29,7 +29,7 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
           The same model, without Qloo
         </h2>
         <p className={c.lede}>
-          Before Routed looked anything up, {agent ?? "the model"} was asked to route the same {plan.stops.length} shows from what it already knows. Its tour was then scored on {artist}&apos;s Qloo evidence, the same way Routed&apos;s was.
+          Before Routed looked anything up, {agent ?? "the model"} was asked to route the same {plan.stops.length} cities from what it already knows. Its tour was then scored on {artist}&apos;s Qloo evidence, the same way Routed&apos;s was.
         </p>
       </div>
 

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MAX_REVISIONS } from "@/lib/agent/plan";
+import { FAN_CAP, FAN_KEEP, MAX_REVISIONS } from "@/lib/agent/plan";
+import { SNUG } from "@/lib/agent/evidence";
+import { NEAR_VOTE_M } from "@/lib/geo/local";
 import { BAR_TAG_DRAW, BIG_ROOM_DRAW, REDUCED_MAX, SHORT_MIN, STADIUM_MIN_DRAW, TWO_NIGHT_MIN } from "@/lib/agent/rooms";
 import { ANCHOR_RANK, EXACT_MAX, MAJOR_POP, MAX_LEG_KM, MAX_SHOWS_IN_A_ROW, RADIUS_BY_REGION, ROAD_FACTOR, SHOW_DAY_DRIVE_H, TRAVEL_DAY_DRIVE_H, VAN_KMH } from "@/lib/geo/route";
 import { loadTour, showcaseTours } from "@/lib/store";
 import type { LogLine, Usage } from "@/lib/types";
+import { H2H_ARTISTS } from "@/components/proof/HeadToHead";
+import { OUTSIDE2, POST } from "@/components/proof/PostCutoff";
 import { AgentLoop } from "./AgentLoop";
 import s from "./how.module.css";
 
@@ -55,7 +59,7 @@ export default async function How() {
         <h2 className={s.h2}>The agent</h2>
         <AgentLoop log={ex?.log} usage={ex?.usage} artist={ex?.artist} />
         <p>
-          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does. It <b>shortlists</b> cities from Qloo&apos;s ranked heatmap, weighing fan strength against geography, with a few alternates. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room per city and one support act for the whole run, and writes one sentence on why. Then <b>check_plan</b> runs the tour&apos;s rules over the booking as a tool and sends every objection back; the model <b>re-books</b>, changing only what an objection names, up to {MAX_REVISIONS} times.
+          NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does. It <b>shortlists</b> cities from Qloo&apos;s fan cities, weighing fan strength against geography, with a few alternates. It reads them in the order that tested best against real tours, each city&apos;s Qloo fan rank averaged with its rank by population; Qloo&apos;s top {FAN_KEEP} fan cities always stay, and only the top {FAN_CAP} are candidates unless a long leg needs a city to close it. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room per city and one support act for the whole run, and writes one sentence on why. Then <b>check_plan</b> runs the tour&apos;s rules over the booking as a tool and sends every objection back; the model <b>re-books</b>, changing only what an objection names, up to {MAX_REVISIONS} times.
         </p>
         <p>
           Rules hold it in, and every rule that changes the agent&apos;s answer says so on the call sheet. What check_plan still objects to after the model&apos;s last answer, a rule settles. Cities must come from Qloo&apos;s candidates; the radius clause is enforced; a major market in the artist&apos;s top ten stays on the tour; no leg between shows runs over {MAX_LEG_KM.toLocaleString("en-US")} km where a city with rooms can close it; rooms are measured and sized to the crowd; one support act plays every date; gaps are filled from the ranking. If the model is down or the day&apos;s budget is spent, the same steps run as a fixed plan, and the tour book says which one ran.
@@ -75,7 +79,7 @@ export default async function How() {
       <section className={s.sec}>
         <h2 className={s.h2}>The control group</h2>
         <p>
-          Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for twenty artists, and checks both tours against the cities each artist actually played on a recent tour: <Link href="/proof#head-to-head">a ruler Qloo didn&apos;t make</Link>. After every run, the same rules also re-plan the tour on city size alone, with no Qloo or model call, so the tour book names the stops Qloo changed.
+          Every tour also asks the same model, with no Qloo, to route the same shows from what it already knows. Its cities are ranked on the artist&apos;s own heatmap and its rooms are scored in the same Qloo call as Routed&apos;s, so the tour book shows, for that artist, what the taste graph changed. <Link href="/proof">The benchmark</Link> does this for twenty artists. Rulers Qloo didn&apos;t make are on the same page: <Link href="/proof#unread">tours announced after the model&apos;s release</Link>, where the city ranking Routed ships beat population for {POST.blendVsPop.wins} of {POST.n} artists, and <Link href="/proof#head-to-head">{H2H_ARTISTS} older real tours</Link>, where the model alone, which may have read them, did better. After every run, the same rules also re-plan the tour on city size alone, with no Qloo or model call, so the tour book names the stops Qloo changed.
         </p>
       </section>
 
@@ -133,7 +137,8 @@ export default async function How() {
           </li>
           <li>One support act for the whole run, as on a real tour: never the headliner&apos;s own member or a member of another band, clearly smaller than the headliner, and sharing a genre with them. The other artists each city suggested are listed as local options.</li>
           <li>A pitch may only use figures from its stop&apos;s evidence. Any other figure is struck through on the page.</li>
-          <li>A room is &ldquo;in the fans&apos; neighbourhood&rdquo; when it is within 1.5 km of the city&apos;s hottest heatmap tile, or sits on a tile in the city&apos;s top tenth.</li>
+          <li>The fans&apos; neighbourhood is named by a vote of the Qloo places within {NEAR_VOTE_M} m of the city&apos;s hottest heatmap tile, each filed by Qloo under a neighbourhood. A room &ldquo;sits in&rdquo; it only when Qloo files the room under that same name; otherwise the day sheet gives the room&apos;s distance from the hottest blocks. Where Qloo names no neighbourhood, the sheet says so.</li>
+          <li>A day sheet says a room &ldquo;fits&rdquo; only when it holds {pc(SNUG.min)}–{pc(SNUG.max)} of the crowd; otherwise it says what the room holds against the crowd.</li>
         </ul>
       </section>
 
@@ -145,7 +150,8 @@ export default async function How() {
           <li>Drive times are estimates from distance, not a road router.</li>
           <li>Routed sends Qloo only public names: the artist, cities and venues. No personal data is collected or sent.</li>
           <li>Qloo sometimes merges two acts with one name (one &ldquo;Wednesday&rdquo; profile carries Japanese visual-kei tags). Routed takes Qloo&apos;s best match for the name; check the genres on the tour book.</li>
-          <li>The comparison scores both tours on Qloo&apos;s own evidence. It shows how much closer the agent gets to where Qloo says the fans are, not ticket sales.</li>
+          <li>The tour book&apos;s comparison scores both tours on Qloo&apos;s own evidence. It shows how much closer the agent gets to where Qloo says the fans are, not ticket sales.</li>
+          <li>Qloo&apos;s room and support-act rankings are weak predictors of the room and opener a real tour books: on <Link href="/proof#unread">past tours</Link> the model alone found the real venue far more often, and the real opener for {OUTSIDE2.support.pooled.model} of {OUTSIDE2.support.n} tours against Qloo&apos;s {OUTSIDE2.support.pooled.qloo}. Routed measures every room against the crowd before booking it.</li>
         </ul>
       </section>
     </div>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { fit } from "@/lib/agent/evidence";
-import { twoNights } from "@/lib/agent/rooms";
+import { sizeNote } from "@/lib/agent/evidence";
 import { addDays, MAX_LEG_KM } from "@/lib/geo/route";
 import { independents } from "@/lib/chains";
+import { sharedGenres } from "@/lib/agent/rooms";
 import type { Spot, Stop } from "@/lib/types";
 import { LocalMap } from "./LocalMap";
 import s from "./tour.module.css";
@@ -37,7 +37,7 @@ function Checked({ text }: { text: string }) {
 }
 
 /** One stop, laid out like a tour manager's day sheet. */
-export function DaySheet({ stop, prev, total, artist, pending, draw, first = false }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number; first?: boolean }) {
+export function DaySheet({ stop, prev, total, artist, pending, draw, first = false, genres }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number; first?: boolean; /** The headliner's genre keys, so only tastes both acts are filed under are shown as shared. */ genres?: string[] }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const d = new Date(`${stop.date}T12:00:00Z`);
@@ -114,19 +114,13 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                         <span title={room.capacity.quote}>{room.capacity.source}</span>
                       )}
                       .
-                      {draw && nights > 1 && twoNights(room, draw) ? (
-                        <span className={s.alt}>
-                          Two nights cover a usual crowd of {draw.toLocaleString("en-US")} ({(room.capacity.value * 2).toLocaleString("en-US")} across both): no room these fans go to here was confirmed to fit it in one.
-                        </span>
-                      ) : (
-                        draw &&
-                        fit(room, draw) !== "fits" && (
-                          <span className={s.sizeNote}>
-                            {" "}
-                            {fit(room, draw) === "too small" ? "Small" : "Large"} for a usual crowd of {draw.toLocaleString("en-US")}: no room these fans go to here was confirmed to fit, so the pitch asks about {fit(room, draw) === "too small" ? "a second night or a bigger room" : "a reduced configuration"}.
-                          </span>
-                        )
-                      )}
+                      {draw
+                        ? (() => {
+                            // "Fits" only at 85–130% of the crowd, "cover" only when the nights hold it (lib/agent/evidence.ts).
+                            const note = sizeNote(room.capacity.value, draw, nights);
+                            return note.kind === "fits" || note.kind === "covers" ? <span className={s.alt}>{note.text}</span> : <span className={s.sizeNote}> {note.text}</span>;
+                          })()
+                        : null}
                     </>
                   ) : (
                     !pending && "Capacity not found on the web; ask the room."
@@ -145,7 +139,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                   {opener.affinity !== undefined && <span className={s.aff}>Audience affinity {pct(opener.affinity)}. </span>}
                   {opener.genres?.length ? `${opener.genres.slice(0, 2).join(", ")}. ` : ""}
                 </span>
-                {opener.shared.length > 0 && <span className={s.alt}>What both audiences share: {opener.shared.slice(0, 3).join(", ")}</span>}
+                {sharedGenres(opener.shared, genres ?? [], opener.genres).length > 0 && <span className={s.alt}>What both audiences share: {sharedGenres(opener.shared, genres ?? [], opener.genres).slice(0, 3).join(", ")}</span>}
                 {locals.length > 0 && <span className={s.alt}>Local options here: {locals.map((o) => o.name).join(", ")}</span>}
               </dd>
             </>

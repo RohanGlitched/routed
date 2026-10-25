@@ -3,6 +3,7 @@ import type { Market } from "../geo/markets";
 import type { Artist, Room } from "../types";
 import { kmBetween } from "../geo/local";
 import { fit } from "./evidence";
+import { sameVenue } from "./capacity";
 
 /**
  * The rules about rooms, openers and artists, kept pure (no Qloo, no server) so they are tested: which kinds of
@@ -39,8 +40,12 @@ export function orchestraHallFor(name: string, genres: string[]): boolean {
 const BAR_NAME = /\b(caf[eé]|bar|pub|tavern|lounge|bistro|brasserie|taproom|saloon|kneipe|food carts?|craft beer|beer garden|biergarten|backyard)(?![a-z])/i;
 /** Below this draw a stadium is never the room, whatever its tags (Nissan Stadium once came back for 15,000). */
 export const STADIUM_MIN_DRAW = 30_000;
-/** A room that holds this share of the crowd or more, but less than a one-night fit, is booked for two nights. */
-export const TWO_NIGHT_MIN = 0.3;
+/** A room that holds this share of the crowd or more, but less than a one-night fit, is booked for two nights: from
+ *  half the crowd up, so the two nights together always hold it (at 0.3, Tower Theatre's 460 was booked twice for
+ *  1,500 and the day sheet said two nights "cover" 920). */
+export const TWO_NIGHT_MIN = 0.5;
+/** A measured room from this share of the crowd up is a better booking than a room nobody could measure. */
+export const SHORT_MIN = 0.4;
 export const DEFAULT_VENUE_TAGS = ["urn:tag:genre:place:live_music_venue", "urn:tag:genre:place:concert_hall", "urn:tag:genre:place:ballroom", "urn:tag:genre:place:performing_arts_theater"];
 
 export function venueTier(draw?: number, defaults = DEFAULT_VENUE_TAGS) {
@@ -55,8 +60,25 @@ const NOT_A_ROOM_NAME = /\b(fair|fairgrounds?|speedway|raceway|racetrack|motor|e
 const NOT_A_ROOM_EVER = /\b(housing|apartments?|residences?|lofts|condos?|hostel)\b/i;
 /** A gallery or an art centre can be a 200-cap room; for a crowd of 700 or more it isn't. */
 const SMALL_ART_ROOM = /\b(gallery|galerie|art center|art centre|arts centre|art museum|artist run)\b/i;
-/** For a crowd of 3,000 or more a bar, pub or restaurant isn't the room, however the fans love it. */
+/** For a crowd of 1,000 or more a bar, pub or restaurant isn't the room, however the fans love it (the Timbre Room,
+ *  tagged a bar, came back for 1,500). */
 const BAR_TAG = /restaurant|\bbar$|live_music_bar|pub$|night_club|cocktail/;
+export const BAR_TAG_DRAW = 1000;
+/** Parks, playgrounds and trails carry a venue tag for the odd summer concert (Route 66 Park, with its ponds and
+ *  swings, came back for 15,000): by a tag, or by a name that ends in "Park" or "Green". A park's own stage keeps
+ *  its place ("Red Rocks Park and Amphitheatre", "Central Park SummerStage", "Prospect Park Bandshell"). */
+// Tags only a park carries: "Park views" or "Free parking" don't count, ponds and swings do.
+const PARK_TAG = /\b(playgrounds?|ponds?|swings?|skate ?parks?|hikes|hiking trails?|kid friendly (hikes|parks?|playgrounds?)|splash pads?|dog parks?|green ?spaces?|nature (reserve|preserve|area)|campgrounds?|picnic (areas?|shelters?|tables?))\b|:(park|playground|nature_reserve|hiking_area|dog_park)$/i;
+const PARK_NAME = /\b(park|green|playground|commons|trailhead|nature (reserve|preserve|center))$/i;
+const PARK_STAGE = /amphithea|pavilion|band ?shell|summerstage|stage|bowl|arena|theat|hall|auditorium|ballroom|music|club|coliseum/i;
+
+/** Whether a place is a park, playground or trail (by its name or any of its tags), not a stage in one. Takes Qloo
+ *  tags ({ id, name }) or a stored room's tag names. */
+export function isPark(name: string, tags: ({ id?: string; name?: string } | string)[] = []): boolean {
+  if (PARK_STAGE.test(name)) return false;
+  if (PARK_NAME.test(name.trim())) return true;
+  return tags.some((t) => (typeof t === "string" ? PARK_TAG.test(t) : PARK_TAG.test(t.name ?? "") || PARK_TAG.test(t.id ?? "")));
+}
 const BIG_ROOM_TAG = /concert_hall|amphitheater|arena|stadium|performing_arts_theater|ballroom/;
 
 export const placeTagIds = (e: Pick<Entity, "tags">) => e.tags.filter((t) => /genre:place|category:place/.test(t.id)).map((t) => t.id);
@@ -67,7 +89,8 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
   const ids = placeTagIds(e);
   if (ids.some((id) => NOT_A_ROOM_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id) && !/stadium/.test(id))) return false;
   if (!roomNameOk(e.name, draw)) return false;
-  if (draw && draw >= 3000 && ids.some((id) => BAR_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id))) return false;
+  if (isPark(e.name, e.tags)) return false;
+  if (draw && draw >= BAR_TAG_DRAW && ids.some((id) => BAR_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id))) return false;
   if (!(draw && draw >= STADIUM_MIN_DRAW) && ids.some((id) => /stadium/.test(id))) return false;
   return true;
 }
@@ -75,7 +98,7 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
 /** The rules a room's name alone can settle (so they apply to stored tours too): fairs, housing, galleries for
  *  big crowds, bars and cafés, stadiums. */
 export function roomNameOk(name: string, draw?: number): boolean {
-  if (NOT_A_ROOM_NAME.test(name) || NOT_A_ROOM_EVER.test(name)) return false;
+  if (NOT_A_ROOM_NAME.test(name) || NOT_A_ROOM_EVER.test(name) || isPark(name)) return false;
   if (draw && draw >= 700 && SMALL_ART_ROOM.test(name) && !/performing arts/i.test(name)) return false;
   if (draw && draw >= BIG_ROOM_DRAW && SMALL_NAME.test(name)) return false;
   if (draw && draw >= 1000 && BAR_NAME.test(name)) return false;
@@ -94,7 +117,8 @@ export function cleanName(name: string): string {
 
 /* ───────────────────────── rooms by size ───────────────────────── */
 
-/** Two nights cover the crowd: the room holds 30–60% of it (one night would turn half the fans away). */
+/** Two nights cover the crowd: the room holds 50–60% of it (one night would turn half the fans away; two hold them
+ *  all). */
 export function twoNights(r: Room, draw?: number): boolean {
   if (!draw || !r.capacity) return false;
   const share = r.capacity.value / draw;
@@ -109,11 +133,18 @@ export function reducedHouse(r: Room, draw?: number): boolean {
   return Boolean(draw && r.capacity && r.capacity.value > draw * 2.5 && r.capacity.value <= draw * REDUCED_MAX);
 }
 
+/** A measured room short of the crowd but within reach of it (40–50%): one night, and the sheet says how short. */
+export function shortHouse(r: Room, draw?: number): boolean {
+  return Boolean(draw && r.capacity && r.capacity.value >= draw * SHORT_MIN && r.capacity.value < draw * TWO_NIGHT_MIN);
+}
+
 /**
  * How good a room is for this crowd, lower is better: 0 a known fit (60–250% of the draw, one night); 1 a known
- * two-night stand (30–60%); 1.5 a known room up to four times the crowd, in a reduced configuration; then a room
- * whose capacity couldn't be found (2 for a crowd under 3,000, where clubs are rarely on Wikidata; 2.5 from 3,000
- * up, where an unmeasured room is nearly always a small one); then rooms known to miss by how far they miss.
+ * two-night stand (50–60%); 1.5 a known room up to four times the crowd, in a reduced configuration; 1.8 a known
+ * room at 40–50% of the crowd, one night; then a room whose capacity couldn't be found (2 for a crowd under 3,000,
+ * where clubs are rarely on Wikidata; 2.5 from 3,000 up, where an unmeasured room is nearly always a small one);
+ * then rooms known to miss by how far they miss. So a measured room at 40–250% always beats one nobody measured
+ * (Ghost's 8,000 crowd once got Strom, a club nobody could measure).
  */
 export function roomGrade(r: Room, draw?: number): number {
   if (!draw) return 0;
@@ -121,6 +152,7 @@ export function roomGrade(r: Room, draw?: number): number {
   if (f === "fits") return 0;
   if (twoNights(r, draw)) return 1;
   if (reducedHouse(r, draw)) return 1.5;
+  if (shortHouse(r, draw)) return 1.8;
   if (f === "unknown") return draw >= BIG_ROOM_DRAW ? 2.5 : 2;
   return 3 + Math.abs(Math.log(r.capacity!.value / draw));
 }
@@ -130,6 +162,72 @@ export function chooseRoom(rooms: Room[], wanted: string | undefined, draw?: num
   if (!rooms.length) return undefined;
   const order = [...rooms].sort((a, b) => roomGrade(a, draw) - roomGrade(b, draw) || Number(b.id === wanted) - Number(a.id === wanted) || rooms.indexOf(a) - rooms.indexOf(b));
   return order[0];
+}
+
+/**
+ * Whether a city has a room this crowd can be booked into, for the planner: the room chooseRoom would book, and
+ * `bookable` false when the city should give way to the next ranked one. Not bookable: no room at all; only rooms
+ * known to miss the crowd (under 40% of it, or over four times); or, for a crowd of 3,000 or more, only rooms
+ * nobody could measure (an unmeasured room at that size is nearly always a club). Below 3,000 an unmeasured room
+ * is bookable: clubs are rarely on Wikidata, and the pitch asks the room what it holds.
+ */
+export type RoomCheck = { room?: Room; bookable: boolean; status: "measured" | "unmeasured" | "misfit" | "none"; reason?: string };
+
+export function roomCheck(rooms: Room[], wanted: string | undefined, draw?: number): RoomCheck {
+  const room = chooseRoom(rooms, wanted, draw);
+  if (!room) return { bookable: false, status: "none", reason: "no room of this kind came back" };
+  if (!draw) return { room, bookable: true, status: room.capacity ? "measured" : "unmeasured" };
+  if (roomGrade(room, draw) < 2) return { room, bookable: true, status: "measured" };
+  const crowd = draw.toLocaleString("en-US");
+  if (!room.capacity) return draw >= BIG_ROOM_DRAW ? { room, bookable: false, status: "unmeasured", reason: `no room these fans go to could be measured for a crowd of ${crowd}` } : { room, bookable: true, status: "unmeasured" };
+  return { room, bookable: false, status: "misfit", reason: `the nearest size, ${room.name} at ${room.capacity.value.toLocaleString("en-US")}, is ${room.capacity.value < draw ? "under 40%" : "over four times"} of a crowd of ${crowd}` };
+}
+
+/* ───────────────────────── a market's room ladder ───────────────────────── */
+
+/**
+ * A market's rooms by size, from Wikidata: items with a maximum capacity (P1083) within about 30 km
+ * (lib/wikidata.ts wikidataRoomsNear). Qloo returns the rooms its fans' graph links to a venue tag, so a city's
+ * arena can be missing from its answer (Munich came back with no Olympiahalle or Zenith); the ladder says what
+ * sizes the market has. It never ranks: Qloo's affinity order decides within a size tier.
+ */
+export type LadderRoom = { qid: string; name: string; description?: string; lat?: number; lon?: number; capacity: number };
+
+/** A Wikidata item counts as a room when its name or description says venue, and the room rules allow it. */
+const LADDER_KIND = /\b(music venue|concert (hall|venue)|arena|amphithea(tre|ter)|theat(re|er)|auditorium|ballroom|opera house|coliseum|colosseum|pavilion|event venue|performing arts|nightclub|music hall|multi-purpose)\b/i;
+const LADDER_NOT = /\b(stadium|ballpark|church|cathedral|school|university|college|museum|cinema|movie theat(re|er)|racecourse|velodrome|swimming|ice rink|demolished|former|defunct)\b/i;
+
+/** The ladder: Wikidata rows that are rooms for this crowd, one per item, smallest first. */
+export function roomLadder(rows: LadderRoom[], draw?: number): LadderRoom[] {
+  const seen = new Set<string>();
+  return rows
+    .filter((r) => r.capacity >= 50 && r.capacity <= 120_000 && LADDER_KIND.test(`${r.name} ${r.description ?? ""}`) && !LADDER_NOT.test(r.description ?? "") && roomNameOk(r.name, draw))
+    .filter((r) => !seen.has(r.qid) && Boolean(seen.add(r.qid)))
+    .sort((a, b) => a.capacity - b.capacity);
+}
+
+/** The ladder's rooms at a one-night fit (60–250%) for this crowd, smallest first. */
+export function ladderTier(ladder: LadderRoom[], draw: number): LadderRoom[] {
+  return ladder.filter((r) => r.capacity >= draw * 0.6 && r.capacity <= draw * 2.5);
+}
+
+/**
+ * Merges a ladder into a city's Qloo rooms. A Qloo room with no capacity takes the ladder item that is the same
+ * room (its distinctive words, within 2 km when both have coordinates), with the Wikidata source; the Qloo rooms
+ * keep Qloo's order. The fitting ladder rooms Qloo didn't return come back as `extras`, for the planner to look up
+ * on Qloo (for their fan affinity) when no Qloo room is bookable.
+ */
+export function mergeLadder(rooms: Room[], ladder: LadderRoom[], draw?: number): { rooms: Room[]; extras: LadderRoom[] } {
+  const used = new Set<string>();
+  const close = (r: Room, l: LadderRoom) => r.lat === undefined || r.lon === undefined || l.lat === undefined || l.lon === undefined || kmBetween({ lat: r.lat, lon: r.lon }, { lat: l.lat, lon: l.lon }) <= 2;
+  const out = rooms.map((r) => {
+    const l = ladder.find((x) => !used.has(x.qid) && sameVenue(r.name, x.name, x.description) && close(r, x));
+    if (!l) return r;
+    used.add(l.qid);
+    if (r.capacity) return r;
+    return { ...r, capacity: { value: l.capacity, source: `https://www.wikidata.org/wiki/${l.qid}`, quote: `${l.name}${l.description ? `: ${l.description}` : ""}; maximum capacity ${l.capacity.toLocaleString("en-US")} (Wikidata P1083)` } };
+  });
+  return { rooms: out, extras: draw ? ladderTier(ladder, draw).filter((l) => !used.has(l.qid)) : [] };
 }
 
 /* ───────────────────────── openers ───────────────────────── */
@@ -164,6 +262,20 @@ export function sharesGenre(headliner: string[], opener: string[]): boolean {
   return shared.some((g) => !BROAD.test(g)) || shared.length >= 2;
 }
 
+/**
+ * The tastes Qloo's audience comparison says two acts' fans share, kept only when both acts are filed under them
+ * (Turnstile and End It "shared" Rockabilly; Zach Bryan and Parker McCollum "shared" Jazz). When either act has no
+ * genres on Qloo nothing can be confirmed, so nothing is kept.
+ */
+export function sharedGenres(shared: string[], headliner: string[], opener: string[] | undefined): string[] {
+  const h = new Set(headliner.map(foldGenre));
+  const o = new Set((opener ?? []).map(foldGenre));
+  return shared.filter((t) => {
+    const g = foldGenre(t);
+    return Boolean(g) && !NOT_A_GENRE.test(g) && h.has(g) && o.has(g);
+  });
+}
+
 /** "best known as the lead guitarist of the heavy metal band Metallica": a member of another band, not a support act. */
 const SIDE_MEMBER = [
   /\bbest known\b[^.]{0,80}?\b(of|for|in|with)\b[^.]{0,60}?\b(band|group|duo|trio|quartet|supergroup|collective)\b/i,
@@ -181,11 +293,15 @@ export function isSideMember(description?: string): boolean {
   return SIDE_MEMBER.some((re) => re.test(description));
 }
 
+/** How far below the headliner a support act's Qloo popularity percentile sits: at least 5 points (a peer is a
+ *  co-headliner), at most 35 (an arena run doesn't carry a club act). */
+export const SUPPORT_GAP = { min: 0.05, max: 0.35 };
+
 /**
  * Why an artist Qloo suggests can't open for this headliner, or null when they can: the headliner themselves,
  * a shared name word (a solo member or side project), a member of the headliner or of another band (Grian
- * Chatten fronts Fontaines D.C.; Kirk Hammett plays in Metallica), not clearly smaller than the headliner, or no
- * genre in common (bluegrass under post-punk, country under disco-funk).
+ * Chatten fronts Fontaines D.C.; Kirk Hammett plays in Metallica), not 5 to 35 popularity points below the
+ * headliner, or no genre in common (bluegrass under post-punk, country under disco-funk).
  */
 export function openerProblem(headliner: { id?: string; name: string; popularity?: number; genres: string[] }, cand: { id?: string; name: string; description?: string; popularity?: number; genres: string[] }): string | null {
   if (cand.id && cand.id === headliner.id) return "the headliner";
@@ -193,7 +309,11 @@ export function openerProblem(headliner: { id?: string; name: string; popularity
   if (sharesName(headliner.name, cand.name)) return "shares the headliner's name";
   if (isMember(headliner.name, cand)) return `a member of ${headliner.name}`;
   if (isSideMember(cand.description)) return "a member of another band";
-  if (headliner.popularity !== undefined && cand.popularity !== undefined && cand.popularity >= headliner.popularity) return "not smaller than the headliner";
+  if (headliner.popularity !== undefined && cand.popularity !== undefined) {
+    if (cand.popularity >= headliner.popularity) return "not smaller than the headliner";
+    if (cand.popularity > headliner.popularity - SUPPORT_GAP.min) return "a co-headliner, not a support act";
+    if (cand.popularity < headliner.popularity - SUPPORT_GAP.max) return "too small for the headliner's rooms";
+  }
   if (!sharesGenre(headliner.genres, cand.genres)) return "no genre in common";
   return null;
 }

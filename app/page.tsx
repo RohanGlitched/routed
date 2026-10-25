@@ -3,26 +3,22 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PrefilledForm } from "@/components/home/PrefilledForm";
 import { RouteForm } from "@/components/home/RouteForm";
+import { StickyRoute } from "@/components/home/StickyRoute";
+import { Wall } from "@/components/home/Wall";
 import { Poster } from "@/components/poster/Poster";
 import { opener, room } from "@/lib/agent/evidence";
 import { MARKETS, type RegionId } from "@/lib/geo/markets";
 import { independents } from "@/lib/chains";
 import { posterFor } from "@/lib/poster";
-import { loadTour, shelfTours, showcaseTours } from "@/lib/store";
-import type { TourRecord } from "@/lib/types";
+import { homeData } from "@/lib/showcase";
 import s from "./home.module.css";
 
-/** The home page reads a few dozen tour records; it is rebuilt every two minutes, not on every visit. */
+/**
+ * The home page is built from cached reads (lib/showcase.ts) and rebuilt every two minutes, not on every visit:
+ * the CDN serves it in between. Only the hero poster is drawn in the page; the wall's posters are drawn in the
+ * browser as they scroll near (components/home/Wall.tsx).
+ */
 export const revalidate = 120;
-
-async function showcase(): Promise<{ hero: TourRecord | null; wall: TourRecord[] }> {
-  const wall = await showcaseTours().catch(() => [] as TourRecord[]);
-  const pinned = process.env.SHOWCASE_ID ? await loadTour(process.env.SHOWCASE_ID).catch(() => null) : null;
-  // The pin holds only while that tour is on the poster wall; a tour taken off it (re-routed under newer rules)
-  // gives way to the newest one there.
-  const hero = pinned?.status === "done" && pinned.showcase ? pinned : (wall[0] ?? null);
-  return { hero, wall: wall.filter((t) => t.plan?.stops?.length) };
-}
 
 /** The biggest cities in the region, for the contrast with where the fans actually are. */
 function biggest(region: RegionId, n: number) {
@@ -45,34 +41,30 @@ function pitchLine(body: string): string {
   return sentences.slice(0, 2).join(" ").trim();
 }
 
-/** The benchmark in two numbers, for the home page. */
-async function bench(): Promise<{ n: number; routed: number; guess: number } | null> {
-  const tours = (await shelfTours("bench").catch(() => [] as TourRecord[])).filter((t) => t.plan?.guess?.rankMean.guess !== undefined);
-  if (!tours.length) return null;
-  const avg = (f: (t: TourRecord) => number) => tours.reduce((a, t) => a + f(t), 0) / tours.length;
-  return { n: tours.length, routed: avg((t) => t.plan!.guess!.rankMean.routed ?? 0), guess: avg((t) => t.plan!.guess!.rankMean.guess ?? 0) };
-}
-
 export default async function Home() {
-  const [{ hero, wall }, b] = await Promise.all([showcase(), bench()]);
+  const { hero, wall, bench: b } = await homeData().catch(() => ({ hero: null, wall: [], bench: null }));
   const plan = hero?.plan;
   const poster = plan ? posterFor(plan) : null;
   const stop = plan?.stops?.[1] ?? plan?.stops?.[0];
   const fanCities = plan?.cities?.slice(0, 6) ?? [];
   const big = plan ? biggest(plan.region, 6) : [];
+  // Films, TV and books this audience over-indexes on (Qloo cross-domain), one of each first, as on the tour page.
+  const media = plan?.audience?.media;
+  const watch = [media?.films?.[0], media?.tv?.[0], media?.books?.[0], media?.films?.[1]].filter((x) => x?.name).slice(0, 3).map((x) => x!.name);
 
   return (
     <>
       <section className={`wrap ${s.hero}`}>
         <div className={s.pitch}>
           <h1 className={s.h1}>Tour where the fans are dense, not where the cities are big.</h1>
+          <Suspense fallback={<RouteForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />}>
+            <PrefilledForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />
+          </Suspense>
           <p className={s.lede}>
             Name an artist. An agent reads Qloo&apos;s taste graph for the cities where their fans are unusually dense and the rooms those fans go to, picks one support act whose audience overlaps for the whole run, then routes the dates,
             sizes every room to the crowd and drafts a checked pitch for each venue.
           </p>
-          <Suspense fallback={<RouteForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />}>
-            <PrefilledForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />
-          </Suspense>
+          <StickyRoute />
         </div>
         <figure className={s.stage}>
           {poster && hero ? (
@@ -245,10 +237,12 @@ export default async function Home() {
                 <dd>{independents(plan.stops[0]!.posters).slice(0, 3).map((x) => x.name).join(", ")}</dd>
               </div>
             ) : null}
-            <div>
-              <dt>Pitch these podcasts</dt>
-              <dd>{plan.audience.media.podcasts.slice(0, 3).map((x) => x.name).join(", ")}</dd>
-            </div>
+            {watch.length ? (
+              <div>
+                <dt>Watch and read</dt>
+                <dd>{watch.join(", ")}</dd>
+              </div>
+            ) : null}
           </dl>
         </section>
       ) : null}
@@ -259,22 +253,7 @@ export default async function Home() {
             Poster wall
           </h2>
           <p className={s.wallLede}>Tours routed on Routed. Each poster is printed from its own run: the dots are that artist&apos;s Qloo heatmap.</p>
-          <ul className={s.wall}>
-            {wall.map((t) => {
-              const p = posterFor(t.plan!);
-              if (!p) return null;
-              return (
-                <li key={t.id}>
-                  <Link href={`/tour/${t.id}`} className={s.wallLink}>
-                    <Poster {...p} compact />
-                    <span>
-                      {p.artist}, {t.plan!.stops.length} shows from {t.plan!.from.label.split(",")[0]}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <Wall items={wall.map(({ id, artist, shows, from }) => ({ id, artist, shows, from }))} />
         </section>
       )}
     </>

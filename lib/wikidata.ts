@@ -1,5 +1,6 @@
 import "server-only";
 import { sameVenue } from "./agent/capacity";
+import type { LadderRoom } from "./agent/rooms";
 import { kmBetween } from "./geo/local";
 
 /**
@@ -94,4 +95,47 @@ export async function wikidataCapacity(venue: string, city: string, near?: { lat
   memo.set(key, out);
   if (memo.size > 3000) memo.delete(memo.keys().next().value!);
   return out;
+}
+
+/* ───────────────────────── a market's room ladder ───────────────────────── */
+
+const SPARQL = "https://query.wikidata.org/sparql";
+const ladderMemo = new Map<string, LadderRoom[]>();
+
+/**
+ * Every Wikidata item with a maximum capacity (P1083) within `radiusKm` of a point, with its label, description
+ * and coordinates: one query a market, the raw rows for agent/rooms.ts roomLadder to filter (venues by their
+ * description, the room rules by name). Classes aren't queried, since venues are filed under dozens of them; the
+ * description says what an item is. Undefined when Wikidata couldn't be asked (never cached), so the planner goes
+ * on with Qloo's rooms alone.
+ */
+export async function wikidataRoomsNear(near: { lat: number; lon: number }, radiusKm = 30): Promise<LadderRoom[] | undefined> {
+  const key = `${near.lat.toFixed(2)},${near.lon.toFixed(2)},${radiusKm}`;
+  if (ladderMemo.has(key)) return ladderMemo.get(key)!;
+  const query = `SELECT ?item ?itemLabel ?itemDescription ?cap ?coord WHERE {
+  SERVICE wikibase:around { ?item wdt:P625 ?coord . bd:serviceParam wikibase:center "Point(${near.lon} ${near.lat})"^^geo:wktLiteral . bd:serviceParam wikibase:radius "${radiusKm}" . }
+  ?item wdt:P1083 ?cap .
+  FILTER NOT EXISTS { ?item wdt:P576 ?gone . }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+} LIMIT 400`;
+  type Row = { item: { value: string }; itemLabel?: { value: string }; itemDescription?: { value: string }; cap: { value: string }; coord?: { value: string } };
+  try {
+    const j = await getJson<{ results?: { bindings?: Row[] } }>(`${SPARQL}?${new URLSearchParams({ query, format: "json" })}`);
+    const rows: LadderRoom[] = [];
+    for (const b of j.results?.bindings ?? []) {
+      const qid = b.item.value.split("/").pop()!;
+      const name = b.itemLabel?.value ?? "";
+      const capacity = Math.round(Number(b.cap.value));
+      // An item with no English label comes back labelled with its own id.
+      if (!name || name === qid || !Number.isFinite(capacity)) continue;
+      const pt = b.coord?.value.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
+      rows.push({ qid, name, description: b.itemDescription?.value, capacity, ...(pt ? { lon: Number(pt[1]), lat: Number(pt[2]) } : {}) });
+    }
+    ladderMemo.set(key, rows);
+    if (ladderMemo.size > 300) ladderMemo.delete(ladderMemo.keys().next().value!);
+    return rows;
+  } catch (e) {
+    console.error("[wikidata] ladder lookup failed", (e as Error).message);
+    return undefined;
+  }
 }

@@ -12,6 +12,9 @@ import { downloadPoster } from "./download";
 import { tourCalendar } from "@/lib/ics";
 import { Campaign } from "./Campaign";
 import { Control } from "./Control";
+import { QlooDiff } from "./QlooDiff";
+import { AssumedDraw } from "@/components/home/AssumedDraw";
+import a from "./agent.module.css";
 import s from "./tour.module.css";
 
 type Event = { t: "log"; line: LogLine } | { t: "plan"; plan: Partial<Plan> } | { t: "done"; at: string; engine: TourRecord["engine"] } | { t: "error"; message: string };
@@ -137,6 +140,12 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
             </p>
           )}
 
+          {plan?.assumedDraw ? <AssumedDraw draw={plan.assumedDraw} artist={plan.artist.name} from={rec.input.from} /> : null}
+          {plan?.readThrough?.length ? (
+            <p className={a.note}>
+              {title}&apos;s own Qloo heatmap was too thin to route, so the map is <b>read through {list(plan.readThrough.map((x) => x.name))}</b>: the cities where audiences like {title}&apos;s over-index.
+            </p>
+          ) : null}
           {plan?.artist?.others?.length ? (
             <p className={s.others}>
               Qloo matched <b>{plan.artist.name}</b>{plan.artist.disambiguation ? ` (${plan.artist.disambiguation})` : ""}. Not the one you meant? Route{" "}
@@ -163,6 +172,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
             <p className={s.engine}>
               {rec.engine.planned === "model" ? `Planned by ${rec.engine.agent ?? "the agent"}` : "Planned by the fixed plan (the agent model was unavailable)"}
               {rec.engine.writer ? `; pitches by ${rec.engine.writer}` : "; template pitches"}.
+              {rec.engine.check ? ` ${checkLine(rec.engine.check)}` : ""}
               {rec.engine.usage
                 ? ` This run cost ${rec.engine.usage.qloo} Qloo requests${rec.engine.usage.qlooCached ? ` (and ${rec.engine.usage.qlooCached} answered from the cache)` : ""}, ${rec.engine.usage.modelCalls} model calls and ${(rec.engine.usage.tokensIn + rec.engine.usage.tokensOut).toLocaleString("en-US")} tokens.`
                 : ""}{" "}
@@ -178,9 +188,11 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
             The tour book
           </h2>
           {plan!.audience?.advice && <p className={s.advice}>{plan!.audience.advice}</p>}
+          {plan!.tradeOff && <p className={s.advice}>Routing: {plan!.tradeOff}.</p>}
+          {!running && <QlooDiff plan={plan!} />}
           <ol className={s.sheets}>
             {stops.map((st, i) => (
-              <DaySheet key={st.marketId} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} />
+              <DaySheet key={st.marketId} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} genres={plan!.artist.genreKeys ?? plan!.artist.genres} />
             ))}
           </ol>
         </section>
@@ -199,6 +211,15 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
       )}
     </div>
   );
+}
+
+const list = (xs: string[]) => (xs.length <= 1 ? (xs[0] ?? "") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
+
+/** How the rules and the agent settled the booking, in one sentence (the counts /proof can total). */
+function checkLine(c: NonNullable<NonNullable<TourRecord["engine"]>["check"]>): string {
+  const obj = (n: number) => `${n} objection${n === 1 ? "" : "s"}`;
+  const first = c.before ? `The rules raised ${obj(c.before)} to the agent's booking${c.rounds ? `; it re-booked ${c.revised} pick${c.revised === 1 ? "" : "s"} in ${c.rounds} round${c.rounds === 1 ? "" : "s"}, leaving ${c.after ? obj(c.after) : "none"}` : ""}.` : "The agent's booking cleared every rule.";
+  return `${first} ${c.ruled ? `A rule still changed ${c.ruled} of ${c.stops} stops.` : `Every stop is the agent's own.`}`;
 }
 
 /** The tour as an .ics file: every show, travel day and day off, for the band's shared calendar. */

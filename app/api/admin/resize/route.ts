@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { timingSafeEqual } from "node:crypto";
 import { resizeTour } from "@/lib/agent/resize";
 import { loadTour, updateTour } from "@/lib/store";
@@ -18,5 +19,6 @@ export async function POST(req: Request) {
   if (!rec?.plan || rec.status !== "done") return NextResponse.json({ error: "No finished tour with that id." }, { status: 404 });
   const { rec: next, changed } = await resizeTour(rec);
   await updateTour(body.id, () => next);
+  revalidateTag("tours");
   return NextResponse.json({ ok: true, changed, usage: next.engine?.usage });
 }

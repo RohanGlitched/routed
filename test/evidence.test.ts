@@ -88,12 +88,23 @@ test("the checker is idempotent, reads “15k” as 15,000 and leaves a date's c
 });
 
 test("a stop's reason may cite what the booking model saw (room popularity), and a rule's sentence is rebuilt from the room as measured", () => {
+  const keep = { keepModel: true };
   const s = { ...lexington, why: "Lexington ranks #9 and the Lyric scores 88 popularity with 84 affinity." } as Stop;
-  assert.equal(checkWhy(plan, s, 1500), s.why);
+  assert.equal(checkWhy(plan, s, 1500, keep), s.why);
   const stale = { ...lexington, why: "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds ~~1,200~~ a night over two nights." } as Stop;
-  assert.equal(checkWhy(plan, stale, 1500), "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 a night over two nights.");
+  assert.equal(checkWhy(plan, stale, 1500, keep), "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 a night over two nights.");
   const wrong = { ...lexington, why: "Lexington ranks #19 for these fans." } as Stop;
-  assert.equal(checkWhy(plan, wrong, 1500), "Lexington ranks #~~19~~ for these fans.");
+  assert.equal(checkWhy(plan, wrong, 1500, keep), "Lexington ranks #~~19~~ for these fans.");
+});
+
+test("every stop's reason is the rule's sentence by default, and a broken model line never survives", () => {
+  const rule = "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 a night over two nights.";
+  const model = { ...lexington, why: "Lexington ranks #9 and the Lyric scores 88 popularity with 84 affinity." } as Stop;
+  assert.equal(checkWhy(plan, model, 1500), rule, "one voice on every stop");
+  const broken = { ...lexington, why: "Lexington ranks #9 heatmap and the Lyric is a room the Lyric is a room for fans." } as Stop;
+  assert.equal(checkWhy(plan, broken, 1500, { keepModel: true }), rule, "a repeated run of words: the rule's sentence instead");
+  const bare = { ...lexington, rooms: [{ ...room, capacity: undefined, affinity: undefined }], why: "x" } as unknown as Stop;
+  assert.equal(checkWhy(plan, bare, 1500), "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center is a room these fans go to.", "no capacity or score: no 'matches these fans at 0'");
 });
 
 test("re-checking a stored tour lifts the false strikes, logs one line, and a second pass changes nothing", () => {

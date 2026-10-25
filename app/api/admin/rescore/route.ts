@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { timingSafeEqual } from "node:crypto";
 import { rescore } from "@/lib/agent/guess";
 import { shelfTours, updateTour } from "@/lib/store";
@@ -19,5 +20,6 @@ export async function POST(req: Request) {
     await updateTour(t.id, (r) => (r.plan ? { ...r, plan: { ...r.plan, guess: next } } : null));
     out.push({ id: t.id, artist: t.plan?.artist.name, before, after: next.rankMean.guess });
   }
+  revalidateTag("tours");
   return NextResponse.json({ ok: true, tours: out });
 }

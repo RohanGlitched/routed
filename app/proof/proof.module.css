@@ -33,6 +33,31 @@
 .keyBlue::before { border: 2.5px solid var(--blue); box-sizing: border-box; }
 
 .tableWrap { overflow-x: auto; border-top: 1px solid var(--ink); }
+/* Phones: the tables are wider than the screen, so the scroller says so: a "swipe" line above it and a shadow at
+   whichever edge has more table (scrolling shadows: stock-coloured covers that move with the content hide each
+   shadow once that end is reached). */
+@media (max-width: 860px) {
+  .tableWrap {
+    position: relative;
+    background:
+      linear-gradient(to right, var(--stock) 40%, rgba(251, 251, 249, 0)) left center / 32px 100% no-repeat local,
+      linear-gradient(to left, var(--stock) 40%, rgba(251, 251, 249, 0)) right center / 32px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, rgba(22, 21, 27, 0.16), transparent) left center / 12px 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, rgba(22, 21, 27, 0.16), transparent) right center / 12px 100% no-repeat scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tableWrap::before {
+    content: "Swipe the table sideways for every column →";
+    position: sticky;
+    left: 0;
+    display: block;
+    width: max-content;
+    padding: 8px 0 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mute);
+  }
+}
 .table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 860px; }
 .table th,
 .table td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
@@ -59,7 +84,12 @@
 }
 
 .prompt { margin: 14px 0 0; font-size: 14px; }
-.prompt summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.prompt summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; gap: 10px; list-style: none; }
+.prompt summary::-webkit-details-marker { display: none; }
+/* display:flex drops the browser's own triangle, so the toggle draws one, as the call sheet's does. */
+.prompt summary::before { content: "▸"; color: var(--fire); font-size: 20px; line-height: 1; transition: transform 150ms ease; }
+.prompt[open] summary::before { transform: rotate(90deg); }
+.prompt summary:hover { text-decoration: underline; text-decoration-color: var(--fire); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .prompt pre { white-space: pre-wrap; font-size: 13px; line-height: 1.5; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; margin: 6px 0; }
 .prompt p { margin: 0; color: var(--mute); font-size: 13px; }
 

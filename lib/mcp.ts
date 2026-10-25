@@ -146,7 +146,7 @@ function register(server: McpServer) {
         from: z.string().min(2).max(80).describe("Starting city, e.g. 'Portland, OR', 'Leeds, UK', 'Berlin'"),
         shows: z.number().int().min(3).max(16).optional().describe("Number of shows, default 8"),
         first_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("ISO date of the first show; default about five months out"),
-        draw: z.number().int().min(50).max(20000).optional().describe("How many people the artist usually draws; rooms are sized to it"),
+        draw: z.number().int().min(50).max(30000).optional().describe("How many people the artist usually draws; rooms are sized to it"),
       }),
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
     },

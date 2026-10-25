@@ -104,11 +104,15 @@ export type Stop = {
   fromHours: number;
   travelDays: number;
   dayOff: boolean;
+  /** The ferry the drive here takes (North Channel, Irish Sea, English Channel…), with its hours. */
+  ferry?: { name: string; hours: number };
   score: CityScore;
   /** The agent's one-line reason, checked like the pitch. */
   why?: string;
   rooms: Room[];
   roomId?: string;
+  /** Set when no room in the city can take the crowd and no city within reach had one either (rooms.ts roomCheck). */
+  noRoom?: string;
   openers: Opener[];
   openerId?: string;
   /** Where the artist's fans go after a show here (cross-domain: artist → bars). */
@@ -173,6 +177,41 @@ export type Guess = {
   unscored: number;
 };
 
+/**
+ * Where Qloo changed the tour: the same city rules re-run once on city size alone (no Qloo call, no model call),
+ * and the two tours compared city by city.
+ */
+export type QlooDiff = {
+  /** Cities on the tour that the size-only plan didn't pick, with Qloo's evidence: fan rank against size rank. */
+  added: { marketId: string; city: string; fanRank: number; popRank: number; affinity: number }[];
+  /** Cities the size-only plan would have played instead; fanRank is missing when Qloo found no fans there. */
+  dropped: { marketId: string; city: string; popRank: number; fanRank?: number }[];
+  /** Cities both plans pick. */
+  kept: number;
+  /** The size-only plan's cities, as market ids. */
+  population: string[];
+};
+
+/** A comparable artist the fan map was read through, when the artist's own heatmap was too thin to route. */
+export type ReadThrough = { id: string; name: string };
+
+/**
+ * How often the rules overrode the agent on one tour (H1). check_plan runs the rules over the agent's booking and
+ * sends what they object to back to it, at most twice; whatever is still broken after that, a rule fixes.
+ */
+export type AgentCheck = {
+  /** check_plan's objections to the agent's first booking, and to its last answer. */
+  before: number;
+  after: number;
+  /** Revision rounds the agent took (0–2). */
+  rounds: number;
+  /** Stops the agent changed itself in answer to the objections. */
+  revised: number;
+  /** Final stops where a rule still replaced the agent's city or room after its last answer. */
+  ruled: number;
+  stops: number;
+};
+
 export type Plan = {
   artist: Artist;
   region: RegionId;
@@ -185,6 +224,14 @@ export type Plan = {
   totalKm: number;
   audience: Audience;
   guess?: Guess;
+  /** The stops Qloo changed against a plan on city size alone. */
+  qlooDiff?: QlooDiff;
+  /** The crowd the rooms were sized to when the visitor left it at "Not sure" (from Qloo popularity, lib/draw.ts). */
+  assumedDraw?: number;
+  /** What the leg rule's swaps gave up and gained ("Dropping Austin for Tulsa saves 2,900 km and 4 dark days"). */
+  tradeOff?: string;
+  /** Set when the artist's own heatmap was thin and the map was read through these artists instead. */
+  readThrough?: ReadThrough[];
 };
 
 export type LogKind = "qloo" | "model" | "rule" | "web";
@@ -200,12 +247,14 @@ export type LogLine = {
   request?: string;
   ms?: number;
   failed?: boolean;
+  /** A revision round: what the agent proposed, what the rule objected, what the agent chose instead. */
+  swaps?: { proposed: string; objection: string; chose: string }[];
 };
 
 /** What a run cost: Qloo requests over the network and from the six-hour cache, model calls and tokens. */
 export type Usage = { qloo: number; qlooCached: number; modelCalls: number; tokensIn: number; tokensOut: number };
 
-export type Engine = { agent?: string; writer?: string; planned: "model" | "fixed"; usage?: Usage };
+export type Engine = { agent?: string; writer?: string; planned: "model" | "fixed"; usage?: Usage; check?: AgentCheck };
 
 export type TourStatus = "queued" | "running" | "done" | "failed";
 

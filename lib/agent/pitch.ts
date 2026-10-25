@@ -1,7 +1,7 @@
 import "server-only";
 import { MODELS, structured } from "../nebius";
 import type { Pitch, Plan } from "../types";
-import { checkNumbers, evidenceLines, templatePitch } from "./evidence";
+import { checkNumbers, evidenceLines, garbled, signed, templatePitch } from "./evidence";
 
 /**
  * One hold-request email per stop, written by Nemotron from that stop's evidence lines only, as strict JSON.
@@ -28,15 +28,23 @@ const SCHEMA = {
 const SYSTEM = `You write short hold-request emails from an independent artist's booking agent to a venue's talent buyer.
 Rules:
 - Use only the facts in that stop's evidence. Never invent ticket sales, streams, follower counts, prices, guarantees or past shows.
-- Lead with the date and the ask, then one or two sentences on why this room and city fit, citing Qloo's taste evidence in plain words (for example "ranks 2nd of 31 cities in the region for fan affinity").
-- Mention the support act (the same one plays the whole run) and, if useful, one thing these fans also love.
-- If the evidence asks for two nights, ask for both dates.
-- If the evidence says the room is small or large for the usual crowd, say so and ask the question the evidence suggests (a second night, a larger room, a reduced configuration). Never call a room a fit unless the evidence does.
-- 90 to 140 words, warm and professional, no exclamation marks, no emoji, no placeholders like [Name]. End with "Thanks," on its own line and no name after it.`;
+- Subject: "Hold request: <artist>, <city>, <date with weekday, month, day and year>".
+- Open with the ask: a 1st hold on the date (both dates for two nights), or a 2nd hold if it is taken.
+- Give the routing in one line, in and out, as the evidence's Routing line says.
+- Say what the room holds against the usual crowd, as the evidence words it. Never call a room a fit unless the evidence does; if it says the room is small or large, ask the question it suggests (a second night, a larger room, a reduced configuration).
+- One plain line of Qloo evidence, the city's rank (for example "Qloo ranks it #2 of 31 cities in the region for her fans"). Don't quote scores out of 100 for the city, and don't state ages as fact.
+- Name the support act (the same one plays the whole run); describe its score only as "ranked N for <artist>'s audience", never as shared affinity or overlap. Name a genre for the bill only if the evidence says both acts are filed under it.
+- 80 to 130 words, warm and professional, no exclamation marks, no emoji, no placeholders like [Name]. End with "Thanks," on its own line and no name after it.`;
 
-export async function writePitches(plan: Plan, useModel: boolean, draw?: number): Promise<{ pitches: Pitch[]; model?: string }> {
+/**
+ * The hold requests for a plan. A pitch the model wrote that reads as broken (a repeated run of words, a cut-off
+ * word: garbled in evidence.ts) is replaced by the template, as is a missing one. `sign` (the agent's name and
+ * agency, when the form gives one) goes under "Thanks," on every pitch, added here rather than by the model.
+ */
+export async function writePitches(plan: Plan, useModel: boolean, draw?: number, sign?: string): Promise<{ pitches: Pitch[]; model?: string }> {
   const evidence = plan.stops.map((s) => evidenceLines(plan, s, draw));
-  const fallback = () => plan.stops.map((s) => ({ ...templatePitch(plan, s), struck: [] }));
+  const template = (i: number) => ({ ...templatePitch(plan, plan.stops[i]!, { draw, sign }), struck: [] });
+  const fallback = () => plan.stops.map((_, i) => template(i));
   if (!useModel) return { pitches: fallback() };
   try {
     const { data, model } = await structured<{ pitches: { stop: number; subject: string; body: string }[] }>(MODELS.writer, {
@@ -49,12 +57,12 @@ export async function writePitches(plan: Plan, useModel: boolean, draw?: number)
         { role: "user", content: `Write one email per stop.\n\n${evidence.map((lines, i) => `Stop ${i + 1}\n${lines.map((l) => `- ${l}`).join("\n")}`).join("\n\n")}` },
       ],
     });
-    const pitches = plan.stops.map((s, i) => {
+    const pitches = plan.stops.map((_, i) => {
       const p = data.pitches.find((x) => x.stop === i + 1);
-      if (!p?.body?.trim()) return { ...templatePitch(plan, s), struck: [] };
+      if (!p?.body?.trim() || garbled(`${p.subject}\n${p.body}`).length) return template(i);
       const subject = checkNumbers(p.subject.trim(), evidence[i]!);
       const body = checkNumbers(p.body.trim(), evidence[i]!);
-      return { subject: subject.text, body: body.text, struck: [...subject.struck, ...body.struck] };
+      return { subject: subject.text, body: signed(body.text, sign), struck: [...subject.struck, ...body.struck] };
     });
     return { pitches, model };
   } catch (e) {

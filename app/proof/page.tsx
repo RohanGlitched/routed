@@ -4,7 +4,7 @@ import { controlPrompt } from "@/lib/agent/guess";
 import { RADIUS_BY_REGION } from "@/lib/geo/route";
 import { findMarket, marketId, unrankedLabel } from "@/lib/geo/markets";
 import { outsideRow, REAL_TOURS, realTourFor } from "@/lib/outside";
-import { shelfTours } from "@/lib/store";
+import { benchTours } from "@/lib/showcase";
 import type { TourRecord } from "@/lib/types";
 import { HeadToHead, H2H_ARTISTS as R_ALL } from "@/components/proof/HeadToHead";
 import s from "./proof.module.css";
@@ -68,7 +68,8 @@ function rows(tours: TourRecord[]): Row[] {
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 
 export default async function Proof() {
-  const tours = await shelfTours("bench").catch(() => [] as TourRecord[]);
+  // Cached and slimmed (lib/showcase.ts), so the page is built once per window instead of reading 20 tours per visit.
+  const tours = await benchTours().catch(() => [] as TourRecord[]);
   const r = rows(tours);
   const shows = r.reduce((n, x) => n + x.shows, 0);
   const outside = r.reduce((n, x) => n + x.outside, 0);

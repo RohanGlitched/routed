@@ -1,4 +1,5 @@
 import "server-only";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { countModel } from "./usage";
 
 /**
@@ -41,19 +42,50 @@ export function hasKey(): boolean {
   return Boolean(process.env.NEBIUS_API_KEY);
 }
 
+/**
+ * A run-wide deadline (L6): Vercel stops the function at 300 s, and with two passes over a two-model chain a hung
+ * provider used to cost 4 × 90 s before the fixed plan could take over. Every call made inside `withDeadline` gets
+ * at most the time left, and a call that times out is never retried (not on the next pass, not on the next model):
+ * the caller falls back at once, while there is still time to finish the tour.
+ */
+const deadlines = new AsyncLocalStorage<number>();
+
+export function withDeadline<T>(at: number, fn: () => T): T {
+  return deadlines.run(Math.min(at, deadlines.getStore() ?? Infinity), fn);
+}
+
+/** Milliseconds left before the current run's deadline (Infinity outside a run). */
+export const timeLeft = () => (deadlines.getStore() ?? Infinity) - Date.now();
+
+/** Below this there's no point starting a model call. */
+const MIN_CALL_MS = 1500;
+
+/** The model took too long, or the run's deadline came first. Never retried. */
+export class ModelTimeout extends Error {}
+
 async function once(model: string, body: Record<string, unknown>, timeoutMs: number): Promise<ChatResult> {
-  const r = await fetch(`${BASE}/chat/completions`, {
-    method: "POST",
-    headers: { authorization: `Bearer ${process.env.NEBIUS_API_KEY}`, "content-type": "application/json" },
-    body: JSON.stringify({ model, ...body }),
-    signal: AbortSignal.timeout(timeoutMs),
-  });
+  const left = timeLeft();
+  if (left < MIN_CALL_MS) throw new ModelTimeout("out of time");
+  let r: Response;
+  try {
+    r = await fetch(`${BASE}/chat/completions`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${process.env.NEBIUS_API_KEY}`, "content-type": "application/json" },
+      body: JSON.stringify({ model, ...body }),
+      signal: AbortSignal.timeout(Math.min(timeoutMs, left)),
+    });
+  } catch (e) {
+    if ((e as Error).name === "TimeoutError" || (e as Error).name === "AbortError") throw new ModelTimeout(`timed out after ${Math.round(Math.min(timeoutMs, left) / 1000)} s`);
+    throw e;
+  }
   if (!r.ok) {
     const text = (await r.text()).slice(0, 400);
     console.error(`[nebius] ${model} HTTP ${r.status}: ${text}`);
     throw new Error(`HTTP ${r.status}`);
   }
-  const j = (await r.json()) as { choices: { message: { content: string | null; tool_calls?: ToolCall[] }; finish_reason?: string }[]; usage?: ChatResult["usage"] };
+  const j = (await r.json().catch((e: Error) => {
+    throw e.name === "TimeoutError" || e.name === "AbortError" ? new ModelTimeout("timed out reading the reply") : e;
+  })) as { choices: { message: { content: string | null; tool_calls?: ToolCall[] }; finish_reason?: string }[]; usage?: ChatResult["usage"] };
   countModel(j.usage);
   const m = j.choices?.[0]?.message;
   if (!m) throw new Error("empty response");
@@ -65,15 +97,20 @@ export async function chat(chain: string[], body: { messages: Msg[]; tools?: Too
   if (!hasKey()) throw new Error("NEBIUS_API_KEY is not set");
   let last: unknown;
   // Two passes over the chain: Token Factory has answered 401 to every model for a few seconds at a time
-  // (measured Oct 5) and then recovered, so one short pause saves the run from the fixed plan.
+  // (measured Oct 5) and then recovered, so one short pause saves the run from the fixed plan. A timeout ends the
+  // call instead: a provider that hangs once tends to hang again, and the time is better spent on the fallback.
   for (let pass = 0; pass < 2; pass++) {
-    if (pass) await new Promise((r) => setTimeout(r, 1500));
+    if (pass) {
+      if (timeLeft() < 1500 + MIN_CALL_MS) break;
+      await new Promise((r) => setTimeout(r, 1500));
+    }
     for (const model of chain) {
       try {
         return await once(model, { temperature: 0.2, max_tokens: 2000, ...body }, timeoutMs);
       } catch (e) {
         last = e;
         console.error(`[nebius] ${model} failed: ${(e as Error).message}`);
+        if (e instanceof ModelTimeout) throw e;
       }
     }
   }
@@ -93,7 +130,8 @@ export function parseJson<T>(text: string): T {
 }
 
 /**
- * Structured output under a strict JSON schema. Retries the next model when one returns something unparsable.
+ * Structured output under a strict JSON schema. Retries the next model when one returns something unparsable
+ * (never after a timeout).
  * Reasoning is off unless asked for: with it on, Nemotron 3 Ultra spent the whole token budget thinking and was
  * cut off mid-JSON (finish "length", measured Oct 7); off, the same answer came back in about a second.
  */
@@ -114,6 +152,7 @@ export async function structured<T>(chain: string[], opts: { name: string; schem
       }
     } catch (e) {
       last = e;
+      if (e instanceof ModelTimeout) throw e;
     }
   }
   throw last instanceof Error ? last : new Error("No model returned valid JSON");

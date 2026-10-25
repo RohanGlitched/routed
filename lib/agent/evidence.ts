@@ -1,6 +1,7 @@
 import type { Opener, Plan, Room, Stop } from "../types";
 import { addDays } from "../geo/route";
 import { AGE_LABEL, topAge } from "./audience";
+import { sharedGenres } from "./rooms";
 
 /**
  * The facts a pitch may use, as plain lines. The model writes from these and nothing else; afterwards every
@@ -17,12 +18,47 @@ export function longDate(iso: string): string {
   return `${d.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })}, ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
 }
 
-/** How a room's known capacity compares with the usual crowd: 60% to 250% of the draw fits. */
+/** "2027-03-12" → "Friday, March 12, 2027": a buyer files holds by year. */
+export const fullDate = (iso: string) => `${longDate(iso)}, ${iso.slice(0, 4)}`;
+
+/**
+ * How a room's known capacity compares with the usual crowd, for booking: 60% to 250% of the draw can be booked
+ * for one night. The word "fits" in copy is narrower (snugFit, sizeNote).
+ */
 export function fit(r: Room, draw?: number): "fits" | "too small" | "too big" | "unknown" {
   if (!draw || !r.capacity) return "unknown";
   if (r.capacity.value < draw * 0.6) return "too small";
   if (r.capacity.value > draw * 2.5) return "too big";
   return "fits";
+}
+
+/** A page or a pitch says a room "fits" only from 85% to 130% of the usual crowd ("the 1,270-capacity room fits the
+ *  usual crowd of about 1,500" read as false to a booker). */
+export const SNUG = { min: 0.85, max: 1.3 };
+export const snugFit = (capacity: number, draw: number) => capacity >= draw * SNUG.min && capacity <= draw * SNUG.max;
+
+const n0 = (v: number) => v.toLocaleString("en-US");
+const NIGHTS_WORD = ["", "One night", "Two nights", "Three nights", "Four nights"];
+
+/**
+ * The day sheet's sentence on a room's size against the usual crowd, by rule. "Fits" only at 85–130% for one
+ * night; "cover" only when the nights together hold the crowd; otherwise what the room holds of it. `kind` says
+ * how the page shows it: "fits" and "covers" as a plain note, "short" and "large" as a warning.
+ */
+export function sizeNote(capacity: number, draw: number, nights = 1): { text: string; kind: "fits" | "covers" | "short" | "large" } {
+  const crowd = n0(draw);
+  if (nights > 1) {
+    const all = capacity * nights;
+    const word = NIGHTS_WORD[nights] ?? `${nights} nights`;
+    return all >= draw
+      ? { text: `${word} cover a usual crowd of ${crowd} (${n0(all)} across ${nights === 2 ? "both" : "them"}): no room these fans go to here was confirmed to fit it in one.`, kind: "covers" }
+      : { text: `${word} hold ${n0(all)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit it in one.`, kind: "short" };
+  }
+  if (snugFit(capacity, draw)) return { text: `Fits a usual crowd of ${crowd}.`, kind: "fits" };
+  if (capacity < draw * 0.6) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a second night or a bigger room.`, kind: "short" };
+  if (capacity < draw) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd} in one night.`, kind: "short" };
+  if (capacity > draw * 2.5) return { text: `Holds ${n0(capacity)} against a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a reduced configuration.`, kind: "large" };
+  return { text: `Room for ${n0(capacity)} against a usual crowd of ${crowd}.`, kind: "large" };
 }
 
 export const room = (s: Stop): Room | undefined => s.rooms.find((r) => r.id === s.roomId) ?? s.rooms[0];
@@ -31,6 +67,40 @@ export const opener = (s: Stop): Opener | undefined => s.openers.find((o) => o.i
 /** Every night of a stop, as ISO dates: a two-night stand on 2027-05-07 plays 2027-05-07 and 2027-05-08. */
 export const showNights = (s: Pick<Stop, "date" | "nights">): string[] => Array.from({ length: Math.max(1, s.nights ?? 1) }, (_, i) => addDays(s.date, i));
 
+/** The stops either side of this one on the run, for the routing line a buyer looks for. */
+function neighbours(plan: Plan, s: Stop): { prev?: Stop; next?: Stop } {
+  const i = plan.stops.findIndex((x) => x.marketId === s.marketId && x.date === s.date);
+  return i < 0 ? {} : { prev: plan.stops[i - 1], next: plan.stops[i + 1] };
+}
+
+/** "in from Knoxville (Sunday, May 9), out to Santa Fe (Friday, May 14)"; the first and last dates say so. */
+export function routingWords(plan: Plan, s: Stop): string {
+  const { prev, next } = neighbours(plan, s);
+  const inn = prev ? `in from ${prev.city} (${longDate(showNights(prev).at(-1)!)})` : "the opening night of the run";
+  const out = next ? `out to ${next.city} (${longDate(next.date)})` : "the last night of the run";
+  return `${inn}, ${out}`;
+}
+
+/** What a room's size against the crowd lets the pitch say: "fits" only at 85–130% for one night. */
+function sizeEvidence(r: Room, draw: number | undefined, nights: number): string {
+  if (!r.capacity || !draw) return "";
+  const cap = r.capacity.value;
+  const f = fit(r, draw);
+  if (nights > 1) {
+    const all = cap * nights;
+    return all >= draw
+      ? ` One night is small for the usual crowd of about ${draw}; ${nights === 2 ? "two" : nights} nights hold ${all}, which covers it, so ask for both nights and don't call the room a fit for one.`
+      : ` One night is small for the usual crowd of about ${draw}; ${nights === 2 ? "two" : nights} nights hold ${all}, still short of it, so ask for both nights, say plainly that they hold ${all} of about ${draw}, and don't call the room a fit.`;
+  }
+  if (f === "too small") return ` That is small for the usual crowd of about ${draw}: ask whether a second night or a larger room is possible, and don't call the room a fit.`;
+  if (f === "too big") return ` That is large for the usual crowd of about ${draw}: ask about a reduced configuration, and don't call the room a fit.`;
+  if (snugFit(cap, draw)) return ` That fits the usual crowd of about ${draw}.`;
+  return cap < draw ? ` That holds ${cap} of the usual crowd of about ${draw} in one night: say so plainly, and don't call the room a fit.` : ` That is more than the usual crowd of about ${draw}: say it holds ${cap} against a usual crowd of about ${draw}, and don't call the room a fit.`;
+}
+
+/** The genres both acts are filed under among the tastes their audiences share (nothing off-genre in a pitch). */
+export const billGenres = (plan: Plan, o: Opener) => sharedGenres(o.shared, plan.artist.genreKeys ?? plan.artist.genres, o.genres);
+
 export function evidenceLines(plan: Plan, s: Stop, draw?: number): string[] {
   const r = room(s);
   const o = opener(s);
@@ -38,23 +108,26 @@ export function evidenceLines(plan: Plan, s: Stop, draw?: number): string[] {
   const lines = [
     `Artist: ${plan.artist.name}${plan.artist.genres.length ? ` (${plan.artist.genres.slice(0, 3).join(", ")})` : ""}`,
     (s.nights ?? 1) > 1 ? `Dates asked for: ${showNights(s).length === 2 ? "two" : showNights(s).length} nights, ${showNights(s).map((d) => `${longDate(d)} (${d})`).join(" and ")}` : `Date asked for: ${longDate(s.date)} (${s.date})`,
+    `Hold asked for: a 1st hold on ${(s.nights ?? 1) > 1 ? "both dates" : "the date"}, or a 2nd hold if it is taken. Write the date with its year, ${s.date.slice(0, 4)}.`,
+    `Routing: ${routingWords(plan, s)}.`,
     `City: ${s.label}. Of the ${plan.cities.length} cities where Qloo found ${plan.artist.name} fans in this region, ${s.city} ranks ${s.score.rank} for fan affinity.`,
-    `Qloo fan-affinity score for ${s.city}: ${pct(s.score.affinity)} out of 100${s.score.popularity !== undefined ? `; popularity percentile ${pct(s.score.popularity)}` : ""}.`,
+    `Qloo fan-affinity score for ${s.city}: ${pct(s.score.affinity)} out of 100${s.score.popularity !== undefined ? `; popularity percentile ${pct(s.score.popularity)}` : ""} (scaled within this one map, so several cities can score 100: cite the rank, not this score).`,
   ];
   if (r) {
     lines.push(`Room: ${r.name}${r.address ? `, ${r.address}` : ""}.`);
     if (r.affinity !== undefined) lines.push(`Qloo affinity between ${plan.artist.name} fans and ${r.name}: ${pct(r.affinity)} out of 100.`);
-    if (r.capacity) {
-      const f = draw ? fit(r, draw) : "unknown";
-      lines.push(`${r.name} capacity: ${r.capacity.value} (from ${r.capacity.source}).${(s.nights ?? 1) > 1 && f === "too small" ? ` One night is small for the usual crowd of about ${draw}, so ask for two nights; don't call the room a fit for one.` : f === "too small" ? ` That is small for the usual crowd of about ${draw}: ask whether a second night or a larger room is possible, and don't call the room a fit.` : f === "too big" ? ` That is large for the usual crowd of about ${draw}: ask about a reduced configuration, and don't call the room a fit.` : f === "fits" ? ` That fits the usual crowd of about ${draw}.` : ""}`);
-    } else if (draw) lines.push(`${r.name}'s capacity isn't confirmed; the usual crowd is about ${draw}. Ask the room what it holds.`);
+    if (r.capacity) lines.push(`${r.name} capacity: ${r.capacity.value} (from ${r.capacity.source}).${sizeEvidence(r, draw, s.nights ?? 1)}`);
+    else if (draw) lines.push(`${r.name}'s capacity isn't confirmed; the usual crowd is about ${draw}. Ask the room what it holds.`);
   }
   if (s.local?.hot && r) {
     const where = s.local.hot.name ? `${s.local.hot.name}${s.local.hot.trait ? `, ${s.local.hot.trait.toLowerCase()}` : ""}` : "one neighbourhood";
     const km = s.local.roomKm ?? 0;
     lines.push(km <= 1.5 ? `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}, and ${r.name} sits in it.` : s.local.inHot ? `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}; ${r.name} sits on one of their strongest tiles, ${km} km from it.` : `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}; ${r.name} is ${km} km from it.`);
   }
-  if (o) lines.push(`Support act for the whole run (travelling with the tour): ${o.name}${o.affinity !== undefined ? `, Qloo audience affinity ${pct(o.affinity)} out of 100 with ${plan.artist.name}` : ""}${o.shared.length ? `; shared tastes: ${o.shared.slice(0, 3).join(", ")}` : ""}.`);
+  if (o) {
+    const both = billGenres(plan, o);
+    lines.push(`Support act for the whole run (travelling with the tour): ${o.name}${o.affinity !== undefined ? `. Qloo ranks ${o.name} ${pct(o.affinity)} out of 100 for ${plan.artist.name}'s audience (a match score: write "ranked ${pct(o.affinity)} for ${plan.artist.name}'s audience", never "shares an affinity")` : ""}${both.length ? `; both acts are filed under ${both.slice(0, 2).join(" and ")}` : ""}.`);
+  }
   if (top) lines.push(`Audience: Qloo says ${plan.artist.name} fans over-index most at ages ${AGE_LABEL[top.bucket]}.`);
   const t = plan.audience.taste;
   if (t?.music?.length) lines.push(`The sound these fans love (Qloo taste analysis): ${t.music.slice(0, 4).map((x) => x.name).join(", ")}.`);
@@ -106,6 +179,46 @@ export function checkNumbers(text: string, evidence: string[]): { text: string; 
   return { text: out, struck };
 }
 
+/** Hyphenated words that really do have a one-letter part. */
+const ONE_LETTER_OK = /^(e-mail|x-ray|t-shirts?|a-list|b-side|k-pop|j-pop|j-rock|u-turn|g-funk|r-rated|e-commerce|e-ticket|p-funk|d-beat)$/i;
+const STOP_WORDS = new Set(["the", "a", "an", "of", "and", "to", "in", "on", "for", "at", "with", "is", "it", "this", "that", "be", "as", "by", "or"]);
+
+/**
+ * What reads as broken in model-written text, by rule: a run of three or more words repeated within a few words
+ * ("#1 of 409 cities with a 100 fan-a cities with a 100 affinity score"), a word cut off at a hyphen ("fan-a"), the
+ * same word twice in a row, doubled punctuation, a placeholder. Returns what was found; empty when the text is clean.
+ * Each line is read on its own, so a subject and a body that name the same date don't count as a repeat.
+ */
+export function garbled(text: string): string[] {
+  const lines = unstrike(text).split("\n");
+  if (lines.length > 1) return [...new Set(lines.flatMap((l) => garbled(l)))];
+  const t = lines[0]!;
+  const found: string[] = [];
+  const toks = t.toLowerCase().replace(/[^\p{L}\p{N}#'’\s-]/gu, " ").split(/\s+/).filter(Boolean);
+  for (let n = 4; n >= 3; n--) {
+    for (let i = 0; i + n <= toks.length; i++) {
+      const gram = toks.slice(i, i + n);
+      if (gram.every((w) => STOP_WORDS.has(w))) continue;
+      const key = gram.join(" ");
+      // The same words again with at most three words between: a sentence that restarted mid-way. (A date or a
+      // room named twice in one email is normal, so farther repeats don't count.)
+      for (let j = i + n; j <= Math.min(toks.length - n, i + n + 3); j++) {
+        if (toks.slice(j, j + n).join(" ") === key) {
+          if (!found.some((f) => f.includes(key))) found.push(`repeated "${key}"`);
+          break;
+        }
+      }
+    }
+    if (found.length) break;
+  }
+  for (const m of t.matchAll(/\b[\p{L}]{2,}-[\p{Ll}]\b(?!-)/gu)) if (!ONE_LETTER_OK.test(m[0])) found.push(`broken word "${m[0]}"`);
+  // Lower case only: "Duran Duran" and "Talk Talk" are names.
+  for (const m of t.matchAll(/(?<![\p{L}])(\p{Ll}{2,})\s+\1(?![\p{L}])/gu)) if (!/^(that|had|is|very|so|no)$/.test(m[1]!)) found.push(`doubled "${m[0]}"`);
+  if (/[,;:]\s*[,;:]|(?<!\.)\.\.(?!\.)|\s[,.;:](?=\s|$)/.test(t)) found.push("broken punctuation");
+  if (/\[[A-Z][^\]]{0,30}\]|\{\{|\}\}|<[a-z]+>/.test(t)) found.push("a placeholder");
+  return found;
+}
+
 /** Checks a stored pitch again against its stop's evidence as the evidence reads now. No model call. */
 export function recheckPitch(pitch: { subject: string; body: string }, evidence: string[]): { subject: string; body: string; struck: string[] } {
   const subject = checkNumbers(pitch.subject, evidence);
@@ -134,38 +247,77 @@ export function whyEvidence(plan: Plan, s: Stop, draw?: number): string[] {
  * room holds or how well it matches. Rebuilt from the stop as it stands, so a capacity measured later is the one shown.
  */
 export function ruleWhy(artist: string, s: Pick<Stop, "city" | "score" | "nights">, r: Room): string {
-  return `${s.city} is ${artist}'s #${s.score.rank} city on Qloo${r.capacity ? `, and ${r.name} holds ${r.capacity.value.toLocaleString("en-US")}${s.nights === 2 ? " a night over two nights" : ""}` : `, and ${r.name} matches these fans at ${Math.round((r.affinity ?? 0) * 100)}`}.`;
+  return `${s.city} is ${artist}'s #${s.score.rank} city on Qloo${r.capacity ? `, and ${r.name} holds ${r.capacity.value.toLocaleString("en-US")}${s.nights === 2 ? " a night over two nights" : ""}` : r.affinity !== undefined ? `, and ${r.name} matches these fans at ${Math.round(r.affinity * 100)}` : `, and ${r.name} is a room these fans go to`}.`;
 }
 
-const RULE_WHY = /^.+ is .+'s #\d+ city on Qloo, and .+ (holds [~\d,]+( a night over two nights)?|matches these fans at [~\d]+)\.$/;
+const RULE_WHY = /^.+ is .+'s #\d+ city on Qloo, and .+ (holds [~\d,]+( a night over two nights)?|matches these fans at [~\d]+|is a room these fans go to)\.$/;
 
-/** A stop's "why", checked: a rule's sentence is rebuilt from the stop first; the model's is checked as written. */
-export function checkWhy(plan: Plan, s: Stop, draw?: number): string | undefined {
+/**
+ * A stop's "why", checked. By default every stop with a room gets the rule's sentence, rebuilt from the stop as it
+ * stands, so the voice is one voice on every tour (the model's lines on older tours read "Leipzig ranks #12
+ * heatmap and …"). With `keepModel`, the model's sentence is kept when it is clean (no broken fragments) and not a
+ * rule's; its figures are checked as written.
+ */
+export function checkWhy(plan: Plan, s: Stop, draw?: number, opts: { keepModel?: boolean } = {}): string | undefined {
   if (!s.why) return s.why;
   const r = room(s);
-  const text = r && RULE_WHY.test(unstrike(s.why)) && unstrike(s.why).includes(r.name) ? ruleWhy(plan.artist.name, s, r) : s.why;
+  const isRule = RULE_WHY.test(unstrike(s.why)) && Boolean(r && unstrike(s.why).includes(r.name));
+  const text = r && (!opts.keepModel || isRule || garbled(s.why).length) ? ruleWhy(plan.artist.name, s, r) : s.why;
   return checkNumbers(text, whyEvidence(plan, s, draw)).text;
 }
 
-/** A plain pitch from the evidence alone, for when the model is off or out of budget. */
-export function templatePitch(plan: Plan, s: Stop): { subject: string; body: string } {
+/** A pitch signed: the signature on the line under "Thanks," (added when the pitch has no sign-off); unchanged
+ *  without one. */
+export function signed(body: string, sign?: string): string {
+  const name = sign?.trim();
+  if (!name) return body;
+  const text = body.trimEnd();
+  if (text.endsWith(name)) return text;
+  return /(^|\n)thanks,?$/i.test(text) ? `${text}\n${name}` : `${text}\n\nThanks,\n${name}`;
+}
+
+/** The room and the crowd in a pitch's words: "fits" only at 85–130% for one night, "covers" only when the nights hold it. */
+function sizeAsk(r: Room, draw: number | undefined, nights: number): string {
+  if (!r.capacity || !draw) return draw ? `We usually draw about ${n0(draw)}; could you confirm what the room holds?` : "";
+  const cap = n0(r.capacity.value);
+  const crowd = n0(draw);
+  if (nights > 1) {
+    const all = r.capacity.value * nights;
+    return all >= draw ? `The room holds ${cap} and we usually draw about ${crowd}, so we're asking for both nights (${n0(all)} across the two).` : `The room holds ${cap} and we usually draw about ${crowd}; both nights together hold ${n0(all)} of that, so we're asking for both.`;
+  }
+  if (snugFit(r.capacity.value, draw)) return `The room's ${cap} fits our usual crowd of about ${crowd}.`;
+  if (r.capacity.value < draw * 0.6) return `The room holds ${cap} against our usual crowd of about ${crowd}: would a second night or a larger room be possible?`;
+  if (r.capacity.value > draw * 2.5) return `The room holds ${cap} against our usual crowd of about ${crowd}: could we talk about a reduced configuration?`;
+  return r.capacity.value < draw ? `The room holds ${cap} of our usual crowd of about ${crowd}.` : `The room holds ${cap} against our usual crowd of about ${crowd}.`;
+}
+
+/**
+ * A plain pitch from the evidence alone, for when the model is off, out of budget, or wrote something broken: the
+ * date with its year and the hold asked for, the routing in and out, the room against the crowd, one plain line
+ * of Qloo evidence, the support act, and an optional signature.
+ */
+export function templatePitch(plan: Plan, s: Stop, opts: { draw?: number; sign?: string } = {}): { subject: string; body: string } {
   const r = room(s);
   const o = opener(s);
-  const top = topAge(plan.audience.age);
-  const day = longDate(s.date);
+  const nights = s.nights ?? 1;
+  const days = showNights(s);
+  const when = nights > 1 ? `${longDate(days[0]!)} and ${fullDate(days.at(-1)!)}` : fullDate(s.date);
+  const both = o ? billGenres(plan, o) : [];
+  const size = r ? sizeAsk(r, opts.draw, nights) : "";
   const body = [
     `Hi${r ? ` ${r.name} team` : ""},`,
     "",
-    `I'm routing ${plan.artist.name} through ${s.city} and would love a hold on ${(s.nights ?? 1) > 1 ? `two nights from ${day}` : day}${r ? ` at ${r.name}` : ""}.`,
+    `Could we place a 1st hold for ${plan.artist.name} on ${when}${r ? ` at ${r.name}` : ""}? If ${nights > 1 ? "those dates are" : "the date is"} taken, a 2nd hold works while we confirm the routing.`,
     "",
-    `Why ${s.city}: on Qloo's taste graph, ${s.city} ranks ${s.score.rank} of ${plan.cities.length} cities in the region for ${plan.artist.name} fan affinity (score ${pct(s.score.affinity)} out of 100).` +
-      (r?.affinity !== undefined ? ` Their fans' affinity with ${r.name} itself scores ${pct(r.affinity)}.` : ""),
-    ...(top ? [`The audience over-indexes at ages ${AGE_LABEL[top.bucket]}.`] : []),
-    ...(o ? [`${o.name} is the support act on every date${o.shared.length ? "" : "."}${o.shared.length ? `; the two audiences share a taste for ${o.shared.slice(0, 2).join(" and ").toLowerCase()}.` : ""}`] : []),
+    `Routing: ${routingWords(plan, s)}.`,
+    ...(size ? [size] : []),
+    `Why ${s.city}: Qloo ranks it #${s.score.rank} of ${plan.cities.length} cities in the region for ${plan.artist.name} fans.`,
+    ...(o ? [`${o.name} supports on every date${both.length ? `; both acts are filed under ${both.slice(0, 2).join(" and ").toLowerCase()}` : ""}.`] : []),
     "",
     "Could you let me know about availability and your offer terms?",
     "",
     "Thanks,",
+    ...(opts.sign?.trim() ? [opts.sign.trim()] : []),
   ].join("\n");
-  return { subject: `Hold request: ${plan.artist.name}, ${day}`, body };
+  return { subject: `Hold request: ${plan.artist.name}, ${s.city}, ${when}`, body };
 }

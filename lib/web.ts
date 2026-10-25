@@ -1,5 +1,5 @@
 import "server-only";
-import { mergeCapacities, NOT_A_SOURCE, pickCapacity, sameVenue } from "./agent/capacity";
+import { capacityOverride, mergeCapacities, NOT_A_SOURCE, pickCapacity, sameVenue, sourceOk } from "./agent/capacity";
 import { storage } from "./storage";
 import { wikidataCapacity } from "./wikidata";
 
@@ -40,12 +40,17 @@ type Cap = { value: number; source: string; quote: string };
  * stored for a room wins, so two tours never show the same room with two capacities (Wonder Ballroom once read
  * 778 on one tour and 3,000 on another). The index was started again on Oct 15 when the page reader got
  * stricter; of the older index (answers stored by name and city) only Wikidata answers re-checked against the
- * room are still read.
+ * room are still read. On Oct 25 the reader learned to refuse meeting and wedding pages, other venues' pages and
+ * sub-rooms' numbers, so it moved to a new index again; the Oct 15 index is still read, but each answer only once
+ * it passes today's source rules for its room (lib/agent/capacity.ts sourceOk). A hand-checked capacity
+ * (capacityOverride) wins over everything.
  */
 const memo = new Map<string, Cap | null>();
-/** Bumped whenever the page reader changes, so answers read by an older reader are never trusted again. */
-export const READER_VERSION = 3;
+/** Bumped whenever the page reader changes, so answers read by an older reader are never trusted unchecked. */
+export const READER_VERSION = 4;
 const INDEX = `capacity/rooms-v${READER_VERSION}.json`;
+/** The previous reader's index, re-checked room by room. */
+const PREVIOUS_INDEX = `capacity/rooms-v${READER_VERSION - 1}.json`;
 const LEGACY_INDEX = "capacity/index.json";
 const legacy = new Map<string, Cap>();
 let legacyLoaded: Promise<void> | null = null;
@@ -59,9 +64,10 @@ const useBlob = () => storage() !== null;
 
 /** A stored answer from a source Routed no longer trusts (social posts, an article about a planned building). */
 const distrusted = (c: Cap | null | undefined) => Boolean(c && (NOT_A_SOURCE.test(c.source) || /planned|proposed|new-venue|will-open/i.test(c.source)));
-/** An older Wikidata answer, re-checked against the venue: its quote is "Label: description; maximum capacity …". */
+/** An older answer, re-checked against the venue: the page rules (no meeting page, no other venue's page or
+ *  number), and for Wikidata the item ("Label: description; maximum capacity …") must still be this room. */
 function stillTrusted(c: Cap, venue: string): boolean {
-  if (distrusted(c)) return false;
+  if (distrusted(c) || !sourceOk(venue, c)) return false;
   if (!c.source.includes("wikidata.org")) return true;
   const head = c.quote.split("; maximum capacity")[0] ?? "";
   const [label, ...rest] = head.split(": ");
@@ -72,8 +78,10 @@ function load(): Promise<void> {
   if (!useBlob()) return Promise.resolve();
   legacyLoaded ??= (async () => {
     const r = await storage()!.read(LEGACY_INDEX).catch(() => null);
-    if (!r) return;
-    for (const [k, v] of Object.entries(JSON.parse(r.text) as Record<string, Cap | null>)) if (v && v.source.includes("wikidata.org")) legacy.set(k, v);
+    if (r) for (const [k, v] of Object.entries(JSON.parse(r.text) as Record<string, Cap | null>)) if (v && v.source.includes("wikidata.org")) legacy.set(k, v);
+    // The previous reader's answers, keyed by room id like this one's; each is re-checked when its room is asked for.
+    const p = await storage()!.read(PREVIOUS_INDEX).catch(() => null);
+    if (p) for (const [k, v] of Object.entries(JSON.parse(p.text) as Record<string, Cap | null>)) if (v) legacy.set(k, v);
   })().catch(() => {});
   if (loaded && Date.now() - loadedAt < RELOAD_MS) return loaded;
   loadedAt = Date.now();
@@ -139,7 +147,12 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
   const near = room.lat !== undefined && room.lon !== undefined ? { lat: room.lat, lon: room.lon } : undefined;
   const key = `id:${room.id}`;
   const old = `${venue}|${city.split(",")[0]!.trim()}`.toLowerCase();
+  // A capacity checked by hand wins over any stored or looked-up answer (Crystal Ballroom read 800 off a meetings page).
+  const fixed = capacityOverride(venue, city);
+  if (fixed) return fixed;
   await load();
+  const had = memo.get(key);
+  if (had && !sourceOk(venue, had)) memo.delete(key);
   if (memo.has(key)) return memo.get(key)!;
   const kept = legacy.get(key) ?? legacy.get(old);
   if (kept && stillTrusted(kept, venue)) {

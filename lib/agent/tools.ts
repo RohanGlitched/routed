@@ -1,7 +1,7 @@
 import "server-only";
 import { marketById, type Market } from "../geo/markets";
 import { CHAINS } from "../chains";
-import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isRoom, nearCity, openerProblem, orchestraHallFor, placeTagIds, venueTier } from "./rooms";
+import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isMember, isRoom, nearCity, openerProblem, orchestraHallFor, placeTagIds, sharesName, venueTier } from "./rooms";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
 import { describeRequest, recommend, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
@@ -125,6 +125,34 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
     return openers;
   } catch (e) {
     log({ kind: "qloo", text: `Who could open in ${m.name}?`, result: (e as Error).message, failed: true });
+    return [];
+  }
+}
+
+/**
+ * "Sounds like" (H10): artists whose audience Qloo matches to this one's and who are at least as well known, so
+ * their fans leave a denser heatmap. For an act too new for its own map, the tour is read through two or three
+ * of them sent together. A solo member or side project of the artist isn't a comparable.
+ */
+export async function lookUpSoundsLike(artist: Artist, log: Log, take = 3): Promise<{ id: string; name: string }[]> {
+  try {
+    const [r, ms] = await timed(() =>
+      recommend({
+        type: "urn:entity:artist",
+        signals: [artist.id],
+        exclude: [artist.id],
+        take: 15,
+        ...(artist.popularity !== undefined ? { extra: { "filter.popularity.min": Math.min(0.99, artist.popularity).toFixed(3) } } : {}),
+      }),
+    );
+    const like = r.entities
+      .filter((e) => e.id !== artist.id && !sharesName(artist.name, e.name) && !isMember(artist.name, e))
+      .slice(0, take)
+      .map((e) => ({ id: e.id, name: cleanName(e.name) }));
+    log({ kind: "qloo", text: `Which better-known artists does Qloo match to ${artist.name}'s audience?`, result: like.length ? like.map((x) => x.name).join(", ") : "None came back.", request: describeRequest(r.request), ms });
+    return like;
+  } catch (e) {
+    log({ kind: "qloo", text: `Which better-known artists does Qloo match to ${artist.name}'s audience?`, result: (e as Error).message, failed: true });
     return [];
   }
 }

@@ -37,6 +37,48 @@
 .actions button:disabled { opacity: 0.75; cursor: progress; }
 .hint { margin: 0; font-size: 14px; color: var(--mute); }
 .error { grid-column: 1 / -1; margin: 0; padding: 12px 14px; border-left: 4px solid var(--fire); background: #fff; font-size: 15px; }
+.drawNote { grid-column: 1 / -1; margin: -6px 0 0; font-size: 13px; color: var(--mute); max-width: 40em; }
+
+/* The allowance is spent: the stored tour, offered plainly. */
+.stored { grid-column: 1 / -1; display: grid; gap: 10px; padding: 14px 16px; border-left: 4px solid var(--blue); background: var(--panel); font-size: 15px; }
+.stored p { margin: 0; }
+.storedLink { justify-self: start; font-weight: 700; color: var(--ink); text-decoration-color: var(--fire); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+/* "Assumed about 1,500; change it", on a tour whose crowd was left at "Not sure". */
+.assumed { margin: 0; font-size: 15px; color: var(--ink-2); }
+.assumed b { color: var(--ink); }
+.assumed a { font-weight: 700; color: var(--ink); text-decoration-color: var(--fire); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+/* Phones: a "Route a tour" bar until the form is on screen. */
+.sticky { display: none; }
+@media (max-width: 860px) {
+  .sticky {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--stock) 70%, rgba(251, 251, 249, 0));
+    transform: translateY(110%);
+    transition: transform 200ms ease;
+    pointer-events: none;
+  }
+  .sticky[data-show] { transform: none; pointer-events: auto; }
+  .sticky button {
+    width: 100%;
+    height: 52px;
+    border: 0;
+    border-radius: 4px;
+    background: var(--fire);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    box-shadow: 3px 3px 0 var(--blue);
+    cursor: pointer;
+  }
+}
 
 @media (max-width: 560px) {
   .form { grid-template-columns: 1fr 1fr; }

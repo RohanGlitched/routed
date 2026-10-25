@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { timingSafeEqual } from "node:crypto";
 import { shelve, type Shelf } from "@/lib/store";
 import { TOUR_ID } from "@/lib/types";
@@ -14,5 +15,6 @@ export async function POST(req: Request) {
   const shelf = body?.shelf as Shelf;
   if (!body?.id || !TOUR_ID.test(body.id) || (shelf !== "showcase" && shelf !== "bench")) return NextResponse.json({ error: "Send {id, shelf: showcase|bench}." }, { status: 400 });
   await shelve(body.id, shelf, !body.off);
+  revalidateTag("tours");
   return NextResponse.json({ ok: true });
 }

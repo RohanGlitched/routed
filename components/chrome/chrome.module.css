@@ -1,8 +1,10 @@
 .header { position: relative; z-index: 2; }
 .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 76px; }
-.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--wood); font-weight: 900; font-size: 30px; letter-spacing: 0.01em; }
+.logo { display: inline-flex; flex: none; align-items: center; gap: 10px; text-decoration: none; font-family: var(--wood); font-weight: 900; font-size: 30px; letter-spacing: 0.01em; }
+.logo svg { flex: none; }
 .nav { display: flex; gap: 28px; font-weight: 500; font-size: 15px; }
-.nav a { text-decoration: none; color: var(--ink-2); padding: 12px 0; }
+.nav a { text-decoration: none; color: var(--ink-2); padding: 12px 0; white-space: nowrap; }
+.short { display: none; }
 .nav a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--fire); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 
 .footer { margin-top: 96px; border-top: 3px solid var(--ink); }
@@ -14,7 +16,13 @@
 .footNav a { color: var(--ink-2); }
 
 @media (max-width: 760px) {
-  .nav { gap: 16px; font-size: 14px; }
-  .nav a:first-child { display: none; }
+  .bar { height: 64px; gap: 12px; }
+  .logo { font-size: 26px; gap: 8px; }
+  .nav { gap: 16px; font-size: 15px; }
+  .long { display: none; }
+  .short { display: inline; }
   .foot { grid-template-columns: 1fr; gap: 16px; }
+}
+@media (max-width: 360px) {
+  .nav { gap: 12px; font-size: 14px; }
 }

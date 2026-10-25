@@ -8,7 +8,7 @@ import type { LogLine, Room, TourRecord, Usage } from "../types";
 import { sameVenue } from "./capacity";
 import { checkWhy, fit, ruleWhy } from "./evidence";
 import { writePitches } from "./pitch";
-import { candidatesBySize, chooseRoom, orchestraHallFor, reducedHouse, roomNameOk, twoNights } from "./rooms";
+import { candidatesBySize, chooseRoom, isPark, orchestraHallFor, reducedHouse, roomNameOk, twoNights } from "./rooms";
 
 /**
  * Re-sizes a stored tour under the current room rules, without asking Qloo for anything new (Playbook N5: re-score
@@ -38,7 +38,7 @@ export async function resizeTour(rec: TourRecord): Promise<{ rec: TourRecord; ch
 
     await Promise.all(
       plan.stops.map(async (s) => {
-        const ok = (r: Room) => roomNameOk(r.name, draw) && !orchestraHallFor(r.name, genres);
+        const ok = (r: Room) => roomNameOk(r.name, draw) && !orchestraHallFor(r.name, genres) && !isPark(r.name, r.tags);
         const pool = s.rooms.filter(ok);
         if (!pool.length) return;
         // Every room is measured again from the shared index (one number per room, from the current reader), and

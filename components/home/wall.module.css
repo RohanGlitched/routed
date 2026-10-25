@@ -1,0 +1,22 @@
+.wall { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 28px; }
+.link { display: grid; gap: 10px; text-decoration: none; font-size: 14px; color: var(--ink-2); }
+.sheet { aspect-ratio: 540 / 800; box-shadow: 0 18px 30px -18px rgba(22, 21, 27, 0.5); transition: transform 200ms ease; background: var(--poster-stock); }
+.sheet > svg { display: block; }
+.link:hover .sheet { transform: translateY(-4px) rotate(-0.6deg); }
+.blank {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 12px;
+  font-family: var(--wood);
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-align: center;
+  color: #e3e1da;
+}
+
+@media (max-width: 560px) {
+  .wall { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+}

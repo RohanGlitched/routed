@@ -107,10 +107,15 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
   return true;
 }
 
+/** A company that performs somewhere (New York City Ballet), not the building it performs in. */
+const COMPANY_NAME = /\b(ballet|opera company|dance company|dance theat(re|er) of|symphony orchestra|philharmonic orchestra|chamber orchestra|choir|chorus|repertory company)\b/i;
+const BUILDING_WORD = /\b(theat(re|er)|hall|house|cent(er|re)|auditorium|stage|arena|ballroom|pavilion)\b/i;
+
 /** The rules a room's name alone can settle (so they apply to stored tours too): fairs, housing, galleries for
  *  big crowds, bars and cafés, stadiums. */
 export function roomNameOk(name: string, draw?: number): boolean {
   if (NOT_A_ROOM_NAME.test(name) || NOT_A_ROOM_EVER.test(name) || isPark(name)) return false;
+  if (COMPANY_NAME.test(name) && !BUILDING_WORD.test(name)) return false;
   if (draw && draw >= 700 && SMALL_ART_ROOM.test(name) && !/performing arts/i.test(name)) return false;
   if (draw && draw >= BIG_ROOM_DRAW && SMALL_NAME.test(name)) return false;
   if (draw && draw >= 1000 && BAR_NAME.test(name)) return false;

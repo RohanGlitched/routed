@@ -260,3 +260,10 @@ test("the day sheet's warning style is only for misfits: never a room at 60–25
   assert.equal(unmeasuredNote(800).alarm, false, "below 1,000 most clubs aren't measured anywhere");
   assert.equal(unmeasuredNote(undefined).alarm, false);
 });
+
+test("a performing company isn't a room; its building is", () => {
+  assert.equal(roomNameOk("New York City Ballet", 1500), false);
+  assert.equal(roomNameOk("San Francisco Symphony Orchestra", 1500), false);
+  assert.equal(roomNameOk("David H. Koch Theater", 1500), true);
+  assert.equal(roomNameOk("Pacific Northwest Ballet at McCaw Hall", 1500), true);
+});

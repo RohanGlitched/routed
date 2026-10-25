@@ -555,3 +555,48 @@ test("an agent-named room Qloo couldn't be asked about is logged as that, not as
   assert.ok(lines.some((l) => l.failed && l.text === "Couldn't look up Ball Arena in Denver: Qloo didn't answer."));
   assert.ok(!lines.some((l) => /Ball Arena in Denver; Qloo has no such room/.test(l.text)));
 });
+
+/* ───────────── Ghost's Milan at 8,000: Qloo's list has no one-night fit, so Wikidata's rooms of the right size come in ───────────── */
+
+function milan(ladder: { qid: string; name: string; capacity: number }[]) {
+  const mil = city("Milan", 1), tur = city("Turin", 2), bol = city("Bologna", 3);
+  const searched: string[] = [];
+  const deps: PlanDeps = {
+    ask: (async () => {
+      throw new Error("fixed plan");
+    }) as Ask,
+    lookUpRooms: async (_a, m) => (m === mil.marketId ? [{ id: "alcatraz", name: "Alcatraz", tags: [] }] : [{ id: `${m}-arena`, name: `${m} Arena`, tags: [] }]),
+    lookUpOpeners: async () => [],
+    roomCapacity: async (r) => ({ value: r.id === "alcatraz" ? 3250 : 8000, source: "https://example.org/", quote: "capacity" }),
+    findPlace: async (_a, name) => {
+      searched.push(name);
+      const l = ladder.find((x) => x.name === name);
+      return l ? { id: l.qid.toLowerCase(), name: l.name, tags: [], lat: mil.lat, lon: mil.lon } : null;
+    },
+    scoreRooms: async (_a, ids) => new Map(ids.map((x) => [x, 0.8])),
+    ladderRooms: async (m) => (m === mil.marketId ? ladder.map((l) => ({ ...l, description: "arena in Milan" })) : []),
+  };
+  const lines: Omit<LogLine, "at">[] = [];
+  const p = planTour({ artist, audience, cities: [mil, tur, bol], from: { lat: mil.lat, lon: mil.lon, label: mil.label }, region: "eu", shows: 3, draw: 8000, useModel: false, log: (l) => lines.push(l) }, deps);
+  return { p, lines, searched, mil };
+}
+
+test("Milan at 8,000: the Forum (12,700, a loose fit) beats Alcatraz (3,250, a short room), found on Wikidata then on Qloo", async () => {
+  const { p, lines, searched, mil } = milan([{ qid: "Q1", name: "Unipol Forum", capacity: 12700 }]);
+  const r = await p;
+  const m = r.picks.find((x) => x.marketId === mil.marketId)!;
+  const room = m.rooms.find((x) => x.id === m.roomId)!;
+  assert.equal(room.name, "Unipol Forum");
+  assert.equal(room.origin, "wikidata");
+  assert.equal(m.nights, 1);
+  assert.deepEqual(searched, ["Unipol Forum"], "the other cities' rooms fit, so no Wikidata lookup there");
+  assert.ok(lines.some((l) => /^No room on Qloo's list for Milan fits the crowd for one night/.test(l.text)));
+});
+
+test("Milan at 8,000: a room the fans sell out (5,400 = 68%) is looked up first and beats the loose Forum", async () => {
+  const { p, searched, mil } = milan([{ qid: "Q1", name: "Unipol Forum", capacity: 12700 }, { qid: "Q2", name: "Allianz Cloud", capacity: 5400 }]);
+  const r = await p;
+  assert.deepEqual(searched, ["Allianz Cloud", "Unipol Forum"], "in the booker's order, two searches at most");
+  const m = r.picks.find((x) => x.marketId === mil.marketId)!;
+  assert.equal(m.rooms.find((x) => x.id === m.roomId)!.name, "Allianz Cloud");
+});

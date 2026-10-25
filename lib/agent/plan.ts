@@ -92,6 +92,8 @@ export const FAN_CAP = 25;
  *  more call scores their fan affinity). */
 export const NAMED_PER_CITY = 2;
 export const NAMED_SEARCHES = 15;
+/** From this crowd up, a city with no one-night fit on Qloo's list also gets the Wikidata rooms of the right size. */
+export const LADDER_DRAW = 1000;
 /** Bridge cities tried (with their room lookups) to reach a fan city the run can't reach within the leg cap. */
 export const BRIDGE_TRIES = 3;
 /** A city within the fan cap, or a major market in the artist's top ten. */
@@ -941,13 +943,18 @@ export async function planTour(
   // A city whose rooms can't take this crowd (rooms.ts roomCheck: only misfits, or nothing measurable for 3,000 or
   // more) gives way to the next ranked city that clears the radius, adds no long leg and has a bookable room.
   /**
-   * A city whose rooms can't take the crowd gets the rooms Wikidata lists there at the right size (P1083, 60–250% of
-   * the crowd, closest first), each looked up on Qloo by name: found, it joins the city's rooms with Wikidata's
+   * A city with no one-night fit gets the rooms Wikidata lists there at the right size (P1083, 60–250% of the crowd,
+   * in the booker's order), each looked up on Qloo by name: found, it joins the city's rooms with Wikidata's
    * capacity, its Qloo id and the fans' affinity; not found, it is never booked. At most 2 a city.
    */
   const addLadderRooms = async (score: CityScore, list: Room[]): Promise<number> => {
     if (!draw || !deps.ladderRooms || !deps.findPlace) return 0;
-    const rungs = (await deps.ladderRooms(score.marketId, draw).catch(() => [] as LadderRoom[])).filter((l) => !list.some((x) => roomNameMatches(l.name, x.name))).slice(0, 2);
+    // In the booker's order (a close fit, then one the fans sell out, then a loose fit), nearest the crowd within each.
+    const grade = (l: LadderRoom) => roomGrade({ id: l.qid, name: l.name, tags: [], capacity: { value: l.capacity, source: "", quote: "" } }, draw);
+    const rungs = (await deps.ladderRooms(score.marketId, draw).catch(() => [] as LadderRoom[]))
+      .filter((l) => !list.some((x) => roomNameMatches(l.name, x.name)))
+      .sort((a, b) => grade(a) - grade(b) || Math.abs(Math.log(a.capacity / draw)) - Math.abs(Math.log(b.capacity / draw)))
+      .slice(0, 2);
     const added: Room[] = [];
     for (const l of rungs) {
       const r = await deps.findPlace(artist, l.name, score.marketId, draw).catch(() => null);
@@ -962,7 +969,7 @@ export async function planTour(
       for (const x of added) if (aff.has(x.id)) x.affinity = aff.get(x.id);
     }
     list.push(...added);
-    if (added.length) log({ kind: "qloo", text: `No room on Qloo's list for ${score.name} could take the crowd, so the rooms Wikidata lists there at that size were looked up on Qloo.`, result: added.map((x) => `${x.name} (holds ${n(x.capacity!.value)})`).join(", ") });
+    if (added.length) log({ kind: "qloo", text: `No room on Qloo's list for ${score.name} fits the crowd for one night, so the rooms Wikidata lists there at that size were looked up on Qloo.`, result: added.map((x) => `${x.name} (holds ${n(x.capacity!.value)})`).join(", ") });
     return added.length;
   };
 
@@ -978,8 +985,10 @@ export async function planTour(
         }
       }
       let check = roomCheck(r, c.roomId ?? first?.id, draw);
-      // No Qloo room can take the crowd: the city's Wikidata rooms of the right size, each found on Qloo first.
-      if (!check.bookable && draw && (await addLadderRooms(c.score, r))) check = roomCheck(r, c.roomId ?? first?.id, draw);
+      // No one-night fit on Qloo's list (only two nights, a reduced house, a short room, unmeasured rooms or misfits:
+      // Ghost's Paris got a 32,000 arena for 8,000, Milan a 3,250 club): the city's Wikidata rooms of the right size,
+      // each found on Qloo first. From a crowd of 1,000 up, or whenever nothing can take the crowd.
+      if (draw && (!check.bookable || (draw >= LADDER_DRAW && !roomFit(check.room!, draw))) && (await addLadderRooms(c.score, r))) check = roomCheck(r, c.roomId ?? first?.id, draw);
       const room = check.room;
       const nights = room && twoNights(room, draw) && !r.some((x) => fit(x, draw) === "fits") ? 2 : 1;
       if (room && c.roomId && room.id !== c.roomId) {

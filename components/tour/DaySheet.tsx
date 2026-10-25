@@ -110,6 +110,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
               <dd>
                 <b>{room.name}</b>
                 {room.origin === "agent" && <span className={s.alt}>Suggested by the agent, found on Qloo</span>}
+                {room.origin === "wikidata" && <span className={s.alt}>Found on Wikidata by size, then on Qloo</span>}
                 <span className={s.meta}>
                   {room.affinity !== undefined && <span className={s.aff}>Fan affinity {pct(room.affinity)}. </span>}
                   {room.capacity ? (

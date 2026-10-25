@@ -358,6 +358,7 @@ export type SettleEvent =
   | { t: "home"; home: CityScore; out: CityScore[] }
   | { t: "fan"; city: CityScore; out: CityScore[]; bridge?: CityScore }
   | { t: "no-fan"; city: CityScore }
+  | { t: "bridge"; city: CityScore; out: CityScore[]; from: CityScore; to: CityScore; km: number }
   | { t: "no-home"; home: CityScore; reason: string };
 
 /**
@@ -529,6 +530,47 @@ export async function settleCities<T extends { score: CityScore }>(o: {
     rebuild(homed.stops);
   } else if (homed.home && homed.reason) o.on?.({ t: "no-home", home: allById.get(homed.home.id)!, reason: homed.reason });
   if (anchored.added.length || fans || homed.added) await legPass();
+
+  // Bridges: a leg still over the cap after the leg rule (Denver to Portland, 1,895 km) gets a city within the cap of
+  // both ends, looked up even if no rule has scouted it yet: from the leg rule's pool, the fan cap's cities first, then
+  // past it (closing a leg is what a city past the cap is for), each by fan rank, BRIDGE_TRIES room lookups at most. The weakest stop no
+  // rule keeps gives way, chosen as in the fan step so no other leg goes over; a bridge stands only if it removes a
+  // long leg.
+  const tried = new Set<string>();
+  let lookups = 0;
+  for (let round = 0; round < shows && lookups < BRIDGE_TRIES; round++) {
+    const list = chosen.map((c) => c.score);
+    const now = longCount(list);
+    if (!now) break;
+    const home = homeId && list.some((x) => x.marketId === homeId) ? homeId : undefined;
+    const ordered = orderStops(o.from, list.map((x) => ({ ...x, id: x.marketId })), { max, first: home });
+    const leg = longLegs(o.from, ordered, max)[0]!;
+    const a = ordered[leg.index - 1]!, b = ordered[leg.index]!;
+    // From the leg rule's pool, by the plan's own weight: for the agent's plan the fan cap first, then fan rank; for
+    // the size-only plan, size.
+    const near = pool
+      .filter((c) => !tried.has(c.marketId) && !list.some((x) => x.marketId === c.marketId || clash(x, c)) && roadKm(c, a) <= max && roadKm(c, b) <= max)
+      .sort((x, y) => (o.protect ? Number(!inFanCap(x)) - Number(!inFanCap(y)) || x.rank - y.rank : rankOf(x) - rankOf(y)));
+    let bridged = false;
+    for (const c of near) {
+      if (lookups >= BRIDGE_TRIES) break;
+      const options = list.length >= shows ? list.filter((x) => !kept(x)).sort(weakestFirst).map((g) => ({ g, l: [...list.filter((x) => x !== g), c] })) : [{ g: undefined as CityScore | undefined, l: [...list, c] }];
+      let best: { g?: CityScore; l: CityScore[]; n: number } | undefined;
+      for (const opt of options) {
+        const n = longCount(opt.l);
+        if (n < now && (!best || n < best.n)) best = { ...opt, n };
+      }
+      if (!best) continue;
+      tried.add(c.marketId);
+      lookups++;
+      if (!(await o.usable(c.marketId))) continue;
+      rebuild(best.l.map((x) => ({ id: x.marketId })));
+      o.on?.({ t: "bridge", city: c, out: best.g ? [best.g] : [], from: allById.get(a.marketId) ?? a, to: allById.get(b.marketId) ?? b, km: leg.km });
+      bridged = true;
+      break;
+    }
+    if (!bridged) break;
+  }
   return { stops: chosen, homeId: first(), tradeOff };
 }
 
@@ -844,6 +886,8 @@ export async function planTour(
         log({ kind: "rule", text: `${e.home.name} is where the tour starts and #${e.home.rank} on ${artist.name}'s fan map, so the run opens with a hometown show${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}.`, result: "No band routes past its hometown" });
       } else if (e.t === "fan") {
         log({ kind: "rule", text: `${e.city.name} is #${e.city.rank} on ${artist.name}'s fan map, one of the ${FAN_KEEP} strongest, so it stays on the tour${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}${e.bridge ? `; ${e.bridge.name} (fan #${e.bridge.rank}${e.bridge.rank > FAN_CAP ? ", past the fan cap" : ""}) comes in to keep every leg under ${n(MAX_LEG_KM)} km` : ""}.`, result: "A tour never drops the artist's strongest fan cities when the route can reach them, and never drops the city that bridges the route" });
+      } else if (e.t === "bridge") {
+        log({ kind: "rule", text: `${e.from.name} to ${e.to.name} is ${n(e.km)} km of road with no show, so ${e.city.name} (fan #${e.city.rank}${e.city.rank > FAN_CAP ? ", past the fan cap" : ""}) bridges it${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}.`, result: `No leg between shows over ${n(MAX_LEG_KM)} km` });
       } else if (e.t === "no-fan") {
         log({ kind: "rule", text: `${e.city.name} is #${e.city.rank} on ${artist.name}'s fan map, but no route reaches it without a leg over ${n(MAX_LEG_KM)} km, even with a bridge city, so it stays off this run.`, failed: true });
       } else if (e.t === "no-home") {

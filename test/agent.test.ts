@@ -380,3 +380,32 @@ test("room names match the way venues are written, without merging two rooms", (
   assert.ok(!sameRoomName("The Basement", "The Basement East"));
   assert.ok(!sameRoomName("Ogden Theatre", "Bluebird Theater"));
 });
+
+/* ───────────── a bridge for a leg the agent booked itself (prod flagship ufa6g3z3cm: Denver to Portland, 1,895 km) ───────────── */
+
+const FLAG = ["Asheville", "Nashville", "Portland, OR", "Denver", "Austin", "Santa Fe", "Boulder", "Knoxville", "Seattle", "Lexington", "Cincinnati", "Pittsburgh", "Louisville", "Chattanooga", "New Orleans", "Birmingham, AL", "Little Rock", "Memphis", "Tulsa", "St. Louis", "Kansas City", "Oklahoma City", "Albuquerque", "Salt Lake City", "Atlanta", "Charlotte", "Raleigh", "Indianapolis", "Columbus, OH", "Boise", "Houston", "Chicago"].map((n, i) => city(n, i + 1));
+const fid = (name: string) => FLAG.find((c) => c.name === name)!.marketId;
+
+test("a leg the agent booked over the cap gets a bridge city: Salt Lake City (#24) between Denver and Portland", async () => {
+  assert.deepEqual([fid("Denver"), fid("Salt Lake City"), fid("Portland")].map((x) => FLAG.find((c) => c.marketId === x)!.lat.toFixed(1)), ["39.7", "40.8", "45.5"]);
+  const booking = ["Nashville", "Asheville", "Pittsburgh", "Cincinnati", "Seattle", "Austin", "Denver", "Portland"].map((n) => stop(fid(n)));
+  const ask = model((name) => (name === "shortlist" ? { cities: booking.map((s) => ({ city_id: s.city_id, why: "strong" })), alternates: [] } : name === "reasons" ? { reasons: [] } : { stops: booking }));
+  const nash = FLAG[1]!;
+  const lines: Omit<LogLine, "at">[] = [];
+  // As on the prod run, the leg rule finds no swap that closes it: the cities that could replace an end have no
+  // rooms on Qloo, and Salt Lake City (which bridges, but can't replace Denver) hasn't been looked up.
+  const base = tools(ask);
+  const noRooms = new Set(["Boulder", "Santa Fe", "Albuquerque", "Oklahoma City", "Tulsa", "Kansas City", "Boise"].map(fid));
+  const deps: PlanDeps = { ...base, lookUpRooms: (a, m, l, d) => (noRooms.has(m) ? Promise.resolve([]) : base.lookUpRooms(a, m, l, d)) };
+  const r = await planTour({ artist, audience, cities: FLAG, from: { lat: nash.lat, lon: nash.lon, label: nash.label }, region: "na", shows: 8, draw: 1500, useModel: true, log: (l) => lines.push(l) }, deps);
+  const ids = r.picks.map((x) => x.marketId);
+  for (const c of ["Asheville", "Nashville", "Portland", "Denver"]) assert.ok(ids.includes(fid(c)), `${c} stays: ${ids.join(", ")}`);
+  assert.ok(ids.includes(fid("Salt Lake City")), `Salt Lake City bridges: ${ids.join(", ")}`);
+  const at = r.picks.map((p) => ({ ...FLAG.find((c) => c.marketId === p.marketId)!, id: p.marketId }));
+  const route = orderStops(nash, at, { max: MAX_LEG_KM, first: r.homeId });
+  assert.equal(r.homeId, fid("Nashville"), "the run opens at home");
+  assert.equal(route[0]!.name, "Nashville");
+  assert.deepEqual(longLegs(nash, route, MAX_LEG_KM), [], route.map((x) => x.name).join(" → "));
+  assert.ok(!lines.some((l) => /still over/.test(l.text)), lines.filter((l) => l.kind === "rule").map((l) => l.text).join(" | "));
+  assert.ok(lines.some((l) => /^Denver to Portland is [\d,]+ km of road with no show, so Salt Lake City \(fan #24\) bridges it/.test(l.text)));
+});

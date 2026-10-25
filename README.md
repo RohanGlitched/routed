@@ -12,12 +12,12 @@
 
 <p align="center">
   <b><a href="https://routed-tours.vercel.app">Route a tour</a></b> ·
-  <b><a href="https://routed-tours.vercel.app/tour/bnwvpmjuet">A finished tour book</a></b> ·
+  <b><a href="https://routed-tours.vercel.app/tour/8v4ce57nx6">A finished tour book</a></b> ·
   <b><a href="https://routed-tours.vercel.app/proof">With and without Qloo</a></b> ·
   <b><a href="https://routed-tours.vercel.app/how">How it works</a></b>
 </p>
 
-**Routed answers three questions for an independent artist's tour: which city, which neighbourhood, which room.** Name an artist, a starting city and the usual crowd. An agent reads Qloo's taste graph for the cities where that artist's fans over-index, the blocks inside each city where they live, the rooms they go to and the artists who share their audience. It routes and dates the tour by rules a booker would sign, sizes every room to the crowd, and drafts a hold request for every venue with each figure traced to its source. On 13 tours announced after the model's release, the city ranking Routed ships (Qloo + population) found 13.2 pts more of the real cities than population alone, better for 11 artists and worse for none ([results](data/outside2/RESULTS.md)). Run without Qloo, the same model sent Sierra Ferrell to Toronto (#202 on her fan map), Atlanta (#90) and Dallas (#89); Routed's cities averaged #6.
+**Routed answers three questions for an independent artist's tour: which city, which neighbourhood, which room.** Name an artist, a starting city and the usual crowd. An agent reads Qloo's taste graph for the cities where that artist's fans over-index, the blocks inside each city where they live, the rooms they go to and the artists who share their audience. It routes and dates the tour by rules a booker would sign, sizes every room to the crowd, and drafts a hold request for every venue with each figure traced to its source. On 13 tours announced after the model's release, the city ranking Routed ships (Qloo + population) found 13.2 pts more of the real cities than population alone, better for 11 artists and worse for none ([results](data/outside2/RESULTS.md)). Run without Qloo, the same model sent Sierra Ferrell to Toronto (#202 on her fan map), Atlanta (#90) and Chicago (#50), averaging #50; Routed's cities averaged #10, with Asheville, her #1 fan city and only the 238th biggest, on the tour.
 
 It is for the people who route tours without a data team: independent artists, their managers, and the small agencies and promoters who book them.
 
@@ -234,7 +234,7 @@ Each rule is deterministic, tested, and logged on the call sheet when it changes
 
 ## Inside each city
 
-For every stop Routed asks Qloo for the heatmap of that one city: a few hundred tiles about 150 m across. A rule finds the hottest tile, names its neighbourhood by a vote of the places within 600 m of it, each filed by Qloo under a neighbourhood (with how Qloo characterises it: a creative hub, a historic district), measures the booked room against it, and anchors the poster run on it, so posters go up where the fans live. A room "sits in" the fans' neighbourhood only when Qloo files the room under that same name: in Portland, Sierra Ferrell's hottest blocks are Downtown and so is Dante's, so the sheet says "Dante's sits in Downtown, 0.6 km from the hottest blocks"; a room filed elsewhere gets its distance instead ("1.6 km from the fans' hottest blocks (Chinatown); Qloo files it under Northern Liberties"). Where Qloo files no neighbourhood at all (Nashville's places carry none), the sheet says so and points at the nearest place. The map sits under the date on every day sheet.
+For every stop Routed asks Qloo for the heatmap of that one city: a few hundred tiles about 150 m across. A rule finds the hottest tile, names its neighbourhood by a vote of the places within 600 m of it, each filed by Qloo under a neighbourhood (with how Qloo characterises it: a creative hub, a historic district), measures the booked room against it, and anchors the poster run on it, so posters go up where the fans live. A room "sits in" the fans' neighbourhood only when Qloo files the room under that same name: in Portland, Sierra Ferrell's hottest blocks are Downtown and so is the Crystal Ballroom, so the sheet says "McMenamins Crystal Ballroom sits in Downtown, 0.6 km from the hottest blocks"; a room filed elsewhere gets its distance instead ("1.6 km from the fans' hottest blocks (Chinatown); Qloo files it under Northern Liberties"). Where Qloo files no neighbourhood at all (Nashville's places carry none), the sheet says so and points at the nearest place. The map sits under the date on every day sheet.
 
 ## Use it from your own agent
 

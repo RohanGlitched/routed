@@ -9,6 +9,7 @@ import { fit } from "./evidence";
 import { blendOrder, diffLine, qlooDiff, sizeRanks, type Ranks } from "./qloodiff";
 import { candidatesBySize, chooseRoom, fitWord, pickSupport, roomFit, REDUCED_MAX, reducedHouse, roomCheck, roomGrade, twoNights } from "./rooms";
 import type { Log } from "./tools";
+import type { LadderRoom } from "./rooms";
 
 /**
  * The agent, in the moves a booking agent would make:
@@ -60,6 +61,8 @@ export type PlanDeps = {
   findPlace?: (artist: Artist, name: string, marketId: string, draw?: number) => Promise<Room | null>;
   /** The artist's fans' affinity for these places, in one call. */
   scoreRooms?: (artist: Artist, ids: string[]) => Promise<Map<string, number>>;
+  /** The city's rooms by capacity from Wikidata that fit this crowd, closest first. */
+  ladderRooms?: (marketId: string, draw: number) => Promise<LadderRoom[]>;
   roomCapacity: (room: Room, city: string) => Promise<Capacity | null>;
 };
 
@@ -707,7 +710,13 @@ export async function planTour(
           }
           if (searches >= NAMED_SEARCHES) break;
           searches++;
-          const r = await deps.findPlace!(artist, name, id, draw).catch(() => null);
+          let failed = false;
+          const r = await deps.findPlace!(artist, name, id, draw).catch(() => ((failed = true), null));
+          if (failed) {
+            missed.push(`${name} in ${city} (Qloo didn't answer)`);
+            log({ kind: "qloo", text: `Couldn't look up ${name} in ${city}: Qloo didn't answer.`, failed: true });
+            continue;
+          }
           if (!r || !roomNameMatches(name, r.name)) {
             missed.push(`${name} in ${city}`);
             log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo has no such room here.`, failed: true });
@@ -931,6 +940,32 @@ export async function planTour(
   // nothing else is left (and the sheet says so).
   // A city whose rooms can't take this crowd (rooms.ts roomCheck: only misfits, or nothing measurable for 3,000 or
   // more) gives way to the next ranked city that clears the radius, adds no long leg and has a bookable room.
+  /**
+   * A city whose rooms can't take the crowd gets the rooms Wikidata lists there at the right size (P1083, 60–250% of
+   * the crowd, closest first), each looked up on Qloo by name: found, it joins the city's rooms with Wikidata's
+   * capacity, its Qloo id and the fans' affinity; not found, it is never booked. At most 2 a city.
+   */
+  const addLadderRooms = async (score: CityScore, list: Room[]): Promise<number> => {
+    if (!draw || !deps.ladderRooms || !deps.findPlace) return 0;
+    const rungs = (await deps.ladderRooms(score.marketId, draw).catch(() => [] as LadderRoom[])).filter((l) => !list.some((x) => roomNameMatches(l.name, x.name))).slice(0, 2);
+    const added: Room[] = [];
+    for (const l of rungs) {
+      const r = await deps.findPlace(artist, l.name, score.marketId, draw).catch(() => null);
+      if (!r || list.some((x) => x.id === r.id)) {
+        log({ kind: "qloo", text: `Wikidata lists ${l.name} in ${score.name} (holds ${n(l.capacity)}); Qloo has no such room here.`, failed: true });
+        continue;
+      }
+      added.push({ ...r, origin: "wikidata", capacity: { value: l.capacity, source: `https://www.wikidata.org/wiki/${l.qid}`, quote: `${l.name}${l.description ? `: ${l.description}` : ""}; maximum capacity ${n(l.capacity)} (Wikidata P1083)` } });
+    }
+    if (added.length && deps.scoreRooms) {
+      const aff = await deps.scoreRooms(artist, added.map((x) => x.id)).catch(() => new Map<string, number>());
+      for (const x of added) if (aff.has(x.id)) x.affinity = aff.get(x.id);
+    }
+    list.push(...added);
+    if (added.length) log({ kind: "qloo", text: `No room on Qloo's list for ${score.name} could take the crowd, so the rooms Wikidata lists there at that size were looked up on Qloo.`, result: added.map((x) => `${x.name} (holds ${n(x.capacity!.value)})`).join(", ") });
+    return added.length;
+  };
+
   const pickFor = async (c: Chosen): Promise<{ pick: Pick; bookable: boolean; reason?: string }> => {
       const [r, o] = await Promise.all([getRooms(c.score.marketId), getOpeners(c.score.marketId)]);
       const city = c.score.label;
@@ -942,7 +977,9 @@ export async function planTour(
           if (roomFit(next, draw) === "close") break;
         }
       }
-      const check = roomCheck(r, c.roomId ?? first?.id, draw);
+      let check = roomCheck(r, c.roomId ?? first?.id, draw);
+      // No Qloo room can take the crowd: the city's Wikidata rooms of the right size, each found on Qloo first.
+      if (!check.bookable && draw && (await addLadderRooms(c.score, r))) check = roomCheck(r, c.roomId ?? first?.id, draw);
       const room = check.room;
       const nights = room && twoNights(room, draw) && !r.some((x) => fit(x, draw) === "fits") ? 2 : 1;
       if (room && c.roomId && room.id !== c.roomId) {

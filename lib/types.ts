@@ -58,8 +58,9 @@ export type Room = {
   capacity?: Capacity;
   /** The neighbourhood Qloo files the room under ("Buckman"). */
   area?: string;
-  /** "agent": the agent named this room and Qloo's place search found it in the city (with its fan affinity). */
-  origin?: "agent";
+  /** Where a room not on Qloo's own list came from, before Qloo's place search found it in the city (with its fan
+   *  affinity): "agent", the agent named it; "wikidata", the city's Wikidata ladder of rooms by capacity. */
+  origin?: "agent" | "wikidata";
 };
 
 export type Opener = {

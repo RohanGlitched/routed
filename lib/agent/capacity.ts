@@ -20,16 +20,32 @@ const GENERIC = new Set(["the", "and", "club", "hall", "theatre", "theater", "ro
 const words = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/['’]/g, "").replace(/&/g, " and ").split(/[^a-z0-9]+/).filter((w) => w.length > 1);
 
 /**
- * Whether a Wikidata item is this room and not a part of it or a namesake: the venue's distinctive words must be
- * in the item's label ("Lensic Theater" is the Lensic Performing Arts Center), and an item that is "part of"
- * something else is a smaller room inside it (Nordstrom Recital Hall, 536, is part of Benaroya Hall).
+ * Whether a Wikidata item is this room and not a part of it or a namesake. An item that is "part of" something else
+ * is a smaller room inside it (Nordstrom Recital Hall, 536, is part of Benaroya Hall). Otherwise the two names'
+ * distinctive words must agree: the same words ("Lensic Theater" is the Lensic Performing Arts Center), or one
+ * name's words all in the other's with at most one word more and never a short word alone. Sharing one word is a
+ * namesake: Bush Hall is not Shepherd's Bush Empire (2,000), EartH is not the Hackney Empire (1,275). A room's
+ * aliases in parentheses count as its names ("EartH (Evolutionary Arts Hackney)").
  */
 export function sameVenue(venue: string, label: string, description = ""): boolean {
   if (/\bpart of\b|\bwithin\b|\binside\b|\bsecond stage\b|\bstudio theat/i.test(description)) return false;
-  const distinct = words(venue).filter((w) => !GENERIC.has(w));
-  const have = new Set(words(label));
-  if (!distinct.length) return words(venue).every((w) => have.has(w));
-  return distinct.some((w) => have.has(w)) && distinct.filter((w) => have.has(w)).length >= Math.min(2, distinct.length) - (distinct.length > 2 ? 1 : 0);
+  const inner = [...venue.matchAll(/\(([^)]*)\)/g)].map((m) => m[1]!);
+  const names = [venue, venue.replace(/\s*\([^)]*\)/g, ""), ...inner].filter((x) => x.trim());
+  const theirs = [...new Set(words(label).filter((w) => !GENERIC.has(w)))];
+  return names.some((name) => {
+    const ours = [...new Set(words(name).filter((w) => !GENERIC.has(w)))];
+    if (!ours.length || !theirs.length) return words(name).join(" ") === words(label).join(" ");
+    const [short, long] = ours.length <= theirs.length ? [ours, theirs] : [theirs, ours];
+    if (!short.every((w) => long.includes(w))) return false;
+    if (long.length === short.length) return true;
+    return long.length - short.length <= 1 && (short.length >= 2 || short[0]!.length >= 5);
+  });
+}
+
+/** The item a stored Wikidata answer quotes ("Label: description; maximum capacity …"). */
+export function wikidataLabel(quote: string): { label: string; description: string } {
+  const [label, ...rest] = (quote.split("; maximum capacity")[0] ?? "").split(": ");
+  return { label: label ?? "", description: rest.join(": ") };
 }
 
 /**
@@ -232,7 +248,12 @@ function findValue(quote: string, value: number): { at: number; len: number } | 
  */
 export function sourceOk(venue: string, c: { value?: number; source: string; quote: string }): boolean {
   if (NOT_A_SOURCE.test(c.source) || /planned|proposed|new-venue|will-open/i.test(c.source)) return false;
-  if (c.source.includes("wikidata.org")) return true;
+  // A Wikidata answer is only as good as its item: the quoted label must be this room (the shared index once held
+  // Shepherd's Bush Empire's 2,000 for Bush Hall; first writer wins, so a bad entry is refused here and re-measured).
+  if (c.source.includes("wikidata.org")) {
+    const { label, description } = wikidataLabel(c.quote);
+    return sameVenue(venue, label, description);
+  }
   if (otherVenueUrl(venue, c.source) || namesake(venue, c.quote)) return false;
   const first = /\d{1,3}(?:[,.]\d{3})+|\d{2,}/.exec(c.quote);
   const v = (c.value !== undefined ? findValue(c.quote, c.value) : null) ?? (first ? { at: first.index, len: first[0].length } : null);

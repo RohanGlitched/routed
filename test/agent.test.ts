@@ -480,3 +480,78 @@ test("Asheville: the Orange Peel (1,050, sold out) beats Thomas Wolfe Auditorium
   assert.equal(r.picks.find((x) => x.marketId === id("Denver"))!.roomId, `${id("Denver")}-b`);
   assert.ok(lines.some((l) => l.text === "denver-us-co Hall A holds 2,431, a loose fit for a crowd of about 1,500, and denver-us-co Hall B is closer, so Denver gets denver-us-co Hall B."), lines.filter((l) => l.kind === "rule").map((l) => l.text).join(" | "));
 });
+
+/* ───────────── Oct 26 wall re-runs: Wikidata namesakes, arenas Qloo files as stadiums, the Wikidata ladder ───────────── */
+
+test("a Wikidata item that only shares a word with the room is a namesake, stored or fresh", async () => {
+  const { sameVenue, sourceOk } = await import("../lib/agent/capacity.ts");
+  assert.equal(sameVenue("Bush Hall", "Shepherd's Bush Empire", "music venue in London"), false);
+  assert.equal(sameVenue("EartH (Evolutionary Arts Hackney)", "Hackney Empire", "theatre in Hackney, London"), false);
+  assert.equal(sameVenue("Islington Assembly Hall", "Islington Assembly Hall", "music venue in London"), true);
+  assert.equal(sameVenue("McMenamins Crystal Ballroom", "Crystal Ballroom", "ballroom in Portland, Oregon"), true, "one distinctive word more is the same room");
+  // The shared index's first answers, read back: the namesakes are refused (and re-measured), the right item kept.
+  assert.equal(sourceOk("Bush Hall", { value: 2000, source: "https://www.wikidata.org/wiki/Q2778511", quote: "Shepherd's Bush Empire: music venue in London; maximum capacity 2,000 (Wikidata P1083)" }), false);
+  assert.equal(sourceOk("EartH (Evolutionary Arts Hackney)", { value: 1275, source: "https://www.wikidata.org/wiki/Q5637363", quote: "Hackney Empire: theatre in Hackney, London; maximum capacity 1,275 (Wikidata P1083)" }), false);
+  assert.equal(sourceOk("Islington Assembly Hall", { value: 800, source: "https://www.wikidata.org/wiki/Q20711847", quote: "Islington Assembly Hall: music venue in London; maximum capacity 800 (Wikidata P1083)" }), true);
+});
+
+test("arenas Qloo also tags as stadiums are rooms for 15,000; a palace in a park is a room", async () => {
+  const { isRoom } = await import("../lib/agent/rooms.ts");
+  const ids = (s: string) => s.split(", ").map((x) => ({ id: x, name: x.split(":").pop()!.replace(/_/g, " ") }));
+  const at = { lat: 36.15, lon: -95.99 };
+  // Tags as Qloo's /search returned them (probed Oct 26).
+  const bok = { name: "BOK Center", place: at, tags: ids("urn:tag:genre:place:arena, urn:tag:category:place:auditorium, urn:tag:category:place:event_venue, urn:tag:category:place:arena, urn:tag:genre:place:tourist_attraction, urn:tag:category:place:stadium, urn:tag:genre:place:stadium, urn:tag:genre:place:event_venue") };
+  const bridgestone = { name: "Bridgestone Arena", place: at, tags: ids("urn:tag:category:place:sports, urn:tag:category:place:event_venue, urn:tag:genre:place:arena, urn:tag:category:place:hockey, urn:tag:genre:place:hockey, urn:tag:genre:place:ice_hockey_rink, urn:tag:genre:place:stadium, urn:tag:category:place:stadium, urn:tag:category:place:arena") };
+  const paycom = { name: "Paycom Center", place: at, tags: ids("urn:tag:genre:place:sports_complex, urn:tag:genre:place:concert_hall, urn:tag:category:place:arena, urn:tag:category:place:stadium, urn:tag:genre:place:stadium, urn:tag:genre:place:arena") };
+  for (const a of [bok, bridgestone, paycom]) assert.equal(isRoom(a, 15000), true, a.name);
+  const ally = { name: "Alexandra Palace", place: at, tags: [...ids("urn:tag:category:place:live_music_venue, urn:tag:genre:place:event_venue, urn:tag:genre:place:ice_skating_rink"), { id: "urn:tag:keyword:place:picnic_areas", name: "Picnic areas" }, { id: "urn:tag:keyword:place:green_spaces", name: "Green spaces" }] };
+  assert.equal(isRoom(ally, 3000), true);
+  assert.equal(isRoom({ name: "Nissan Stadium", place: at, tags: ids("urn:tag:genre:place:stadium") }, 15000), false, "a stadium that is only a stadium still isn't");
+});
+
+test("a city whose Qloo rooms can't take 15,000 gets Wikidata's arena there, found on Qloo first", async () => {
+  const tulsa = city("Tulsa", 1), okc = city("Oklahoma City", 2), wichita = city("Wichita", 3);
+  const found: string[] = [];
+  const deps: PlanDeps = {
+    ask: (async () => {
+      throw new Error("fixed plan");
+    }) as Ask,
+    lookUpRooms: async (_a, m) => [{ id: `${m}-club`, name: `${m} Club`, tags: [] }],
+    lookUpOpeners: async () => [],
+    roomCapacity: async (r) => (r.id.endsWith("-club") ? { value: 400, source: "https://example.org/", quote: "capacity 400" } : null),
+    findPlace: async (_a, name) => {
+      found.push(name);
+      return name === "BOK Center" ? { id: "bok", name: "BOK Center", tags: [], lat: 36.15, lon: -95.99 } : null;
+    },
+    scoreRooms: async (_a, ids) => new Map(ids.map((x) => [x, 0.9])),
+    ladderRooms: async (m) => (m === tulsa.marketId ? [{ qid: "Q4", name: "BOK Center", description: "arena in Tulsa", capacity: 19199 }, { qid: "Q5", name: "Expo Square Pavilion", capacity: 11000 }] : []),
+  };
+  const lines: Omit<LogLine, "at">[] = [];
+  const r = await planTour({ artist, audience, cities: [tulsa, okc, wichita], from: { lat: tulsa.lat, lon: tulsa.lon, label: tulsa.label }, region: "na", shows: 2, draw: 15000, useModel: false, log: (l) => lines.push(l) }, deps);
+  const t = r.picks.find((x) => x.marketId === tulsa.marketId)!;
+  assert.ok(t, r.picks.map((x) => x.marketId).join(", "));
+  const room = t.rooms.find((x) => x.id === t.roomId)!;
+  assert.equal(room.id, "bok", "booked with its Qloo id");
+  assert.equal(room.origin, "wikidata");
+  assert.equal(room.capacity!.value, 19199);
+  assert.equal(t.noRoom, undefined);
+  assert.ok(found.includes("Expo Square Pavilion"));
+  assert.ok(lines.some((l) => l.failed && l.text === "Wikidata lists Expo Square Pavilion in Tulsa (holds 11,000); Qloo has no such room here."));
+});
+
+test("an agent-named room Qloo couldn't be asked about is logged as that, not as 'no such room'", async () => {
+  const ask = model((name) => {
+    if (name === "shortlist") return { cities: [{ city_id: id("Denver"), why: "strong", rooms: ["Ball Arena"] }, { city_id: id("Salt Lake City"), why: "strong", rooms: [] }, { city_id: id("Albuquerque"), why: "strong", rooms: [] }], alternates: [] };
+    return name === "reasons" ? { reasons: [] } : { stops: [stop(id("Denver")), stop(id("Salt Lake City")), stop(id("Albuquerque"))] };
+  });
+  const deps: PlanDeps = {
+    ...tools(ask),
+    findPlace: async () => {
+      throw new Error("Qloo's rate limit was hit");
+    },
+  };
+  const { p, lines } = run(deps);
+  await p;
+  assert.ok(lines.some((l) => l.failed && l.text === "Couldn't look up Ball Arena in Denver: Qloo didn't answer."));
+  assert.ok(!lines.some((l) => /Ball Arena in Denver; Qloo has no such room/.test(l.text)));
+});

@@ -76,7 +76,8 @@ export const BAR_TAG_DRAW = 1000;
 // Tags only a park carries: "Park views" or "Free parking" don't count, ponds and swings do.
 const PARK_TAG = /\b(playgrounds?|ponds?|swings?|skate ?parks?|hikes|hiking trails?|kid friendly (hikes|parks?|playgrounds?)|splash pads?|dog parks?|green ?spaces?|nature (reserve|preserve|area)|campgrounds?|picnic (areas?|shelters?|tables?))\b|:(park|playground|nature_reserve|hiking_area|dog_park)$/i;
 const PARK_NAME = /\b(park|green|playground|commons|trailhead|nature (reserve|preserve|center))$/i;
-const PARK_STAGE = /amphithea|pavilion|band ?shell|summerstage|stage|bowl|arena|theat|hall|auditorium|ballroom|music|club|coliseum/i;
+// A palace or a dome in a park is the building, not the park (Alexandra Palace carries its park's tags).
+const PARK_STAGE = /amphithea|pavilion|band ?shell|summerstage|stage|bowl|arena|theat|hall|auditorium|ballroom|music|club|coliseum|palace|dome/i;
 
 /** Whether a place is a park, playground or trail (by its name or any of its tags), not a stage in one. Takes Qloo
  *  tags ({ id, name }) or a stored room's tag names. */
@@ -86,6 +87,9 @@ export function isPark(name: string, tags: ({ id?: string; name?: string } | str
   return tags.some((t) => (typeof t === "string" ? PARK_TAG.test(t) : PARK_TAG.test(t.name ?? "") || PARK_TAG.test(t.id ?? "")));
 }
 const BIG_ROOM_TAG = /concert_hall|amphitheater|arena|stadium|performing_arts_theater|ballroom/;
+/** Tags that make a place a music room whatever else it is: Qloo files every arena as a stadium too (BOK Center,
+ *  Bridgestone Arena, Ball Arena, Paycom Center: measured Oct 26). */
+const VENUE_TAG = /:(arena|concert_hall|amphitheater|live_music_venue|performing_arts_theater|ballroom)$/;
 
 export const placeTagIds = (e: Pick<Entity, "tags">) => e.tags.filter((t) => /genre:place|category:place/.test(t.id)).map((t) => t.id);
 
@@ -95,9 +99,11 @@ export function isRoom(e: Pick<Entity, "name" | "tags" | "place">, draw?: number
   const ids = placeTagIds(e);
   if (ids.some((id) => NOT_A_ROOM_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id) && !/stadium/.test(id))) return false;
   if (!roomNameOk(e.name, draw)) return false;
+  const venue = ids.some((id) => VENUE_TAG.test(id));
   if (isPark(e.name, e.tags)) return false;
   if (draw && draw >= BAR_TAG_DRAW && ids.some((id) => BAR_TAG.test(id)) && !ids.some((id) => BIG_ROOM_TAG.test(id))) return false;
-  if (!(draw && draw >= STADIUM_MIN_DRAW) && ids.some((id) => /stadium/.test(id))) return false;
+  // A stadium below a stadium crowd, unless it is also an arena or a concert venue (an arena is a stadium to Qloo).
+  if (!(draw && draw >= STADIUM_MIN_DRAW) && ids.some((id) => /stadium/.test(id)) && !venue) return false;
   return true;
 }
 

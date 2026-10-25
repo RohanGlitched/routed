@@ -1,7 +1,8 @@
 import "server-only";
 import { marketById, type Market } from "../geo/markets";
 import { CHAINS } from "../chains";
-import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isMember, isRoom, nearCity, openerProblem, orchestraHallFor, placeTagIds, sharesName, venueTier } from "./rooms";
+import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isMember, isRoom, ladderTier, nearCity, openerProblem, orchestraHallFor, placeTagIds, roomLadder, sharesName, venueTier, type LadderRoom } from "./rooms";
+import { wikidataRoomsNear } from "../wikidata";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
 import { describeRequest, qlooGet, recommend, search, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
@@ -140,10 +141,24 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
 export async function findPlace(artist: Artist, name: string, marketId: string, draw?: number): Promise<Room | null> {
   const m = marketById(marketId);
   if (!m) return null;
-  const r = await search(`${name} ${m.name}`, "urn:entity:place", 10).catch(() => null);
+  // A failed search throws, so the call sheet can tell "Qloo didn't answer" from "no such room".
+  const r = await search(`${name} ${m.name}`, "urn:entity:place", 10);
   const genres = artist.genreKeys ?? artist.genres;
   const e = r?.entities.find((x) => nearCity(x, m) && x.place?.lat !== undefined && isRoom(x, draw) && !orchestraHallFor(x.name, genres) && roomNameMatches(name, x.name));
   return e ? { ...toRoom(e), origin: "agent" } : null;
+}
+
+/**
+ * The city's rooms by capacity from Wikidata (P1083 within 30 km, one cached query a market), kept to the ones that
+ * fit this crowd (60–250%), closest to it first: for a city whose Qloo rooms can't take the crowd (Qloo's arena
+ * query came back empty for Tulsa at 15,000). Each still has to be found on Qloo before it can be booked.
+ */
+export async function ladderRooms(marketId: string, draw: number): Promise<LadderRoom[]> {
+  const m = marketById(marketId);
+  if (!m) return [];
+  const rows = await wikidataRoomsNear({ lat: m.lat, lon: m.lon }, 30);
+  if (!rows) return [];
+  return ladderTier(roomLadder(rows, draw), draw).sort((a, b) => Math.abs(Math.log(a.capacity / draw)) - Math.abs(Math.log(b.capacity / draw)));
 }
 
 /**

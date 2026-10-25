@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { checkPlan, planTour, type Ask, type BookStop, type PlanDeps } from "../lib/agent/plan.ts";
 import { findMarket, marketId, marketLabel } from "../lib/geo/markets.ts";
+import { longLegs, MAX_LEG_KM, orderStops } from "../lib/geo/route.ts";
 import type { Msg } from "../lib/nebius.ts";
 import type { Artist, Audience, CityScore, LogLine, Room } from "../lib/types.ts";
 
@@ -265,4 +266,46 @@ test("check_plan: an unmeasured room loses to a measured room that fits, for a c
   const out = checkPlan([{ city_id: col.marketId, room_id: "wex", opener_id: "o", why: "" }], { byId: new Map([[col.marketId, col]]), rooms, shows: 1, draw: 1500, from: col, radius: 150 });
   assert.equal(out.length, 1);
   assert.match(out[0]!.text, /Wexner Center for the Arts has no confirmed capacity; the room rule would book KEMBA Live! \(kemba\), which holds 2,200 \(fits for about 1,500\)/);
+});
+
+/* ───────────── the bridge (second smoke tour: Portland kept, but Salt Lake City gave way and Denver lost to Boulder) ───────────── */
+
+const BRIDGED = ["Asheville", "Nashville", "Portland, OR", "Denver", "Austin", "Santa Fe", "Boulder", "Knoxville", "Lexington", "Louisville", "Cincinnati", "New Orleans", "Chattanooga", "Birmingham, AL", "Little Rock", "Salt Lake City", "Tulsa", "Memphis", "St. Louis", "Kansas City", "Oklahoma City", "Albuquerque", "Atlanta", "Savannah", "Charlotte", "Raleigh", "Richmond", "Pittsburgh", "Indianapolis", "Boise", "Columbus, OH", "Houston", "Dallas", "Detroit", "Chicago"].map((n, i) => city(n, i + 1));
+const bid = (name: string) => BRIDGED.find((c) => c.name === name)!.marketId;
+
+/** The legs over the cap on the tour as run.ts routes it (the exact order, opening at the hometown). */
+function overCap(r: Awaited<ReturnType<typeof planTour>>, from: CityScore): number[] {
+  const at = r.picks.map((p) => ({ ...BRIDGED.find((c) => c.marketId === p.marketId)!, id: p.marketId }));
+  return longLegs(from, orderStops(from, at, { max: MAX_LEG_KM, first: r.homeId }), MAX_LEG_KM).map((l) => l.km);
+}
+
+function bridged(deps: PlanDeps, useModel: boolean) {
+  const nash = BRIDGED[1]!;
+  const lines: Omit<LogLine, "at">[] = [];
+  const p = planTour({ artist, audience, cities: BRIDGED, from: { lat: nash.lat, lon: nash.lon, label: nash.label }, region: "na", shows: 8, draw: 1500, useModel, log: (l) => lines.push(l) }, deps);
+  return { p, lines, nash };
+}
+
+test("adding Portland never drops the bridge city: a mid-route stop gives way, Denver stays, and no leg is over 1,800 km", async () => {
+  const booking = ["Nashville", "Asheville", "Cincinnati", "Memphis", "New Orleans", "Austin", "Denver", "Salt Lake City"].map((n) => stop(bid(n)));
+  const ask = model((name) => (name === "shortlist" ? { cities: booking.map((s) => ({ city_id: s.city_id, why: "strong" })), alternates: [] } : name === "reasons" ? { reasons: [] } : { stops: booking }));
+  const { p, lines, nash } = bridged(tools(ask), true);
+  const r = await p;
+  const ids = r.picks.map((x) => x.marketId);
+  for (const c of ["Asheville", "Nashville", "Portland", "Denver", "Salt Lake City"]) assert.ok(ids.includes(bid(c)), `${c} stays: ${ids.join(", ")}`);
+  assert.ok(!ids.includes(bid("Boulder")), "Denver isn't traded for Boulder");
+  assert.deepEqual(overCap(r, nash), [], ids.join(", "));
+  const fan = lines.find((l) => /^Portland is #3 on .* so it stays on the tour/.test(l.text));
+  assert.ok(fan && !/Salt Lake City gives way/.test(fan.text), fan?.text);
+  assert.ok(!lines.some((l) => /would cost a [\d,]+ km leg with no show, so Boulder/.test(l.text)));
+});
+
+test("the fixed plan reaches Portland with every leg under the cap, pulling in a bridge city when it must", async () => {
+  const { p, lines, nash } = bridged(tools(model(() => ({}))), false);
+  const r = await p;
+  const ids = r.picks.map((x) => x.marketId);
+  for (const c of ["Asheville", "Nashville", "Portland"]) assert.ok(ids.includes(bid(c)), `${c} stays: ${ids.join(", ")}`);
+  assert.equal(r.picks.length, 8);
+  assert.deepEqual(overCap(r, nash), [], ids.join(", "));
+  assert.ok(!lines.some((l) => /still over/.test(l.text)), "no leg left to flag");
 });

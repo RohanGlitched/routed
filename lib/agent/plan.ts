@@ -1,5 +1,5 @@
 import { km, marketById, marketLabel } from "../geo/markets";
-import { ANCHOR_RANK, capCountries, HOME_RANK, homeCity, isAnchor, keepAnchors, keepHome, longLegs, MAX_LEG_KM, orderStops, radiusFor, repairLegs, roadKm, tooClose } from "../geo/route";
+import { ANCHOR_RANK, capCountries, describeTradeOff, HOME_RANK, homeCity, isAnchor, keepAnchors, keepHome, longLegs, MAX_LEG_KM, orderStops, radiusFor, repairLegs, roadKm, tooClose } from "../geo/route";
 import type { RegionId } from "../geo/markets";
 import { populationRanking } from "../headtohead";
 import type { Msg } from "../nebius";
@@ -81,6 +81,8 @@ export const FAN_KEEP = 3;
  * it, a city is booked only when it closes a leg, or when the fan cities can't fill the run.
  */
 export const FAN_CAP = 25;
+/** Bridge cities tried (with their room lookups) to reach a fan city the run can't reach within the leg cap. */
+export const BRIDGE_TRIES = 3;
 /** A city within the fan cap, or a major market in the artist's top ten. */
 export const inFanCap = (c: CityScore) => c.rank <= FAN_CAP || isAnchor({ rank: c.rank, pop: marketById(c.marketId)?.pop ?? 0 });
 /** Cities tried in place of one with no bookable room (each costs its Qloo lookups and a few measurements). */
@@ -320,7 +322,8 @@ export type SettleEvent =
   | { t: "swap"; out: CityScore; in: CityScore; km: number; reason?: "leg" | "km-per-show" | "country" }
   | { t: "anchor"; anchor: CityScore; out: CityScore[]; close: boolean }
   | { t: "home"; home: CityScore; out: CityScore[] }
-  | { t: "fan"; city: CityScore; out: CityScore[] }
+  | { t: "fan"; city: CityScore; out: CityScore[]; bridge?: CityScore }
+  | { t: "no-fan"; city: CityScore }
   | { t: "no-home"; home: CityScore; reason: string };
 
 /**
@@ -380,6 +383,13 @@ export async function settleCities<T extends { score: CityScore }>(o: {
   const protect = (c: CityScore) => o.protect?.(c) ?? false;
   const keep = (c: { id: string; pop?: number }) => c.id === homeId || isAnchor({ rank: allById.get(c.id)?.rank ?? Infinity, pop: c.pop }) || protect(allById.get(c.id)!);
   let tradeOff: string | undefined;
+  const rebuild = (stops: { id: string }[]) => {
+    const was = new Map(chosen.map((c) => [c.score.marketId, c]));
+    chosen.splice(0, chosen.length, ...stops.map((st) => was.get(st.id) ?? o.make(allById.get(st.id)!)));
+  };
+  /** Legs over the cap in the best order of these stops (the exact search, opening at the hometown). */
+  const longCount = (list: CityScore[]) => longLegs(o.from, orderStops(o.from, list.map((x) => ({ ...x, id: x.marketId })), { max, first: homeId && list.some((x) => x.marketId === homeId) ? homeId : undefined }), max).length;
+  const kept = (x: CityScore) => keep({ id: x.marketId, pop: popOf(x.marketId) });
   const apply = (swaps: { out: { id: string }; in: { id: string }; km: number; reason?: "leg" | "km-per-show" | "country" }[]) => {
     for (const sw of swaps) {
       const i = chosen.findIndex((c) => c.score.marketId === sw.out.id);
@@ -388,15 +398,34 @@ export async function settleCities<T extends { score: CityScore }>(o: {
       o.on?.({ t: "swap", out: allById.get(sw.out.id)!, in: allById.get(sw.in.id)!, km: sw.km, reason: sw.reason });
     }
   };
+  // A swap stands only when the run ends up with fewer legs over the cap than it started with, and then each swap
+  // that the result doesn't need is undone, newest first, so the higher-ranked city keeps its place (Denver, fan #4,
+  // was once swapped for Boulder, #7, and the leg stayed over the cap). Whatever is left is flagged.
   const legPass = async () => {
-    const legs = await repairLegs({ from: o.from, stops: chosen.map((c) => asStop(c.score)), pool: pool.map(asStop), usable, weight: (c) => 1 / Math.sqrt(c.rank), radius, max, keep, first: first() });
-    apply(legs.swaps);
-    if (legs.tradeOff?.text) tradeOff = legs.tradeOff.text;
+    const start = chosen.map((c) => c.score);
+    const n0 = longCount(start);
+    const legs = await repairLegs({ from: o.from, stops: start.map(asStop), pool: pool.map(asStop), usable, weight: (c) => 1 / Math.sqrt(c.rank), radius, max, keep, first: first() });
+    let list = legs.stops.map((x) => allById.get(x.id)!);
+    let kept = [...legs.swaps];
+    if (!kept.length || longCount(list) >= n0) {
+      list = start;
+      kept = [];
+    } else {
+      for (const sw of [...kept].reverse()) {
+        const at = list.findIndex((x) => x.marketId === sw.in.id);
+        const back = allById.get(sw.out.id)!;
+        if (at < 0 || list.some((x) => x.marketId === back.marketId || (x.marketId !== sw.in.id && clash(x, back)))) continue;
+        const undone = list.map((x, i) => (i === at ? back : x));
+        if (longCount(undone) <= longCount(list)) {
+          list = undone;
+          kept = kept.filter((k) => k !== sw);
+        }
+      }
+    }
+    for (const sw of kept) o.on?.({ t: "swap", out: allById.get(sw.out.id)!, in: allById.get(sw.in.id)!, km: sw.km, reason: sw.reason });
+    rebuild(list.map((x) => ({ id: x.marketId })));
+    if (kept.length) tradeOff = describeTradeOff(o.from, start.map(asStop), list.map(asStop), { max, first: first() }).text;
     if (o.region === "eu") apply((await capCountries({ from: o.from, stops: chosen.map((c) => asStop(c.score)), pool: pool.map(asStop), usable, radius, max, keep, first: first() })).swaps);
-  };
-  const rebuild = (stops: { id: string }[]) => {
-    const was = new Map(chosen.map((c) => [c.score.marketId, c]));
-    chosen.splice(0, chosen.length, ...stops.map((st) => was.get(st.id) ?? o.make(allById.get(st.id)!)));
   };
   await legPass();
 
@@ -404,27 +433,59 @@ export async function settleCities<T extends { score: CityScore }>(o: {
   for (const { anchor, out } of anchored.added) o.on?.({ t: "anchor", anchor: allById.get(anchor.id)!, out: out.map((x) => allById.get(x.id)!), close: out.some((x) => tooClose(x, anchor, radius)) });
   if (anchored.added.length) rebuild(anchored.stops);
 
-  // The fan anchors: each protected city the run can reach comes in; a stop inside its radius gives way, or, when
-  // the run is full, the weakest stop that no rule keeps. A gap left behind is refilled from the ranking.
+  // The fan anchors: each protected city comes in. A stop inside its radius gives way; when the run is full, so does
+  // the weakest stop no rule keeps whose going leaves the fewest legs over the cap, so a bridge city (Salt Lake City
+  // between Denver and Portland) is never the one dropped. When no such choice keeps every leg legal, one more stop
+  // gives way to a bridge: a city that closes the leg, from inside the fan cap first, then past it (that is what a
+  // city past the cap is for). A fan city no route can reach without a leg over the cap stays off, and says so.
   let fans = 0;
   const order = new Map(o.ranking.map((c, i) => [c.marketId, i]));
+  const weakestFirst = (a: CityScore, b: CityScore) => (order.get(b.marketId) ?? 1e9) - (order.get(a.marketId) ?? 1e9);
   for (const f of deep.filter(protect)) {
     if (chosen.some((x) => x.score.marketId === f.marketId)) continue;
-    const near = chosen.filter((x) => clash(x.score, f));
-    if (near.some((x) => keep({ id: x.score.marketId, pop: popOf(x.score.marketId) }))) continue;
-    const weakest = chosen.filter((x) => !near.includes(x) && !keep({ id: x.score.marketId, pop: popOf(x.score.marketId) })).sort((a, b) => (order.get(b.score.marketId) ?? 1e9) - (order.get(a.score.marketId) ?? 1e9))[0];
-    const gone = chosen.length - near.length >= shows && weakest ? [...near, weakest] : near;
-    const stay = chosen.filter((x) => !gone.includes(x));
-    if (stay.length >= shows) continue;
-    if (!deep.some((x) => x.marketId !== f.marketId && roadKm(x, f) <= max)) continue;
+    const base = chosen.map((x) => x.score);
+    const near = base.filter((x) => clash(x, f));
+    if (near.some(kept)) continue;
     if (!(await o.usable(f.marketId))) continue;
-    chosen.splice(0, chosen.length, ...stay, o.make(f));
+    const baseN = longCount(base);
+    const rest = base.filter((x) => !near.includes(x));
+    const free = rest.filter((x) => !kept(x)).sort(weakestFirst);
+    type Option = { gone: CityScore[]; list: CityScore[]; n: number; bridge?: CityScore };
+    const options: Option[] = rest.length + 1 > shows ? free.map((g) => ({ gone: [...near, g], list: [...rest.filter((x) => x !== g), f], n: 0 })) : [{ gone: near, list: [...rest, f], n: 0 }];
+    if (!options.length) continue;
+    for (const opt of options) opt.n = longCount(opt.list);
+    let best = options.reduce((a, b) => (b.n < a.n ? b : a));
+    if (best.n > baseN) {
+      let found: Option | undefined;
+      let tries = 0;
+      for (const b of o.ranking) {
+        if (tries >= BRIDGE_TRIES) break;
+        if (b.marketId === f.marketId || best.list.some((x) => x.marketId === b.marketId || clash(x, b)) || best.gone.includes(b) || roadKm(b, f) > max) continue;
+        const out = best.list.length >= shows ? best.list.filter((x) => x !== f && !kept(x)).sort(weakestFirst)[0] : undefined;
+        if (best.list.length >= shows && !out) break;
+        const list = [...best.list.filter((x) => x !== out), b];
+        const n = longCount(list);
+        if (n > baseN) continue;
+        tries++;
+        if (!(await o.usable(b.marketId))) continue;
+        found = { gone: out ? [...best.gone, out] : best.gone, list, n, bridge: b };
+        break;
+      }
+      if (!found) {
+        o.on?.({ t: "no-fan", city: f });
+        continue;
+      }
+      best = found;
+    }
+    rebuild(best.list.map((x) => ({ id: x.marketId })));
+    // A stop freed by the radius clause is refilled, but never with a city that lengthens a leg over the cap.
     for (const score of deep) {
       if (chosen.length >= shows) break;
-      if (gone.some((g) => g.score.marketId === score.marketId) || chosen.some((x) => x.score.marketId === score.marketId || clash(x.score, score))) continue;
+      if (best.gone.includes(score) || chosen.some((x) => x.score.marketId === score.marketId || clash(x.score, score))) continue;
+      if (longCount([...chosen.map((x) => x.score), score]) > best.n) continue;
       if (await o.usable(score.marketId)) chosen.push(o.make(score));
     }
-    o.on?.({ t: "fan", city: f, out: gone.map((g) => g.score) });
+    o.on?.({ t: "fan", city: f, out: best.gone, ...(best.bridge ? { bridge: best.bridge } : {}) });
     fans++;
   }
 
@@ -690,7 +751,9 @@ export async function planTour(
       } else if (e.t === "home") {
         log({ kind: "rule", text: `${e.home.name} is where the tour starts and #${e.home.rank} on ${artist.name}'s fan map, so the run opens with a hometown show${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}.`, result: "No band routes past its hometown" });
       } else if (e.t === "fan") {
-        log({ kind: "rule", text: `${e.city.name} is #${e.city.rank} on ${artist.name}'s fan map, one of the ${FAN_KEEP} strongest, so it stays on the tour${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}.`, result: "A tour never drops the artist's strongest fan cities when the route can reach them" });
+        log({ kind: "rule", text: `${e.city.name} is #${e.city.rank} on ${artist.name}'s fan map, one of the ${FAN_KEEP} strongest, so it stays on the tour${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}${e.bridge ? `; ${e.bridge.name} (fan #${e.bridge.rank}${e.bridge.rank > FAN_CAP ? ", past the fan cap" : ""}) comes in to keep every leg under ${n(MAX_LEG_KM)} km` : ""}.`, result: "A tour never drops the artist's strongest fan cities when the route can reach them, and never drops the city that bridges the route" });
+      } else if (e.t === "no-fan") {
+        log({ kind: "rule", text: `${e.city.name} is #${e.city.rank} on ${artist.name}'s fan map, but no route reaches it without a leg over ${n(MAX_LEG_KM)} km, even with a bridge city, so it stays off this run.`, failed: true });
       } else if (e.t === "no-home") {
         log({ kind: "rule", text: `${e.home.name} is #${e.home.rank} on the fan map, but stays off the tour: ${e.reason}.` });
       } else {

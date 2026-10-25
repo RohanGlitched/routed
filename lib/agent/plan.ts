@@ -7,7 +7,7 @@ import type { AgentCheck, Artist, Audience, Capacity, CityScore, LogLine, Opener
 import { AGE_LABEL, topAge } from "./audience";
 import { fit } from "./evidence";
 import { blendOrder, diffLine, qlooDiff, sizeRanks, type Ranks } from "./qloodiff";
-import { candidatesBySize, chooseRoom, pickSupport, REDUCED_MAX, reducedHouse, roomCheck, twoNights } from "./rooms";
+import { candidatesBySize, chooseRoom, fitWord, pickSupport, roomFit, REDUCED_MAX, reducedHouse, roomCheck, roomGrade, twoNights } from "./rooms";
 import type { Log } from "./tools";
 
 /**
@@ -67,7 +67,7 @@ export { MAX_LEG_KM };
 export { ANCHOR_RANK };
 /** How deep in the ranking the leg rule may look for a city that closes a long leg. */
 export const POOL_SIZE = 60;
-/** Rooms measured per city, after the agent's choice, until one fits the crowd. */
+/** Rooms measured per city, after the agent's choice, until one is a close fit for the crowd. */
 export const MEASURE_PER_CITY = 8;
 /** Rooms measured per shortlisted city before the book call, in the order the room rule would measure them. */
 export const PRE_MEASURE = 4;
@@ -255,7 +255,7 @@ export type Objection = {
 export type CheckContext = { byId: Map<string, CityScore>; rooms: Map<string, Room[]>; shows: number; draw?: number; from: { lat: number; lon: number }; radius: number; /** Qloo's top fan cities, kept like anchors. */ mustKeep?: Set<string> };
 
 const placed = (c: CityScore) => ({ lat: c.lat, lon: c.lon, pop: popOf(c.marketId) });
-const sizeWord = (r: Room, draw?: number) => (r.capacity ? `holds ${n(r.capacity.value)}${draw ? ` (${fit(r, draw)} for about ${n(draw)})` : ""}` : "has no confirmed capacity");
+const sizeWord = (r: Room, draw?: number) => (r.capacity ? `holds ${n(r.capacity.value)}${draw ? ` (${fitWord(r, draw)} for about ${n(draw)})` : ""}` : "has no confirmed capacity");
 
 /**
  * check_plan: the rules the tour will be held to, run over the agent's booking as it stands, returning each
@@ -300,7 +300,15 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
       continue;
     }
     const best = c.draw ? chooseRoom(rs, room.id, c.draw) : undefined;
-    if (best && best.id !== room.id) out.push({ city_id: s.city_id, rule: "room", text: `${room.name} ${sizeWord(room, c.draw)}; the room rule would book ${best.name} (${best.id}), which ${sizeWord(best, c.draw)}. Book a room that fits the crowd.`, short: `${room.name} ${room.capacity ? `holds ${n(room.capacity.value)}, ${fit(room, c.draw)}` : "has no confirmed capacity"}` });
+    // Both measured and both one-night rooms: say which is closer, in a booker's words.
+    const closer = best && room.capacity && best.capacity && fit(room, c.draw) === "fits" && roomGrade(best, c.draw) < roomGrade(room, c.draw);
+    if (best && best.id !== room.id)
+      out.push({
+        city_id: s.city_id,
+        rule: "room",
+        text: closer ? `${best.name} holds ${n(best.capacity!.value)}, a closer fit for about ${n(c.draw!)} than ${room.name}'s ${n(room.capacity!.value)} (${fitWord(room, c.draw)}): book ${best.name} (${best.id}). A booker would rather sell out a slightly small room than half-fill a big one.` : `${room.name} ${sizeWord(room, c.draw)}; the room rule would book ${best.name} (${best.id}), which ${sizeWord(best, c.draw)}. Book a room that fits the crowd.`,
+        short: closer ? `${best.name} (${n(best.capacity!.value)}) is a closer fit than ${room.name}'s ${n(room.capacity!.value)}` : `${room.name} ${room.capacity ? `holds ${n(room.capacity.value)}, ${fitWord(room, c.draw)}` : "has no confirmed capacity"}`,
+      });
   }
 
   const ordered = orderStops(c.from, kept.map((k) => k.score));
@@ -663,7 +671,7 @@ export async function planTour(
     log({ kind: "web", text: `How many does ${room.name} hold?`, result: cap ? `${n(cap.value)}, per ${host(cap.source)}` : "Not found; ask the room." });
   };
   /** Before booking: the rooms the agent named, then the likeliest of the rest in the order the room rule measures
-   *  them, until one fits. */
+   *  them, until one is a close fit (85–130%). */
   const premeasure = async (id: string) => {
     const c = allById.get(id) ?? byId.get(id);
     if (!draw || !c) return;
@@ -671,7 +679,8 @@ export async function planTour(
     const order = [...all.filter((r) => r.origin === "agent"), ...candidatesBySize(all.filter((r) => r.origin !== "agent"), draw).slice(0, PRE_MEASURE)];
     for (const r of order) {
       await measure(r, c.label);
-      if (fit(r, draw) === "fits") break;
+      // A close fit ends the search; a loose one or one the fans sell out doesn't, so a closer room can still turn up.
+      if (roomFit(r, draw) === "close") break;
     }
   };
 
@@ -917,7 +926,7 @@ export async function planTour(
 
   // Every picked city gets its lookups, whatever the model skipped. With a known crowd the booked room's capacity
   // is checked, then the city's other rooms in order (best-known first for a big crowd, best-matched for a small
-  // one) until one fits, up to eight checks a city. The room is then chosen by rule: a known fit for one night,
+  // one) until one is a close fit, up to eight checks a city. The room is then chosen by rule: a known fit for one night,
   // else a known two-night stand, else a room whose capacity couldn't be found, and a known misfit only when
   // nothing else is left (and the sheet says so).
   // A city whose rooms can't take this crowd (rooms.ts roomCheck: only misfits, or nothing measurable for 3,000 or
@@ -927,10 +936,10 @@ export async function planTour(
       const city = c.score.label;
       const first = r.find((x) => x.id === c.roomId) ?? r[0];
       if (first) await measure(first, city);
-      if (draw && first && fit(first, draw) !== "fits") {
+      if (draw && first && roomFit(first, draw) !== "close") {
         for (const next of candidatesBySize(r.filter((x) => x !== first), draw).slice(0, MEASURE_PER_CITY)) {
           await measure(next, city);
-          if (fit(next, draw) === "fits") break;
+          if (roomFit(next, draw) === "close") break;
         }
       }
       const check = roomCheck(r, c.roomId ?? first?.id, draw);
@@ -938,7 +947,7 @@ export async function planTour(
       const nights = room && twoNights(room, draw) && !r.some((x) => fit(x, draw) === "fits") ? 2 : 1;
       if (room && c.roomId && room.id !== c.roomId) {
         const was = r.find((x) => x.id === c.roomId);
-        log({ kind: "rule", text: `${was?.name ?? "The agent's room"} ${was?.capacity ? `holds ${n(was.capacity.value)}, ${fit(was, draw)} for a crowd of about ${n(draw!)}` : "couldn't be confirmed for the crowd"}, so ${c.score.name} gets ${room.name}.`, result: room.capacity ? `${room.name} holds ${n(room.capacity.value)}${nights === 2 ? ": two nights" : fit(room, draw) === "fits" ? "" : " (the nearest size that could be confirmed)"}` : `${room.name}: capacity not found, ask the room` });
+        log({ kind: "rule", text: `${was?.name ?? "The agent's room"} ${was?.capacity ? `holds ${n(was.capacity.value)}, ${fitWord(was, draw)} for a crowd of about ${n(draw!)}${fit(was, draw) === "fits" && room.capacity ? `, and ${room.name} is closer` : ""}` : "couldn't be confirmed for the crowd"}, so ${c.score.name} gets ${room.name}.`, result: room.capacity ? `${room.name} holds ${n(room.capacity.value)}${nights === 2 ? ": two nights" : fit(room, draw) === "fits" ? "" : " (the nearest size that could be confirmed)"}` : `${room.name}: capacity not found, ask the room` });
       } else if (room && reducedHouse(room, draw) && !r.some((x) => fit(x, draw) === "fits")) {
         log({ kind: "rule", text: `${room.name} holds ${n(room.capacity!.value)}, more than the usual crowd of about ${n(draw!)}, and no room in ${c.score.name} was confirmed to fit, so the pitch asks for a reduced configuration.`, result: `Up to ${REDUCED_MAX} times the crowd can be booked that way` });
       } else if (nights === 2 && room) {

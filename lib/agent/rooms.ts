@@ -2,7 +2,7 @@ import type { Entity } from "../qloo";
 import type { Market } from "../geo/markets";
 import type { Artist, Room } from "../types";
 import { kmBetween } from "../geo/local";
-import { fit, snugFit } from "./evidence";
+import { fit, SNUG, snugFit } from "./evidence";
 import { sameVenue } from "./capacity";
 
 /**
@@ -181,9 +181,10 @@ export const SMALL_ONLY_DRAW = 1500;
 export function roomGrade(r: Room, draw?: number): number {
   if (!draw) return 0;
   const f = fit(r, draw);
-  // Among rooms that fit, a snug one (85–130% of the crowd) goes first: Capitol Theatre's 1,876 for 1,500, not the
-  // 2,768 of a hall two-thirds full.
-  if (f === "fits") return snugFit(r.capacity!.value, draw) ? 0 : 0.2;
+  // One night, in a booker's order: a close fit (85–130% of the crowd), then a room the fans sell out (60–85%), then
+  // a loose fit (130–250%). Selling out a slightly small room beats half-filling a big one: the Crystal Ballroom's
+  // 1,500 before Arlene Schnitzer's 2,776, the Orange Peel's 1,050 before Thomas Wolfe's 2,431.
+  if (f === "fits") return roomFit(r, draw) === "close" ? 0 : roomFit(r, draw) === "sells out" ? 0.1 : 0.2;
   if (twoNights(r, draw)) return 1;
   if (reducedHouse(r, draw)) return 1.5;
   if (shortHouse(r, draw)) return 1.8;
@@ -193,6 +194,19 @@ export function roomGrade(r: Room, draw?: number): number {
     return base + (prior === "large" ? -0.1 : prior === "small" ? 0.6 : 0);
   }
   return 3 + Math.abs(Math.log(r.capacity!.value / draw));
+}
+
+/** Where a measured one-night room sits in the booker's order; undefined outside 60–250% or unmeasured. */
+export function roomFit(r: Room, draw?: number): "close" | "sells out" | "loose" | undefined {
+  if (!draw || !r.capacity || fit(r, draw) !== "fits") return undefined;
+  return snugFit(r.capacity.value, draw) ? "close" : r.capacity.value < draw * SNUG.min ? "sells out" : "loose";
+}
+
+/** A room's size in words for the call sheet and the agent: "a close fit", "one the fans sell out", "a loose fit",
+ *  else what fit() says ("too small", "too big", "unknown"). */
+export function fitWord(r: Room, draw?: number): string {
+  const f = roomFit(r, draw);
+  return f === "close" ? "a close fit" : f === "sells out" ? "one the fans sell out" : f === "loose" ? "a loose fit" : fit(r, draw);
 }
 
 /** The room to book: the best grade; among equals the agent's choice, then Qloo's order (fan affinity). */

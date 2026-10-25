@@ -207,7 +207,7 @@ test("check_plan: room fit and the leg cap", () => {
     { byId: new Map([seattle, miami].map((c) => [c.marketId, c])), rooms, shows: 2, draw: 1200, from: seattle, radius: 150 },
   );
   assert.deepEqual(out.map((o) => o.rule).sort(), ["leg", "room"]);
-  assert.match(out.find((o) => o.rule === "room")!.text, /the room rule would book Big Hall \(s-big\), which holds 1,500 \(fits for about 1,200\)/);
+  assert.match(out.find((o) => o.rule === "room")!.text, /the room rule would book Big Hall \(s-big\), which holds 1,500 \(a close fit for about 1,200\)/);
   assert.match(out.find((o) => o.rule === "leg")!.text, /Seattle to Miami is [\d,]+ km of road with no show between/);
 });
 
@@ -265,7 +265,7 @@ test("check_plan: an unmeasured room loses to a measured room that fits, for a c
   const rooms = new Map<string, Room[]>([[col.marketId, [{ id: "wex", name: "Wexner Center for the Arts", tags: [], affinity: 0.95 }, { id: "kemba", name: "KEMBA Live!", tags: [], affinity: 0.7, capacity: { value: 2200, source: "https://x.org", quote: "" } }]]]);
   const out = checkPlan([{ city_id: col.marketId, room_id: "wex", opener_id: "o", why: "" }], { byId: new Map([[col.marketId, col]]), rooms, shows: 1, draw: 1500, from: col, radius: 150 });
   assert.equal(out.length, 1);
-  assert.match(out[0]!.text, /Wexner Center for the Arts has no confirmed capacity; the room rule would book KEMBA Live! \(kemba\), which holds 2,200 \(fits for about 1,500\)/);
+  assert.match(out[0]!.text, /Wexner Center for the Arts has no confirmed capacity; the room rule would book KEMBA Live! \(kemba\), which holds 2,200 \(a loose fit for about 1,500\)/);
 });
 
 /* ───────────── the bridge (second smoke tour: Portland kept, but Salt Lake City gave way and Denver lost to Boulder) ───────────── */
@@ -439,4 +439,44 @@ test("Salt Lake City books the snug measured room, not the symphony's hall: Capi
   // One jazz-flavoured tag among an americana act's genres doesn't open the Utah Symphony's hall.
   assert.equal(orchestraHallFor("Abravanel Hall", ["americana", "bluegrass", "folk", "country", "gypsy jazz"]), true);
   assert.equal(orchestraHallFor("Abravanel Hall", ["jazz", "vocal jazz", "swing"]), false);
+});
+
+/* ───────────── a booker's order among rooms that fit: close, then sells out, then loose ───────────── */
+
+const capped = (id: string, name: string, value: number): Room => ({ id, name, tags: [], capacity: { value, source: "https://example.org/", quote: "capacity" } });
+
+test("Portland: the Crystal Ballroom (1,500) is a closer fit than Arlene Schnitzer (2,776), and check_plan says so", async () => {
+  const { chooseRoom, roomCheck, fitWord } = await import("../lib/agent/rooms.ts");
+  const pdx = city("Portland, OR", 3);
+  const rooms = [capped("schnitz", "Arlene Schnitzer Concert Hall", 2776), capped("crystal", "McMenamins Crystal Ballroom", 1500)];
+  assert.equal(chooseRoom(rooms, "schnitz", 1500)!.id, "crystal", "the rule picks the close fit over the agent's loose one");
+  assert.equal(roomCheck(rooms, "schnitz", 1500).room!.id, "crystal");
+  assert.equal(fitWord(rooms[0]!, 1500), "a loose fit");
+  const out = checkPlan([{ city_id: pdx.marketId, room_id: "schnitz", opener_id: "o", why: "" }], { byId: new Map([[pdx.marketId, pdx]]), rooms: new Map([[pdx.marketId, rooms]]), shows: 1, draw: 1500, from: pdx, radius: 150 });
+  assert.equal(out.length, 1);
+  assert.match(out[0]!.text, /^McMenamins Crystal Ballroom holds 1,500, a closer fit for about 1,500 than Arlene Schnitzer Concert Hall's 2,776 \(a loose fit\): book McMenamins Crystal Ballroom \(crystal\)/);
+});
+
+test("Asheville: the Orange Peel (1,050, sold out) beats Thomas Wolfe Auditorium (2,431, two-thirds full), and an agent that insists is overruled", async () => {
+  const { chooseRoom, fitWord } = await import("../lib/agent/rooms.ts");
+  const rooms = [capped("wolfe", "Thomas Wolfe Auditorium", 2431), capped("peel", "The Orange Peel", 1050)];
+  assert.equal(fitWord(rooms[1]!, 1500), "one the fans sell out");
+  assert.equal(chooseRoom(rooms, "wolfe", 1500)!.id, "peel");
+  // A close fit still beats a room the fans sell out.
+  assert.equal(chooseRoom([capped("peel", "The Orange Peel", 1050), capped("x", "Close Hall", 1600)], "peel", 1500)!.id, "x");
+
+  // The agent books Thomas Wolfe and keeps it through both rounds: the rule swaps and says why.
+  const caps = { [`${id("Denver")}-a`]: 2431, [`${id("Denver")}-b`]: 1050 };
+  const calls: string[] = [];
+  const ask = model((name, messages) => {
+    if (name === "shortlist") return { cities: [id("Denver"), id("Salt Lake City"), id("Albuquerque")].map((c) => ({ city_id: c, why: "strong" })), alternates: [] };
+    if (name === "rebook") assert.match(lastUser(messages), /denver-us-co Hall B holds 1,050, a closer fit for about 1,500 than denver-us-co Hall A's 2,431 \(a loose fit\)/);
+    if (name === "book" || name === "rebook") return { stops: [stop(id("Denver")), stop(id("Salt Lake City")), stop(id("Albuquerque"))] };
+    return { reasons: [] };
+  }, calls);
+  const { p, lines } = run(tools(ask, caps), { draw: 1500 });
+  const r = await p;
+  assert.deepEqual(calls.slice(0, 4), ["shortlist", "book", "rebook", "rebook"]);
+  assert.equal(r.picks.find((x) => x.marketId === id("Denver"))!.roomId, `${id("Denver")}-b`);
+  assert.ok(lines.some((l) => l.text === "denver-us-co Hall A holds 2,431, a loose fit for a crowd of about 1,500, and denver-us-co Hall B is closer, so Denver gets denver-us-co Hall B."), lines.filter((l) => l.kind === "rule").map((l) => l.text).join(" | "));
 });

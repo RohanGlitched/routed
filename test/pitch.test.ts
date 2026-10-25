@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { checkNumbers, evidenceLines, fullDate, garbled, routingWords, signed, templatePitch } from "../lib/agent/evidence.ts";
+import { checkNumbers, evidenceLines, falseLocalClaim, fullDate, garbled, routingWords, signed, stopLocal, templatePitch } from "../lib/agent/evidence.ts";
 import { recheckTour } from "../lib/agent/recheck.ts";
 import type { Plan, Stop, TourRecord } from "../lib/types.ts";
 
@@ -106,4 +106,34 @@ test("a signature goes under Thanks, once", () => {
   assert.equal(signed("Hi,\n\nBody.\n\nThanks,\nRohan", "Rohan"), "Hi,\n\nBody.\n\nThanks,\nRohan");
   assert.equal(signed("Hi,\n\nBody.", "Rohan"), "Hi,\n\nBody.\n\nThanks,\nRohan");
   assert.equal(signed("Hi,\n\nThanks,", "  "), "Hi,\n\nThanks,");
+});
+
+/* The street level (H4 wiring, Oct 25): the evidence reads geo/local.ts readLocal, so "sits in" needs Qloo to file the
+   room under the fans' own neighbourhood; a stored pitch that claimed it by distance is re-drafted. */
+const tiles: [number, number, number][] = [[45.5122, -122.6587, 1], [45.513, -122.659, 0.9]];
+const near = { ...lyric, id: "dantes", name: "Dante's", lat: 45.5232, lon: -122.6587, area: "Old Town" };
+const portland = stop("Portland", "2027-05-10", 3, { rooms: [near], roomId: "dantes", local: { tiles, hot: { lat: 45.5122, lon: -122.6587, name: "Buckman", trait: "Creative hub", named: "near" } } as unknown as Stop["local"] });
+const inside = stop("Portland", "2027-05-10", 3, { rooms: [{ ...near, area: "Buckman", lat: 45.5125, lon: -122.6588 }], roomId: "dantes", local: portland.local });
+const p2 = { ...plan, stops: [portland] } as unknown as Plan;
+
+test("the evidence says 'sits in' only when Qloo files the room under the fans' neighbourhood", () => {
+  const ev = evidenceLines(p2, portland, 1500).join("\n");
+  assert.match(ev, /strongest area in Portland around Buckman, creative hub; Dante's is 1\.2 km from those blocks\. Qloo files Dante's under Old Town\. Do not write that Dante's is in Buckman\./);
+  assert.doesNotMatch(ev, /one neighbourhood|sits in it/);
+  assert.match(evidenceLines({ ...plan, stops: [inside] } as unknown as Plan, inside, 1500).join("\n"), /Dante's sits in Buckman/);
+});
+
+test("a false neighbourhood claim is caught, and re-checking re-drafts the stored pitch", () => {
+  const read = stopLocal(portland);
+  assert.equal(falseLocalClaim("Dante's sits in it, right where her fans are.", read), true);
+  assert.equal(falseLocalClaim("Dante's is in Buckman, the fans' strongest area.", read), true);
+  assert.equal(falseLocalClaim("Fans cluster around Buckman; Dante's is 1.2 km away.", read), false, "saying where the fans are is fine");
+  assert.equal(falseLocalClaim("Dante's sits in it.", stopLocal(inside)), false, "true when Qloo files it there");
+  assert.equal(falseLocalClaim("The heatmap puts fans in one neighbourhood.", undefined), true, "the old placeholder");
+  const bad = { subject: "Hold request: Sierra Ferrell, Monday, May 10", body: "Hi,\n\nDante's sits in the fans' strongest area, 1.2 km from it.\n\nThanks,", struck: [] };
+  const rec = { id: "t", createdAt: "x", status: "done", input: { artist: "Sierra Ferrell", from: "Nashville, TN", firstDate: "2027-05-10", shows: 1, draw: 1500 }, log: [], plan: { ...p2, stops: [{ ...portland, pitch: bad }] } } as unknown as TourRecord;
+  const r = recheckTour(rec, "2026-10-25T00:00:00Z");
+  assert.deepEqual(r.redrafted, ["Portland"]);
+  assert.doesNotMatch(r.rec.plan!.stops[0]!.pitch!.body, /sits in/);
+  assert.match(r.rec.log.at(-1)!.text, /neighbourhood Qloo doesn't file it under/);
 });

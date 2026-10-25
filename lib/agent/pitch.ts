@@ -1,7 +1,7 @@
 import "server-only";
 import { MODELS, structured } from "../nebius";
 import type { Pitch, Plan } from "../types";
-import { checkNumbers, evidenceLines, garbled, signed, templatePitch } from "./evidence";
+import { checkNumbers, evidenceLines, falseLocalClaim, garbled, signed, stopLocal, templatePitch } from "./evidence";
 
 /**
  * One hold-request email per stop, written by Nemotron from that stop's evidence lines only, as strict JSON.
@@ -59,7 +59,7 @@ export async function writePitches(plan: Plan, useModel: boolean, draw?: number,
     });
     const pitches = plan.stops.map((_, i) => {
       const p = data.pitches.find((x) => x.stop === i + 1);
-      if (!p?.body?.trim() || garbled(`${p.subject}\n${p.body}`).length) return template(i);
+      if (!p?.body?.trim() || garbled(`${p.subject}\n${p.body}`).length || falseLocalClaim(`${p.subject}\n${p.body}`, stopLocal(plan.stops[i]!))) return template(i);
       const subject = checkNumbers(p.subject.trim(), evidence[i]!);
       const body = checkNumbers(p.body.trim(), evidence[i]!);
       return { subject: subject.text, body: signed(body.text, sign), struck: [...subject.struck, ...body.struck] };

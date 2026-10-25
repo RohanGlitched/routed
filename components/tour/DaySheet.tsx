@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { sizeNote } from "@/lib/agent/evidence";
+import { sizeNote, unmeasuredNote } from "@/lib/agent/evidence";
 import { addDays, MAX_LEG_KM, VAN_KMH } from "@/lib/geo/route";
 import { independents } from "@/lib/chains";
 import { sharedGenres } from "@/lib/agent/rooms";
@@ -103,6 +103,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
               <dt>Room</dt>
               <dd>
                 <b>{room.name}</b>
+                {room.origin === "agent" && <span className={s.alt}>Suggested by the agent, found on Qloo</span>}
                 <span className={s.meta}>
                   {room.affinity !== undefined && <span className={s.aff}>Fan affinity {pct(room.affinity)}. </span>}
                   {room.capacity ? (
@@ -120,12 +121,13 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                         ? (() => {
                             // "Fits" only at 85–130% of the crowd, "cover" only when the nights hold it (lib/agent/evidence.ts).
                             const note = sizeNote(room.capacity.value, draw, nights);
-                            return note.kind === "fits" || note.kind === "covers" ? <span className={s.alt}>{note.text}</span> : <span className={s.sizeNote}> {note.text}</span>;
+                            // Red only for a misfit; a room inside the booking window (60–250%) reads as a plain note.
+                            return note.alarm ? <span className={s.sizeNote}> {note.text}</span> : <span className={s.alt}>{note.text}</span>;
                           })()
                         : null}
                     </>
                   ) : (
-                    !pending && "Capacity not found on the web; ask the room."
+                    !pending && (unmeasuredNote(draw).alarm ? <span className={s.sizeNote}>{unmeasuredNote(draw).text}</span> : unmeasuredNote(draw).text)
                   )}
                 </span>
                 {others.length > 0 && <span className={s.alt}>Other rooms these fans go to: {others.map((r) => `${r.name}${r.capacity ? ` (holds ${r.capacity.value.toLocaleString("en-US")})` : r.affinity !== undefined ? ` (${pct(r.affinity)})` : ""}`).join(", ")}</span>}

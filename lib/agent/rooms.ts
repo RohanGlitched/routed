@@ -27,7 +27,7 @@ export const BIG_ROOM_TAGS = ["urn:tag:genre:place:arena", "urn:tag:genre:place:
 /** A café, bar, pub or club by name is not the room for a crowd of 3,000 (Olympic Café came back for 8,000). */
 const SMALL_NAME = /\b(caf[eé]|bar|pub|tavern|lounge|club|jazz|kneipe|bistro|brasserie|taproom|saloon)(?![a-z])/i;
 /** An orchestra's own hall: booked for orchestras, not for a rock, pop or hip-hop tour. */
-const ORCHESTRA_HALL = /\b(symphony|philharmoni[ce]|orchestra hall|walt disney concert hall|benaroya hall|meyerhoff|davies symphony|severance hall|carnegie hall|heinz hall|boettcher|kimmel center|segerstrom concert hall|roy thomson hall|jack singer|royal festival hall|elbphilharmonie|concertgebouw)\b/i;
+const ORCHESTRA_HALL = /\b(symphony|philharmoni[ce]|orchestra hall|walt disney concert hall|benaroya hall|abravanel hall|meyerhoff|davies symphony|severance hall|carnegie hall|heinz hall|boettcher|kimmel center|segerstrom concert hall|roy thomson hall|jack singer|royal festival hall|elbphilharmonie|concertgebouw)\b/i;
 /** Genres whose acts do play orchestra halls. */
 const HALL_GENRES = /classical|orchestral|chamber|choral|opera|jazz|neo ?classical|ambient|contemporary classical/;
 
@@ -139,12 +139,38 @@ export function shortHouse(r: Room, draw?: number): boolean {
 }
 
 /**
+ * What a room's name and Qloo tags say about its size when nobody could measure it: "small" for a music school, a
+ * DIY space, a youth centre, a collective, an "underground" room, an abbey or church arts centre, a bar (Swallow
+ * Hill Music, Seventh Circle Music Collective, The Vera Project, Fremont Abbey Arts Center); "large" for a theatre,
+ * auditorium, ballroom, hall, music hall or amphitheatre, and the Fillmores and the Ogden. Only a guess: it orders
+ * rooms nobody measured and is never shown as a capacity. Small wins when both match ("Theatre Off Jackson" is a
+ * theatre by name; its tags don't say small, so it stays large).
+ */
+// Not "academy" (O2 Academy Bristol holds 1,600) and not "house of" (House of Blues).
+const SMALL_PRIOR_NAME = /\b(music school|school of music|conservatory|diy|youth|collective|underground|abbey|church|chapel|coffee ?house|caf[eé]|tavern|pub|bar|lounge|basement|gallery|studios?|community cent(er|re)|vfw|legion)(?![a-z])/i;
+const SMALL_PRIOR_TAG = /^(diy|youth center|youth centre|youth empowerment|music instructor|music lessons|music school|sober space|converted church aesthetic|church|dive bar|dive bar aesthetic|full bar|barebones|house shows?|coffee shop)$/i;
+const LARGE_PRIOR_NAME = /\b(theat(re|er)|auditorium|ballroom|hall|music hall|amphithea(tre|ter)|arena|coliseum|pavilion|opera house|fillmore|ogden|performing arts|event center|events center|palladium|paramount|orpheum)\b/i;
+const LARGE_PRIOR_TAG = /^(music hall|amphitheater|amphitheatre|arena|performing arts venue|theater house|ballroom|concert venue)$/i;
+
+export function sizePrior(r: Pick<Room, "name" | "tags">): "small" | "large" | undefined {
+  const tags = r.tags ?? [];
+  if (SMALL_PRIOR_NAME.test(r.name) || tags.some((t) => SMALL_PRIOR_TAG.test(t.trim()))) return "small";
+  if (LARGE_PRIOR_NAME.test(r.name) || tags.some((t) => LARGE_PRIOR_TAG.test(t.trim()))) return "large";
+  return undefined;
+}
+
+/** From this crowd up, an unmeasured room's size prior orders it, and a small one alone isn't bookable at 1,500. */
+export const PRIOR_DRAW = 1000;
+export const SMALL_ONLY_DRAW = 1500;
+
+/**
  * How good a room is for this crowd, lower is better: 0 a known fit (60–250% of the draw, one night); 1 a known
  * two-night stand (50–60%); 1.5 a known room up to four times the crowd, in a reduced configuration; 1.8 a known
  * room at 40–50% of the crowd, one night; then a room whose capacity couldn't be found (2 for a crowd under 3,000,
- * where clubs are rarely on Wikidata; 2.5 from 3,000 up, where an unmeasured room is nearly always a small one);
- * then rooms known to miss by how far they miss. So a measured room at 40–250% always beats one nobody measured
- * (Ghost's 8,000 crowd once got Strom, a club nobody could measure).
+ * where clubs are rarely on Wikidata; 2.5 from 3,000 up, where an unmeasured room is nearly always a small one;
+ * from 1,000 up a name or tags that say theatre take 0.1 off and ones that say music school or DIY add 0.6, so
+ * the Ogden goes before Swallow Hill Music); then rooms known to miss by how far they miss. So a measured room at
+ * 40–250% always beats one nobody measured (Ghost's 8,000 crowd once got Strom, a club nobody could measure).
  */
 export function roomGrade(r: Room, draw?: number): number {
   if (!draw) return 0;
@@ -153,7 +179,11 @@ export function roomGrade(r: Room, draw?: number): number {
   if (twoNights(r, draw)) return 1;
   if (reducedHouse(r, draw)) return 1.5;
   if (shortHouse(r, draw)) return 1.8;
-  if (f === "unknown") return draw >= BIG_ROOM_DRAW ? 2.5 : 2;
+  if (f === "unknown") {
+    const base = draw >= BIG_ROOM_DRAW ? 2.5 : 2;
+    const prior = draw >= PRIOR_DRAW ? sizePrior(r) : undefined;
+    return base + (prior === "large" ? -0.1 : prior === "small" ? 0.6 : 0);
+  }
   return 3 + Math.abs(Math.log(r.capacity!.value / draw));
 }
 
@@ -168,8 +198,10 @@ export function chooseRoom(rooms: Room[], wanted: string | undefined, draw?: num
  * Whether a city has a room this crowd can be booked into, for the planner: the room chooseRoom would book, and
  * `bookable` false when the city should give way to the next ranked one. Not bookable: no room at all; only rooms
  * known to miss the crowd (under 40% of it, or over four times); or, for a crowd of 3,000 or more, only rooms
- * nobody could measure (an unmeasured room at that size is nearly always a club). Below 3,000 an unmeasured room
- * is bookable: clubs are rarely on Wikidata, and the pitch asks the room what it holds.
+ * nobody could measure (an unmeasured room at that size is nearly always a club); or, for a crowd of 1,500 or
+ * more, only unmeasured rooms whose names or tags say small (sizePrior: Barboza, a 100-cap bar, for 1,500).
+ * Otherwise an unmeasured room below 3,000 is bookable: clubs are rarely on Wikidata, and the pitch asks the room
+ * what it holds.
  */
 export type RoomCheck = { room?: Room; bookable: boolean; status: "measured" | "unmeasured" | "misfit" | "none"; reason?: string };
 
@@ -177,9 +209,14 @@ export function roomCheck(rooms: Room[], wanted: string | undefined, draw?: numb
   const room = chooseRoom(rooms, wanted, draw);
   if (!room) return { bookable: false, status: "none", reason: "no room of this kind came back" };
   if (!draw) return { room, bookable: true, status: room.capacity ? "measured" : "unmeasured" };
-  if (roomGrade(room, draw) < 2) return { room, bookable: true, status: "measured" };
+  if (room.capacity && roomGrade(room, draw) < 2) return { room, bookable: true, status: "measured" };
   const crowd = draw.toLocaleString("en-US");
-  if (!room.capacity) return draw >= BIG_ROOM_DRAW ? { room, bookable: false, status: "unmeasured", reason: `no room these fans go to could be measured for a crowd of ${crowd}` } : { room, bookable: true, status: "unmeasured" };
+  if (!room.capacity) {
+    if (draw >= BIG_ROOM_DRAW) return { room, bookable: false, status: "unmeasured", reason: `no room these fans go to could be measured for a crowd of ${crowd}` };
+    // chooseRoom puts a small-sounding room last among the unmeasured, so this one being small means they all are.
+    if (draw >= SMALL_ONLY_DRAW && sizePrior(room) === "small") return { room, bookable: false, status: "unmeasured", reason: `the only rooms left, like ${room.name}, couldn't be measured and look small for a crowd of ${crowd}` };
+    return { room, bookable: true, status: "unmeasured" };
+  }
   return { room, bookable: false, status: "misfit", reason: `the nearest size, ${room.name} at ${room.capacity.value.toLocaleString("en-US")}, is ${room.capacity.value < draw ? "under 40%" : "over four times"} of a crowd of ${crowd}` };
 }
 
@@ -368,7 +405,9 @@ export function isMember(headliner: string, opener: { name: string; description?
  *  small one the best-matched; rooms already known to miss the crowd go last. */
 export function candidatesBySize(rooms: Room[], draw: number): Room[] {
   const misses = (r: Room) => Number(fit(r, draw) !== "unknown" && fit(r, draw) !== "fits");
-  return [...rooms].sort((a, b) => misses(a) - misses(b) || (draw >= 1000 ? (b.popularity ?? 0) - (a.popularity ?? 0) : (b.affinity ?? 0) - (a.affinity ?? 0)));
+  // From 1,000 up, a theatre or a hall by name is measured before an unlabelled room, and a music school last.
+  const p = (r: Room) => (draw >= PRIOR_DRAW && !r.capacity ? (sizePrior(r) === "large" ? 0 : sizePrior(r) === "small" ? 2 : 1) : 1);
+  return [...rooms].sort((a, b) => misses(a) - misses(b) || p(a) - p(b) || (draw >= 1000 ? (b.popularity ?? 0) - (a.popularity ?? 0) : (b.affinity ?? 0) - (a.affinity ?? 0)));
 }
 
 const foldName = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/^the\s+/, "").replace(/[^a-z0-9]+/g, " ").trim();

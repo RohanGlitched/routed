@@ -1,7 +1,8 @@
 import "server-only";
 import { capacityOverride, mergeCapacities, NOT_A_SOURCE, pickCapacity, sameVenue, sourceOk } from "./agent/capacity";
+import { mergeLadder, roomLadder, type LadderRoom } from "./agent/rooms";
 import { storage } from "./storage";
-import { wikidataCapacity } from "./wikidata";
+import { wikidataCapacity, wikidataRoomsNear } from "./wikidata";
 
 /**
  * Tavily, for the one fact Qloo doesn't carry: how many people a room holds. Search returns page snippets; the
@@ -20,6 +21,32 @@ let webDay = "";
 let webCount = 0;
 
 export const hasTavily = () => process.env.TAVILY_OFF !== "1";
+
+const today = () => new Date().toISOString().slice(0, 10);
+let downDay = "";
+/** Whether web lookups are off for the rest of the day (keyless Tavily answered with its daily limit), so a call
+ *  sheet can say "the web search was unavailable" instead of "not found". */
+export const webDown = () => downDay === today();
+
+/**
+ * A room Wikidata's name search missed can still be on the city's ladder (agent/rooms.ts roomLadder): every item
+ * with a capacity within 30 km, one gated query a city, matched to the room by its distinctive words within 2 km.
+ * A failed query is forgotten, so the next room asks again.
+ */
+const ladders = new Map<string, Promise<LadderRoom[] | undefined>>();
+async function ladderCapacity(room: { id: string; name: string; lat?: number; lon?: number }, city: string, near: { lat: number; lon: number }): Promise<Cap | null> {
+  const k = city.toLowerCase();
+  let p = ladders.get(k);
+  if (!p) {
+    p = wikidataRoomsNear(near, 30).then((rows) => (rows ? roomLadder(rows) : undefined));
+    ladders.set(k, p);
+    void p.then((l) => l === undefined && ladders.delete(k));
+    if (ladders.size > 300) ladders.delete(ladders.keys().next().value!);
+  }
+  const ladder = await p.catch(() => undefined);
+  if (!ladder?.length) return null;
+  return mergeLadder([{ id: room.id, name: room.name, lat: room.lat, lon: room.lon, tags: [] }], ladder).rooms[0]!.capacity ?? null;
+}
 
 function takeSearch(): boolean {
   const d = new Date().toISOString().slice(0, 10);
@@ -162,12 +189,13 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
   }
   // Wikidata knows most theatres, ballrooms, amphitheatres and arenas, exactly and for free.
   const wiki = await wikidataCapacity(venue, city, near);
-  if (wiki) {
-    memo.set(key, wiki);
+  const found = wiki ?? (wiki === null && near ? await ladderCapacity(room, city, near) : null);
+  if (found) {
+    memo.set(key, found);
     scheduleFlush();
-    return wiki;
+    return found;
   }
-  if (!hasTavily() || !takeSearch()) return null;
+  if (!hasTavily() || webDown() || !takeSearch()) return null;
   let r: Response;
   try {
     r = await fetch(`${API}/search`, {
@@ -180,7 +208,12 @@ export async function roomCapacity(room: { id: string; name: string; lat?: numbe
     return null;
   }
   if (!r.ok) {
-    console.error(`[tavily] HTTP ${r.status}`);
+    // Keyless Tavily has a daily cap per address; once it says so, every search that day would fail the same way.
+    if (r.status === 429 || r.status === 432) {
+      const body = await r.text().catch(() => "");
+      if (/daily|cap|limit|quota/i.test(body) || r.status === 432) downDay = today();
+    }
+    console.error(`[tavily] HTTP ${r.status}${downDay === today() ? ": daily limit reached, no more web lookups today" : ""}`);
     return null;
   }
   const j = (await r.json()) as { results?: { url: string; title: string; content: string }[] };

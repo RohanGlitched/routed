@@ -1,4 +1,5 @@
 import type { Opener, Plan, Room, Stop } from "../types";
+import { localEvidence, readLocal, type LocalRead } from "../geo/local";
 import { addDays } from "../geo/route";
 import { AGE_LABEL, topAge } from "./audience";
 import { sharedGenres } from "./rooms";
@@ -43,22 +44,29 @@ const NIGHTS_WORD = ["", "One night", "Two nights", "Three nights", "Four nights
 /**
  * The day sheet's sentence on a room's size against the usual crowd, by rule. "Fits" only at 85–130% for one
  * night; "cover" only when the nights together hold the crowd; otherwise what the room holds of it. `kind` says
- * how the page shows it: "fits" and "covers" as a plain note, "short" and "large" as a warning.
+ * what the sentence is; `alarm` whether the page shows it as a warning: only a misfit (one night under half the
+ * crowd, two nights short of it, or over 2.5 times it). A room inside the booking window (60–250%) is never one.
  */
-export function sizeNote(capacity: number, draw: number, nights = 1): { text: string; kind: "fits" | "covers" | "short" | "large" } {
+export function sizeNote(capacity: number, draw: number, nights = 1): { text: string; kind: "fits" | "covers" | "short" | "large"; alarm: boolean } {
   const crowd = n0(draw);
   if (nights > 1) {
     const all = capacity * nights;
     const word = NIGHTS_WORD[nights] ?? `${nights} nights`;
     return all >= draw
-      ? { text: `${word} cover a usual crowd of ${crowd} (${n0(all)} across ${nights === 2 ? "both" : "them"}): no room these fans go to here was confirmed to fit it in one.`, kind: "covers" }
-      : { text: `${word} hold ${n0(all)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit it in one.`, kind: "short" };
+      ? { text: `${word} cover a usual crowd of ${crowd} (${n0(all)} across ${nights === 2 ? "both" : "them"}): no room these fans go to here was confirmed to fit it in one.`, kind: "covers", alarm: false }
+      : { text: `${word} hold ${n0(all)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit it in one.`, kind: "short", alarm: true };
   }
-  if (snugFit(capacity, draw)) return { text: `Fits a usual crowd of ${crowd}.`, kind: "fits" };
-  if (capacity < draw * 0.6) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a second night or a bigger room.`, kind: "short" };
-  if (capacity < draw) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd} in one night.`, kind: "short" };
-  if (capacity > draw * 2.5) return { text: `Holds ${n0(capacity)} against a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a reduced configuration.`, kind: "large" };
-  return { text: `Room for ${n0(capacity)} against a usual crowd of ${crowd}.`, kind: "large" };
+  if (snugFit(capacity, draw)) return { text: `Fits a usual crowd of ${crowd}.`, kind: "fits", alarm: false };
+  if (capacity < draw * 0.6) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a second night or a bigger room.`, kind: "short", alarm: capacity < draw * 0.5 };
+  if (capacity < draw) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd} in one night.`, kind: "short", alarm: false };
+  if (capacity > draw * 2.5) return { text: `Holds ${n0(capacity)} against a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a reduced configuration.`, kind: "large", alarm: true };
+  return { text: `Room for ${n0(capacity)} against a usual crowd of ${crowd}.`, kind: "large", alarm: false };
+}
+
+/** The day sheet's line for a room nobody could measure: a warning from a crowd of 1,000 up, where a guess can be
+ *  a 100-cap bar; plain below it, where most clubs aren't on Wikidata and the pitch asks. */
+export function unmeasuredNote(draw?: number): { text: string; alarm: boolean } {
+  return { text: "Capacity not found on the web; ask the room.", alarm: Boolean(draw && draw >= 1000) };
 }
 
 export const room = (s: Stop): Room | undefined => s.rooms.find((r) => r.id === s.roomId) ?? s.rooms[0];
@@ -119,11 +127,9 @@ export function evidenceLines(plan: Plan, s: Stop, draw?: number): string[] {
     if (r.capacity) lines.push(`${r.name} capacity: ${r.capacity.value} (from ${r.capacity.source}).${sizeEvidence(r, draw, s.nights ?? 1)}`);
     else if (draw) lines.push(`${r.name}'s capacity isn't confirmed; the usual crowd is about ${draw}. Ask the room what it holds.`);
   }
-  if (s.local?.hot && r) {
-    const where = s.local.hot.name ? `${s.local.hot.name}${s.local.hot.trait ? `, ${s.local.hot.trait.toLowerCase()}` : ""}` : "one neighbourhood";
-    const km = s.local.roomKm ?? 0;
-    lines.push(km <= 1.5 ? `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}, and ${r.name} sits in it.` : s.local.inHot ? `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}; ${r.name} sits on one of their strongest tiles, ${km} km from it.` : `Qloo's street-level heatmap puts ${plan.artist.name} fans' strongest area in ${s.city} at ${where}; ${r.name} is ${km} km from it.`);
-  }
+  // "Sits in" only when Qloo files the room under the fans' own neighbourhood (geo/local.ts readLocal), not by distance.
+  const read = stopLocal(s);
+  if (read) lines.push(localEvidence(read, s.city, plan.artist.name));
   if (o) {
     const both = billGenres(plan, o);
     lines.push(`Support act for the whole run (travelling with the tour): ${o.name}${o.affinity !== undefined ? `. Qloo ranks ${o.name} ${pct(o.affinity)} out of 100 for ${plan.artist.name}'s audience (a match score: write "ranked ${pct(o.affinity)} for ${plan.artist.name}'s audience", never "shares an affinity")` : ""}${both.length ? `; both acts are filed under ${both.slice(0, 2).join(" and ")}` : ""}.`);
@@ -218,6 +224,27 @@ export function garbled(text: string): string[] {
   if (/\[[A-Z][^\]]{0,30}\]|\{\{|\}\}|<[a-z]+>/.test(t)) found.push("a placeholder");
   return found;
 }
+
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Whether a pitch claims more about the neighbourhood than the stop's street level supports (geo/local.ts
+ * readLocal): "sits in" or "in the heart of" the fans' area when Qloo doesn't file the room there, the room "in"
+ * the named area, or the old placeholder "one neighbourhood". The stored pitches wrote "sits in it" by distance.
+ */
+export function falseLocalClaim(text: string, read: LocalRead | undefined): boolean {
+  const t = unstrike(text);
+  if (/\bone neighbou?rhood\b/i.test(t)) return true;
+  if (!read?.room || read.room.sitsIn) return false;
+  if (/\bsits\s+(right\s+)?(in|inside|within)\b|\bin the (heart|middle|center|centre) of (their|the fans'?|that|this) (area|neighbou?rhood)\b|\bright where (the|these|her|his|their) fans (live|are)\b/i.test(t)) return true;
+  return Boolean(read.area && new RegExp(`${escapeRe(read.room.name)}[^.]{0,40}\\b(is|lies|sits|located)\\s+(right\\s+)?in\\s+(the\\s+heart\\s+of\\s+)?${escapeRe(read.area)}\\b`, "i").test(t));
+}
+
+/** The street level a stop's evidence reads from, or undefined when it has none. */
+export const stopLocal = (s: Stop): LocalRead | undefined => {
+  const r = room(s);
+  return s.local?.hot && r && Array.isArray(s.local.tiles) && s.local.tiles.length ? readLocal(s.local, r, [...s.rooms, ...(s.posters ?? []), ...s.after]) : undefined;
+};
 
 /** Checks a stored pitch again against its stop's evidence as the evidence reads now. No model call. */
 export function recheckPitch(pitch: { subject: string; body: string }, evidence: string[]): { subject: string; body: string; struck: string[] } {

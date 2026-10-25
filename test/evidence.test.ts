@@ -10,6 +10,9 @@ const room = {
   id: "lyric",
   name: "Lyric Theatre & Cultural Arts Center",
   address: "300 E Third St Lexington, KY 40508",
+  // 3.3 km east of the hottest tile, as the stored tour has it.
+  lat: 38.0594,
+  lon: -84.4857,
   affinity: 0.8363892052934128,
   popularity: 0.8783565326858094,
   capacity: { value: 600, source: "https://www.cvent.com/venues/lexington/entertainment-venue/lyric-theatre-cultural-art-center" },
@@ -29,7 +32,7 @@ const lexington = {
   roomId: "lyric",
   openers: [support],
   openerId: "waldon",
-  local: { hot: { lat: 38.0594, lon: -84.5233, trait: "Accessible" }, roomKm: 3.3, inHot: false },
+  local: { tiles: [[38.0594, -84.5233, 1], [38.0601, -84.524, 0.8]], hot: { lat: 38.0594, lon: -84.5233, trait: "Accessible" }, roomKm: 3.3, inHot: false },
   after: [{ id: "a", name: "The Green Lantern" }, { id: "b", name: "The Fishtank" }],
   why: "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 a night over two nights.",
 } as unknown as Stop;

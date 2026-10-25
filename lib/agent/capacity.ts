@@ -16,7 +16,8 @@ export type CapacityHit = { value: number; quote: string; at?: number };
 type Stored = { value: number; source: string; quote: string } | null;
 
 const GENERIC = new Set(["the", "and", "club", "hall", "theatre", "theater", "room", "bar", "music", "venue", "center", "centre", "arts", "performing", "auditorium", "house", "ballroom", "arena", "amphitheater", "amphitheatre", "live", "concert", "stage", "at", "of"]);
-const words = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/&/g, " and ").split(/[^a-z0-9]+/).filter((w) => w.length > 1);
+// "Dante's" is "dantes", as a web address writes it.
+const words = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/['’]/g, "").replace(/&/g, " and ").split(/[^a-z0-9]+/).filter((w) => w.length > 1);
 
 /**
  * Whether a Wikidata item is this room and not a part of it or a namesake: the venue's distinctive words must be
@@ -68,64 +69,85 @@ export function capacitiesIn(text: string): CapacityHit[] {
 export const NOT_A_SOURCE = /^(https?:\/\/)?([a-z0-9-]+\.)*(facebook|twitter|x|instagram|reddit|tiktok|threads|pinterest|linkedin|youtube|quora|medium)\.com\b/i;
 
 /**
- * Meeting, wedding and venue-hire pages give the room set for dinners and conferences, not a concert: Crystal
- * Ballroom's "Theater Capacity 800 Banquet Capacity 400" (it holds about 1,500 standing), Thalia Hall's "160
- * seated (rounds)", the Lyric's cvent "Total meeting space". Their sites and paths, and any number whose sentence
- * reads like one, don't count.
+ * Meeting, wedding and venue-hire listings (cvent, eventective, a venue's own private-events page). Their numbers
+ * are the venue's own and often right (the Tennessee Theatre's "Seating capacity 1,645", the Great American Music
+ * Hall's "650 Capacity"), but they are the second tier: read only when no other page gives this room a number.
+ * What they get wrong is the configuration, which the label next to the number says (CONFIG_LABEL).
  */
 const EVENT_SITE = /^(https?:\/\/)?([a-z0-9-]+\.)*(cvent|eventective|weddingwire|theknot|wedding-spot|bridebook|zola|peerspace|tagvenue|hirespace|splacer|thevendry|venuereport|eventup|meetingsnet|successfulmeetings|partyslate|giggster)\.(com|co|co\.uk|net)\b/i;
-const EVENT_PATH = /[/.-](meetings?|weddings?|private-events?|privateevents|banquets?|event-spaces?|venue-hire|venue-finder|corporate-events?|rentals?|hire)([/.?#-]|$)/i;
-const EVENT_WORDS = /\b(banquet|reception|classroom|boardroom|wedding|meeting|conference|cocktail[- ]style|u-shape|rounds|dinner|sq\.? ?ft|square feet|guest rooms)\b/i;
+const EVENT_PATH = /[/.-](meetings?|weddings?|wedding-venue[a-z-]*|private-events?|privateevents|banquets?|event-spaces?|venue-hire|venue-finder|corporate-events?|rentals?|hire)([/.?#-]|$)/i;
 
-/** Whether a page is a meeting, wedding or venue-hire listing. */
+/** Whether a page is a meeting, wedding or venue-hire listing (the second tier). */
 export const eventSource = (url: string) => EVENT_SITE.test(url) || EVENT_PATH.test(url.replace(/^https?:\/\/[^/]+/, ""));
 
-/** Room-type words: "Broadway Theatre" is another venue than "The Broadway" because of one. */
-const ROOM_TYPE = /^(theatre|theater|hall|arena|ballroom|center|centre|club|room|auditorium|coliseum|amphitheatre|amphitheater|pavilion|stadium|opera|lounge|bar|complex|music|house|cafe|stage)$/;
+/**
+ * A number labelled as a dinner or meeting layout, not a show: "Theater Capacity 800 Banquet Capacity 400" (the
+ * Crystal Ballroom holds about 1,500 standing), "160 seated (rounds)" (Thalia Hall), "Sitting Capacity: 155". Only
+ * the label right next to the number counts: "a standing room capacity of 1,200 and over 10,000 sq ft" is a show
+ * number, and so is "3,000+ Sq Ft Up to 500 Capacity".
+ */
+const CONFIG_BEFORE = /\b(banquet|reception|classroom|boardroom|cocktail|u-shape|dinner|seated dinner|sitting|theat(?:er|re)[- ]style|theat(?:er|re) capacity)\b[^\d]{0,24}$/i;
+const CONFIG_AFTER = /^[^\d]{0,12}\b(seated \(rounds\)|rounds|banquet|reception|classroom|boardroom|cocktail|for dinner|dinner|seated dinner)\b/i;
+export function configNumber(text: string, at: number, len: number): boolean {
+  const before = text.slice(Math.max(0, at - 36), at).split(/[|•#\n]|\s-\s/).pop() ?? "";
+  const after = text.slice(at + len, at + len + 24).split(/[|•#\n]/)[0] ?? "";
+  return CONFIG_BEFORE.test(before) || CONFIG_AFTER.test(after);
+}
+
+/** Room-type words: "Hawthorne Theatre Lounge" is a room inside the Hawthorne Theatre because of one. */
+const ROOM_TYPE = /^(theatre|theater|hall|arena|ballroom|center|centre|club|room|auditorium|coliseum|amphitheatre|amphitheater|pavilion|stadium|lounge|studio)$/;
+const nameWords = (venue: string) => words(venue).filter((w, i) => !(i === 0 && w === "the"));
 
 /**
- * Whether a venue page's address is another venue's: a "/venue/" slug that lacks this room's distinctive words
- * (dice.fm/venue/kremwerk-complex for the Timbre Room), or that adds a room-type word this name doesn't have
- * (todaytix …/venues/broadway-theatre for The Broadway, a Brooklyn club).
+ * Venues that share a name with a bigger, better-documented one, so a page about the other one names this one too:
+ * every page or quote matching `not` is the other venue's. Checked by hand.
+ */
+const NAMESAKES: { venue: string; not: RegExp }[] = [
+  // The Broadway, 1272 Broadway, Brooklyn (a Bushwick club), is not Manhattan's Broadway Theatre (1,761 seats).
+  { venue: "The Broadway", not: /broadway[\s-]+theat(re|er)/i },
+];
+const namesake = (venue: string, text: string) => NAMESAKES.some((n) => words(n.venue).join(" ") === words(venue).join(" ") && n.not.test(text));
+
+/**
+ * Whether text names a room inside this one: every time this room's full name appears, a room-type word it doesn't
+ * have follows ("Hawthorne Theatre Lounge"). Only for a name that has a type of its own: "Orpheum" on a page as
+ * "Orpheum Theatre" is the Orpheum, and "Brooklyn Bowl Nashville Music Venue Review" is Brooklyn Bowl.
+ */
+function extended(venue: string, text: string[]): boolean {
+  const mine = nameWords(venue);
+  if (!mine.length || !mine.some((w) => ROOM_TYPE.test(w))) return false;
+  const at: number[] = [];
+  for (let i = 0; i + mine.length <= text.length; i++) if (mine.every((w, k) => text[i + k] === w)) at.push(i + mine.length);
+  return at.length > 0 && at.every((i) => Boolean(text[i] && ROOM_TYPE.test(text[i]!) && !mine.includes(text[i]!)));
+}
+
+/**
+ * Whether a venue page's address is another venue's: the path after "/venue/" lacks this room's distinctive words
+ * (dice.fm/venue/kremwerk-complex for the Timbre Room) when the path names any venue at all (an id alone, as on
+ * vividseats …/venue/14384, can't say), names a room inside this one, or is a known namesake's.
  */
 export function otherVenueUrl(venue: string, url: string): boolean {
-  // Everything after "/venue/": an id segment can come first (livenation …/venue/KovZp…/the-fillmore-philadelphia-events).
-  const m = url.replace(/[?#].*$/, "").match(/\/(?:venues?|locations?|places?|lieux?|spielstaetten?)\/([a-z0-9%/_-]+)/i);
-  if (!m) return false;
-  let path = m[1]!;
+  let path = url.replace(/^https?:\/\/[^/]+/, "").replace(/[?#].*$/, "");
   try {
     path = decodeURIComponent(path);
   } catch {
     /* keep it as written */
   }
-  const slug = words(path);
-  const mine = new Set(words(venue));
-  const distinct = [...mine].filter((w) => !GENERIC.has(w));
-  if (distinct.length && !distinct.some((w) => slug.includes(w))) return true;
-  return slug.some((w) => ROOM_TYPE.test(w) && !mine.has(w));
-}
-
-/**
- * Whether the name next to a number is a longer venue's ("Broadway Theatre 1761 capacity" for The Broadway): every
- * time the name appears in the text before the number, the next word is a room type this name doesn't have.
- */
-function longerName(venue: string, before: string): boolean {
-  const mine = words(venue);
-  const last = mine.at(-1);
-  if (!last) return false;
-  const text = words(before);
-  const at: number[] = [];
-  text.forEach((w, i) => w === last && at.push(i));
-  if (!at.length) return false;
-  return at.every((i) => {
-    const next = text[i + 1];
-    return Boolean(next && ROOM_TYPE.test(next) && !mine.includes(next));
-  });
+  if (namesake(venue, path)) return true;
+  // Everything after "/venue/": an id segment can come first (livenation …/venue/KovZp…/the-fillmore-philadelphia-events).
+  const m = path.match(/\/(?:venues?|locations?|places?|lieux?|spielstaetten?)\/([^?#]+)/i);
+  if (!m) return false;
+  const slug = words(m[1]!).filter((w) => /[a-z]{3,}/.test(w) && !/\d/.test(w));
+  if (!slug.length) return false;
+  const all = words(path);
+  const distinct = [...new Set(words(venue))].filter((w) => !GENERIC.has(w));
+  if (distinct.length && !distinct.some((w) => all.includes(w))) return true;
+  return extended(venue, slug);
 }
 
 /**
  * A complex named as two rooms ("North Charleston Coliseum & Performing Arts Center"): the number belongs to the
- * main room, the first one. When the text before it names the second room and not the first one's own type word,
+ * main room, the first one. When the text before it names the second room after the first one's own type word,
  * it is the second room's ("North Charleston Performing Arts Center Theater 2,300", where the coliseum holds
  * about 13,000).
  */
@@ -143,18 +165,45 @@ function subRoom(venue: string, before: string): boolean {
 }
 
 /**
- * Capacities checked by hand for rooms the readers get wrong, each with its source. One wins over Wikidata and
- * the web for that room in that city.
+ * Whether the number belongs to another venue named in the same clause: "The Mammoth Events Center has a capacity
+ * of 5,100 and The Fillmore Auditorium has a seating…" (5,100 was stored for the Fillmore). The clause before the
+ * number has another venue as its subject (capitalised words ending in a room-type word, then "has", "holds",
+ * "seats"…) sharing none of this room's distinctive words. A neighbourhood in brackets ("(Van Ness - Civic
+ * Center) 600 Capacity") or a room's own hall ("Great Hall (2nd floor) – 251 capacity") isn't a subject.
  */
-const OVERRIDES: { venue: string; city: string; value: number; source: string; quote: string }[] = [
+function otherSubject(venue: string, before: string): boolean {
+  const clause = before.split(/[.;!?\n]|,\s|\s(?:and|while|whereas)\s/).pop() ?? "";
+  const distinct = words(venue).filter((w) => !GENERIC.has(w));
+  if (!distinct.length) return false;
+  for (const m of clause.matchAll(/\b((?:[A-Z][\w'’&.-]*\s+){0,4}(?:Theat(?:re|er)|Hall|Arena|Ballroom|Cent(?:er|re)|Club|Room|Auditorium|Coliseum|Amphithea(?:tre|ter)|Pavilion|Stadium|Lounge))\s+(?:has|have|holds|seats|can (?:hold|seat|accommodate)|accommodates|offers|boasts|is)\b/g)) {
+    const named = words(m[1]!);
+    if (named.filter((w) => !GENERIC.has(w)).length && !distinct.some((w) => named.includes(w))) return true;
+  }
+  return false;
+}
+
+/**
+ * Capacities checked by hand, each with its source: rooms the readers get wrong, and well-known rooms Wikidata has
+ * no capacity for (P1083), so they don't hang on a web search being up. One wins over Wikidata and the web for
+ * that room in that city.
+ */
+const OVERRIDES: { venue: string[]; city: string; value: number; source: string; quote: string }[] = [
   // The concert room, not the meetings sheet ("Theater Capacity 800 Banquet Capacity 400").
-  { venue: "McMenamins Crystal Ballroom", city: "Portland, OR", value: 1500, source: "https://en.wikipedia.org/wiki/Crystal_Ballroom_(Portland,_Oregon)", quote: "In concert configuration the ballroom holds up to 1,500 standing persons or 850 seated (Wikipedia, checked by hand Oct 25)." },
-  { venue: "Crystal Ballroom", city: "Portland, OR", value: 1500, source: "https://en.wikipedia.org/wiki/Crystal_Ballroom_(Portland,_Oregon)", quote: "In concert configuration the ballroom holds up to 1,500 standing persons or 850 seated (Wikipedia, checked by hand Oct 25)." },
+  { venue: ["McMenamins Crystal Ballroom", "Crystal Ballroom"], city: "Portland, OR", value: 1500, source: "https://en.wikipedia.org/wiki/Crystal_Ballroom_(Portland,_Oregon)", quote: "In concert configuration the ballroom holds up to 1,500 standing persons or 850 seated (Wikipedia, checked by hand Oct 25)." },
   // Standing for a show, not "160 seated (rounds)" from the weddings page; listings range 800 to 1,100.
-  { venue: "Thalia Hall", city: "Chicago, IL", value: 800, source: "https://thrillzing.com/music-venues/thalia-hall-chicago/", quote: "Thalia Hall's main hall holds about 800 standing; venue listings agree (240 seated for a dinner), checked by hand Oct 25." },
+  { venue: ["Thalia Hall"], city: "Chicago, IL", value: 800, source: "https://thrillzing.com/music-venues/thalia-hall-chicago/", quote: "Thalia Hall's main hall holds about 800 standing; venue listings agree (240 seated for a dinner), checked by hand Oct 25." },
   // The coliseum, not the Performing Arts Center theatre (2,300) on the same campus.
-  { venue: "North Charleston Coliseum & Performing Arts Center", city: "Charleston, SC", value: 13000, source: "https://en.wikipedia.org/wiki/North_Charleston_Coliseum", quote: "North Charleston Coliseum: capacity 13,000 (13,295 center-stage, 8,805–12,645 end-stage), Wikipedia, checked by hand Oct 25." },
-  { venue: "North Charleston Coliseum", city: "Charleston, SC", value: 13000, source: "https://en.wikipedia.org/wiki/North_Charleston_Coliseum", quote: "North Charleston Coliseum: capacity 13,000 (13,295 center-stage, 8,805–12,645 end-stage), Wikipedia, checked by hand Oct 25." },
+  { venue: ["North Charleston Coliseum & Performing Arts Center", "North Charleston Coliseum"], city: "Charleston, SC", value: 13000, source: "https://en.wikipedia.org/wiki/North_Charleston_Coliseum", quote: "North Charleston Coliseum: capacity 13,000 (13,295 center-stage, 8,805–12,645 end-stage), Wikipedia, checked by hand Oct 25." },
+  // The Oct 15 reader stored 5,100, the Mammoth Events Center's number from a page listing both.
+  { venue: ["Fillmore Auditorium", "The Fillmore Auditorium"], city: "Denver, CO", value: 3900, source: "https://en.wikipedia.org/wiki/Fillmore_Auditorium_(Denver)", quote: "Fillmore Auditorium (Denver): capacity 3,900 (Wikipedia infobox, checked by hand Oct 25)." },
+  { venue: ["Ogden Theatre"], city: "Denver, CO", value: 1600, source: "https://en.wikipedia.org/wiki/Ogden_Theatre", quote: "Built in 1917, it has a maximum capacity of 1,600 for concerts (Wikipedia, checked by hand Oct 25)." },
+  { venue: ["Eccles Theater", "George S. and Dolores Doré Eccles Theater"], city: "Salt Lake City, UT", value: 2468, source: "https://en.wikipedia.org/wiki/Eccles_Theater", quote: "George S. and Dolores Doré Eccles Theater: capacity 2,468 (Wikipedia infobox, citing the Salt Lake Tribune; checked by hand Oct 25)." },
+  { venue: ["Abravanel Hall", "Maurice Abravanel Hall"], city: "Salt Lake City, UT", value: 2768, source: "https://en.wikipedia.org/wiki/Abravanel_Hall", quote: "Maurice Abravanel Hall: capacity 2,768 (Wikipedia infobox, citing the hall's own one-sheet; checked by hand Oct 25)." },
+  { venue: ["Capitol Theatre", "Janet Quinney Lawson Capitol Theatre"], city: "Salt Lake City, UT", value: 1876, source: "https://en.wikipedia.org/wiki/Capitol_Theatre_(Salt_Lake_City)", quote: "Janet Quinney Lawson Capitol Theatre: capacity 1,876 (Wikipedia infobox, checked by hand Oct 25)." },
+  { venue: ["Austin City Limits Live (ACL Live & 3TEN ACL Live)", "ACL Live at the Moody Theater", "ACL Live", "Moody Theater"], city: "Austin, TX", value: 2750, source: "https://en.wikipedia.org/wiki/Moody_Theater", quote: "ACL Live at the Moody Theater: capacity 2,750 (Wikipedia infobox; the venue's sponsorship page agrees; checked by hand Oct 25)." },
+  // Listings range 600 to 750 (750 is the private-events figure); 650 is the concert number most of them give.
+  { venue: ["Neumos"], city: "Seattle, WA", value: 650, source: "https://seattlemag.com/music/best-live-music-venues-seattle/", quote: "Neumos: capacity 650 (Seattle Magazine venue listing; ReverbNation lists 700; checked by hand Oct 25)." },
+  { venue: ["El Corazón", "El Corazon"], city: "Seattle, WA", value: 807, source: "https://songkick.com/concerts/40301737-origin-at-el-corazon", quote: "El Corazon, 109 Eastlake Ave E: capacity 807 (Songkick venue listing, checked by hand Oct 25)." },
 ];
 
 const foldKey = (s: string) => words(s).join(" ");
@@ -163,32 +212,45 @@ const foldKey = (s: string) => words(s).join(" ");
 export function capacityOverride(venue: string, city: string): { value: number; source: string; quote: string } | null {
   const v = foldKey(venue);
   const c = foldKey(city);
-  const o = OVERRIDES.find((x) => foldKey(x.venue) === v && (c === foldKey(x.city) || c.endsWith(` ${foldKey(x.city)}`)));
+  const o = OVERRIDES.find((x) => x.venue.some((n) => foldKey(n) === v) && (c === foldKey(x.city) || c.endsWith(` ${foldKey(x.city)}`)));
   return o ? { value: o.value, source: o.source, quote: o.quote } : null;
+}
+
+/** Where a value sits in a quote, as written ("1,600", "1.600", "1600"). */
+function findValue(quote: string, value: number): { at: number; len: number } | null {
+  const s = String(value);
+  const grouped = s.replace(/\B(?=(\d{3})+(?!\d))/g, "[,.\\u00a0 ]?");
+  const m = new RegExp(`(?<![\\d,.])${grouped}(?![\\d])`).exec(quote);
+  return m ? { at: m.index, len: m[0].length } : null;
 }
 
 /**
  * Whether a stored capacity still passes today's source rules for this room (so an answer read before a rule
- * existed is asked again): not a social post or a planned building, not a meeting or wedding page, not another
- * venue's page, and its quote not a banquet line, a longer venue's name or a sub-room's.
+ * existed is asked again): not a social post or a planned building, not another venue's page, and the number in
+ * its quote not a dinner layout, not another venue's or a sub-room's. A meeting or venue-hire listing passes when
+ * its number does: it was the best page the reader had.
  */
-export function sourceOk(venue: string, c: { source: string; quote: string }): boolean {
+export function sourceOk(venue: string, c: { value?: number; source: string; quote: string }): boolean {
   if (NOT_A_SOURCE.test(c.source) || /planned|proposed|new-venue|will-open/i.test(c.source)) return false;
   if (c.source.includes("wikidata.org")) return true;
-  if (eventSource(c.source) || otherVenueUrl(venue, c.source)) return false;
-  if (EVENT_WORDS.test(c.quote)) return false;
-  const at = c.quote.search(/\d{2,}/);
-  const before = at > 0 ? c.quote.slice(0, at) : c.quote;
-  return !longerName(venue, before) && !subRoom(venue, before);
+  if (otherVenueUrl(venue, c.source) || namesake(venue, c.quote)) return false;
+  const first = /\d{1,3}(?:[,.]\d{3})+|\d{2,}/.exec(c.quote);
+  const v = (c.value !== undefined ? findValue(c.quote, c.value) : null) ?? (first ? { at: first.index, len: first[0].length } : null);
+  if (!v) return true;
+  const before = c.quote.slice(0, v.at);
+  if (configNumber(c.quote, v.at, v.len)) return false;
+  return !extended(venue, words(before)) && !subRoom(venue, before) && !otherSubject(venue, before);
 }
 
 /**
  * The capacity most sources agree on; on a tie, the larger (the main room, not a side stage). A page must name the
- * venue (its distinctive words) for its numbers to count, and must not be a meeting or wedding page or another
- * venue's page; a number must not sit in a banquet line, next to a longer venue's name, or next to a sub-room's.
+ * venue (its distinctive words) for its numbers to count, and must not be another venue's page; a number must not
+ * be a dinner layout, a room inside this one, or another venue's in the same clause. Meeting and venue-hire
+ * listings are read only when no other page gave a number.
  */
-export function pickCapacity(venue: string, pages: { url: string; text: string }[], city?: string): { value: number; source: string; quote: string } | null {
-  const fold = (s: string) => ` ${s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()} `;
+export function pickCapacity(venue: string, pages: { url: string; text: string }[], city?: string, trace?: (url: string, why: string) => void): { value: number; source: string; quote: string } | null {
+  const skip = (url: string, why: string) => (trace?.(url, why), true);
+  const fold = (s: string) => ` ${s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, " ").trim()} `;
   const distinct = fold(venue)
     .trim()
     .split(" ")
@@ -196,31 +258,38 @@ export function pickCapacity(venue: string, pages: { url: string; text: string }
   // Whole words only ("The Ark" is not in "Docklands"); a name with no distinctive word ("9:30 Club") must appear whole.
   const names = (text: string) => (distinct.length ? distinct.every((w) => text.includes(` ${w} `)) : text.includes(fold(venue)));
   const town = city ? fold(city.split(",")[0]!) : null;
-  const tally = new Map<number, { n: number; source: string; quote: string }>();
+  const tiers = [new Map<number, { n: number; source: string; quote: string }>(), new Map<number, { n: number; source: string; quote: string }>()];
   for (const p of pages) {
-    if (NOT_A_SOURCE.test(p.url) || /planned|proposed|new-venue|will-open/i.test(p.url)) continue;
-    if (eventSource(p.url) || otherVenueUrl(venue, p.url)) continue;
+    if ((NOT_A_SOURCE.test(p.url) || /planned|proposed|new-venue|will-open/i.test(p.url)) && skip(p.url, "not a source")) continue;
+    if (otherVenueUrl(venue, p.url) && skip(p.url, "another venue's page")) continue;
+    const tier = eventSource(p.url) ? 1 : 0;
     const page = fold(p.text);
-    if (!names(page)) continue;
+    if (!names(page) && skip(p.url, "page doesn't name the room")) continue;
     // Komedia Bath is not Komedia Bristol: the page or its address must name the city.
-    if (town && !page.includes(town) && !fold(p.url).includes(town)) continue;
+    if (town && !page.includes(town) && !fold(p.url).includes(town) && skip(p.url, "page doesn't name the city")) continue;
     // Search snippets join pieces of a page with "[...]": each piece stands alone, so a number is never read
     // next to a name from another part of the page.
     const pieces = p.text.split("[...]");
     for (const h of pieces.flatMap((piece) => capacitiesIn(piece).map((x) => ({ ...x, piece })))) {
       // On a page listing many venues the number must sit next to this one's name (within 250 characters).
       const near = fold(h.piece.slice(Math.max(0, (h.at ?? 0) - 250), (h.at ?? 0) + 120));
-      if (!names(near)) continue;
-      // A banquet or meeting line, a longer venue's name ("Broadway Theatre"), a sub-room ("…Performing Arts
-      // Center Theater 2,300"): not this room's concert capacity.
-      const lead = h.piece.slice(Math.max(0, (h.at ?? 0) - 120), h.at ?? 0);
-      const around = h.piece.slice(Math.max(0, (h.at ?? 0) - 80), (h.at ?? 0) + 60);
-      if (EVENT_WORDS.test(around) || longerName(venue, lead) || subRoom(venue, lead)) continue;
+      if (!names(near) && skip(p.url, `${h.value}: name not next to it`)) continue;
+      const v = findValue(h.piece.slice(h.at ?? 0), h.value);
+      const numAt = (h.at ?? 0) + (v?.at ?? 0);
+      const lead = h.piece.slice(Math.max(0, numAt - 120), numAt);
+      if (configNumber(h.piece, numAt, v?.len ?? String(h.value).length) && skip(p.url, `${h.value}: a dinner or meeting layout`)) continue;
+      if (namesake(venue, lead) && skip(p.url, `${h.value}: a namesake venue's`)) continue;
+      if (extended(venue, words(lead)) && skip(p.url, `${h.value}: a room inside this one`)) continue;
+      if (subRoom(venue, lead) && skip(p.url, `${h.value}: a sub-room's number`)) continue;
+      if (otherSubject(venue, lead) && skip(p.url, `${h.value}: another venue's number`)) continue;
+      trace?.(p.url, `${h.value}: counted${tier ? " (listing page, second tier)" : ""}`);
+      const tally = tiers[tier]!;
       const cur = tally.get(h.value);
       if (cur) cur.n++;
       else tally.set(h.value, { n: 1, source: p.url, quote: h.quote });
     }
   }
+  const tally = tiers[0]!.size ? tiers[0]! : tiers[1]!;
   const best = [...tally.entries()].sort((a, b) => b[1].n - a[1].n || b[0] - a[0])[0];
   return best ? { value: best[0], source: best[1].source, quote: best[1].quote } : null;
 }

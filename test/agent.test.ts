@@ -209,3 +209,60 @@ test("check_plan: room fit and the leg cap", () => {
   assert.match(out.find((o) => o.rule === "room")!.text, /the room rule would book Big Hall \(s-big\), which holds 1,500 \(fits for about 1,200\)/);
   assert.match(out.find((o) => o.rule === "leg")!.text, /Seattle to Miami is [\d,]+ km of road with no show between/);
 });
+
+/* ───────────── the fan anchors and the fan cap (Oct 25 smoke tour: Sierra Ferrell from Nashville, 8 shows, 1,500) ───────────── */
+
+const SMOKE = ["Asheville", "Nashville", "Portland, OR", "Denver", "Austin", "Santa Fe", "Boulder", "Knoxville", "Lexington", "Louisville", "Bend", "Boise", "Salt Lake City", "Kansas City", "St. Louis", "Memphis", "Chattanooga", "Tulsa", "Oklahoma City", "Albuquerque", "Missoula", "Spokane", "Omaha", "Birmingham, AL", "Little Rock", "Charlotte", "Raleigh", "Richmond", "Pittsburgh", "Cincinnati", "Indianapolis", "Detroit", "Atlanta", "Savannah", "Columbus, OH", "Houston", "Dallas", "Phoenix", "Los Angeles", "San Francisco", "Seattle", "Philadelphia", "New York", "Boston", "Washington", "Miami", "Minneapolis", "San Diego", "Toronto", "Chicago"].map((n, i) => city(n, i + 1));
+const sid = (name: string) => SMOKE.find((c) => c.name === name)!.marketId;
+const NASH = SMOKE[1]!;
+
+function smoke(deps: PlanDeps, useModel: boolean) {
+  const lines: Omit<LogLine, "at">[] = [];
+  const p = planTour({ artist, audience, cities: SMOKE, from: { lat: NASH.lat, lon: NASH.lon, label: NASH.label }, region: "na", shows: 8, draw: 1500, useModel, log: (l) => lines.push(l) }, deps);
+  return { p, lines };
+}
+
+test("the fixed plan keeps the top three fan cities and doesn't let city size lift Chicago (#50) or Columbus (#35)", async () => {
+  const { p, lines } = smoke(tools(model(() => ({}))), false);
+  const r = await p;
+  const ids = r.picks.map((x) => x.marketId);
+  for (const c of ["Asheville", "Nashville", "Portland"]) assert.ok(ids.includes(sid(c)), `${c} stays: ${ids.join(", ")}`);
+  for (const c of ["Chicago", "Columbus"]) assert.ok(!ids.includes(sid(c)), `${c} isn't added: ${ids.join(", ")}`);
+  assert.equal(r.picks.length, 8);
+  assert.ok(lines.some((l) => /^Only Qloo's top 25 fan cities are candidates/.test(l.text) && /^Left out though city size lifts them: .*\(fan #(2[6-9]|[3-5]\d)\)/.test(l.result ?? "")), "the call sheet says why the big cities are out");
+});
+
+test("an agent that drops Asheville and Portland for Chicago and Columbus is objected to, and the rules keep the fan cities", async () => {
+  const booking = ["Nashville", "Denver", "Austin", "Knoxville", "Lexington", "Louisville", "Chicago", "Columbus"].map((n) => stop(sid(n)));
+  let objected = "";
+  const ask = model((name, messages) => {
+    if (name === "shortlist") {
+      assert.match(lastUser(messages), /asheville-us-nc \| Asheville, NC \| #\d+ \| #1 \| .* \| MUST KEEP \(a top-3 fan city\)/);
+      return { cities: booking.map((s) => ({ city_id: s.city_id, why: "big" })), alternates: [] };
+    }
+    if (name === "book") {
+      assert.match(lastUser(messages), /"city_id":"asheville-us-nc"[^}]*"must_keep":true/, "Asheville is scouted and flagged even though the shortlist left it out");
+      return { stops: booking };
+    }
+    if (name === "rebook") {
+      objected = lastUser(messages);
+      return { stops: booking };
+    }
+    return { reasons: [] };
+  });
+  const { p } = smoke(tools(ask), true);
+  const r = await p;
+  assert.match(objected, /Asheville \(asheville-us-nc\) is #1 on Qloo's fan map, one of the artist's 3 strongest fan cities/);
+  assert.match(objected, /"chicago-us-il" isn't one of the candidate cities/);
+  const ids = r.picks.map((x) => x.marketId);
+  for (const c of ["Asheville", "Nashville", "Portland"]) assert.ok(ids.includes(sid(c)), `${c} stays: ${ids.join(", ")}`);
+  for (const c of ["Chicago", "Columbus"]) assert.ok(!ids.includes(sid(c)), `${c} isn't added: ${ids.join(", ")}`);
+});
+
+test("check_plan: an unmeasured room loses to a measured room that fits, for a crowd of 1,000 or more", () => {
+  const col = city("Columbus, OH", 5);
+  const rooms = new Map<string, Room[]>([[col.marketId, [{ id: "wex", name: "Wexner Center for the Arts", tags: [], affinity: 0.95 }, { id: "kemba", name: "KEMBA Live!", tags: [], affinity: 0.7, capacity: { value: 2200, source: "https://x.org", quote: "" } }]]]);
+  const out = checkPlan([{ city_id: col.marketId, room_id: "wex", opener_id: "o", why: "" }], { byId: new Map([[col.marketId, col]]), rooms, shows: 1, draw: 1500, from: col, radius: 150 });
+  assert.equal(out.length, 1);
+  assert.match(out[0]!.text, /Wexner Center for the Arts has no confirmed capacity; the room rule would book KEMBA Live! \(kemba\), which holds 2,200 \(fits for about 1,500\)/);
+});

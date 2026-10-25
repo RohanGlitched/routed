@@ -73,6 +73,16 @@ export const MAX_REVISIONS = 2;
 export const EXTRA_CALLS = 2;
 /** Qloo's strongest cities always shown to the agent, even when the blend ranks them lower. */
 export const QLOO_TOP_SHOWN = 5;
+/** Qloo's strongest fan cities, kept on the tour like anchors (any size): a tour never drops the artist's #1 city. */
+export const FAN_KEEP = 3;
+/**
+ * How far down Qloo's fan map a city may be and still be a candidate. The blend lifts big cities, and without a cap
+ * it lifted Chicago (fan #50) and Columbus (#35) over Asheville (#1) for Sierra Ferrell (Oct 25 smoke test). Past
+ * it, a city is booked only when it closes a leg, or when the fan cities can't fill the run.
+ */
+export const FAN_CAP = 25;
+/** A city within the fan cap, or a major market in the artist's top ten. */
+export const inFanCap = (c: CityScore) => c.rank <= FAN_CAP || isAnchor({ rank: c.rank, pop: marketById(c.marketId)?.pop ?? 0 });
 /** Cities tried in place of one with no bookable room (each costs its Qloo lookups and a few measurements). */
 export const ROOM_SWAP_TRIES = 3;
 /** A model call isn't started with less of the planning share left than this. */
@@ -123,11 +133,11 @@ export const role = (artist: string) =>
  * rank and the city's size rank side by side, fan affinity in its own column; without (the head-to-head's
  * pre-registered protocol) the table reads exactly as it did when that test was committed.
  */
-export function table(cities: CityScore[], from: { lat: number; lon: number }, RADIUS_KM: number, ranks?: Ranks): string {
+export function table(cities: CityScore[], from: { lat: number; lon: number }, RADIUS_KM: number, ranks?: Ranks, mustKeep?: Set<string>): string {
   const signal = (c: CityScore) => (c.popularity !== undefined ? ` | signal ${Math.round(c.popularity * 100)}` : "");
   const rows = cities.map((c) =>
     ranks
-      ? `${c.marketId} | ${c.label} | #${ranks.blend.get(c.marketId) ?? "–"} | #${c.rank} | #${ranks.pop.get(c.marketId) ?? "–"} | affinity ${Math.round(c.affinity * 100)}${signal(c)} | ${n(popOf(c.marketId))} people | ${Math.round(km(from, c))} km from start`
+      ? `${c.marketId} | ${c.label} | #${ranks.blend.get(c.marketId) ?? "–"} | #${c.rank} | #${ranks.pop.get(c.marketId) ?? "–"} | affinity ${Math.round(c.affinity * 100)}${signal(c)} | ${n(popOf(c.marketId))} people | ${Math.round(km(from, c))} km from start${mustKeep?.has(c.marketId) ? " | MUST KEEP (a top-3 fan city)" : ""}`
       : `${c.marketId} | ${c.label} | #${c.rank} | affinity ${Math.round(c.affinity * 100)}${signal(c)} | ${Math.round(km(from, c))} km from start`,
   );
   const close: string[] = [];
@@ -157,7 +167,12 @@ export function brief(artist: Artist, audience: Audience): string {
 }
 
 const p100 = (v?: number) => (v === undefined ? null : Math.round(v * 100));
-const compactRooms = (rooms: Room[], draw?: number) => rooms.map((r) => ({ id: r.id, name: r.name, affinity: p100(r.affinity), popularity: p100(r.popularity), kind: r.tags.slice(0, 3).join(", ") || null, capacity: r.capacity?.value ?? null, ...(draw ? { size: fit(r, draw) } : {}) }));
+/** A city's rooms for the book call; with a crowd, `rule_pick` marks the room the size rule books (rooms.ts roomGrade: a
+ *  measured fit beats any unmeasured room), so the agent books knowing what the rule would do. */
+const compactRooms = (rooms: Room[], draw?: number) => {
+  const pick = draw ? chooseRoom(rooms, undefined, draw)?.id : undefined;
+  return rooms.map((r) => ({ id: r.id, name: r.name, affinity: p100(r.affinity), popularity: p100(r.popularity), kind: r.tags.slice(0, 3).join(", ") || null, capacity: r.capacity?.value ?? null, ...(draw ? { size: fit(r, draw) } : {}), ...(pick === r.id ? { rule_pick: true } : {}) }));
+};
 const compactOpeners = (o: Opener[]) => o.map((x) => ({ id: x.id, name: x.name, affinity: p100(x.affinity), ...(x.genres?.length ? { genres: x.genres.slice(0, 3) } : {}) }));
 
 const host = (u: string) => {
@@ -181,14 +196,14 @@ function inTime<T>(p: Promise<T>, ms: number): Promise<T> {
 export type Objection = {
   /** The stop the objection is about (for an anchor, the market to add). */
   city_id?: string;
-  rule: "candidate" | "duplicate" | "radius" | "rooms" | "room" | "leg" | "anchor" | "home" | "count" | "support";
+  rule: "candidate" | "duplicate" | "radius" | "rooms" | "room" | "leg" | "anchor" | "fan" | "home" | "count" | "support";
   /** What the agent is told. */
   text: string;
   /** The same in a few words, for the call sheet. */
   short: string;
 };
 
-export type CheckContext = { byId: Map<string, CityScore>; rooms: Map<string, Room[]>; shows: number; draw?: number; from: { lat: number; lon: number }; radius: number };
+export type CheckContext = { byId: Map<string, CityScore>; rooms: Map<string, Room[]>; shows: number; draw?: number; from: { lat: number; lon: number }; radius: number; /** Qloo's top fan cities, kept like anchors. */ mustKeep?: Set<string> };
 
 const placed = (c: CityScore) => ({ lat: c.lat, lon: c.lon, pop: popOf(c.marketId) });
 const sizeWord = (r: Room, draw?: number) => (r.capacity ? `holds ${n(r.capacity.value)}${draw ? ` (${fit(r, draw)} for about ${n(draw)})` : ""}` : "has no confirmed capacity");
@@ -253,6 +268,16 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
     out.push({ city_id: a.marketId, rule: "anchor", text: `${a.name} (${a.marketId}) is a major market and #${a.rank} on the fan map: the anchor rule keeps it on the tour, so book it in place of your weakest stop.`, short: `${a.name} is a major market, #${a.rank} (anchor rule)` });
   }
 
+  // Qloo's top fan cities stay, whatever their size, when another candidate is within the leg cap of them.
+  for (const id of c.mustKeep ?? []) {
+    const f = c.byId.get(id);
+    if (!f || kept.some((k) => k.score.marketId === id)) continue;
+    if (![...c.byId.values()].some((x) => x.marketId !== id && roadKm(x, f) <= MAX_LEG_KM)) continue;
+    const near = kept.find((k) => tooClose(placed(k.score), placed(f), c.radius));
+    if (near && c.mustKeep!.has(near.score.marketId)) continue;
+    out.push({ city_id: id, rule: "fan", text: `${f.name} (${id}) is #${f.rank} on Qloo's fan map, one of the artist's ${FAN_KEEP} strongest fan cities: keep it on the tour${near ? `, in place of ${near.score.name} inside its radius` : ", in place of your weakest stop"}.`, short: `${f.name} is fan city #${f.rank} (kept like an anchor)` });
+  }
+
   // The starting city, when it is in the artist's top HOME_RANK, opens the run (keepHome).
   const home = homeCity(c.from, [...c.byId.values()].map((x) => ({ ...x, id: x.marketId, pop: popOf(x.marketId) })));
   if (home && !kept.some((k) => k.score.marketId === home.id)) out.push({ city_id: home.id, rule: "home", text: `${home.name} (${home.id}) is where the tour starts and #${home.rank} on the fan map (top ${HOME_RANK}): the hometown rule opens the run there, so book it in place of your weakest stop.`, short: `${home.name} is the hometown, #${home.rank}` });
@@ -271,9 +296,9 @@ export function bookingSwaps(prev: BookStop[], next: BookStop[], objections: Obj
   const rows: NonNullable<LogLine["swaps"]> = [];
   gone.forEach((g, i) => {
     const c = came[i];
-    rows.push({ proposed: name(g.city_id), objection: objected(g.city_id) ?? (c && objected(c.city_id, ["anchor", "home"])) ?? "the agent's own change", chose: c ? name(c.city_id) : "dropped" });
+    rows.push({ proposed: name(g.city_id), objection: objected(g.city_id) ?? (c && objected(c.city_id, ["anchor", "fan", "home"])) ?? "the agent's own change", chose: c ? name(c.city_id) : "dropped" });
   });
-  for (const c of came.slice(gone.length)) rows.push({ proposed: "no stop", objection: objected(c.city_id, ["anchor", "home"]) ?? objections.find((o) => o.rule === "count")?.short ?? "the agent's own change", chose: name(c.city_id) });
+  for (const c of came.slice(gone.length)) rows.push({ proposed: "no stop", objection: objected(c.city_id, ["anchor", "fan", "home"]) ?? objections.find((o) => o.rule === "count")?.short ?? "the agent's own change", chose: name(c.city_id) });
   for (const x of next) {
     const p = prev.find((y) => y.city_id === x.city_id);
     if (p && p.room_id !== x.room_id) rows.push({ proposed: `${roomName(x.city_id, p.room_id)}, ${name(x.city_id)}`, objection: objected(x.city_id, ["room"]) ?? "the agent's own change", chose: roomName(x.city_id, x.room_id) });
@@ -295,6 +320,7 @@ export type SettleEvent =
   | { t: "swap"; out: CityScore; in: CityScore; km: number; reason?: "leg" | "km-per-show" | "country" }
   | { t: "anchor"; anchor: CityScore; out: CityScore[]; close: boolean }
   | { t: "home"; home: CityScore; out: CityScore[] }
+  | { t: "fan"; city: CityScore; out: CityScore[] }
   | { t: "no-home"; home: CityScore; reason: string };
 
 /**
@@ -320,6 +346,8 @@ export async function settleCities<T extends { score: CityScore }>(o: {
   region?: RegionId;
   /** The leg cap (road km); MAX_LEG_KM unless a tour asks for less. */
   legCap?: number;
+  /** Cities kept like anchors (Qloo's top fan cities): added when the run can reach them, never swapped out. */
+  protect?: (c: CityScore) => boolean;
   on?: (e: SettleEvent) => void;
 }): Promise<{ stops: T[]; homeId?: string; tradeOff?: string }> {
   const { shows, radius } = o;
@@ -349,7 +377,8 @@ export async function settleCities<T extends { score: CityScore }>(o: {
   const homeId = homeCity(o.from, deep.map(onFanMap))?.id;
   const first = () => (homeId && chosen.some((c) => c.score.marketId === homeId) ? homeId : undefined);
   // The anchor and hometown rules read the fan map too: "a major market in the artist's top ten".
-  const keep = (c: { id: string; pop?: number }) => c.id === homeId || isAnchor({ rank: allById.get(c.id)?.rank ?? Infinity, pop: c.pop });
+  const protect = (c: CityScore) => o.protect?.(c) ?? false;
+  const keep = (c: { id: string; pop?: number }) => c.id === homeId || isAnchor({ rank: allById.get(c.id)?.rank ?? Infinity, pop: c.pop }) || protect(allById.get(c.id)!);
   let tradeOff: string | undefined;
   const apply = (swaps: { out: { id: string }; in: { id: string }; km: number; reason?: "leg" | "km-per-show" | "country" }[]) => {
     for (const sw of swaps) {
@@ -375,12 +404,36 @@ export async function settleCities<T extends { score: CityScore }>(o: {
   for (const { anchor, out } of anchored.added) o.on?.({ t: "anchor", anchor: allById.get(anchor.id)!, out: out.map((x) => allById.get(x.id)!), close: out.some((x) => tooClose(x, anchor, radius)) });
   if (anchored.added.length) rebuild(anchored.stops);
 
+  // The fan anchors: each protected city the run can reach comes in; a stop inside its radius gives way, or, when
+  // the run is full, the weakest stop that no rule keeps. A gap left behind is refilled from the ranking.
+  let fans = 0;
+  const order = new Map(o.ranking.map((c, i) => [c.marketId, i]));
+  for (const f of deep.filter(protect)) {
+    if (chosen.some((x) => x.score.marketId === f.marketId)) continue;
+    const near = chosen.filter((x) => clash(x.score, f));
+    if (near.some((x) => keep({ id: x.score.marketId, pop: popOf(x.score.marketId) }))) continue;
+    const weakest = chosen.filter((x) => !near.includes(x) && !keep({ id: x.score.marketId, pop: popOf(x.score.marketId) })).sort((a, b) => (order.get(b.score.marketId) ?? 1e9) - (order.get(a.score.marketId) ?? 1e9))[0];
+    const gone = chosen.length - near.length >= shows && weakest ? [...near, weakest] : near;
+    const stay = chosen.filter((x) => !gone.includes(x));
+    if (stay.length >= shows) continue;
+    if (!deep.some((x) => x.marketId !== f.marketId && roadKm(x, f) <= max)) continue;
+    if (!(await o.usable(f.marketId))) continue;
+    chosen.splice(0, chosen.length, ...stay, o.make(f));
+    for (const score of deep) {
+      if (chosen.length >= shows) break;
+      if (gone.some((g) => g.score.marketId === score.marketId) || chosen.some((x) => x.score.marketId === score.marketId || clash(x.score, score))) continue;
+      if (await o.usable(score.marketId)) chosen.push(o.make(score));
+    }
+    o.on?.({ t: "fan", city: f, out: gone.map((g) => g.score) });
+    fans++;
+  }
+
   const homed = await keepHome({ from: o.from, stops: chosen.map((c) => onFanMap(c.score)), ranked: deep.map(onFanMap), shows, usable, radius, max });
   if (homed.added && homed.home) {
     o.on?.({ t: "home", home: allById.get(homed.home.id)!, out: homed.out.map((x) => allById.get(x.id)!) });
     rebuild(homed.stops);
   } else if (homed.home && homed.reason) o.on?.({ t: "no-home", home: allById.get(homed.home.id)!, reason: homed.reason });
-  if (anchored.added.length || homed.added) await legPass();
+  if (anchored.added.length || fans || homed.added) await legPass();
   return { stops: chosen, homeId: first(), tradeOff };
 }
 
@@ -415,10 +468,20 @@ export async function planTour(
 
   // The blend (C2a): the cities in the order that beat city size alone on real tours. Qloo's own top few stay in
   // view, so the agent always sees where fans over-index most, ranks side by side.
+  // The fan cap: only cities in Qloo's top FAN_CAP (or a major market in its top ten) are candidates when they can
+  // fill the run; past it, a city only closes a leg. Qloo's top FAN_KEEP fan cities are kept like anchors.
   const blend = opts.region ? blendOrder(opts.cities, opts.region) : null;
-  const cities = blend?.ordered ?? opts.cities;
-  const topBlend = cities.slice(0, Math.max(shows * 2 + 4, 16));
+  const blended = blend?.ordered ?? opts.cities;
+  const within = blended.filter(inFanCap);
+  const capped = within.length >= shows + 3;
+  const cities = [...within, ...blended.filter((c) => !inFanCap(c))];
+  const want = Math.max(shows * 2 + 4, 16);
+  const topBlend = (capped ? within : cities).slice(0, want);
   const candidates = [...topBlend, ...opts.cities.slice(0, QLOO_TOP_SHOWN).filter((c) => !topBlend.includes(c))];
+  const mustKeep = new Set(opts.cities.filter((c) => c.rank <= FAN_KEEP).map((c) => c.marketId));
+  const lifted = blended.slice(0, want).filter((c) => !inFanCap(c));
+  if (capped && lifted.length) log({ kind: "rule", text: `Only Qloo's top ${FAN_CAP} fan cities are candidates: a city further down the fan map is booked only to close a leg, however big it is.`, result: `Left out though city size lifts them: ${lifted.slice(0, 6).map((c) => `${c.name} (fan #${c.rank})`).join(", ")}` });
+  log({ kind: "rule", text: `Qloo's ${FAN_KEEP} strongest fan cities are kept on the tour like major markets, whatever their size.`, result: opts.cities.filter((c) => mustKeep.has(c.marketId)).map((c) => `${c.name} (fan #${c.rank})`).join(", ") });
   if (blend) log({ kind: "rule", text: "Ordered the cities by fan rank weighed against city size: each city's place on Qloo's heatmap averaged with its place by metro population, the ranking that found more of the real tours than size alone.", result: cities.slice(0, 5).map((c) => `${c.name} (fan #${c.rank}, size #${blend.ranks.pop.get(c.marketId) ?? "–"})`).join(", ") });
 
   const byId = new Map(candidates.map((c) => [c.marketId, c]));
@@ -485,8 +548,8 @@ export async function planTour(
               shows,
               draw,
               source: blend ? `Candidate cities for ${artist.name}, in blend order: Qloo's fan rank (where these fans over-index) averaged with size rank (metro population), the ranking that beat city size alone on real tours` : `Candidate cities from Qloo's heatmap for ${artist.name}, strongest first`,
-              table: table(candidates, opts.from, RADIUS_KM, blend?.ranks),
-              prefer: blend ? "weighing fan rank against city size (the blend order is a good guide; a city high on Qloo's fan rank is worth a stop even when it is small)" : "preferring stronger cities",
+              table: table(candidates, opts.from, RADIUS_KM, blend?.ranks, mustKeep),
+              prefer: blend ? "always including the cities marked MUST KEEP (the artist's strongest fan cities on Qloo), then weighing fan rank against city size (the blend order is a good guide; a city high on Qloo's fan rank is worth a stop even when it is small)" : "preferring stronger cities",
             }),
           },
         ],
@@ -500,21 +563,24 @@ export async function planTour(
 
       // 2. Scout every shortlisted city and alternate, then measure the shortlisted cities' likeliest rooms, so
       //    the agent books knowing what each holds (the same rooms the room rule would measure after booking).
-      await Promise.all([...shortlist, ...alternates].map(scout));
+      // The must-keep cities are scouted even when the shortlist left one out, so the agent can book it.
+      const kept = [...mustKeep].filter((id) => byId.has(id) && !shortlist.includes(id) && !alternates.includes(id));
+      await Promise.all([...shortlist, ...alternates, ...kept].map(scout));
       if (draw) {
         const before = measured.size;
-        await Promise.all(shortlist.map(premeasure));
+        await Promise.all([...shortlist, ...kept].map(premeasure));
         const fitting = shortlist.filter((id) => (rooms.get(id) ?? []).some((r) => fit(r, draw) === "fits")).length;
         log({ kind: "rule", text: `Measured the likeliest rooms in the ${shortlist.length} shortlisted cities before booking, so the agent books knowing what each holds.`, result: `${measured.size - before} rooms checked; a room confirmed to fit about ${n(draw)} in ${fitting} of ${shortlist.length} cities` });
       }
 
       // 3. Book.
       const t3 = Date.now();
-      const evidence = [...shortlist, ...alternates].map((id) => ({
+      const evidence = [...shortlist, ...alternates, ...kept].map((id) => ({
         city_id: id,
         city: byId.get(id)!.label,
         heatmap_rank: byId.get(id)!.rank,
         alternate: alternates.includes(id),
+        ...(mustKeep.has(id) ? { must_keep: true } : {}),
         rooms: compactRooms(rooms.get(id) ?? [], draw),
         openers: compactOpeners(openers.get(id) ?? []),
       }));
@@ -522,7 +588,7 @@ export async function planTour(
         { role: "system", content: role(artist.name) },
         {
           role: "user",
-          content: `${brief(artist, opts.audience)}\nShows wanted: ${shows}.${draw ? ` Usual crowd: about ${draw}. Each room shows its capacity where one was found and its size against this crowd ("fits", "too small", "too big", or "unknown" when no capacity was found): book a room that fits wherever a city has one. When a capacity is unknown, a room's popularity is a rough guide to its size, so prefer well-known rooms over tiny ones for a crowd this size.` : " Crowd size unknown: a room's popularity is a rough guide to its size."}\n\nScouting results (rooms and openers from Qloo for ${artist.name}'s fans):\n${JSON.stringify(evidence)}\n\nBook exactly ${shows} stops. For each: city_id, room_id from that city's rooms (a real music room: club, hall or theatre, not a festival, gallery or restaurant), opener_id: one support act for the whole run (it travels with the tour, as on a real tour), so use the same opener_id on every stop, choosing an artist that appears in several cities' openers and fits ${artist.name}'s genre, and "why": one natural sentence a manager would read, on why this city and this room, citing one or two figures (for example "Seattle is ${artist.name}'s #2 city on Qloo, and Barboza's crowd matches these fans at 84"). Don't list every field. Use an alternate city only when a shortlisted city has no room that fits. After you book, check_plan runs the tour's rules over it (the ${RADIUS_KM} km radius clause, the ${n(MAX_LEG_KM)} km leg cap, room fit, major markets) and sends back anything they object to.`,
+          content: `${brief(artist, opts.audience)}\nShows wanted: ${shows}.${draw ? ` Usual crowd: about ${draw}. Each room shows its capacity where one was found and its size against this crowd ("fits", "too small", "too big", or "unknown" when no capacity was found): book a room that fits wherever a city has one. When a capacity is unknown, a room's popularity is a rough guide to its size, so prefer well-known rooms over tiny ones for a crowd this size.` : " Crowd size unknown: a room's popularity is a rough guide to its size."}\n\nScouting results (rooms and openers from Qloo for ${artist.name}'s fans):\n${JSON.stringify(evidence)}\n\nBook exactly ${shows} stops. For each: city_id, room_id from that city's rooms (a real music room: club, hall or theatre, not a festival, gallery or restaurant), opener_id: one support act for the whole run (it travels with the tour, as on a real tour), so use the same opener_id on every stop, choosing an artist that appears in several cities' openers and fits ${artist.name}'s genre, and "why": one natural sentence a manager would read, on why this city and this room, citing one or two figures (for example "Seattle is ${artist.name}'s #2 city on Qloo, and Barboza's crowd matches these fans at 84"). Don't list every field. Book every city marked must_keep (the artist's strongest fan cities on Qloo). Use an alternate city only when a shortlisted city has no room that fits.${draw ? " In each city, rule_pick marks the room the size rule would book (a measured fit always beats a room nobody could measure): book it unless another room that fits matches these fans better." : ""} After you book, check_plan runs the tour's rules over it (the ${RADIUS_KM} km radius clause, the ${n(MAX_LEG_KM)} km leg cap, room fit, major markets, the strongest fan cities) and sends back anything they object to.`,
         },
       ];
       const book = await ask<{ stops: BookStop[] }>({ name: "book", schema: BOOK_SCHEMA, maxTokens: 8000, timeoutMs: 120_000, messages: bookMessages });
@@ -541,7 +607,7 @@ export async function planTour(
   // 4. check_plan, and the agent's answer to it: at most MAX_REVISIONS rounds, each one strict-JSON call.
   if (booked) {
     const first = booked;
-    const ctx = (): CheckContext => ({ byId, rooms, shows, draw, from: opts.from, radius: RADIUS_KM });
+    const ctx = (): CheckContext => ({ byId, rooms, shows, draw, from: opts.from, radius: RADIUS_KM, mustKeep });
     const name = (id: string) => allById.get(id)?.name ?? byId.get(id)?.name ?? id;
     const roomName = (city: string, id: string) => rooms.get(city)?.find((r) => r.id === id)?.name ?? "an unlisted room";
     let objections = checkPlan(booked, ctx());
@@ -612,6 +678,7 @@ export async function planTour(
     usable,
     make: (score) => ({ score }),
     region: opts.region,
+    protect: (c) => mustKeep.has(c.marketId),
     on: (e) => {
       if (e.t === "fill") {
         if (planned === "fixed") log({ kind: "rule", text: `Fixed plan: the ${before + e.cities.length} ${blend ? "top cities in blend order (fan rank weighed against size)" : "strongest cities"} that clear the ${RADIUS_KM} km radius clause and have rooms.`, result: e.cities.map((c) => c.name).join(", ") });
@@ -622,6 +689,8 @@ export async function planTour(
         else log({ kind: "rule", text: `${e.out.name} would cost a ${n(e.km)} km leg with no show, so ${e.in.name} (#${e.in.rank} on the fan map) takes its place.`, result: `No order of the stops keeps every leg between shows under ${n(MAX_LEG_KM)} km, and a city with rooms can close it` });
       } else if (e.t === "home") {
         log({ kind: "rule", text: `${e.home.name} is where the tour starts and #${e.home.rank} on ${artist.name}'s fan map, so the run opens with a hometown show${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}.`, result: "No band routes past its hometown" });
+      } else if (e.t === "fan") {
+        log({ kind: "rule", text: `${e.city.name} is #${e.city.rank} on ${artist.name}'s fan map, one of the ${FAN_KEEP} strongest, so it stays on the tour${e.out.length ? ` and ${e.out.map((x) => x.name).join(" and ")} give${e.out.length === 1 ? "s" : ""} way` : ""}.`, result: "A tour never drops the artist's strongest fan cities when the route can reach them" });
       } else if (e.t === "no-home") {
         log({ kind: "rule", text: `${e.home.name} is #${e.home.rank} on the fan map, but stays off the tour: ${e.reason}.` });
       } else {
@@ -674,7 +743,7 @@ export async function planTour(
     const now = legsOver(chosen.map((x) => x.score));
     let tries = 0;
     let swapped = false;
-    if (was.marketId !== settled.homeId) {
+    if (was.marketId !== settled.homeId && !mustKeep.has(was.marketId)) {
       for (const score of cities.slice(0, POOL_SIZE)) {
         if (tries >= ROOM_SWAP_TRIES) break;
         if (chosen.some((x) => x.score.marketId === score.marketId || (x !== chosen[i] && clash(x.score, score)))) continue;

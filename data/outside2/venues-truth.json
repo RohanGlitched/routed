@@ -1,0 +1,2079 @@
+{
+ "rule": "data/outside2/PROTOCOL.md, test 1",
+ "citiesPerArtist": 3,
+ "subjects": [
+  {
+   "artist": "Ledisi",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Good Life Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Good_Life_Tour&oldid=1293293249",
+   "revid": 1293293249,
+   "qlooId": "F6368EC6-031E-4AF6-BDB4-152C0F7ACACA",
+   "draw": 2700,
+   "measured": 13,
+   "marketsWithVenue": 29,
+   "cities": [
+    {
+     "marketId": "dallas-us-tx",
+     "city": "Dallas",
+     "venues": [
+      {
+       "names": [
+        "Music Hall at Fair Park",
+        "GM Building"
+       ],
+       "qid": "Q6941540",
+       "capacity": 3420
+      }
+     ]
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "venues": [
+      {
+       "names": [
+        "Theater At MGM National Harbor",
+        "MGM National Harbor",
+        "The Theater at MGM National Harbor"
+       ],
+       "qid": "Q22984612"
+      }
+     ]
+    },
+    {
+     "marketId": "birmingham-us-al",
+     "city": "Birmingham",
+     "venues": [
+      {
+       "names": [
+        "Alabama Theatre"
+       ],
+       "qid": "Q4705348",
+       "capacity": 2176
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "The 1975",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Still... At Their Very Best",
+   "source": "https://en.wikipedia.org/w/index.php?title=Still..._At_Their_Very_Best&oldid=1367276826",
+   "revid": 1367276826,
+   "qlooId": "C977220F-11A7-4F93-8714-AEDC57674191",
+   "draw": 18400,
+   "measured": 33,
+   "marketsWithVenue": 36,
+   "cities": [
+    {
+     "marketId": "chicago-us-il",
+     "city": "Chicago",
+     "venues": [
+      {
+       "names": [
+        "Allstate Arena",
+        "Rosemont Horizon"
+       ],
+       "qid": "Q1336027",
+       "capacity": 18500
+      }
+     ]
+    },
+    {
+     "marketId": "st-louis-us-mo",
+     "city": "St. Louis",
+     "venues": [
+      {
+       "names": [
+        "Enterprise Center",
+        "Kiel Center",
+        "Savvis Center",
+        "Scottrade Center"
+       ],
+       "qid": "Q1067700",
+       "capacity": 18400
+      }
+     ]
+    },
+    {
+     "marketId": "vancouver-ca",
+     "city": "Vancouver",
+     "venues": [
+      {
+       "names": [
+        "Rogers Arena",
+        "General Motors Place",
+        "GM Place"
+       ],
+       "qid": "Q517318",
+       "capacity": 18422
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Omar Apollo",
+   "set": "held-out",
+   "region": "na",
+   "tour": "God Said No World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=God_Said_No_World_Tour&oldid=1360001122",
+   "revid": 1360001122,
+   "qlooId": "40E072EE-DAEE-435B-83A4-0B7085066E94",
+   "draw": 8500,
+   "measured": 10,
+   "marketsWithVenue": 26,
+   "cities": [
+    {
+     "marketId": "chicago-us-il",
+     "city": "Chicago",
+     "venues": [
+      {
+       "names": [
+        "Huntington Bank Pavilion",
+        "Pavilion at Northerly Island",
+        "Charter One Pavilion",
+        "Huntington Bank Pavilion at Northerly Island",
+        "Lakefront Pavilion",
+        "FirstMerit Bank Pavilion"
+       ],
+       "qid": "Q2961232"
+      }
+     ]
+    },
+    {
+     "marketId": "dallas-us-tx",
+     "city": "Dallas",
+     "venues": [
+      {
+       "names": [
+        "The Pavilion at Toyota Music Factory",
+        "Toyota Music Factory",
+        "Irving Music Factory"
+       ],
+       "qid": "Q29470817"
+      }
+     ]
+    },
+    {
+     "marketId": "miami-us-fl",
+     "city": "Miami",
+     "venues": [
+      {
+       "names": [
+        "FPL Solar Amphitheater",
+        "Bayfront Park"
+       ],
+       "qid": "Q812537"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Flo",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Access All Areas Tour (Flo)",
+   "source": "https://en.wikipedia.org/w/index.php?title=Access_All_Areas_Tour_(Flo)&oldid=1378984407",
+   "revid": 1378984407,
+   "qlooId": "D3AE84B1-C633-4902-A510-6785D10DB16B",
+   "draw": 2300,
+   "measured": 7,
+   "marketsWithVenue": 26,
+   "cities": [
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "venues": [
+      {
+       "names": [
+        "Brooklyn Paramount Theater"
+       ],
+       "qid": "Q7135369"
+      }
+     ]
+    },
+    {
+     "marketId": "vancouver-ca",
+     "city": "Vancouver",
+     "venues": [
+      {
+       "names": [
+        "Commodore Ballroom"
+       ],
+       "qid": "Q5153212"
+      }
+     ]
+    },
+    {
+     "marketId": "boston-us-ma",
+     "city": "Boston",
+     "venues": [
+      {
+       "names": [
+        "Citizens House of Blues Boston",
+        "House of Blues"
+       ],
+       "qid": "Q648898"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Queen + Adam Lambert",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Rhapsody Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Rhapsody_Tour&oldid=1379677608",
+   "revid": 1379677608,
+   "qlooId": "3F06A2DD-5E22-4DD2-B7CE-172D3A50F2DE",
+   "draw": 19100,
+   "measured": 26,
+   "marketsWithVenue": 27,
+   "cities": [
+    {
+     "marketId": "boston-us-ma",
+     "city": "Boston",
+     "venues": [
+      {
+       "names": [
+        "TD Garden",
+        "Shawmut Center",
+        "FleetCenter",
+        "Fleet Center",
+        "TD Banknorth Garden",
+        "Boston Garden",
+        "The Garden"
+       ],
+       "qid": "Q432105",
+       "capacity": 18624
+      }
+     ]
+    },
+    {
+     "marketId": "austin-us-tx",
+     "city": "Austin",
+     "venues": [
+      {
+       "names": [
+        "Circuit of the Americas",
+        "COTA",
+        "Circuit of Americas"
+       ],
+       "qid": "Q59626"
+      }
+     ]
+    },
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "venues": [
+      {
+       "names": [
+        "The Forum",
+        "Kia Forum",
+        "The Forum, Presented by Chase",
+        "Great Western Forum",
+        "Los Angeles Forum",
+        "LA Forum",
+        "Inglewood Forum"
+       ],
+       "qid": "Q639129",
+       "capacity": 17500
+      },
+      {
+       "names": [
+        "BMO Stadium",
+        "LAFC Stadium",
+        "Los Angeles FC Stadium",
+        "Banc of California Stadium"
+       ],
+       "qid": "Q22096111",
+       "capacity": 22000
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Queens of the Stone Age",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Catacombs Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Catacombs_Tour&oldid=1375102207",
+   "revid": 1375102207,
+   "qlooId": "155A5A06-6814-42D2-9633-962CD8385208",
+   "draw": 2800,
+   "measured": 10,
+   "marketsWithVenue": 15,
+   "cities": [
+    {
+     "marketId": "toronto-ca",
+     "city": "Toronto",
+     "venues": [
+      {
+       "names": [
+        "Massey Hall"
+       ],
+       "qid": "Q1122776",
+       "capacity": 2752
+      }
+     ]
+    },
+    {
+     "marketId": "santa-barbara-us-ca",
+     "city": "Santa Barbara",
+     "venues": [
+      {
+       "names": [
+        "Arlington Theatre",
+        "Fox Arlington Theatre",
+        "Arlington Theater"
+       ],
+       "qid": "Q4792404",
+       "capacity": 2018
+      }
+     ]
+    },
+    {
+     "marketId": "palm-springs-us-ca",
+     "city": "Palm Springs",
+     "venues": [
+      {
+       "names": [
+        "Joshua Tree Retreat Center"
+       ]
+      },
+      {
+       "names": [
+        "Agua Caliente Casino",
+        "Agua Caliente Casino Resort Spa"
+       ],
+       "qid": "Q4694430"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Clairo",
+   "set": "bench",
+   "region": "na",
+   "tour": "Charm Tour (2024 North American leg)",
+   "source": "https://en.wikipedia.org/w/index.php?title=Charm_Tour&oldid=1337886246",
+   "revid": 1337886246,
+   "benchId": "kvda9edhz9",
+   "draw": 3500,
+   "measured": 7,
+   "marketsWithVenue": 22,
+   "cities": [
+    {
+     "marketId": "san-diego-us-ca",
+     "city": "San Diego",
+     "venues": [
+      {
+       "names": [
+        "The Rady Shell at Jacobs Park",
+        "Rady Shell",
+        "Rady Shell at Jacobs Park"
+       ],
+       "qid": "Q114964382",
+       "capacity": 10000
+      }
+     ]
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "venues": [
+      {
+       "names": [
+        "The Anthem"
+       ],
+       "qid": "Q30611662"
+      }
+     ]
+    },
+    {
+     "marketId": "charlotte-us-nc",
+     "city": "Charlotte",
+     "venues": [
+      {
+       "names": [
+        "Ovens Auditorium"
+       ],
+       "qid": "Q7113349",
+       "capacity": 2460
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Doja Cat",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Tour Ma Vie World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Tour_Ma_Vie_World_Tour&oldid=1379654155",
+   "revid": 1379654155,
+   "qlooId": "AED4373C-DFD5-425D-9BD7-FFD1EEE9805B",
+   "draw": 19000,
+   "measured": 30,
+   "marketsWithVenue": 31,
+   "cities": [
+    {
+     "marketId": "tampa-us-fl",
+     "city": "Tampa",
+     "venues": [
+      {
+       "names": [
+        "Benchmark International Arena"
+       ],
+       "qid": "Q940199",
+       "capacity": 19204
+      }
+     ]
+    },
+    {
+     "marketId": "las-vegas-us-nv",
+     "city": "Las Vegas",
+     "venues": [
+      {
+       "names": [
+        "T-Mobile Arena",
+        "Tmobile Arena",
+        "T Mobile Arena"
+       ],
+       "qid": "Q3338973",
+       "capacity": 20000
+      }
+     ]
+    },
+    {
+     "marketId": "san-antonio-us-tx",
+     "city": "San Antonio",
+     "venues": [
+      {
+       "names": [
+        "Frost Bank Center",
+        "SBC Center",
+        "ATT Center",
+        "AT and T Center",
+        "AT&T Center"
+       ],
+       "qid": "Q298573",
+       "capacity": 18581
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Depeche Mode",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "Memento Mori World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Memento_Mori_World_Tour&oldid=1357215827",
+   "revid": 1357215827,
+   "qlooId": "83DA77D5-4364-4E55-93D3-A8420CDD354A",
+   "draw": 23000,
+   "measured": 39,
+   "marketsWithVenue": 34,
+   "cities": [
+    {
+     "marketId": "turin-it",
+     "city": "Turin",
+     "venues": [
+      {
+       "names": [
+        "Pala Alpitour",
+        "Torino Palasport Olimpico",
+        "Palasport Olimpico",
+        "PalaOlimpico",
+        "PalaIsozaki",
+        "Inalpi Arena"
+       ],
+       "qid": "Q1393382",
+       "capacity": 15657
+      }
+     ]
+    },
+    {
+     "marketId": "barcelona-es",
+     "city": "Barcelona",
+     "venues": [
+      {
+       "names": [
+        "Palau Sant Jordi",
+        "St. George's Palace"
+       ],
+       "qid": "Q630630",
+       "capacity": 17960
+      }
+     ]
+    },
+    {
+     "marketId": "lodz-pl",
+     "city": "Łódź",
+     "venues": [
+      {
+       "names": [
+        "Atlas Arena",
+        "Arena Łódź"
+       ],
+       "qid": "Q757145",
+       "capacity": 12109
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Billy Joel",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Billy Joel in Concert",
+   "source": "https://en.wikipedia.org/w/index.php?title=Billy_Joel_in_Concert&oldid=1350614192",
+   "revid": 1350614192,
+   "qlooId": "0DC6AE64-E9C1-486D-B239-5E77458C0B2E",
+   "draw": 37900,
+   "measured": 76,
+   "marketsWithVenue": 54,
+   "cities": [
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "venues": [
+      {
+       "names": [
+        "Hollywood Bowl"
+       ],
+       "qid": "Q976218",
+       "capacity": 17500
+      },
+      {
+       "names": [
+        "Dodger Stadium",
+        "Chavez Ravine",
+        "Dodgers Stadium"
+       ],
+       "qid": "Q247420",
+       "capacity": 56000
+      },
+      {
+       "names": [
+        "SoFi Stadium",
+        "City of Champions Stadium",
+        "LA Stadium at Hollywood Park",
+        "LA Stadium",
+        "Los Angeles Stadium",
+        "LA Olympic Stadium",
+        "2028 Stadium"
+       ],
+       "qid": "Q19520501",
+       "capacity": 70240
+      }
+     ]
+    },
+    {
+     "marketId": "winston-salem-us-nc",
+     "city": "Winston-Salem",
+     "venues": [
+      {
+       "names": [
+        "BB&T Field",
+        "Allegacy Federal Credit Union Stadium",
+        "Groves Stadium",
+        "Truist Field at Wake Forest"
+       ],
+       "qid": "Q1028275",
+       "capacity": 31500
+      }
+     ]
+    },
+    {
+     "marketId": "tampa-us-fl",
+     "city": "Tampa",
+     "venues": [
+      {
+       "names": [
+        "Tampa Bay Times Forum",
+        "Amalie Arena"
+       ],
+       "qid": "Q940199",
+       "capacity": 19204
+      },
+      {
+       "names": [
+        "Raymond James Stadium"
+       ],
+       "qid": "Q1141343",
+       "capacity": 65890
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Sugababes",
+   "set": "held-out",
+   "region": "uk",
+   "tour": "Sugababes '25 Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Sugababes_'25_Tour&oldid=1378669791",
+   "revid": 1378669791,
+   "qlooId": "7653517D-0C72-4DF0-8A73-FB038F1B87E4",
+   "draw": 13000,
+   "measured": 8,
+   "marketsWithVenue": 9,
+   "cities": [
+    {
+     "marketId": "glasgow-gb",
+     "city": "Glasgow",
+     "venues": [
+      {
+       "names": [
+        "OVO Hydro",
+        "The OVO Hydro",
+        "The Hydro",
+        "SSE Hydro",
+        "Scottish Hydro Arena"
+       ],
+       "qid": "Q610092",
+       "capacity": 13000
+      }
+     ]
+    },
+    {
+     "marketId": "newcastle-upon-tyne-gb",
+     "city": "Newcastle upon Tyne",
+     "venues": [
+      {
+       "names": [
+        "Utilita Arena",
+        "Newcastle Arena",
+        "Telewest Arena"
+       ],
+       "qid": "Q1647917",
+       "capacity": 11000
+      }
+     ]
+    },
+    {
+     "marketId": "manchester-gb",
+     "city": "Manchester",
+     "venues": [
+      {
+       "names": [
+        "Co-op Live",
+        "Co-op Live arena"
+       ],
+       "qid": "Q111962681"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Green Day",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Saviors Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Saviors_Tour&oldid=1378500500",
+   "revid": 1378500500,
+   "qlooId": "76922890-5BBA-42BB-B3F9-1AF72114CF44",
+   "draw": 41100,
+   "measured": 22,
+   "marketsWithVenue": 27,
+   "cities": [
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "venues": [
+      {
+       "names": [
+        "Citi Field"
+       ],
+       "qid": "Q1072882",
+       "capacity": 41922
+      }
+     ]
+    },
+    {
+     "marketId": "pittsburgh-us-pa",
+     "city": "Pittsburgh",
+     "venues": [
+      {
+       "names": [
+        "PNC Park"
+       ],
+       "qid": "Q1151177",
+       "capacity": 37898
+      }
+     ]
+    },
+    {
+     "marketId": "portland-us-or",
+     "city": "Portland",
+     "venues": [
+      {
+       "names": [
+        "Providence Park",
+        "Civic Stadium",
+        "PGE Park",
+        "Multnomah Stadium",
+        "Multnomah Field",
+        "Jeld-Wen Field"
+       ],
+       "qid": "Q262291",
+       "capacity": 25218
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Dua Lipa",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Radical Optimism Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Radical_Optimism_Tour&oldid=1374098811",
+   "revid": 1374098811,
+   "qlooId": "1D792A35-7D72-4D57-88D0-C3A4F3E73EF6",
+   "draw": 18600,
+   "measured": 10,
+   "marketsWithVenue": 10,
+   "cities": [
+    {
+     "marketId": "boston-us-ma",
+     "city": "Boston",
+     "venues": [
+      {
+       "names": [
+        "TD Garden",
+        "Shawmut Center",
+        "FleetCenter",
+        "Fleet Center",
+        "TD Banknorth Garden",
+        "Boston Garden",
+        "The Garden"
+       ],
+       "qid": "Q432105",
+       "capacity": 18624
+      }
+     ]
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "venues": [
+      {
+       "names": [
+        "Madison Square Garden",
+        "Madison Square Garden Center",
+        "MSG",
+        "The Garden"
+       ],
+       "qid": "Q186125",
+       "capacity": 19812
+      }
+     ]
+    },
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "venues": [
+      {
+       "names": [
+        "Kia Forum",
+        "The Forum, Presented by Chase",
+        "Great Western Forum",
+        "The Forum",
+        "Los Angeles Forum",
+        "LA Forum",
+        "Inglewood Forum"
+       ],
+       "qid": "Q639129",
+       "capacity": 17500
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Nine Inch Nails",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Peel It Back Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Peel_It_Back_Tour&oldid=1372261369",
+   "revid": 1372261369,
+   "qlooId": "2E28F9EF-0008-4731-94C3-C195449BA5C2",
+   "draw": 18500,
+   "measured": 42,
+   "marketsWithVenue": 40,
+   "cities": [
+    {
+     "marketId": "cleveland-us-oh",
+     "city": "Cleveland",
+     "venues": [
+      {
+       "names": [
+        "Rocket Arena",
+        "Gund Arena",
+        "Quicken Loans Arena",
+        "Rocket Mortgage FieldHouse"
+       ],
+       "qid": "Q387157",
+       "capacity": 20562
+      }
+     ]
+    },
+    {
+     "marketId": "irvine-us-ca",
+     "city": "Irvine",
+     "venues": [
+      {
+       "names": [
+        "Honda Center",
+        "Anaheim Arena",
+        "Arrowhead Pond of Anaheim"
+       ],
+       "qid": "Q774138",
+       "capacity": 17174
+      }
+     ]
+    },
+    {
+     "marketId": "fort-worth-us-tx",
+     "city": "Fort Worth",
+     "venues": [
+      {
+       "names": [
+        "Dickies Arena"
+       ],
+       "qid": "Q30674143"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "For King & Country",
+   "set": "held-out",
+   "region": "na",
+   "tour": "A Drummer Boy Christmas Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=A_Drummer_Boy_Christmas_Tour&oldid=1323654848",
+   "revid": 1323654848,
+   "qlooId": "FC278F07-3E78-44C4-970F-88ADAA633AF4",
+   "draw": 18200,
+   "measured": 37,
+   "marketsWithVenue": 48,
+   "cities": [
+    {
+     "marketId": "duluth-us-mn",
+     "city": "Duluth",
+     "venues": [
+      {
+       "names": [
+        "Gas South Arena",
+        "Gwinnett Civic Center Arena",
+        "The Arena at Gwinnett Center",
+        "Infinite Energy Arena"
+       ],
+       "qid": "Q224703",
+       "capacity": 13100
+      }
+     ]
+    },
+    {
+     "marketId": "college-station-us-tx",
+     "city": "College Station",
+     "venues": [
+      {
+       "names": [
+        "Reed Arena"
+       ],
+       "qid": "Q14711273",
+       "capacity": 12989
+      }
+     ]
+    },
+    {
+     "marketId": "pensacola-us-fl",
+     "city": "Pensacola",
+     "venues": [
+      {
+       "names": [
+        "Five Flags Speedway"
+       ],
+       "qid": "Q5455919"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Bonnie Tyler",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "40 Years \"Total Eclipse of the Heart\" Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=40_Years_%22Total_Eclipse_of_the_Heart%22_Tour&oldid=1362833570",
+   "revid": 1362833570,
+   "qlooId": "12BD83EB-3E8A-4DB6-A9E3-00A1B645AEC9",
+   "draw": 15000,
+   "measured": 3,
+   "marketsWithVenue": 27,
+   "cities": [
+    {
+     "marketId": "bremen-de",
+     "city": "Bremen",
+     "venues": [
+      {
+       "names": [
+        "Metropol Theater"
+       ]
+      }
+     ]
+    },
+    {
+     "marketId": "enschede-nl",
+     "city": "Enschede",
+     "venues": [
+      {
+       "names": [
+        "EmslandArena"
+       ]
+      }
+     ]
+    },
+    {
+     "marketId": "reutlingen-de",
+     "city": "Reutlingen",
+     "venues": [
+      {
+       "names": [
+        "Volksbankmesse"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Chappell Roan",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Midwest Princess Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Midwest_Princess_Tour&oldid=1348730313",
+   "revid": 1348730313,
+   "qlooId": "1C8D8828-5739-4304-9506-BA01B3D63516",
+   "draw": 1600,
+   "measured": 8,
+   "marketsWithVenue": 57,
+   "cities": [
+    {
+     "marketId": "madison-us-wi",
+     "city": "Madison",
+     "venues": [
+      {
+       "names": [
+        "The Sylvee"
+       ],
+       "qid": "Q133862909"
+      }
+     ]
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "venues": [
+      {
+       "names": [
+        "Brooklyn Steel"
+       ],
+       "qid": "Q47321175"
+      }
+     ]
+    },
+    {
+     "marketId": "pittsburgh-us-pa",
+     "city": "Pittsburgh",
+     "venues": [
+      {
+       "names": [
+        "Stage AE"
+       ],
+       "qid": "Q7596774"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Travis Scott",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Circus Maximus Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Circus_Maximus_Tour&oldid=1366276511",
+   "revid": 1366276511,
+   "qlooId": "1651869C-3277-47AC-8535-62784C799EDF",
+   "draw": 19200,
+   "measured": 33,
+   "marketsWithVenue": 31,
+   "cities": [
+    {
+     "marketId": "raleigh-us-nc",
+     "city": "Raleigh",
+     "venues": [
+      {
+       "names": [
+        "PNC Arena",
+        "Lenovo Center",
+        "RBC Center"
+       ],
+       "qid": "Q39177",
+       "capacity": 19722
+      }
+     ]
+    },
+    {
+     "marketId": "detroit-us-mi",
+     "city": "Detroit",
+     "venues": [
+      {
+       "names": [
+        "Little Caesars Arena",
+        "New Detroit Arena",
+        "Detroit Events Center"
+       ],
+       "qid": "Q18154984"
+      }
+     ]
+    },
+    {
+     "marketId": "miami-us-fl",
+     "city": "Miami",
+     "venues": [
+      {
+       "names": [
+        "Kaseya Center"
+       ],
+       "qid": "Q420129",
+       "capacity": 16500
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "21 Savage",
+   "set": "held-out",
+   "region": "na",
+   "tour": "American Dream Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=American_Dream_Tour&oldid=1330479410",
+   "revid": 1330479410,
+   "qlooId": "3D8CC570-78AB-4989-AC0E-34FD09E39601",
+   "draw": 18400,
+   "measured": 4,
+   "marketsWithVenue": 27,
+   "cities": [
+    {
+     "marketId": "atlanta-us-ga",
+     "city": "Atlanta",
+     "venues": [
+      {
+       "names": [
+        "Cellairis Amphitheatre at Lakewood",
+        "Cellairis Amphitheatre",
+        "Lakewood Amphitheatre",
+        "Aaron's Amphitheatre at Lakewood",
+        "Aaron's Amphitheatre"
+       ],
+       "qid": "Q4661762"
+      }
+     ]
+    },
+    {
+     "marketId": "tampa-us-fl",
+     "city": "Tampa",
+     "venues": [
+      {
+       "names": [
+        "MidFlorida Credit Union Amphitheatre",
+        "Ford Amphitheatre",
+        "Live Nation Amphitheatre at the Florida State Fairgrounds",
+        "1-800-ASK-GARY Amphitheatre",
+        "1-800-ASK-GARY Amphitheatre at the Florida State Fairgrounds",
+        "MidFlorida Credit Union Amphitheatre at the Florida State Fairgrounds",
+        "Live Nation Amphitheatre",
+        "Ford Amphitheatre at the Florida State Fairgrounds",
+        "Tampa Bay Amphitheatre"
+       ],
+       "qid": "Q4266698"
+      }
+     ]
+    },
+    {
+     "marketId": "brockton-us-ma",
+     "city": "Brockton",
+     "venues": [
+      {
+       "names": [
+        "Xfinity Center",
+        "Great Woods Center for the Performing Arts",
+        "Tweeter Center for the Performing Arts",
+        "Great Woods",
+        "Comcast Center"
+       ],
+       "qid": "Q5018650"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "SZA",
+   "set": "held-out",
+   "region": "na",
+   "tour": "SOS Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=SOS_Tour&oldid=1359128980",
+   "revid": 1359128980,
+   "qlooId": "E2E58680-EE3F-4D1D-88B6-B79F87205B2C",
+   "draw": 19000,
+   "measured": 31,
+   "marketsWithVenue": 28,
+   "cities": [
+    {
+     "marketId": "dallas-us-tx",
+     "city": "Dallas",
+     "venues": [
+      {
+       "names": [
+        "American Airlines Center",
+        "AAC"
+       ],
+       "qid": "Q463345",
+       "capacity": 19200
+      }
+     ]
+    },
+    {
+     "marketId": "chicago-us-il",
+     "city": "Chicago",
+     "venues": [
+      {
+       "names": [
+        "United Center",
+        "The UC",
+        "Madhouse on Madison",
+        "The House that Jordan Built"
+       ],
+       "qid": "Q639975",
+       "capacity": 23500
+      }
+     ]
+    },
+    {
+     "marketId": "nashville-us-tn",
+     "city": "Nashville",
+     "venues": [
+      {
+       "names": [
+        "Bridgestone Arena",
+        "Gaylord Entertainment Center"
+       ],
+       "qid": "Q302869",
+       "capacity": 19395
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Halsey",
+   "set": "held-out",
+   "region": "na",
+   "tour": "For My Last Trick: The Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=For_My_Last_Trick%3A_The_Tour&oldid=1376678226",
+   "revid": 1376678226,
+   "qlooId": "488C7F63-9D38-49A2-9544-51A802B4FE35",
+   "draw": 17500,
+   "measured": 3,
+   "marketsWithVenue": 23,
+   "cities": [
+    {
+     "marketId": "raleigh-us-nc",
+     "city": "Raleigh",
+     "venues": [
+      {
+       "names": [
+        "Coastal Credit Union Music Park",
+        "Coastal Credit Union Music Park at Walnut Creek",
+        "Walnut Creek Amphitheatre",
+        "Hardee's Walnut Creek Amphitheatre and commonly known as Walnut Creek Amphitheatre",
+        "Time Warner Cable Music Pavilion"
+       ],
+       "qid": "Q7805199"
+      }
+     ]
+    },
+    {
+     "marketId": "farmington-hills-us-mi",
+     "city": "Farmington Hills",
+     "venues": [
+      {
+       "names": [
+        "Pine Knob Music Theatre"
+       ],
+       "qid": "Q5206234"
+      }
+     ]
+    },
+    {
+     "marketId": "salt-lake-city-us-ut",
+     "city": "Salt Lake City",
+     "venues": [
+      {
+       "names": [
+        "Utah First Credit Union Amphitheatre",
+        "USANA Amphitheatre"
+       ],
+       "qid": "Q7865749"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Pink",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Summer Carnival (tour)",
+   "source": "https://en.wikipedia.org/w/index.php?title=Summer_Carnival_(tour)&oldid=1376188311",
+   "revid": 1376188311,
+   "qlooId": "E44E2F12-1947-4556-B608-6A3A9347B408",
+   "draw": 42300,
+   "measured": 31,
+   "marketsWithVenue": 29,
+   "cities": [
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "venues": [
+      {
+       "names": [
+        "Citizens Bank Park"
+       ],
+       "qid": "Q912770",
+       "capacity": 43651
+      },
+      {
+       "names": [
+        "Lincoln Financial Field",
+        "The Linc"
+       ],
+       "qid": "Q1052370",
+       "capacity": 68532
+      }
+     ]
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "venues": [
+      {
+       "names": [
+        "Citi Field"
+       ],
+       "qid": "Q1072882",
+       "capacity": 41922
+      },
+      {
+       "names": [
+        "MetLife Stadium",
+        "New York Giants Stadium",
+        "New York Jets Stadium",
+        "New York/New Jersey Stadium",
+        "New York New Jersey Stadium"
+       ],
+       "qid": "Q10862290",
+       "capacity": 82500
+      }
+     ]
+    },
+    {
+     "marketId": "missoula-us-mt",
+     "city": "Missoula",
+     "venues": [
+      {
+       "names": [
+        "Washington–Grizzly Stadium",
+        "Washington Grizzly Stadium",
+        "University of Montana Stadium",
+        "Montana Grizzlies Stadium"
+       ],
+       "qid": "Q7972603",
+       "capacity": 25217
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Pierce the Veil",
+   "set": "held-out",
+   "region": "na",
+   "tour": "I Can't Hear You World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=I_Can't_Hear_You_World_Tour&oldid=1376231105",
+   "revid": 1376231105,
+   "qlooId": "653BD725-93BF-4488-88F5-26881AFBE1BA",
+   "draw": 17500,
+   "measured": 12,
+   "marketsWithVenue": 37,
+   "cities": [
+    {
+     "marketId": "seattle-us-wa",
+     "city": "Seattle",
+     "venues": [
+      {
+       "names": [
+        "WaMu Theater",
+        "Lumen Field",
+        "The Hawk"
+       ],
+       "qid": "Q612736",
+       "capacity": 67000
+      }
+     ]
+    },
+    {
+     "marketId": "west-palm-beach-us-fl",
+     "city": "West Palm Beach",
+     "venues": [
+      {
+       "names": [
+        "ITHINK Financial Amphitheatre",
+        "Cruzan Amphitheatre"
+       ],
+       "qid": "Q5190337"
+      }
+     ]
+    },
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "venues": [
+      {
+       "names": [
+        "Kia Forum",
+        "The Forum, Presented by Chase",
+        "Great Western Forum",
+        "The Forum",
+        "Los Angeles Forum",
+        "LA Forum",
+        "Inglewood Forum"
+       ],
+       "qid": "Q639129",
+       "capacity": 17500
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "set": "bench",
+   "region": "na",
+   "tour": "The Melancholy Tour (spring 2025 North American leg)",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Melancholy_Tour&oldid=1348731607",
+   "revid": 1348731607,
+   "benchId": "bgyrxqguyf",
+   "draw": 2800,
+   "measured": 3,
+   "marketsWithVenue": 11,
+   "cities": [
+    {
+     "marketId": "atlanta-us-ga",
+     "city": "Atlanta",
+     "venues": [
+      {
+       "names": [
+        "Tabernacle",
+        "The Tabernacle"
+       ],
+       "qid": "Q10381839",
+       "capacity": 2600
+      }
+     ]
+    },
+    {
+     "marketId": "nashville-us-tn",
+     "city": "Nashville",
+     "venues": [
+      {
+       "names": [
+        "Ryman Auditorium",
+        "Grand Ole Opry House",
+        "Union Gospel Tabernacle"
+       ],
+       "qid": "Q931449"
+      }
+     ]
+    },
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "venues": [
+      {
+       "names": [
+        "Metropolitan Opera House",
+        "The Met Philadelphia",
+        "Philadelphia Opera House",
+        "Hammerstein's Philadelphia Opera House",
+        "The Met Philly"
+       ],
+       "qid": "Q6825168",
+       "capacity": 3500
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Ado",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Hibana World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Hibana_World_Tour&oldid=1327682517",
+   "revid": 1327682517,
+   "qlooId": "7FFAA902-0F79-449E-B178-8AAB063FD1D7",
+   "draw": 18800,
+   "measured": 10,
+   "marketsWithVenue": 12,
+   "cities": [
+    {
+     "marketId": "toronto-ca",
+     "city": "Toronto",
+     "venues": [
+      {
+       "names": [
+        "Scotiabank Arena",
+        "Air Canada Centre"
+       ],
+       "qid": "Q406972",
+       "capacity": 19800
+      }
+     ]
+    },
+    {
+     "marketId": "fort-worth-us-tx",
+     "city": "Fort Worth",
+     "venues": [
+      {
+       "names": [
+        "Dickies Arena"
+       ],
+       "qid": "Q30674143"
+      }
+     ]
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "venues": [
+      {
+       "names": [
+        "Prudential Center"
+       ],
+       "qid": "Q849027",
+       "capacity": 17625
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Ghost",
+   "set": "bench",
+   "region": "eu",
+   "tour": "Skeletour World Tour (2025 European leg)",
+   "source": "https://en.wikipedia.org/w/index.php?title=Skeletour&oldid=1381597196",
+   "revid": 1381597196,
+   "benchId": "vfzwt8vpab",
+   "draw": 13500,
+   "measured": 17,
+   "marketsWithVenue": 19,
+   "cities": [
+    {
+     "marketId": "berlin-de",
+     "city": "Berlin",
+     "venues": [
+      {
+       "names": [
+        "Uber Arena",
+        "O2 World Berlin",
+        "O2 World",
+        "Mercedes-Benz Arena Berlin"
+       ],
+       "qid": "Q265463",
+       "capacity": 17000
+      }
+     ]
+    },
+    {
+     "marketId": "oslo-no",
+     "city": "Oslo",
+     "venues": [
+      {
+       "names": [
+        "Oslo Spektrum"
+       ],
+       "qid": "Q1508325",
+       "capacity": 9700
+      }
+     ]
+    },
+    {
+     "marketId": "linkoeping-se",
+     "city": "Linköping",
+     "venues": [
+      {
+       "names": [
+        "Saab Arena",
+        "Cloetta Center"
+       ],
+       "qid": "Q1102186",
+       "capacity": 8500
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Troye Sivan",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "Something to Give Each Other Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Something_to_Give_Each_Other_Tour&oldid=1353175921",
+   "revid": 1353175921,
+   "qlooId": "BAFDEBDB-F736-49E9-87BA-336FE5F5F615",
+   "draw": 7500,
+   "measured": 9,
+   "marketsWithVenue": 11,
+   "cities": [
+    {
+     "marketId": "stockholm-se",
+     "city": "Stockholm",
+     "venues": [
+      {
+       "names": [
+        "Hovet",
+        "Johanneshov ice stadium",
+        "Johanneshovs isstadion"
+       ],
+       "qid": "Q304362",
+       "capacity": 8094
+      }
+     ]
+    },
+    {
+     "marketId": "berlin-de",
+     "city": "Berlin",
+     "venues": [
+      {
+       "names": [
+        "Velodrom"
+       ],
+       "qid": "Q464179",
+       "capacity": 12000
+      }
+     ]
+    },
+    {
+     "marketId": "zuerich-ch",
+     "city": "Zürich",
+     "venues": [
+      {
+       "names": [
+        "The Hall"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Nicki Minaj",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Pink Friday 2 World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Pink_Friday_2_World_Tour&oldid=1380477554",
+   "revid": 1380477554,
+   "qlooId": "7AEC8912-DB9F-43D6-ADE1-AB99AC138E26",
+   "draw": 19000,
+   "measured": 43,
+   "marketsWithVenue": 41,
+   "cities": [
+    {
+     "marketId": "new-orleans-us-la",
+     "city": "New Orleans",
+     "venues": [
+      {
+       "names": [
+        "Smoothie King Center",
+        "Arena de Nueva Orleans"
+       ],
+       "qid": "Q1515840",
+       "capacity": 17805
+      }
+     ]
+    },
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "venues": [
+      {
+       "names": [
+        "Wells Fargo Center",
+        "CoreStates Center",
+        "First Union Center"
+       ],
+       "qid": "Q818735",
+       "capacity": 20328
+      }
+     ]
+    },
+    {
+     "marketId": "montreal-ca",
+     "city": "Montréal",
+     "venues": [
+      {
+       "names": [
+        "Bell Centre",
+        "Centre Bell",
+        "Molson Centre",
+        "Centre Molson"
+       ],
+       "qid": "Q522282",
+       "capacity": 21273
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Addison Rae",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Addison Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Addison_Tour&oldid=1368606917",
+   "revid": 1368606917,
+   "qlooId": "52278DD3-3506-4C92-84BC-BD2B4A30F143",
+   "draw": 5900,
+   "measured": 4,
+   "marketsWithVenue": 14,
+   "cities": [
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "venues": [
+      {
+       "names": [
+        "The Fillmore Philadelphia"
+       ]
+      }
+     ]
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "venues": [
+      {
+       "names": [
+        "The Anthem"
+       ],
+       "qid": "Q30611662"
+      }
+     ]
+    },
+    {
+     "marketId": "denver-us-co",
+     "city": "Denver",
+     "venues": [
+      {
+       "names": [
+        "Mission Ballroom"
+       ],
+       "qid": "Q85785906"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Twenty One Pilots",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Clancy World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Clancy_World_Tour&oldid=1373076398",
+   "revid": 1373076398,
+   "qlooId": "0C9D24CF-61C6-4C91-B6E6-91827467A166",
+   "draw": 19200,
+   "measured": 33,
+   "marketsWithVenue": 44,
+   "cities": [
+    {
+     "marketId": "austin-us-tx",
+     "city": "Austin",
+     "venues": [
+      {
+       "names": [
+        "Moody Center"
+       ],
+       "qid": "Q79477138",
+       "capacity": 15000
+      }
+     ]
+    },
+    {
+     "marketId": "las-vegas-us-nv",
+     "city": "Las Vegas",
+     "venues": [
+      {
+       "names": [
+        "MGM Grand Garden Arena",
+        "MGM Grand Garden Special Events Center"
+       ],
+       "qid": "Q717472",
+       "capacity": 16800
+      }
+     ]
+    },
+    {
+     "marketId": "harrisburg-us-pa",
+     "city": "Harrisburg",
+     "venues": [
+      {
+       "names": [
+        "Hersheypark Stadium"
+       ],
+       "qid": "Q9283783",
+       "capacity": 15641
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Gary Barlow",
+   "set": "held-out",
+   "region": "uk",
+   "tour": "The Songbook Tour (2025)",
+   "source": "https://en.wikipedia.org/w/index.php?title=The_Songbook_Tour_(2025)&oldid=1318185932",
+   "revid": 1318185932,
+   "qlooId": "BE68BE28-FD45-4629-99CB-A3C54622444D",
+   "draw": 2400,
+   "measured": 8,
+   "marketsWithVenue": 25,
+   "cities": [
+    {
+     "marketId": "manchester-gb",
+     "city": "Manchester",
+     "venues": [
+      {
+       "names": [
+        "O2 Apollo Manchester",
+        "The Apollo",
+        "Apollo Theatre",
+        "Manchester Apollo",
+        "Carling Apollo Manchester",
+        "ABC Ardwick",
+        "Apollo Manchester"
+       ],
+       "qid": "Q1068548",
+       "capacity": 3500
+      }
+     ]
+    },
+    {
+     "marketId": "brighton-gb",
+     "city": "Brighton",
+     "venues": [
+      {
+       "names": [
+        "Brighton Centre",
+        "Brighton Center"
+       ],
+       "qid": "Q4967617",
+       "capacity": 4500
+      }
+     ]
+    },
+    {
+     "marketId": "nottingham-gb",
+     "city": "Nottingham",
+     "venues": [
+      {
+       "names": [
+        "Nottingham Royal Concert Hall"
+       ],
+       "qid": "Q7063688"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Turnstile",
+   "set": "bench",
+   "region": "na",
+   "tour": "Never Enough Tour (fall 2025 North American leg)",
+   "source": "https://en.wikipedia.org/w/index.php?title=Never_Enough_Tour&oldid=1381207118",
+   "revid": 1381207118,
+   "benchId": "h2puujjejv",
+   "draw": 7000,
+   "measured": 2,
+   "marketsWithVenue": 21,
+   "cities": [
+    {
+     "marketId": "des-moines-us-ia",
+     "city": "Des Moines",
+     "venues": [
+      {
+       "names": [
+        "Water Works Park"
+       ],
+       "qid": "Q16888141"
+      }
+     ]
+    },
+    {
+     "marketId": "minneapolis-us-mn",
+     "city": "Minneapolis",
+     "venues": [
+      {
+       "names": [
+        "The Armory",
+        "Minneapolis Armory"
+       ],
+       "qid": "Q745327"
+      }
+     ]
+    },
+    {
+     "marketId": "san-francisco-us-ca",
+     "city": "San Francisco",
+     "venues": [
+      {
+       "names": [
+        "Bill Graham Civic Auditorium",
+        "Civic Auditorium",
+        "San Francisco Civic Auditorium"
+       ],
+       "qid": "Q4909197",
+       "capacity": 7000
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Kim Petras",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Feed the Beast World Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Feed_the_Beast_World_Tour&oldid=1377726738",
+   "revid": 1377726738,
+   "qlooId": "0A0CB59C-6F7C-49B0-954E-BBD858D4F23B",
+   "draw": 9400,
+   "measured": 9,
+   "marketsWithVenue": 22,
+   "cities": [
+    {
+     "marketId": "seattle-us-wa",
+     "city": "Seattle",
+     "venues": [
+      {
+       "names": [
+        "WaMu Theater",
+        "Lumen Field",
+        "The Hawk"
+       ],
+       "qid": "Q612736",
+       "capacity": 67000
+      }
+     ]
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "venues": [
+      {
+       "names": [
+        "The Anthem"
+       ],
+       "qid": "Q30611662"
+      }
+     ]
+    },
+    {
+     "marketId": "san-francisco-us-ca",
+     "city": "San Francisco",
+     "venues": [
+      {
+       "names": [
+        "Bill Graham Civic Auditorium",
+        "Civic Auditorium",
+        "San Francisco Civic Auditorium"
+       ],
+       "qid": "Q4909197",
+       "capacity": 7000
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "artist": "Tame Impala",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Deadbeat Tour",
+   "source": "https://en.wikipedia.org/w/index.php?title=Deadbeat_Tour&oldid=1380752017",
+   "revid": 1380752017,
+   "qlooId": "D1AE8792-9129-46E0-AEE7-2C3A81E91385",
+   "draw": 19100,
+   "measured": 25,
+   "marketsWithVenue": 25,
+   "cities": [
+    {
+     "marketId": "portland-us-or",
+     "city": "Portland",
+     "venues": [
+      {
+       "names": [
+        "Moda Center",
+        "Rose Garden"
+       ],
+       "qid": "Q1347442",
+       "capacity": 19980
+      }
+     ]
+    },
+    {
+     "marketId": "nashville-us-tn",
+     "city": "Nashville",
+     "venues": [
+      {
+       "names": [
+        "Bridgestone Arena",
+        "Gaylord Entertainment Center"
+       ],
+       "qid": "Q302869",
+       "capacity": 19395
+      }
+     ]
+    },
+    {
+     "marketId": "seattle-us-wa",
+     "city": "Seattle",
+     "venues": [
+      {
+       "names": [
+        "Climate Pledge Arena",
+        "Seattle Center Arena",
+        "Washington State Pavilion",
+        "Washington State Coliseum",
+        "Seattle Center Coliseum",
+        "KeyArena"
+       ],
+       "qid": "Q977529",
+       "capacity": 18000
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "artist": "Zach Bryan",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Tyler Childers",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Caamp",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Waxahatchee",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Khruangbin",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Durand Jones & The Indications",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Knocked Loose",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Cuco",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "MJ Lenderman",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Parcels",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Alvvays",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Arlo Parks",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Wet Leg",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "Fontaines D.C.",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  },
+  {
+   "artist": "JPEGMAFIA",
+   "test": "venues",
+   "reason": "no Wikipedia tour article among the tour's sources (press listings only)"
+  }
+ ]
+}

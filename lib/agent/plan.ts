@@ -107,12 +107,25 @@ const n = (v: number) => v.toLocaleString("en-US");
  * "The Basement" and "The Basement East").
  */
 export function sameRoomName(a: string, b: string): boolean {
-  const words = (s: string) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").split(" ").filter((w) => w && !["the", "a", "at", "of", "and", "theatre", "theater", "hall", "auditorium", "music", "venue", "club", "live", "center", "centre", "arena", "ballroom", "amphitheatre", "amphitheater"].includes(w));
-  const x = words(a), y = words(b);
+  const words = (s: string) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").split(" ").filter((w) => w.length > 1 && !["the", "at", "of", "and", "theatre", "theater", "hall", "auditorium", "music", "venue", "club", "live", "center", "centre", "arena", "ballroom", "amphitheatre", "amphitheater"].includes(w));
+  const x = [...new Set(words(a))], y = [...new Set(words(b))];
   if (!x.length || !y.length) return a.trim().toLowerCase() === b.trim().toLowerCase();
   const [short, long] = x.length <= y.length ? [x, y] : [y, x];
-  // Equal, or a longer name that adds a word to a two-word one; "Basement" and "Basement East" are two rooms.
-  return (short.length === long.length || short.length >= 2) && short.every((w) => long.includes(w));
+  // The same words, or a two-word name with one word added ("Thomas Wolfe Auditorium" is not "Thomas Wolfe Memorial
+  // State Historic Site"; "Basement" and "Basement East" are two rooms).
+  return short.every((w) => long.includes(w)) && (long.length === short.length || (short.length >= 2 && long.length - short.length <= 1));
+}
+
+/**
+ * Whether a name someone asked for is the room Qloo returned: the names as written, the asked name without its
+ * "at the …" (the "ACL Live" of "ACL Live at the Moody Theater"), and the aliases Qloo lists in parentheses
+ * ("Austin City Limits Live (ACL Live & 3TEN ACL Live)").
+ */
+export function roomNameMatches(asked: string, qloo: string): boolean {
+  const mine = [asked, asked.split(/\s+at\s+(?:the\s+)?/i)[0]!].filter((x) => x.trim());
+  const inner = [...qloo.matchAll(/\(([^)]*)\)/g)].flatMap((m) => m[1]!.split(/\s*(?:&|,|\/|\band\b)\s*/i));
+  const theirs = [qloo, qloo.replace(/\s*\([^)]*\)/g, ""), ...inner].map((x) => x.trim()).filter(Boolean);
+  return mine.some((a) => theirs.some((b) => sameRoomName(a, b)));
 }
 
 /** The live shortlist also asks for the rooms the agent would book in each city (names only; Qloo finds them). The
@@ -679,14 +692,14 @@ export async function planTour(
         const list = rooms.get(id) ?? [];
         const city = allById.get(id)?.name ?? id;
         for (const name of names) {
-          if (list.some((r) => sameRoomName(r.name, name))) {
+          if (list.some((r) => roomNameMatches(name, r.name))) {
             already.push(`${name} (${city})`);
             continue;
           }
           if (searches >= NAMED_SEARCHES) break;
           searches++;
           const r = await deps.findPlace!(artist, name, id, draw).catch(() => null);
-          if (!r || !sameRoomName(r.name, name)) {
+          if (!r || !roomNameMatches(name, r.name)) {
             missed.push(`${name} in ${city}`);
             log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo has no such room here.`, failed: true });
             continue;

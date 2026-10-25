@@ -37,7 +37,9 @@ export type WallItem = {
   id: string;
   artist: string;
   keys: string[];
+  /** Cities on the tour, and nights across them (a two-night stand is two shows): "8 cities (12 shows)". */
   shows: number;
+  nights: number;
   from: string;
   region: RegionId;
   lat: number;
@@ -81,6 +83,7 @@ const wallItem = (t: TourRecord): WallItem => ({
   artist: t.plan!.artist.name,
   keys: [...new Set([artistKey(t.plan!.artist.name), artistKey(t.input.artist)])],
   shows: t.plan!.stops.length,
+  nights: t.plan!.stops.reduce((n, x) => n + (x.nights ?? 1), 0),
   from: t.plan!.from.label,
   region: t.plan!.region,
   lat: t.plan!.from.lat,
@@ -111,7 +114,7 @@ export const homeData = unstable_cache(
     const [{ hero, wall }, bench] = await Promise.all([readWall(), benchTours()]);
     return { hero: hero ? slimHero(hero) : null, wall: wall.map(wallItem), bench: summarise(bench) };
   },
-  ["home-data-v1"],
+  ["home-data-v2"],
   { revalidate: WINDOW, tags: ["showcase", "bench", "tours"] },
 );
 
@@ -180,7 +183,7 @@ export async function rememberArtistTour(artist: string, id: string): Promise<vo
   }
 }
 
-export type Stored = { id: string; artist: string; match: "artist" | "nearest"; from: string; shows: number };
+export type Stored = { id: string; artist: string; match: "artist" | "nearest"; from: string; shows: number; nights: number };
 
 const usable = (t: TourRecord | null): t is TourRecord => Boolean(t && t.status === "done" && t.plan?.stops?.length);
 
@@ -197,15 +200,15 @@ export async function storedTourFor(artist: string, from: string): Promise<Store
     const ids = cur ? ((JSON.parse(cur.text) as { ids?: string[] }).ids ?? []) : [];
     for (const id of ids) {
       const t = await loadTour(id).catch(() => null);
-      if (usable(t)) return { id: t.id, artist: t.plan!.artist.name, match: "artist", from: t.plan!.from.label, shows: t.plan!.stops.length };
+      if (usable(t)) return { id: t.id, artist: t.plan!.artist.name, match: "artist", from: t.plan!.from.label, shows: t.plan!.stops.length, nights: t.plan!.stops.reduce((n, x) => n + (x.nights ?? 1), 0) };
     }
   }
   const { wall } = await homeData().catch(() => ({ wall: [] as WallItem[] }));
   const same = wall.find((w) => w.keys.includes(key));
-  if (same) return { id: same.id, artist: same.artist, match: "artist", from: same.from, shows: same.shows };
+  if (same) return { id: same.id, artist: same.artist, match: "artist", from: same.from, shows: same.shows, nights: same.nights ?? same.shows };
   const bench = await benchTours().catch(() => [] as TourRecord[]);
   const b = bench.find((t) => usable(t) && (artistKey(t.plan!.artist.name) === key || artistKey(t.input.artist) === key));
-  if (b) return { id: b.id, artist: b.plan!.artist.name, match: "artist", from: b.plan!.from.label, shows: b.plan!.stops.length };
+  if (b) return { id: b.id, artist: b.plan!.artist.name, match: "artist", from: b.plan!.from.label, shows: b.plan!.stops.length, nights: b.plan!.stops.reduce((n, x) => n + (x.nights ?? 1), 0) };
   if (!wall.length) return null;
   const home = findMarket(from);
   const near = [...wall].sort((a, z) => {
@@ -213,5 +216,5 @@ export async function storedTourFor(artist: string, from: string): Promise<Store
     const ra = a.region === home.region ? 0 : 1, rz = z.region === home.region ? 0 : 1;
     return ra - rz || km(home, a) - km(home, z);
   })[0]!;
-  return { id: near.id, artist: near.artist, match: "nearest", from: near.from, shows: near.shows };
+  return { id: near.id, artist: near.artist, match: "nearest", from: near.from, shows: near.shows, nights: near.nights ?? near.shows };
 }

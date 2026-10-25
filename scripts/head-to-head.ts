@@ -128,7 +128,9 @@ const r400 = (u: string) => u.slice(0, 120);
 
 /* ───────────────────────── sample: the held-out artists ───────────────────────── */
 
-type HeldOut = { artist: string; qlooId: string; qlooName: string; title: string; revid: number; region: RegionId; markets: string[]; source: string };
+// qlooId and qlooName are written by `sample` and stripped before commit (scripts/strip-qloo-data.mjs, M8); a
+// later stage finds the artist again by name the same way (pickArtist on Qloo's search).
+type HeldOut = { artist: string; qlooId?: string; qlooName?: string; title: string; revid: number; region: RegionId; markets: string[]; source: string };
 
 async function sample() {
   const catPath = `${DATA}/categories.json`;
@@ -255,7 +257,9 @@ async function qlooRanking(s: Subject): Promise<{ ids: string[]; cities: CitySco
       if (t.plan!.region !== s.region) throw new Error(`${s.artist}: bench tour region ${t.plan!.region} vs real tour ${s.region}`);
       return { ids: t.plan!.cities.map((c) => c.marketId), cities: t.plan!.cities };
     }
-    const { tiles } = await wherePopular(s.qlooId!, HEAT_AREAS[s.region][0]!.within, 50);
+    const id = s.qlooId ?? pickArtist(s.artist, (await search(s.artist, "urn:entity:artist", 5)).entities).pick?.id;
+    if (!id) throw new Error(`${s.artist}: not found on Qloo`);
+    const { tiles } = await wherePopular(id, HEAT_AREAS[s.region][0]!.within, 50);
     const cities = scoreCities(tiles, s.region);
     return { ids: cities.map((c) => c.marketId), cities };
   });

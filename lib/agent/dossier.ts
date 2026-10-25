@@ -1,5 +1,5 @@
 import "server-only";
-import { demographics, describeRequest, recommend, tasteTags, trending } from "../qloo";
+import { demographics, describeRequest, recommend, tasteTags } from "../qloo";
 import type { Artist, Audience, Named } from "../types";
 import { doorAdvice } from "./audience";
 import type { Log } from "./tools";
@@ -39,8 +39,6 @@ export async function buildDossier(artist: Artist, log: Log): Promise<Audience> 
       log({ kind: "qloo", text: ask.replace("these fans", `${artist.name} fans`), result: (e as Error).message, failed: true });
     }
   };
-  const end = new Date().toISOString().slice(0, 10);
-  const start = new Date(Date.now() - 26 * 7 * 86_400_000).toISOString().slice(0, 10);
 
   await Promise.all([
     step("Who are these fans, by age and gender?", async () => {
@@ -52,14 +50,8 @@ export async function buildDossier(artist: Artist, log: Log): Promise<Audience> 
       }
       return { result: audience.advice ?? "No demographic skew came back.", request: describeRequest(r.request) };
     }),
-    step("Is this audience growing?", async () => {
-      const r = await trending(artist.id, "urn:entity:artist", start, end);
-      // Qloo gives the percentile as 0–1.
-      audience.trend = r.points.map((p) => ({ date: p.date, percentile: p.percentile === undefined ? undefined : p.percentile * 100, velocity: p.velocity }));
-      const a = audience.trend[0]?.percentile, b = audience.trend.at(-1)?.percentile;
-      const moved = a !== undefined && b !== undefined && Math.abs(a - b) >= 1;
-      return { result: a === undefined || b === undefined ? "No trend data came back." : moved ? `Popularity percentile ${Math.round(a)} → ${Math.round(b)} over ${r.points.length} weeks` : `${r.points.length} weekly points, all the same (the hackathon host's trend series is flat), so momentum isn't shown`, request: describeRequest(r.request) };
-    }),
+    // The weekly trend was asked too, and dropped (Oct 26): on the hackathon host the series is flat for every
+    // artist, so the line said nothing and cost a Qloo call. audience.trend stays empty.
     ...Object.entries(TAGS).map(([key, t]) =>
       step(t.ask, async () => {
         const r = await tasteTags([artist.id], { tagTypes: [t.type], take: 10 });

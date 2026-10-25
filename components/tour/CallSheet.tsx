@@ -8,6 +8,9 @@ import s from "./tour.module.css";
 
 const KIND: Record<LogLine["kind"], string> = { qloo: "Qloo", model: "Agent", rule: "Rule", web: "Web" };
 
+/** Stored tours asked Qloo's weekly trend, which is flat for every artist on the hackathon host: not shown. */
+const shown = (l: LogLine) => !(l.kind === "qloo" && /^Is this audience growing\?$/.test(l.text));
+
 /**
  * The agent's call sheet: every question it put to Qloo (and the web, and its own rules) in plain words, with
  * what came back. While it runs, the newest line follows the eye; `full` adds the exact request under each line.
@@ -23,7 +26,7 @@ export function CallSheet({ log, running, full = false }: { log: LogLine[]; runn
 
   return (
     <ol className={`${s.sheet} ${full ? s.sheetFull : ""}`} aria-live={running ? "polite" : undefined} aria-label="Agent call sheet">
-      {log.map(readLine).map((l, i) => (
+      {log.filter(shown).map(readLine).map((l, i) => (
         <li key={i} className={`${s.call} ${s[l.kind]} ${l.failed ? s.callFailed : ""}`}>
           <span className={s.kind}>{KIND[l.kind]}</span>
           <div className={s.callBody}>

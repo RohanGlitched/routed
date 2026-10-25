@@ -2,7 +2,7 @@ import type { Entity } from "../qloo";
 import type { Market } from "../geo/markets";
 import type { Artist, Room } from "../types";
 import { kmBetween } from "../geo/local";
-import { fit } from "./evidence";
+import { fit, snugFit } from "./evidence";
 import { sameVenue } from "./capacity";
 
 /**
@@ -31,9 +31,15 @@ const ORCHESTRA_HALL = /\b(symphony|philharmoni[ce]|orchestra hall|walt disney c
 /** Genres whose acts do play orchestra halls. */
 const HALL_GENRES = /classical|orchestral|chamber|choral|opera|jazz|neo ?classical|ambient|contemporary classical/;
 
-/** Whether a room is an orchestra's home hall that this act wouldn't be booked into. */
+/**
+ * Whether a room is an orchestra's home hall that this act wouldn't be booked into. One jazz-flavoured tag among an
+ * americana act's genres doesn't open the symphony's hall (Sierra Ferrell got Abravanel Hall, Oct 26): at least
+ * half the act's genres must be ones that play there.
+ */
 export function orchestraHallFor(name: string, genres: string[]): boolean {
-  return ORCHESTRA_HALL.test(name) && !genres.some((g) => HALL_GENRES.test(g.toLowerCase()));
+  if (!ORCHESTRA_HALL.test(name)) return false;
+  const hall = genres.filter((g) => HALL_GENRES.test(g.toLowerCase())).length;
+  return !genres.length || hall * 2 < genres.length;
 }
 
 /** A pub, bar or tavern by name is not the room for 1,000 either (O'Briens Pub came back for 2,500). */
@@ -164,7 +170,7 @@ export const PRIOR_DRAW = 1000;
 export const SMALL_ONLY_DRAW = 1500;
 
 /**
- * How good a room is for this crowd, lower is better: 0 a known fit (60–250% of the draw, one night); 1 a known
+ * How good a room is for this crowd, lower is better: 0 a known snug fit (85–130% of the draw); 0.2 any other known fit (60–250%, one night); 1 a known
  * two-night stand (50–60%); 1.5 a known room up to four times the crowd, in a reduced configuration; 1.8 a known
  * room at 40–50% of the crowd, one night; then a room whose capacity couldn't be found (2 for a crowd under 3,000,
  * where clubs are rarely on Wikidata; 2.5 from 3,000 up, where an unmeasured room is nearly always a small one;
@@ -175,7 +181,9 @@ export const SMALL_ONLY_DRAW = 1500;
 export function roomGrade(r: Room, draw?: number): number {
   if (!draw) return 0;
   const f = fit(r, draw);
-  if (f === "fits") return 0;
+  // Among rooms that fit, a snug one (85–130% of the crowd) goes first: Capitol Theatre's 1,876 for 1,500, not the
+  // 2,768 of a hall two-thirds full.
+  if (f === "fits") return snugFit(r.capacity!.value, draw) ? 0 : 0.2;
   if (twoNights(r, draw)) return 1;
   if (reducedHouse(r, draw)) return 1.5;
   if (shortHouse(r, draw)) return 1.8;

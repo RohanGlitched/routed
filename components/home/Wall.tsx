@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { Poster, type PosterProps } from "@/components/poster/Poster";
 import s from "./wall.module.css";
 
-export type WallEntry = { id: string; artist: string; shows: number; from: string };
+/** `shows` is cities; `nights` counts a two-night stand twice ("8 cities (12 shows)"). */
+export type WallEntry = { id: string; artist: string; shows: number; nights?: number; from: string };
 
 /**
  * The poster wall. The page sends only the list (names and links, so it reads and links without script); the
@@ -53,7 +54,7 @@ export function Wall({ items }: { items: WallEntry[] }) {
           <Link href={`/tour/${t.id}`} className={s.link}>
             <Sheet artist={t.artist} poster={posters?.[t.id]} />
             <span>
-              {t.artist}, {t.shows} cities from {t.from.split(",")[0]}
+              {t.artist}, {t.shows} cities{t.nights && t.nights !== t.shows ? ` (${t.nights} shows)` : ""} from {t.from.split(",")[0]}
             </span>
           </Link>
         </li>

@@ -409,3 +409,34 @@ test("a leg the agent booked over the cap gets a bridge city: Salt Lake City (#2
   assert.ok(!lines.some((l) => /still over/.test(l.text)), lines.filter((l) => l.kind === "rule").map((l) => l.text).join(" | "));
   assert.ok(lines.some((l) => /^Denver to Portland is [\d,]+ km of road with no show, so Salt Lake City \(fan #24\) bridges it/.test(l.text)));
 });
+
+/* ───────────── agent-named rooms against Qloo's real /search names (probed Oct 26) ───────────── */
+
+test("an agent's room name matches Qloo's name for it, aliases and 'at the …' included, and nothing else", async () => {
+  const { roomNameMatches } = await import("../lib/agent/plan.ts");
+  assert.ok(roomNameMatches("ACL Live at the Moody Theater", "Austin City Limits Live (ACL Live & 3TEN ACL Live)"));
+  assert.ok(!roomNameMatches("ACL Live at the Moody Theater", "ACL Live Shop"), "the venue's shop isn't the room");
+  assert.ok(roomNameMatches("Thomas Wolfe Auditorium", "Thomas Wolfe Auditorium"));
+  assert.ok(!roomNameMatches("Thomas Wolfe Auditorium", "Thomas Wolfe Memorial State Historic Site"));
+  assert.ok(roomNameMatches("Arlene Schnitzer Concert Hall", "Arlene Schnitzer Concert Hall"));
+  assert.ok(!roomNameMatches("Arlene Schnitzer Concert Hall", "The Old Church Concert Hall"));
+  assert.ok(roomNameMatches("The Paramount Theatre", "The Paramount Theatre"));
+  assert.ok(!roomNameMatches("Paramount Theatre", "Ogden Theatre"));
+  assert.ok(roomNameMatches("Tipitina's", "Tipitina's"));
+});
+
+test("Salt Lake City books the snug measured room, not the symphony's hall: Capitol Theatre (1,876) for 1,500", async () => {
+  const { chooseRoom, orchestraHallFor, roomCheck } = await import("../lib/agent/rooms.ts");
+  const cap = (value: number) => ({ value, source: "https://example.org/", quote: "capacity" });
+  const rooms: Room[] = [
+    { id: "metro", name: "Metro Music Hall", tags: [] },
+    { id: "abravanel", name: "Abravanel Hall", tags: [], capacity: cap(2768) },
+    { id: "eccles", name: "Eccles Theater", tags: [], capacity: cap(2468) },
+    { id: "capitol", name: "Capitol Theatre", tags: [], capacity: cap(1876) },
+  ];
+  assert.equal(chooseRoom(rooms, "metro", 1500)!.id, "capitol", "a snug measured fit beats looser fits and the agent's unmeasured pick");
+  assert.equal(roomCheck(rooms, "metro", 1500).room!.id, "capitol");
+  // One jazz-flavoured tag among an americana act's genres doesn't open the Utah Symphony's hall.
+  assert.equal(orchestraHallFor("Abravanel Hall", ["americana", "bluegrass", "folk", "country", "gypsy jazz"]), true);
+  assert.equal(orchestraHallFor("Abravanel Hall", ["jazz", "vocal jazz", "swing"]), false);
+});

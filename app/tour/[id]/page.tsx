@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TourRoom } from "@/components/tour/TourRoom";
+import { publicTour } from "@/lib/publictour";
 import { loadTour } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -18,5 +19,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function TourPage({ params }: { params: Promise<{ id: string }> }) {
   const rec = await loadTour((await params).id);
   if (!rec) notFound();
-  return <TourRoom initial={rec} />;
+  // The page carries the same trimmed record the API serves (M8), not the stored one.
+  return <TourRoom initial={publicTour(rec)} />;
 }

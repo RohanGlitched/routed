@@ -3,9 +3,9 @@ import { marketById, type Market } from "../geo/markets";
 import { CHAINS } from "../chains";
 import { BIG_ROOM_DRAW, BIG_ROOM_TAGS, cityArea, cleanName, DEFAULT_VENUE_TAGS, genresOf, isMember, isRoom, nearCity, openerProblem, orchestraHallFor, placeTagIds, sharesName, venueTier } from "./rooms";
 export { cityArea, isRoom, sharesName, venueTier } from "./rooms";
-import { describeRequest, qlooGet, recommend, searchNear, type Entity } from "../qloo";
+import { describeRequest, qlooGet, recommend, search, type Entity } from "../qloo";
 import type { Artist, LogLine, Opener, Room, Spot } from "../types";
-import { sameRoomName } from "./plan";
+import { roomNameMatches } from "./plan";
 
 /**
  * The per-city Qloo lookups the agent can call, each logged with its plain question and exact request. Every
@@ -131,15 +131,18 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
 }
 
 /**
- * A room the agent named, found on Qloo: a place search for the name near the city's centre, kept only when Qloo's
- * match is in the city, is a room by the same rules as Qloo's own list, and carries the name (plan.ts sameRoomName
- * decides). Returns the place as a room, or null. One Qloo call.
+ * A room the agent named, found on Qloo: a place search for the name with the city's name after it (Qloo's /search
+ * answers 400 to a POINT for filter.location, measured Oct 26, so the city goes in the query and the distance is
+ * checked here), kept only when the match is in the city, is a room by the same rules as Qloo's own list (an
+ * orchestra's hall included), and carries the name (plan.ts roomNameMatches: "ACL Live at the Moody Theater" is
+ * Qloo's "Austin City Limits Live (ACL Live & 3TEN ACL Live)"). Returns the place as a room, or null. One Qloo call.
  */
-export async function findPlace(_artist: Artist, name: string, marketId: string, draw?: number): Promise<Room | null> {
+export async function findPlace(artist: Artist, name: string, marketId: string, draw?: number): Promise<Room | null> {
   const m = marketById(marketId);
   if (!m) return null;
-  const r = await searchNear(`${name} ${m.name}`, "urn:entity:place", cityArea(m), 5).catch(() => null);
-  const e = r?.entities.find((x) => nearCity(x, m) && isRoom(x, draw) && sameRoomName(cleanName(x.name), name));
+  const r = await search(`${name} ${m.name}`, "urn:entity:place", 10).catch(() => null);
+  const genres = artist.genreKeys ?? artist.genres;
+  const e = r?.entities.find((x) => nearCity(x, m) && x.place?.lat !== undefined && isRoom(x, draw) && !orchestraHallFor(x.name, genres) && roomNameMatches(name, x.name));
   return e ? { ...toRoom(e), origin: "agent" } : null;
 }
 

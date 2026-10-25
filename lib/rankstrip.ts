@@ -31,7 +31,9 @@ const NICE = [10, 20, 50, 100, 200, 500, 1000, 2000];
 const TICKS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
 
 /** x for a rank on a log axis from #1 to #cap. */
-export const rankX = (rank: number, cap: number, x1: number, x2: number) => x1 + (Math.log(Math.min(Math.max(rank, 1), cap)) / Math.log(Math.max(cap, 2))) * (x2 - x1);
+// Rounded so the server's and the browser's Math.log can't disagree in the last digit (a hydration mismatch).
+export const rankX = (rank: number, cap: number, x1: number, x2: number) =>
+  Math.round((x1 + (Math.log(Math.min(Math.max(rank, 1), cap)) / Math.log(Math.max(cap, 2))) * (x2 - x1)) * 100) / 100;
 
 /** Vertical offsets that keep dots in one row from touching: each dot takes the nearest free level. */
 export function stack(xs: number[], levels = [0, -1, 1]): number[] {

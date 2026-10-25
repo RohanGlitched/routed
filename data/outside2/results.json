@@ -201,21 +201,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Uptown Theater in Grand Prairie",
-        "The Epic",
-        "Mesquite Arts Center"
-       ],
-       "routedOrder": [
-        "Moody Performance Hall",
-        "Uptown Theater in Grand Prairie",
-        "Dallas Children's Theater"
-       ],
-       "popular": [
-        "House of Blues",
-        "Dos Equis Pavilion",
-        "The Bomb Factory"
-       ],
        "ladder": [
         "Mesquite Arena",
         "Annette Strauss Square",
@@ -247,21 +232,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "The Howard Theatre",
-        "Joe's Movement Emporium",
-        "Dance Place"
-       ],
-       "routedOrder": [
-        "The Fillmore Silver Spring",
-        "The Howard Theatre",
-        "The REACH, at the Kennedy Center for the Performing Arts"
-       ],
-       "popular": [
-        "The Fillmore Silver Spring",
-        "Echostage",
-        "9:30 Club"
-       ],
        "ladder": [
         "The Show Place Arena",
         "Charles E. Smith Athletic Center",
@@ -293,21 +263,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "The Fennec - Sports, Live Music, Events",
-        "WORKPLAY",
-        "Alys Robinson Stephens Performing Arts Center"
-       ],
-       "routedOrder": [
-        "Alabama Theatre",
-        "Bartow Arena",
-        "Lyric Theatre"
-       ],
-       "popular": [
-        "Iron City Bham",
-        "Alabama Theatre",
-        "Saturn"
-       ],
        "ladder": [
         "Bill Harris Arena",
         "Bartow Arena",
@@ -370,21 +325,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Credit Union 1 Arena",
-        "Wintrust Arena",
-        "Petrillo Music Shell"
-       ],
-       "routedOrder": [
-        "Wintrust Arena",
-        "Credit Union 1 Arena",
-        "Allstate Arena"
-       ],
-       "popular": [
-        "Wintrust Arena",
-        "Credit Union 1 Arena",
-        "Allstate Arena"
-       ],
        "ladder": [
         "United Center",
         "Allstate Arena",
@@ -416,16 +356,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Chaifetz Arena"
-       ],
-       "routedOrder": [
-        "Chaifetz Arena"
-       ],
-       "popular": [
-        "Chaifetz Arena",
-        "Jefferson Barracks Veterans Memorial Amphitheater"
-       ],
        "ladder": [
         "Enterprise Center",
         "St. Louis Municipal Opera Theatre",
@@ -457,21 +387,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Malkin Bowl",
-        "PNE Forum",
-        "Moody Park Arena"
-       ],
-       "routedOrder": [
-        "Moody Park Arena",
-        "PNE Forum",
-        "Malkin Bowl"
-       ],
-       "popular": [
-        "PNE Forum",
-        "Malkin Bowl",
-        "Poirier Sport & Leisure Complex"
-       ],
        "ladder": [
         "Rogers Arena",
         "Pacific Coliseum",
@@ -534,21 +449,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "The Second City",
-        "OuterSpace Studios",
-        "The Theatre School at DePaul University"
-       ],
-       "routedOrder": [
-        "The Chicago Theatre",
-        "CIBC Theatre",
-        "The Riviera Theatre"
-       ],
-       "popular": [
-        "The Chicago Theatre",
-        "House of Blues Chicago",
-        "CIBC Theatre"
-       ],
        "ladder": [
         "Allstate Arena",
         "Wintrust Arena",
@@ -580,21 +480,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "House of Blues",
-        "Granada Theater",
-        "South Side Music Hall"
-       ],
-       "routedOrder": [
-        "Dos Equis Pavilion",
-        "Granada Theater",
-        "Winspear Opera House"
-       ],
-       "popular": [
-        "American Airlines Center",
-        "House of Blues",
-        "Dos Equis Pavilion"
-       ],
        "ladder": [
         "American Airlines Center",
         "Mesquite Arena",
@@ -626,21 +511,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Kaseya Center",
-        "Maurice Gusman Concert Hall",
-        "Olympia Theater"
-       ],
-       "routedOrder": [
-        "Faena Theater",
-        "Adrienne Arsht Center for the Performing Arts of Miami-Dade County",
-        "Olympia Theater"
-       ],
-       "popular": [
-        "Kaseya Center",
-        "Faena Theater",
-        "Adrienne Arsht Center for the Performing Arts of Miami-Dade County"
-       ],
        "ladder": [
         "Kaseya Center",
         "Miami-Dade County Auditorium",
@@ -703,21 +573,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Ambassador Theatre",
-        "Gershwin Theatre",
-        "Pier 36 NYC"
-       ],
-       "routedOrder": [
-        "Gershwin Theatre",
-        "Minskoff Theatre",
-        "Majestic Theatre"
-       ],
-       "popular": [
-        "Infosys Theater at Madison Square Garden",
-        "Jazz At Lincoln Center",
-        "Webster Hall"
-       ],
        "ladder": [
         "Infosys Theater",
         "Four Seasons Arena",
@@ -749,21 +604,6 @@
        "model": 4
       },
       "top": {
-       "qloo": [
-        "Royal Palace Banquet Hall",
-        "Anvil Centre",
-        "Orpheum"
-       ],
-       "routedOrder": [
-        "Vogue Theatre",
-        "Orpheum",
-        "Rickshaw Theatre"
-       ],
-       "popular": [
-        "Commodore Ballroom",
-        "Vogue Theatre",
-        "Orpheum"
-       ],
        "ladder": [
         "Vancouver Forum",
         "Queen Elizabeth Theatre (Auditorium)",
@@ -795,21 +635,6 @@
        "model": 3
       },
       "top": {
-       "qloo": [
-        "Strand Theatre",
-        "The Norwood Theatre",
-        "Big Night Live"
-       ],
-       "routedOrder": [
-        "Leader Bank Pavilion",
-        "Orpheum Theatre",
-        "Emerson Colonial Theatre"
-       ],
-       "popular": [
-        "Citizens House of Blues Boston",
-        "Paradise Rock Club",
-        "Leader Bank Pavilion"
-       ],
        "ladder": [
         "Leader Bank Pavilion",
         "Matthews Arena",
@@ -872,21 +697,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Leader Bank Pavilion",
-        "Walter Brown Arena",
-        "Conte Forum"
-       ],
-       "routedOrder": [
-        "Leader Bank Pavilion",
-        "Matthews Arena - Originally The Boston Arena",
-        "Walter Brown Arena"
-       ],
-       "popular": [
-        "Leader Bank Pavilion",
-        "Matthews Arena - Originally The Boston Arena",
-        "Walter Brown Arena"
-       ],
        "ladder": [
         "TD Garden",
         "The Stage at Suffolk Downs",
@@ -918,21 +728,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Moody Amphitheater",
-        "Gregory Gym",
-        "Moody Center"
-       ],
-       "routedOrder": [
-        "Germania Insurance Amphitheater",
-        "Moody Amphitheater",
-        "Gregory Gym"
-       ],
-       "popular": [
-        "Gregory Gym",
-        "Germania Insurance Amphitheater",
-        "Moody Amphitheater"
-       ],
        "ladder": [
         "Moody Center",
         "Gregory Gymnasium",
@@ -965,21 +760,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Lucha Underground Arena",
-        "Hollywood Bowl",
-        "The Greek Theatre"
-       ],
-       "routedOrder": [
-        "Pauley Pavilion",
-        "The Greek Theatre",
-        "Riot Games Arena"
-       ],
-       "popular": [
-        "Hollywood Bowl",
-        "Pauley Pavilion",
-        "Galen Center"
-       ],
        "ladder": [
         "Crypto.com Arena",
         "Kia Forum",
@@ -1042,21 +822,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Velvet Underground",
-        "Lee's Palace",
-        "The Mod Club"
-       ],
-       "routedOrder": [
-        "Danforth Music Hall",
-        "The Opera House",
-        "Phoenix Concert Theatre"
-       ],
-       "popular": [
-        "RBC Amphitheatre",
-        "Rebel",
-        "Danforth Music Hall"
-       ],
        "ladder": [
         "Mississauga Sports and Entertainment Centre",
         "CAA Centre",
@@ -1088,21 +853,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Lobero Theatre",
-        "Santa Barbara Bowl",
-        "The Granada Theatre"
-       ],
-       "routedOrder": [
-        "The Granada Theatre",
-        "Lobero Theatre",
-        "Center Stage Theater"
-       ],
-       "popular": [
-        "Santa Barbara Bowl",
-        "The Granada Theatre",
-        "Lobero Theatre"
-       ],
        "ladder": [
         "Santa Barbara Bowl",
         "Lobero Theatre"
@@ -1134,15 +884,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "McCallum Theatre"
-       ],
-       "routedOrder": [
-        "McCallum Theatre"
-       ],
-       "popular": [
-        "McCallum Theatre"
-       ],
        "ladder": [
         "McCallum Theatre",
         "Acrisure Arena"
@@ -1204,21 +945,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Spreckels Theatre",
-        "Brick By Brick",
-        "Teatro Cala-Fórnix"
-       ],
-       "routedOrder": [
-        "San Diego Civic Theatre",
-        "Viejas Arena",
-        "Joan B. Kroc Theatre"
-       ],
-       "popular": [
-        "San Diego Civic Theatre",
-        "Music Box",
-        "SOMA SAN DIEGO"
-       ],
        "ladder": [
         "Auditorio Fausto Gutierrez Moreno",
         "Peterson Gym",
@@ -1250,21 +976,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Flash",
-        "Capital One Arena",
-        "Echostage"
-       ],
-       "routedOrder": [
-        "Capital One Arena",
-        "The Howard Theatre",
-        "Ford's Theatre"
-       ],
-       "popular": [
-        "Capital One Arena",
-        "The Fillmore Silver Spring",
-        "Echostage"
-       ],
        "ladder": [
         "Wolf Trap National Park for the Performing Arts",
         "The Show Place Arena",
@@ -1296,21 +1007,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "The Underground",
-        "Skyla Credit Union Amphitheatre",
-        "World"
-       ],
-       "routedOrder": [
-        "The Fillmore Charlotte",
-        "Skyla Credit Union Amphitheatre",
-        "Belk Theater at Blumenthal Performing Arts Center"
-       ],
-       "popular": [
-        "The Fillmore Charlotte",
-        "The Underground",
-        "Skyla Credit Union Amphitheatre"
-       ],
        "ladder": [
         "Grady Cole Center",
         "Ovens Auditorium",
@@ -1373,15 +1069,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Benchmark International Arena"
-       ],
-       "routedOrder": [
-        "Benchmark International Arena"
-       ],
-       "popular": [
-        "Benchmark International Arena"
-       ],
        "ladder": [
         "Yuengling Center",
         "Mahaffey Theater",
@@ -1413,21 +1100,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Orleans Arena",
-        "Cox Pavilion",
-        "South Point Arena & Equestrian Center"
-       ],
-       "routedOrder": [
-        "Orleans Arena",
-        "South Point Arena & Equestrian Center",
-        "City National Arena"
-       ],
-       "popular": [
-        "Orleans Arena",
-        "South Point Arena & Equestrian Center",
-        "City National Arena"
-       ],
        "ladder": [
         "T-Mobile Arena",
         "Sphere",
@@ -1459,21 +1131,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Lila Cockrell Theatre",
-        "Sunken Garden Theater",
-        "Bexar County Community Arenas"
-       ],
-       "routedOrder": [
-        "Lila Cockrell Theatre",
-        "Sunken Garden Theater",
-        "Bexar County Community Arenas"
-       ],
-       "popular": [
-        "Lila Cockrell Theatre",
-        "Sunken Garden Theater",
-        "Bexar County Community Arenas"
-       ],
        "ladder": [
         "Frost Bank Center",
         "Freeman Coliseum",
@@ -1536,15 +1193,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Duca's Guest House"
-       ],
-       "routedOrder": [
-        "Duca's Guest House"
-       ],
-       "popular": [
-        "Duca's Guest House"
-       ],
        "ladder": [
         "Torino Palasport Olimpico",
         "PalaTorino",
@@ -1576,9 +1224,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [],
        "ladder": [
         "Palau Sant Jordi",
         "Palau Municipal d'Esports de Badalona",
@@ -1610,11 +1255,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [
-        "Powiatowa Hala Sportowa przy II Liceum Ogólnokształcącym im. Królowej Jadwigi w Pabianicach"
-       ],
        "ladder": [
         "Arena Łódź",
         "Hala MOSiR"
@@ -1678,21 +1318,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "LightSpace Studios West | Event Venue | Film Productions",
-        "SoFi Stadium",
-        "Crypto.com Arena"
-       ],
-       "routedOrder": [
-        "Crypto.com Arena",
-        "LA Memorial Coliseum",
-        "Hollywood Palladium"
-       ],
-       "popular": [
-        "Crypto.com Arena",
-        "Kia Forum",
-        "Rose Bowl Stadium"
-       ],
        "ladder": [
         "Crypto.com Arena",
         "Kia Forum",
@@ -1724,19 +1349,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Deaton-Thompson Stadium",
-        "Lawrence Joel Veterans Memorial Coliseum"
-       ],
-       "routedOrder": [
-        "Lawrence Joel Veterans Memorial Coliseum",
-        "Deaton-Thompson Stadium"
-       ],
-       "popular": [
-        "Lawrence Joel Veterans Memorial Coliseum",
-        "Deaton-Thompson Stadium",
-        "Winston-Salem State University Football Field"
-       ],
        "ladder": [
         "Qubein Center",
         "Reynolds Gymnasium"
@@ -1768,21 +1380,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Raymond James Stadium",
-        "MIDFLORIDA Credit Union Amphitheatre",
-        "USF School of Music"
-       ],
-       "routedOrder": [
-        "MIDFLORIDA Credit Union Amphitheatre",
-        "Benchmark International Arena",
-        "Power-Pole Arena"
-       ],
-       "popular": [
-        "Raymond James Stadium",
-        "MIDFLORIDA Credit Union Amphitheatre",
-        "Benchmark International Arena"
-       ],
        "ladder": [
         "Yuengling Center",
         "Mahaffey Theater",
@@ -1845,18 +1442,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "OVO Hydro",
-        "Braehead Arena"
-       ],
-       "routedOrder": [
-        "Braehead Arena",
-        "OVO Hydro"
-       ],
-       "popular": [
-        "OVO Hydro",
-        "Braehead Arena"
-       ],
        "ladder": [
         "The OVO Hydro",
         "Commonwealth Arena and Sir Chris Hoy Velodrome",
@@ -1888,16 +1473,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Utilita Arena Newcastle"
-       ],
-       "routedOrder": [
-        "Utilita Arena Newcastle"
-       ],
-       "popular": [
-        "Utilita Arena Newcastle",
-        "Sunderland Live Arena"
-       ],
        "ladder": [
         "Utilita Arena",
         "Sunderland Empire Theatre",
@@ -1929,18 +1504,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "AO Arena",
-        "National Squash Centre"
-       ],
-       "routedOrder": [
-        "AO Arena",
-        "National Squash Centre"
-       ],
-       "popular": [
-        "AO Arena",
-        "National Squash Centre"
-       ],
        "ladder": [
         "Manchester Arena",
         "Bolton Arena",
@@ -2003,21 +1566,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Arthur Ashe Stadium",
-        "Madison Square Garden",
-        "Forest Hills Stadium"
-       ],
-       "routedOrder": [
-        "Webster Hall",
-        "Gramercy Theatre",
-        "The Bowery Ballroom"
-       ],
-       "popular": [
-        "Madison Square Garden",
-        "Barclays Center",
-        "Infosys Theater at Madison Square Garden"
-       ],
        "ladder": [
         "Meadowlands Arena",
         "Madison Square Garden",
@@ -2049,21 +1597,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Stage AE",
-        "F.N.B. Stadium",
-        "Petersen Events Center"
-       ],
-       "routedOrder": [
-        "PPG Paints Arena",
-        "Hartwood Acres Amphitheater",
-        "Petersen Events Center"
-       ],
-       "popular": [
-        "PPG Paints Arena",
-        "Stage AE",
-        "F.N.B. Stadium"
-       ],
        "ladder": [
         "PPG Paints Arena",
         "UPMC Cooper Fieldhouse",
@@ -2095,21 +1628,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Roseland Theater",
-        "McMenamins Crystal Ballroom",
-        "Chiles Center"
-       ],
-       "routedOrder": [
-        "McMenamins Crystal Ballroom",
-        "Roseland Theater",
-        "Keller Auditorium"
-       ],
-       "popular": [
-        "McMenamins Crystal Ballroom",
-        "Roseland Theater",
-        "Keller Auditorium"
-       ],
        "ladder": [
         "Moda Center",
         "Veterans Memorial Coliseum",
@@ -2172,21 +1690,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Leader Bank Pavilion",
-        "Lavietes Pavilion",
-        "Walter Brown Arena"
-       ],
-       "routedOrder": [
-        "Leader Bank Pavilion",
-        "Matthews Arena - Originally The Boston Arena",
-        "Walter Brown Arena"
-       ],
-       "popular": [
-        "Leader Bank Pavilion",
-        "Matthews Arena - Originally The Boston Arena",
-        "Walter Brown Arena"
-       ],
        "ladder": [
         "TD Garden",
         "The Stage at Suffolk Downs",
@@ -2218,21 +1721,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Barclays Center",
-        "Meadowlands Arena",
-        "Coney Island Amphitheater"
-       ],
-       "routedOrder": [
-        "Nassau Veterans Memorial Coliseum",
-        "Coney Island Amphitheater",
-        "Carnesecca Arena"
-       ],
-       "popular": [
-        "Barclays Center",
-        "Prudential Center",
-        "Nassau Veterans Memorial Coliseum"
-       ],
        "ladder": [
         "Meadowlands Arena",
         "Madison Square Garden",
@@ -2264,21 +1752,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Hollywood Bowl",
-        "Galen Center",
-        "Pauley Pavilion"
-       ],
-       "routedOrder": [
-        "Pauley Pavilion",
-        "The Greek Theatre",
-        "Riot Games Arena"
-       ],
-       "popular": [
-        "Hollywood Bowl",
-        "Pauley Pavilion",
-        "Galen Center"
-       ],
        "ladder": [
         "Crypto.com Arena",
         "Kia Forum",
@@ -2341,18 +1814,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Wolstein Center",
-        "Rocket Arena"
-       ],
-       "routedOrder": [
-        "Rocket Arena",
-        "Wolstein Center"
-       ],
-       "popular": [
-        "Rocket Arena",
-        "Wolstein Center"
-       ],
        "ladder": [
         "Rocket Arena",
         "Wolstein Center",
@@ -2384,15 +1845,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "The Pacific Amphitheatre"
-       ],
-       "routedOrder": [
-        "The Pacific Amphitheatre"
-       ],
-       "popular": [
-        "The Pacific Amphitheatre"
-       ],
        "ladder": [
         "Honda Center",
         "Hyperion Theater",
@@ -2424,21 +1876,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Cowtown Coliseum",
-        "Dickies Arena",
-        "Stockyards Championship Rodeo"
-       ],
-       "routedOrder": [
-        "Dickies Arena",
-        "Cowtown Coliseum",
-        "Stockyards Championship Rodeo"
-       ],
-       "popular": [
-        "Dickies Arena",
-        "Stockyards Championship Rodeo",
-        "Cowtown Coliseum"
-       ],
        "ladder": [
         "NYTEX Sports Centre",
         "Bass Performance Hall",
@@ -2501,19 +1938,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Wessman Arena",
-        "Mars Lakeview Arena"
-       ],
-       "routedOrder": [
-        "Wessman Arena",
-        "Mars Lakeview Arena"
-       ],
-       "popular": [
-        "Wessman Arena",
-        "Amsoil Arena",
-        "Mars Lakeview Arena"
-       ],
        "ladder": [],
        "model": [
         "Amsoil Arena",
@@ -2541,16 +1965,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Reed Arena"
-       ],
-       "routedOrder": [
-        "Reed Arena"
-       ],
-       "popular": [
-        "Reed Arena",
-        "Wolf Pen Creek Amphitheater"
-       ],
        "ladder": [],
        "model": [
         "Reed Arena",
@@ -2578,11 +1992,6 @@
        "model": null
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [
-        "Pensacola Bay Center"
-       ],
        "ladder": [
         "Pensacola Civic Center",
         "Saenger Theatre"
@@ -2644,9 +2053,6 @@
        "model": null
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [],
        "ladder": [
         "Stedingsehre",
         "ÖVB Arena"
@@ -2677,9 +2083,6 @@
        "model": null
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [],
        "ladder": [],
        "model": [
         "GelreDome",
@@ -2707,11 +2110,6 @@
        "model": null
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [
-        "Paul Horn-Arena"
-       ],
        "ladder": [
         "Paul Horn-Arena",
         "Stadthalle Reutlingen"
@@ -2773,21 +2171,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Barrymore Theatre",
-        "The Sylvee",
-        "Middleton Performing Arts Center"
-       ],
-       "routedOrder": [
-        "Barrymore Theatre",
-        "Wisconsin Union Theater",
-        "Majestic Theatre"
-       ],
-       "popular": [
-        "Overture Center for the Arts",
-        "The Sylvee",
-        "Barrymore Theatre"
-       ],
        "ladder": [
         "Hartmeyer Ice Arena",
         "LaBahn Arena",
@@ -2819,21 +2202,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Jazz At Lincoln Center",
-        "Richard Rodgers Theatre",
-        "Sleep No More"
-       ],
-       "routedOrder": [
-        "Richard Rodgers Theatre",
-        "Lincoln Center Theater",
-        "Walter Kerr Theatre"
-       ],
-       "popular": [
-        "Infosys Theater at Madison Square Garden",
-        "Jazz At Lincoln Center",
-        "Webster Hall"
-       ],
        "ladder": [
         "Rose Hill Gymnasium",
         "New York City Center",
@@ -2865,21 +2233,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Mr. Smalls Theatre",
-        "Stage AE",
-        "Pittsburgh Ballet Theatre"
-       ],
-       "routedOrder": [
-        "Mr. Smalls Theatre",
-        "Roxian Theatre",
-        "Benedum Center for the Performing Arts"
-       ],
-       "popular": [
-        "Stage AE",
-        "Mr. Smalls Theatre",
-        "Roxian Theatre"
-       ],
        "ladder": [
         "UPMC Cooper Fieldhouse",
         "Heinz Hall",
@@ -2942,19 +2295,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Lenovo Center",
-        "Coastal Credit Union Music Park at Walnut Creek"
-       ],
-       "routedOrder": [
-        "Lenovo Center",
-        "Coastal Credit Union Music Park at Walnut Creek"
-       ],
-       "popular": [
-        "Lenovo Center",
-        "Coastal Credit Union Music Park at Walnut Creek",
-        "Koka Booth Amphitheatre"
-       ],
        "ladder": [
         "Lenovo Center",
         "Reynolds Coliseum",
@@ -2986,21 +2326,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Yack Arena",
-        "Detroit City Fieldhouse",
-        "Little Caesars Arena"
-       ],
-       "routedOrder": [
-        "Little Caesars Arena",
-        "The Aretha Franklin Amphitheatre",
-        "Yack Arena"
-       ],
-       "popular": [
-        "Little Caesars Arena",
-        "The Aretha Franklin Amphitheatre",
-        "Yack Arena"
-       ],
        "ladder": [
         "Calihan Hall",
         "WFCU Centre",
@@ -3032,17 +2357,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Kaseya Center"
-       ],
-       "routedOrder": [
-        "Kaseya Center"
-       ],
-       "popular": [
-        "Kaseya Center",
-        "Watsco Center",
-        "Ocean Bank Convocation Center"
-       ],
        "ladder": [
         "Kaseya Center",
         "Miami-Dade County Auditorium",
@@ -3105,21 +2419,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Mable House Barnes Amphitheatre",
-        "Chastain Park Amphitheater",
-        "Lakewood Amphitheatre"
-       ],
-       "routedOrder": [
-        "Mable House Barnes Amphitheatre",
-        "Lakewood Amphitheatre",
-        "Chastain Park Amphitheater"
-       ],
-       "popular": [
-        "Mable House Barnes Amphitheatre",
-        "Lakewood Amphitheatre",
-        "Chastain Park Amphitheater"
-       ],
        "ladder": [
         "McCamish Pavilion",
         "Cadence Bank Amphitheatre",
@@ -3151,15 +2450,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Benchmark International Arena"
-       ],
-       "routedOrder": [
-        "Benchmark International Arena"
-       ],
-       "popular": [
-        "Benchmark International Arena"
-       ],
        "ladder": [
         "Yuengling Center",
         "Mahaffey Theater",
@@ -3191,11 +2481,6 @@
        "model": 4
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [
-        "Foxboro Sports Center"
-       ],
        "ladder": [
         "Leader Bank Pavilion",
         "Matthews Arena",
@@ -3258,21 +2543,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "American Airlines Center",
-        "College Park Center",
-        "Dos Equis Pavilion"
-       ],
-       "routedOrder": [
-        "Dos Equis Pavilion",
-        "Gomez Western Wear Arena",
-        "American Airlines Center"
-       ],
-       "popular": [
-        "American Airlines Center",
-        "Dos Equis Pavilion",
-        "College Park Center"
-       ],
        "ladder": [
         "American Airlines Center",
         "Mesquite Arena",
@@ -3304,21 +2574,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Credit Union 1 Arena",
-        "Wintrust Arena",
-        "Welsh Ryan Arena"
-       ],
-       "routedOrder": [
-        "Wintrust Arena",
-        "Credit Union 1 Arena",
-        "Allstate Arena"
-       ],
-       "popular": [
-        "Wintrust Arena",
-        "Credit Union 1 Arena",
-        "Allstate Arena"
-       ],
        "ladder": [
         "United Center",
         "Allstate Arena",
@@ -3350,21 +2605,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Ascend Federal Credit Union Amphitheater",
-        "Memorial Gymnasium",
-        "Allen Arena"
-       ],
-       "routedOrder": [
-        "Ascend Federal Credit Union Amphitheater",
-        "Allen Arena",
-        "Memorial Gymnasium"
-       ],
-       "popular": [
-        "Ascend Federal Credit Union Amphitheater",
-        "Memorial Gymnasium",
-        "Allen Arena"
-       ],
        "ladder": [
         "Bridgestone Arena",
         "Nashville Municipal Auditorium",
@@ -3427,19 +2667,6 @@
        "model": 3
       },
       "top": {
-       "qloo": [
-        "Lenovo Center",
-        "Coastal Credit Union Music Park at Walnut Creek"
-       ],
-       "routedOrder": [
-        "Lenovo Center",
-        "Coastal Credit Union Music Park at Walnut Creek"
-       ],
-       "popular": [
-        "Lenovo Center",
-        "Coastal Credit Union Music Park at Walnut Creek",
-        "Koka Booth Amphitheatre"
-       ],
        "ladder": [
         "Lenovo Center",
         "Reynolds Coliseum",
@@ -3471,9 +2698,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [],
        "ladder": [
         "Calihan Hall",
         "USA Hockey Arena",
@@ -3505,21 +2729,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Utah First Credit Union Amphitheatre",
-        "Maverik Center",
-        "Utah Olympic Oval"
-       ],
-       "routedOrder": [
-        "Utah First Credit Union Amphitheatre",
-        "Red Butte Garden Amphitheatre",
-        "Maverik Center"
-       ],
-       "popular": [
-        "Utah First Credit Union Amphitheatre",
-        "Maverik Center",
-        "Utah Olympic Oval"
-       ],
        "ladder": [
         "Delta Center",
         "Maverik Center",
@@ -3583,21 +2792,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Theatre of The Living Arts",
-        "The Fillmore Philadelphia",
-        "The 2300 Arena"
-       ],
-       "routedOrder": [
-        "The Fillmore Philadelphia",
-        "The 2300 Arena",
-        "The Tower Theater"
-       ],
-       "popular": [
-        "The Fillmore Philadelphia",
-        "Union Transfer",
-        "The Liacouras Center"
-       ],
        "ladder": [
         "Palestra",
         "Finneran Pavilion",
@@ -3630,21 +2824,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Madison Square Garden",
-        "Barclays Center",
-        "Pier 17"
-       ],
-       "routedOrder": [
-        "Webster Hall",
-        "Gramercy Theatre",
-        "The Bowery Ballroom"
-       ],
-       "popular": [
-        "Madison Square Garden",
-        "Barclays Center",
-        "Infosys Theater at Madison Square Garden"
-       ],
        "ladder": [
         "Meadowlands Arena",
         "Madison Square Garden",
@@ -3676,21 +2855,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Washington-Grizzly Stadium",
-        "Adams Center",
-        "The Wilma"
-       ],
-       "routedOrder": [
-        "Washington-Grizzly Stadium",
-        "The Wilma",
-        "Adams Center"
-       ],
-       "popular": [
-        "Washington-Grizzly Stadium",
-        "The Wilma",
-        "Adams Center"
-       ],
        "ladder": [
         "Dahlberg Arena",
         "Glacier Ice Rink"
@@ -3752,18 +2916,6 @@
        "model": 3
       },
       "top": {
-       "qloo": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
-       "routedOrder": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
-       "popular": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
        "ladder": [
         "Climate Pledge Arena",
         "Hec Edmundson Pavilion",
@@ -3795,16 +2947,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "iTHINK Financial Amphitheatre"
-       ],
-       "routedOrder": [
-        "iTHINK Financial Amphitheatre"
-       ],
-       "popular": [
-        "iTHINK Financial Amphitheatre",
-        "Meyer Amphitheater"
-       ],
        "ladder": [
         "Raymond F. Kravis Center for the Performing Arts"
        ],
@@ -3834,21 +2976,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "The Greek Theatre",
-        "Lucha Underground Arena",
-        "Hollywood Bowl"
-       ],
-       "routedOrder": [
-        "Pauley Pavilion",
-        "The Greek Theatre",
-        "Riot Games Arena"
-       ],
-       "popular": [
-        "Hollywood Bowl",
-        "Pauley Pavilion",
-        "Galen Center"
-       ],
        "ladder": [
         "Crypto.com Arena",
         "Kia Forum",
@@ -3911,21 +3038,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "The Drunken Unicorn",
-        "Dad's Garage",
-        "Terminal West"
-       ],
-       "routedOrder": [
-        "Buckhead Theatre",
-        "Alliance Theatre",
-        "Ray Charles Performing Arts Center"
-       ],
-       "popular": [
-        "Fox Theatre",
-        "The Masquerade",
-        "Coca-Cola Roxy"
-       ],
        "ladder": [
         "Cadence Bank Amphitheatre",
         "GSU Sports Arena",
@@ -3957,21 +3069,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "The East Room",
-        "OZ Arts Nashville",
-        "Musicians Corner"
-       ],
-       "routedOrder": [
-        "Ryman Auditorium",
-        "War Memorial Auditorium",
-        "Nashville Children's Theatre"
-       ],
-       "popular": [
-        "Ryman Auditorium",
-        "Marathon Music Works",
-        "The Basement East"
-       ],
        "ladder": [
         "The Pinnacle",
         "War Memorial Auditorium",
@@ -4003,21 +3100,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "FringeArts",
-        "Penn Live Arts/Annenberg Center for the Performing Arts",
-        "23rd Street Armory"
-       ],
-       "routedOrder": [
-        "The Fillmore Philadelphia",
-        "The Tower Theater",
-        "Forrest Theatre"
-       ],
-       "popular": [
-        "The Fillmore Philadelphia",
-        "Union Transfer",
-        "Underground Arts"
-       ],
        "ladder": [
         "Finneran Pavilion",
         "Tom Gola Arena",
@@ -4080,21 +3162,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "McCormick Arena",
-        "Coca-Cola Coliseum",
-        "Downsview Arena"
-       ],
-       "routedOrder": [
-        "Coca-Cola Coliseum",
-        "Chesswood Arena",
-        "Paul Coffey Arena"
-       ],
-       "popular": [
-        "RBC Amphitheatre",
-        "Coca-Cola Coliseum",
-        "Mississauga Sports & Entertainment Centre"
-       ],
        "ladder": [
         "Mississauga Celebration Square",
         "Scotiabank Arena",
@@ -4126,21 +3193,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Cowtown Coliseum",
-        "Dickies Arena",
-        "Stockyards Championship Rodeo"
-       ],
-       "routedOrder": [
-        "Dickies Arena",
-        "Cowtown Coliseum",
-        "Stockyards Championship Rodeo"
-       ],
-       "popular": [
-        "Dickies Arena",
-        "Stockyards Championship Rodeo",
-        "Cowtown Coliseum"
-       ],
        "ladder": [
         "NYTEX Sports Centre",
         "Bass Performance Hall",
@@ -4172,21 +3224,6 @@
        "model": 4
       },
       "top": {
-       "qloo": [
-        "Prudential Center",
-        "Jersey City Armory",
-        "Barclays Center"
-       ],
-       "routedOrder": [
-        "Nassau Veterans Memorial Coliseum",
-        "Coney Island Amphitheater",
-        "Carnesecca Arena"
-       ],
-       "popular": [
-        "Barclays Center",
-        "Prudential Center",
-        "Nassau Veterans Memorial Coliseum"
-       ],
        "ladder": [
         "Meadowlands Arena",
         "Madison Square Garden",
@@ -4249,21 +3286,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "UFO Berlin - Konzerthalle",
-        "Parkbühne Wuhlheide",
-        "Velodrom"
-       ],
-       "routedOrder": [
-        "Parkbühne Wuhlheide",
-        "Velodrom",
-        "BOLLE Festsäle"
-       ],
-       "popular": [
-        "Parkbühne Wuhlheide",
-        "Velodrom",
-        "BOLLE Festsäle"
-       ],
        "ladder": [
         "Uber Arena",
         "Wellblechpalast",
@@ -4295,21 +3317,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "SALT - Art & Music",
-        "Sentrum Scene",
-        "Oslo Spektrum"
-       ],
-       "routedOrder": [
-        "Unity Arena",
-        "Oslo Spektrum",
-        "Sentrum Scene"
-       ],
-       "popular": [
-        "Oslo Spektrum",
-        "Sentrum Scene",
-        "SALT - Art & Music"
-       ],
        "ladder": [
         "Holmenkollen National Arena",
         "Unity Arena",
@@ -4341,15 +3348,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Saab Arena"
-       ],
-       "routedOrder": [
-        "Saab Arena"
-       ],
-       "popular": [
-        "Saab Arena"
-       ],
        "ladder": [
         "Saab Arena",
         "Stångebro Ishall",
@@ -4412,21 +3410,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Nya Rågsveds Folkets Hus",
-        "Solvalla",
-        "Riksteatern"
-       ],
-       "routedOrder": [
-        "Strawberry Arena",
-        "Cirkus",
-        "Södra Teatern"
-       ],
-       "popular": [
-        "Strawberry Arena",
-        "Cirkus",
-        "Södra Teatern"
-       ],
        "ladder": [
         "Avicii Arena",
         "Renew Arena",
@@ -4458,21 +3441,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Konzerthaus Berlin",
-        "Badehaus Berlin",
-        "Columbia-Theater"
-       ],
-       "routedOrder": [
-        "Columbia-Theater",
-        "Maxim Gorki Theater",
-        "CHAMÄLEON Theater GmbH"
-       ],
-       "popular": [
-        "Konzerthaus Berlin",
-        "Friedrichstadt-Palast",
-        "Huxleys Neue Welt"
-       ],
        "ladder": [
         "Uber Arena",
         "Wellblechpalast",
@@ -4504,21 +3472,6 @@
        "model": 3
       },
       "top": {
-       "qloo": [
-        "Zentralwäscherei Space",
-        "Bogen F",
-        "Tanzhaus Zürich"
-       ],
-       "routedOrder": [
-        "Theater 11",
-        "Theater Winterthur",
-        "Theater am Hechtplatz"
-       ],
-       "popular": [
-        "Theater 11",
-        "Salzhaus",
-        "Halle 622 Zürich / Eventhalle"
-       ],
        "ladder": [
         "Swiss Life Arena",
         "Stimo Arena",
@@ -4581,19 +3534,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Champions Square",
-        "Sugar Bowl"
-       ],
-       "routedOrder": [
-        "Champions Square",
-        "Sugar Bowl"
-       ],
-       "popular": [
-        "Champions Square",
-        "Sugar Bowl",
-        "XULA Convocation Center"
-       ],
        "ladder": [
         "Smoothie King Center",
         "Lakefront Arena",
@@ -4625,21 +3565,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "The Dell Music Center",
-        "The 2300 Arena",
-        "Tom Gola Arena"
-       ],
-       "routedOrder": [
-        "The 2300 Arena",
-        "Pearson & McGonigle Hall",
-        "Hagan Arena St Joseph's University"
-       ],
-       "popular": [
-        "The 2300 Arena",
-        "Pearson & McGonigle Hall",
-        "Hagan Arena St Joseph's University"
-       ],
        "ladder": [
         "Palestra",
         "Finneran Pavilion",
@@ -4671,21 +3596,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Place Bell",
-        "Aréna Martin Brodeur",
-        "Combat d'Archers - Combat Archery"
-       ],
-       "routedOrder": [
-        "Bob Birnie Arena",
-        "Arena Mascouche",
-        "McConnell Arena"
-       ],
-       "popular": [
-        "Place Bell",
-        "Centre Bell",
-        "CEPSUM"
-       ],
        "ladder": [
         "Bell Centre",
         "Place Bell",
@@ -4748,21 +3658,6 @@
        "model": 3
       },
       "top": {
-       "qloo": [
-        "FringeArts",
-        "Underground Arts",
-        "Ruba"
-       ],
-       "routedOrder": [
-        "The Fillmore Philadelphia",
-        "The 2300 Arena",
-        "Ardmore Music Hall"
-       ],
-       "popular": [
-        "The Fillmore Philadelphia",
-        "Union Transfer",
-        "Underground Arts"
-       ],
        "ladder": [
         "Palestra",
         "Finneran Pavilion",
@@ -4794,21 +3689,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Flash",
-        "The DC Arts Center (DCAC)",
-        "Dance Place"
-       ],
-       "routedOrder": [
-        "Capital One Arena",
-        "The Howard Theatre",
-        "Lincoln Theatre"
-       ],
-       "popular": [
-        "Capital One Arena",
-        "The Fillmore Silver Spring",
-        "Echostage"
-       ],
        "ladder": [
         "Patriot Center",
         "D.C. Armory",
@@ -4840,21 +3720,6 @@
        "model": 2
       },
       "top": {
-       "qloo": [
-        "Bluebird Theater",
-        "Ogden Theatre",
-        "Levitt Pavilion Denver"
-       ],
-       "routedOrder": [
-        "Ogden Theatre",
-        "Fillmore Auditorium",
-        "Bluebird Theater"
-       ],
-       "popular": [
-        "Ogden Theatre",
-        "Fillmore Auditorium",
-        "Bluebird Theater"
-       ],
        "ladder": [
         "Denver Auditorium Arena",
         "Denver Coliseum",
@@ -4917,21 +3782,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Gregory Gym",
-        "Moody Amphitheater",
-        "Moody Center"
-       ],
-       "routedOrder": [
-        "Germania Insurance Amphitheater",
-        "Moody Amphitheater",
-        "Gregory Gym"
-       ],
-       "popular": [
-        "Gregory Gym",
-        "Germania Insurance Amphitheater",
-        "Moody Amphitheater"
-       ],
        "ladder": [
         "Moody Center",
         "Gregory Gymnasium",
@@ -4963,21 +3813,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Orleans Arena",
-        "South Point Arena & Equestrian Center",
-        "Cox Pavilion"
-       ],
-       "routedOrder": [
-        "Orleans Arena",
-        "South Point Arena & Equestrian Center",
-        "City National Arena"
-       ],
-       "popular": [
-        "Orleans Arena",
-        "South Point Arena & Equestrian Center",
-        "City National Arena"
-       ],
        "ladder": [
         "T-Mobile Arena",
         "Sphere",
@@ -5009,9 +3844,6 @@
        "model": null
       },
       "top": {
-       "qloo": [],
-       "routedOrder": [],
-       "popular": [],
        "ladder": [
         "Hersheypark Arena",
         "Hershey Theatre"
@@ -5073,21 +3905,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "AO Arena",
-        "O2 Victoria Warehouse Manchester",
-        "The Bridgewater Hall"
-       ],
-       "routedOrder": [
-        "AO Arena",
-        "Albert Hall, Manchester",
-        "The Bridgewater Hall"
-       ],
-       "popular": [
-        "AO Arena",
-        "Manchester Academy",
-        "O2 Ritz Manchester"
-       ],
        "ladder": [
         "Bolton Arena",
         "Manchester Velodrome",
@@ -5119,21 +3936,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Brighton Music Hall",
-        "Theatre Royal Brighton",
-        "Komedia Brighton"
-       ],
-       "routedOrder": [
-        "Theatre Royal Brighton",
-        "Brighton Music Hall",
-        "Brighton Open Air Theatre"
-       ],
-       "popular": [
-        "Komedia Brighton",
-        "Green Door Store",
-        "Theatre Royal Brighton"
-       ],
        "ladder": [
         "The Saffrons",
         "Connaught Theatre",
@@ -5165,21 +3967,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Motorpoint Arena Nottingham",
-        "Derby Arena",
-        "Nottingham Arts Theatre"
-       ],
-       "routedOrder": [
-        "Motorpoint Arena Nottingham",
-        "Theatre Royal & Royal Concert Hall",
-        "Derby Arena"
-       ],
-       "popular": [
-        "Motorpoint Arena Nottingham",
-        "Theatre Royal & Royal Concert Hall",
-        "Derby Arena"
-       ],
        "ladder": [
         "Derby Arena",
         "Motorpoint Arena Nottingham",
@@ -5242,21 +4029,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "Val Air Ballroom",
-        "Hoyt Sherman Place",
-        "Knapp Center"
-       ],
-       "routedOrder": [
-        "Val Air Ballroom",
-        "Horizon Events Center",
-        "Hoyt Sherman Place"
-       ],
-       "popular": [
-        "Hoyt Sherman Place",
-        "Casey's Center",
-        "Knapp Center"
-       ],
        "ladder": [
         "Casey's Center",
         "Buccaneer Arena"
@@ -5287,21 +4059,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Skyway Theatre",
-        "The Cedar Cultural Center",
-        "Palace Theatre"
-       ],
-       "routedOrder": [
-        "Palace Theatre",
-        "Skyway Theatre",
-        "Varsity Theater"
-       ],
-       "popular": [
-        "First Avenue",
-        "The Armory",
-        "Palace Theatre"
-       ],
        "ladder": [
         "Williams Arena",
         "3M Arena at Mariucci",
@@ -5333,21 +4090,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Social Hall SF",
-        "Great American Music Hall",
-        "Bill Graham Civic Auditorium"
-       ],
-       "routedOrder": [
-        "Fox Theater",
-        "Oakland Arena",
-        "Bill Graham Civic Auditorium"
-       ],
-       "popular": [
-        "Fox Theater",
-        "Oakland Arena",
-        "Bill Graham Civic Auditorium"
-       ],
        "ladder": [
         "Cow Palace",
         "Haas Pavilion",
@@ -5410,18 +4152,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
-       "routedOrder": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
-       "popular": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
        "ladder": [
         "Climate Pledge Arena",
         "Hec Edmundson Pavilion",
@@ -5453,21 +4183,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Capital One Arena",
-        "Washington Wizards",
-        "CareFirst Arena"
-       ],
-       "routedOrder": [
-        "Capital One Arena",
-        "CareFirst Arena",
-        "Bender Arena"
-       ],
-       "popular": [
-        "Capital One Arena",
-        "CareFirst Arena",
-        "DC Armory"
-       ],
        "ladder": [
         "Capital One Arena",
         "Patriot Center",
@@ -5499,21 +4214,6 @@
        "model": null
       },
       "top": {
-       "qloo": [
-        "The Greek Theatre",
-        "Oakland Arena",
-        "Cow Palace Arena & Event Center"
-       ],
-       "routedOrder": [
-        "Oakland Arena",
-        "Cow Palace Arena & Event Center",
-        "The Greek Theatre"
-       ],
-       "popular": [
-        "Oakland Arena",
-        "Cow Palace Arena & Event Center",
-        "The Greek Theatre"
-       ],
        "ladder": [
         "Oakland Arena",
         "Chase Center",
@@ -5576,21 +4276,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Chiles Center",
-        "The Rose Quarter",
-        "Oregon Airsoft Arena"
-       ],
-       "routedOrder": [
-        "Oregon Airsoft Arena",
-        "The Rose Quarter",
-        "Chiles Center"
-       ],
-       "popular": [
-        "The Rose Quarter",
-        "Chiles Center",
-        "Oregon Airsoft Arena"
-       ],
        "ladder": [
         "Moda Center",
         "Veterans Memorial Coliseum",
@@ -5622,21 +4307,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Ascend Federal Credit Union Amphitheater",
-        "Memorial Gymnasium",
-        "Allen Arena"
-       ],
-       "routedOrder": [
-        "Ascend Federal Credit Union Amphitheater",
-        "Allen Arena",
-        "Memorial Gymnasium"
-       ],
-       "popular": [
-        "Ascend Federal Credit Union Amphitheater",
-        "Memorial Gymnasium",
-        "Allen Arena"
-       ],
        "ladder": [
         "Bridgestone Arena",
         "Nashville Municipal Auditorium",
@@ -5668,18 +4338,6 @@
        "model": 1
       },
       "top": {
-       "qloo": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
-       "routedOrder": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
-       "popular": [
-        "Climate Pledge Arena",
-        "Alaska Airlines Arena"
-       ],
        "ladder": [
         "Climate Pledge Arena",
         "Hec Edmundson Pavilion",
@@ -5851,13 +4509,6 @@
      "Raheem DeVaughn",
      "BJ the Chicago Kid"
     ],
-    "qloo": [
-     "Liv Warfield",
-     "Al B. Sure!",
-     "Lisa Fischer",
-     "Nicole Wray",
-     "Muhsinah"
-    ],
     "model": [
      "Sabrina Teitelbaum",
      "Miya Folick",
@@ -5888,13 +4539,6 @@
     "from": "column",
     "openers": [
      "Dora Jar"
-    ],
-    "qloo": [
-     "HOLYCHILD",
-     "Ryan Beatty",
-     "Wrabel",
-     "John the Ghost",
-     "Tor Miller"
     ],
     "model": [
      "Beabadoobee",
@@ -5929,13 +4573,6 @@
      "Kevin Abstract",
      "Ravyn Lenae"
     ],
-    "qloo": [
-     "Hope Tala",
-     "Berhana",
-     "Kyle Dion",
-     "Black Party",
-     "Ama Lou"
-    ],
     "model": [
      "Masego",
      "Ber",
@@ -5967,13 +4604,6 @@
     "openers": [
      "Chxrry",
      "Jae Stephens"
-    ],
-    "qloo": [
-     "Tayla Parx",
-     "Joyce Wrice",
-     "QUIN",
-     "VanJess",
-     "Alex Mali"
     ],
     "model": [
      "Mallrat",
@@ -6008,13 +4638,6 @@
      "Frankie Cosmos",
      "Alice Phoebe Lou"
     ],
-    "qloo": [
-     "Claud",
-     "Deb Never",
-     "sasami",
-     "Ambar Lucid",
-     "Hana Vu"
-    ],
     "model": [
      "Jay Someday",
      "Lomelda",
@@ -6045,13 +4668,6 @@
     "from": "column",
     "openers": [
      "Latto"
-    ],
-    "qloo": [
-     "Qveen Herby",
-     "Lolo Zouaï",
-     "Audrey Nuna",
-     "Destiny Rogers",
-     "Muni Long"
     ],
     "model": [
      "Ice Spice",
@@ -6092,13 +4708,6 @@
      "Suzie Stapleton",
      "Deeper"
     ],
-    "qloo": [
-     "Andy Bell",
-     "Kat Von D",
-     "Prayers",
-     "B-Movie",
-     "Don Johnson"
-    ],
     "model": [
      "Nitzer Ebb",
      "She Past Away",
@@ -6133,13 +4742,6 @@
      "The Linda Lindas",
      "The Paradox"
     ],
-    "qloo": [
-     "The Dollyrots",
-     "Tom Morello",
-     "Tim Timebomb",
-     "The Bombpops",
-     "Evan Taubenfeld"
-    ],
     "model": [
      "The Interrupters",
      "The Linda Lindas",
@@ -6170,13 +4772,6 @@
     "from": "column",
     "openers": [
      "Cil"
-    ],
-    "qloo": [
-     "CYN",
-     "Lolo Zouaï",
-     "Nile Rodgers",
-     "Miquela",
-     "Bronze Avery"
     ],
     "model": [
      "Caroline Polachek",
@@ -6209,13 +4804,6 @@
     "openers": [
      "More Than Words",
      "C.B. Green"
-    ],
-    "qloo": [
-     "Don Johnson",
-     "Dave Stewart",
-     "Sonia",
-     "Marcella Detroit",
-     "Sheila E."
     ],
     "model": [
      "Megan O'Neill",
@@ -6254,13 +4842,6 @@
      "Skilla Baby",
      "Babyface Ray"
     ],
-    "qloo": [
-     "Mike Dean",
-     "Chase B",
-     "Fivio Foreign",
-     "03 Greedo",
-     "Dave East"
-    ],
     "model": [
      "Don Toliver",
      "Sheck Wes",
@@ -6293,13 +4874,6 @@
      "JID",
      "Nardo Wick"
     ],
-    "qloo": [
-     "03 Greedo",
-     "KILLY",
-     "88GLAM",
-     "Guapdad 4000",
-     "Jazz Cartier"
-    ],
     "model": [
      "Lil Tecca",
      "Rob49",
@@ -6331,13 +4905,6 @@
     "openers": [
      "Omar Apollo",
      "D4vd"
-    ],
-    "qloo": [
-     "serpentwithfeet",
-     "Ama Lou",
-     "Lolo Zouaï",
-     "Jenevieve",
-     "OSHUN"
     ],
     "model": [
      "Doechii",
@@ -6380,13 +4947,6 @@
      "Magdalena Bay",
      "Alemeda"
     ],
-    "qloo": [
-     "CYN",
-     "Maty Noyes",
-     "JP Saxe",
-     "Wrabel",
-     "Transviolet"
-    ],
     "model": [
      "Beabadoobee",
      "Ethel Cain",
@@ -6424,13 +4984,6 @@
      "Sheryl Crow",
      "The Script",
      "Noga Erez"
-    ],
-    "qloo": [
-     "Christina Vidal",
-     "Nicole Richie",
-     "AJ McLean",
-     "78Violet",
-     "Evan Taubenfeld"
     ],
     "model": [
      "Brandi Carlile",
@@ -6470,13 +5023,6 @@
      "Movements",
      "Jack Kays"
     ],
-    "qloo": [
-     "Nice Guys Finish First",
-     "FEVER 333",
-     "Paige",
-     "Cory Wells",
-     "Seven Story Fall"
-    ],
     "model": [
      "Casket",
      "VCTMS",
@@ -6507,13 +5053,6 @@
     "from": "column",
     "openers": [
      "Ginger Root"
-    ],
-    "qloo": [
-     "sasami",
-     "Miya Folick",
-     "Rostam",
-     "Luna Li",
-     "Vagabon"
     ],
     "model": [
      "Ginger Root",
@@ -6549,13 +5088,6 @@
      "Skillibeng",
      "Tyga"
     ],
-    "qloo": [
-     "Justine Skye",
-     "Lil Debbie",
-     "Colette Carr",
-     "Dai Burger",
-     "Snow tha Product"
-    ],
     "model": [
      "Ice Spice",
      "Lola Brooke",
@@ -6588,13 +5120,6 @@
      "Balu Brigada",
      "Dayglow"
     ],
-    "qloo": [
-     "Bohnes",
-     "Wrabel",
-     "morgxn",
-     "Goody Grace",
-     "Weathers"
-    ],
     "model": [
      "The Heavy Heavy Hits",
      "The Velveteers",
@@ -6626,13 +5151,6 @@
     "openers": [
      "The Piano",
      "Beverley Knight"
-    ],
-    "qloo": [
-     "Martine McCutcheon",
-     "Stacey Solomon",
-     "Sam Bailey",
-     "Luke Friend",
-     "Ray Quinn"
     ],
     "model": [
      "Rhys Lewis",
@@ -6669,13 +5187,6 @@
      "Blood Orange",
      "Amyl and the Sniffers"
     ],
-    "qloo": [
-     "Culture Abuse",
-     "Gouge Away",
-     "Fury",
-     "Jesus Piece",
-     "Drain"
-    ],
     "model": [
      "Gulch",
      "Drain",
@@ -6708,13 +5219,6 @@
      "Fcukers",
      "Djo",
      "Dominic Fike"
-    ],
-    "qloo": [
-     "Kikagaku Moyo",
-     "Drugdealer",
-     "Levitation Room",
-     "Chicano Batman",
-     "Skaters"
     ],
     "model": [
      "Unknown Mortal Orchestra",

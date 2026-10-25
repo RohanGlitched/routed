@@ -4,8 +4,6 @@
  "taken": [
   {
    "artist": "Pierce the Veil",
-   "qlooId": "653BD725-93BF-4488-88F5-26881AFBE1BA",
-   "qlooName": "Pierce The Veil",
    "title": "I Can't Hear You World Tour",
    "revid": 1376231105,
    "region": "na",
@@ -52,8 +50,6 @@
   },
   {
    "artist": "Dua Lipa",
-   "qlooId": "1D792A35-7D72-4D57-88D0-C3A4F3E73EF6",
-   "qlooName": "Dua Lipa",
    "title": "Radical Optimism Tour",
    "revid": 1374098811,
    "region": "na",
@@ -73,8 +69,6 @@
   },
   {
    "artist": "Troye Sivan",
-   "qlooId": "BAFDEBDB-F736-49E9-87BA-336FE5F5F615",
-   "qlooName": "Troye Sivan",
    "title": "Something to Give Each Other Tour",
    "revid": 1353175921,
    "region": "eu",
@@ -95,8 +89,6 @@
   },
   {
    "artist": "Queen + Adam Lambert",
-   "qlooId": "3F06A2DD-5E22-4DD2-B7CE-172D3A50F2DE",
-   "qlooName": "Queen   Adam Lambert",
    "title": "The Rhapsody Tour",
    "revid": 1379677608,
    "region": "na",
@@ -133,8 +125,6 @@
   },
   {
    "artist": "Chappell Roan",
-   "qlooId": "1C8D8828-5739-4304-9506-BA01B3D63516",
-   "qlooName": "Chappell Roan",
    "title": "The Midwest Princess Tour",
    "revid": 1348730313,
    "region": "na",
@@ -201,8 +191,6 @@
   },
   {
    "artist": "Billy Joel",
-   "qlooId": "0DC6AE64-E9C1-486D-B239-5E77458C0B2E",
-   "qlooName": "Billy Joel",
    "title": "Billy Joel in Concert",
    "revid": 1350614192,
    "region": "na",
@@ -266,8 +254,6 @@
   },
   {
    "artist": "Kim Petras",
-   "qlooId": "0A0CB59C-6F7C-49B0-954E-BBD858D4F23B",
-   "qlooName": "Kim Petras",
    "title": "Feed the Beast World Tour",
    "revid": 1377726738,
    "region": "na",
@@ -299,8 +285,6 @@
   },
   {
    "artist": "Tame Impala",
-   "qlooId": "D1AE8792-9129-46E0-AEE7-2C3A81E91385",
-   "qlooName": "Tame Impala",
    "title": "Deadbeat Tour",
    "revid": 1380752017,
    "region": "na",
@@ -335,8 +319,6 @@
   },
   {
    "artist": "Queens of the Stone Age",
-   "qlooId": "155A5A06-6814-42D2-9633-962CD8385208",
-   "qlooName": "Queens of the Stone Age",
    "title": "The Catacombs Tour",
    "revid": 1375102207,
    "region": "na",
@@ -361,8 +343,6 @@
   },
   {
    "artist": "Nine Inch Nails",
-   "qlooId": "2E28F9EF-0008-4731-94C3-C195449BA5C2",
-   "qlooName": "Nine Inch Nails",
    "title": "Peel It Back Tour",
    "revid": 1372261369,
    "region": "na",
@@ -412,8 +392,6 @@
   },
   {
    "artist": "Flo",
-   "qlooId": "D3AE84B1-C633-4902-A510-6785D10DB16B",
-   "qlooName": "FLO",
    "title": "Access All Areas Tour (Flo)",
    "revid": 1378984407,
    "region": "na",
@@ -449,8 +427,6 @@
   },
   {
    "artist": "Omar Apollo",
-   "qlooId": "40E072EE-DAEE-435B-83A4-0B7085066E94",
-   "qlooName": "omar apollo",
    "title": "God Said No World Tour",
    "revid": 1360001122,
    "region": "na",
@@ -486,8 +462,6 @@
   },
   {
    "artist": "Sugababes",
-   "qlooId": "7653517D-0C72-4DF0-8A73-FB038F1B87E4",
-   "qlooName": "Sugababes",
    "title": "Sugababes '25 Tour",
    "revid": 1378669791,
    "region": "uk",
@@ -506,8 +480,6 @@
   },
   {
    "artist": "Travis Scott",
-   "qlooId": "1651869C-3277-47AC-8535-62784C799EDF",
-   "qlooName": "Travis Scott",
    "title": "Circus Maximus Tour",
    "revid": 1366276511,
    "region": "na",
@@ -548,8 +520,6 @@
   },
   {
    "artist": "Halsey",
-   "qlooId": "488C7F63-9D38-49A2-9544-51A802B4FE35",
-   "qlooName": "Halsey",
    "title": "For My Last Trick: The Tour",
    "revid": 1376678226,
    "region": "na",
@@ -582,8 +552,6 @@
   },
   {
    "artist": "Bonnie Tyler",
-   "qlooId": "12BD83EB-3E8A-4DB6-A9E3-00A1B645AEC9",
-   "qlooName": "Bonnie Tyler",
    "title": "40 Years \"Total Eclipse of the Heart\" Tour",
    "revid": 1362833570,
    "region": "eu",
@@ -620,8 +588,6 @@
   },
   {
    "artist": "Ado",
-   "qlooId": "7FFAA902-0F79-449E-B178-8AAB063FD1D7",
-   "qlooName": "Ado",
    "title": "Hibana World Tour",
    "revid": 1327682517,
    "region": "na",
@@ -643,8 +609,6 @@
   },
   {
    "artist": "Doja Cat",
-   "qlooId": "AED4373C-DFD5-425D-9BD7-FFD1EEE9805B",
-   "qlooName": "Doja Cat",
    "title": "Tour Ma Vie World Tour",
    "revid": 1379654155,
    "region": "na",
@@ -685,8 +649,6 @@
   },
   {
    "artist": "Depeche Mode",
-   "qlooId": "83DA77D5-4364-4E55-93D3-A8420CDD354A",
-   "qlooName": "Depeche Mode",
    "title": "Memento Mori World Tour",
    "revid": 1357215827,
    "region": "eu",
@@ -730,8 +692,6 @@
   },
   {
    "artist": "Addison Rae",
-   "qlooId": "52278DD3-3506-4C92-84BC-BD2B4A30F143",
-   "qlooName": "Addison Rae",
    "title": "The Addison Tour",
    "revid": 1368606917,
    "region": "na",
@@ -755,8 +715,6 @@
   },
   {
    "artist": "Nicki Minaj",
-   "qlooId": "7AEC8912-DB9F-43D6-ADE1-AB99AC138E26",
-   "qlooName": "Nicki Minaj",
    "title": "Pink Friday 2 World Tour",
    "revid": 1380477554,
    "region": "na",
@@ -807,8 +765,6 @@
   },
   {
    "artist": "Gary Barlow",
-   "qlooId": "BE68BE28-FD45-4629-99CB-A3C54622444D",
-   "qlooName": "Gary Barlow",
    "title": "The Songbook Tour (2025)",
    "revid": 1318185932,
    "region": "uk",
@@ -843,8 +799,6 @@
   },
   {
    "artist": "The 1975",
-   "qlooId": "C977220F-11A7-4F93-8714-AEDC57674191",
-   "qlooName": "The 1975",
    "title": "Still... At Their Very Best",
    "revid": 1367276826,
    "region": "na",
@@ -890,8 +844,6 @@
   },
   {
    "artist": "21 Savage",
-   "qlooId": "3D8CC570-78AB-4989-AC0E-34FD09E39601",
-   "qlooName": "21 Savage",
    "title": "American Dream Tour",
    "revid": 1330479410,
    "region": "na",
@@ -928,8 +880,6 @@
   },
   {
    "artist": "Green Day",
-   "qlooId": "76922890-5BBA-42BB-B3F9-1AF72114CF44",
-   "qlooName": "Green Day",
    "title": "The Saviors Tour",
    "revid": 1378500500,
    "region": "na",
@@ -966,8 +916,6 @@
   },
   {
    "artist": "Pink",
-   "qlooId": "E44E2F12-1947-4556-B608-6A3A9347B408",
-   "qlooName": "Pink",
    "title": "Summer Carnival (tour)",
    "revid": 1376188311,
    "region": "na",
@@ -1006,8 +954,6 @@
   },
   {
    "artist": "SZA",
-   "qlooId": "E2E58680-EE3F-4D1D-88B6-B79F87205B2C",
-   "qlooName": "SZA",
    "title": "SOS Tour",
    "revid": 1359128980,
    "region": "na",
@@ -1045,8 +991,6 @@
   },
   {
    "artist": "For King & Country",
-   "qlooId": "FC278F07-3E78-44C4-970F-88ADAA633AF4",
-   "qlooName": "for KING & COUNTRY",
    "title": "A Drummer Boy Christmas Tour",
    "revid": 1323654848,
    "region": "na",
@@ -1104,8 +1048,6 @@
   },
   {
    "artist": "Ledisi",
-   "qlooId": "F6368EC6-031E-4AF6-BDB4-152C0F7ACACA",
-   "qlooName": "Ledisi",
    "title": "The Good Life Tour",
    "revid": 1293293249,
    "region": "na",
@@ -1144,8 +1086,6 @@
   },
   {
    "artist": "Twenty One Pilots",
-   "qlooId": "0C9D24CF-61C6-4C91-B6E6-91827467A166",
-   "qlooName": "Twenty One Pilots",
    "title": "The Clancy World Tour",
    "revid": 1373076398,
    "region": "na",

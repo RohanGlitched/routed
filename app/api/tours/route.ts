@@ -57,10 +57,12 @@ export async function POST(req: Request) {
     const why = left?.limit === "hour" ? "this hour's" : "today's";
     const stored = await storedTourFor(artist, from).catch(() => null);
     if (!stored) return NextResponse.json({ error: `Routed has used ${why} Qloo allowance. The finished tours on the poster wall still open; new ones run again ${left?.limit === "hour" ? "at the top of the hour" : "tomorrow"}.` }, { status: 503 });
+    // "8 cities (12 shows)" when a two-night stand makes the two counts differ.
+    const run = stored.nights && stored.nights !== stored.shows ? `${stored.shows} cities (${stored.nights} shows)` : `${stored.shows} shows`;
     const message =
       stored.match === "artist"
-        ? `Routed has used ${why} Qloo allowance, so here is the stored ${stored.artist} tour (${stored.shows} shows from ${stored.from}) instead of a new run.`
-        : `Routed has used ${why} Qloo allowance and has no stored ${artist} tour, so here is the nearest one on the poster wall: ${stored.artist}, ${stored.shows} shows from ${stored.from}.`;
+        ? `Routed has used ${why} Qloo allowance, so here is the stored ${stored.artist} tour (${run} from ${stored.from}) instead of a new run.`
+        : `Routed has used ${why} Qloo allowance and has no stored ${artist} tour, so here is the nearest one on the poster wall: ${stored.artist}, ${run} from ${stored.from}.`;
     return NextResponse.json({ id: stored.id, stored: { ...stored, reason: left?.limit ?? "day", ...(left?.limit === "hour" ? { retryAt: left.nextHour } : {}), message } });
   }
   if (!isAdmin(req) && !ipAllowed(await clientIp())) return NextResponse.json({ error: "That's a lot of tours in a few minutes. Try again in ten." }, { status: 429 });

@@ -324,7 +324,7 @@ function subjects(): Subject[] {
     const title = wp ? decodeURIComponent(new URL(wp).searchParams.get("title") ?? "").replace(/_/g, " ") : undefined;
     out.push({ artist, set: "bench", region: real.region, truth: [...realMarkets(real)], tour: real.tour ?? "", source: wp, title: title || undefined, benchId: id });
   }
-  const held = readJson<{ taken: { artist: string; qlooId: string; title: string; revid: number; region: RegionId; markets: string[]; source: string }[] }>(`${H2H}/held-out.json`).taken;
+  const held = readJson<{ taken: { artist: string; qlooId?: string; title: string; revid: number; region: RegionId; markets: string[]; source: string }[] }>(`${H2H}/held-out.json`).taken;
   for (const h of held) out.push({ artist: h.artist, set: "held-out", region: h.region, truth: h.markets, tour: h.title, source: h.source, title: h.title, revid: h.revid, qlooId: h.qlooId });
   return out;
 }
@@ -485,7 +485,9 @@ async function truth() {
 
 /* ───────────────────────── stage: sample (post-cutoff tours) ───────────────────────── */
 
-type PostCut = { artist: string; qlooId: string; title: string; revid: number; created: string; announced?: string; region: RegionId; markets: string[]; source: string };
+// qlooId is written by the sampling stages and stripped before commit (scripts/strip-qloo-data.mjs, M8); the run
+// stages find the artist again by name (qlooArtist, artistId) when it isn't on file.
+type PostCut = { artist: string; qlooId?: string; title: string; revid: number; created: string; announced?: string; region: RegionId; markets: string[]; source: string };
 
 const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 /** Every date written in a piece of prose: "June 12, 2026", "12 June 2026", "June 2026" (as the 1st), {{Start date|2026|6|12}}. */
@@ -612,9 +614,9 @@ async function benchArtist(id: string): Promise<Artist> {
 }
 
 /** The artist as Qloo's search gives it (popularity and genres, which the opener lookup needs). */
-async function qlooArtist(test: "support", name: string, qlooId: string): Promise<Artist | null> {
+async function qlooArtist(test: "support" | "venues" | "postcut", name: string, qlooId?: string): Promise<Artist | null> {
   const found = await spend(test, 1, null, () => cached(`${CACHE}/search/${slug(name)}.json`, async () => (await search(name, "urn:entity:artist", 5)).entities));
-  const e = found.find((x) => x.id === qlooId) ?? found.find((x) => fold(x.name) === fold(name));
+  const e = found.find((x) => x.id === qlooId) ?? found.find((x) => fold(x.name) === fold(name)) ?? pickArtist(name, found).pick;
   if (!e) return null;
   return { id: e.id, name: e.name, popularity: e.popularity, genres: e.tags.filter((t) => /genre/.test(t.type ?? t.id)).map((t) => t.name).slice(0, 5), genreKeys: genresOf(e.tags) };
 }
@@ -686,7 +688,9 @@ const callsFor = (draw: number) => (draw >= BIG_ROOM_DRAW && !venueTier(draw).ta
 async function runVenues() {
   const { subjects: vs } = readJson<{ subjects: VenueSubject[] }>(`${DATA}/venues-truth.json`);
   for (const v of vs) {
-    const artist: Artist = v.benchId ? await benchArtist(v.benchId) : { id: v.qlooId!, name: v.artist, genres: [], genreKeys: [] };
+    const id = v.qlooId ?? (await qlooArtist("venues", v.artist))?.id;
+    if (!v.benchId && !id) throw new Error(`${v.artist}: not found on Qloo`);
+    const artist: Artist = v.benchId ? await benchArtist(v.benchId) : { id: id!, name: v.artist, genres: [], genreKeys: [] };
     // Arm Q: Routed's own room lookup (lib/agent/tools.ts lookUpRooms) with the artist's signal. Genres are left
     // empty for every artist so the orchestra-hall rule is the same in both Qloo arms.
     const a: Artist = { ...artist, genres: [], genreKeys: [] };
@@ -749,7 +753,7 @@ async function runSupport() {
     try {
       const qp = `${CACHE}/support/qloo/${slug(s.artist)}.json`;
       if (!existsSync(qp)) {
-        const artist = s.benchId ? await benchArtist(s.benchId) : await qlooArtist("support", s.artist, s.qlooId!);
+        const artist = s.benchId ? await benchArtist(s.benchId) : await qlooArtist("support", s.artist, s.qlooId);
         if (!artist) {
           writeJson(qp, { ok: false, reason: "the artist wasn't found again on Qloo", cities: [] });
         } else {
@@ -797,7 +801,9 @@ async function runPostcut() {
     try {
       const qp = `${CACHE}/postcut/qloo/${slug(t.artist)}.json`;
       if (!existsSync(qp)) {
-        const cities = await spend("postcut", 1, null, async () => scoreCities((await wherePopular(t.qlooId, HEAT_AREAS[t.region][0]!.within, 50)).tiles, t.region));
+        const id = t.qlooId ?? (await qlooArtist("postcut", t.artist))?.id;
+        if (!id) throw new Error(`${t.artist}: not found on Qloo`);
+        const cities = await spend("postcut", 1, null, async () => scoreCities((await wherePopular(id, HEAT_AREAS[t.region][0]!.within, 50)).tiles, t.region));
         writeJson(qp, { ids: cities.map((c: CityScore) => c.marketId) });
       }
       await modelCall("postcut", { in: 200, out: 1600 }, `${CACHE}/postcut/model/${slug(t.artist)}.json`, async () => {

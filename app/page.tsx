@@ -260,7 +260,7 @@ export default async function Home() {
             Poster wall
           </h2>
           <p className={s.wallLede}>Tours routed on Routed. Each poster is printed from its own run: the dots are that artist&apos;s Qloo heatmap.</p>
-          <Wall items={wall.map(({ id, artist, shows, from }) => ({ id, artist, shows, from }))} />
+          <Wall items={wall.map(({ id, artist, shows, nights, from }) => ({ id, artist, shows, nights, from }))} />
         </section>
       )}
     </>

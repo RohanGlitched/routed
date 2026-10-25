@@ -43,6 +43,10 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
   const d = new Date(`${stop.date}T12:00:00Z`);
   const room = stop.rooms.find((r) => r.id === stop.roomId) ?? stop.rooms[0];
   const others = stop.rooms.filter((r) => r !== room).slice(0, 2);
+  // The city's affinity chip read 99 or 100 on nearly every stop; where the booked room sits among the rooms Qloo
+  // ranked for these fans in this city varies, and says something.
+  const ranked = stop.rooms.filter((r) => r.affinity !== undefined).sort((a, b) => b.affinity! - a.affinity!);
+  const roomRank = room && ranked.length > 1 ? ranked.indexOf(room) + 1 : 0;
   const opener = stop.openers.find((o) => o.id === stop.openerId) ?? stop.openers[0];
   const locals = stop.openers.filter((o) => o !== opener).slice(0, 3);
   const pitch = stop.pitch;
@@ -87,9 +91,11 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
           <span className={s.badge}>
             Fan city <b className="num">{stop.score.rank}</b> of <span className="num">{total}</span>
           </span>
-          <span className={s.badge}>
-            Affinity <b className="num">{pct(stop.score.affinity)}</b>
-          </span>
+          {roomRank > 0 && (
+            <span className={s.badge}>
+              Fans&apos; <b className="num">#{roomRank}</b> room of <span className="num">{ranked.length}</span>
+            </span>
+          )}
         </p>
         {stop.why && (
           <p className={s.why}>

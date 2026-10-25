@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { sizeNote } from "@/lib/agent/evidence";
-import { addDays, MAX_LEG_KM } from "@/lib/geo/route";
+import { addDays, MAX_LEG_KM, VAN_KMH } from "@/lib/geo/route";
 import { independents } from "@/lib/chains";
 import { sharedGenres } from "@/lib/agent/rooms";
 import type { Spot, Stop } from "@/lib/types";
@@ -48,7 +48,9 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
   const pitch = stop.pitch;
   const nights = stop.nights ?? 1;
   const last = new Date(`${addDays(stop.date, nights - 1)}T12:00:00Z`);
-  const long = !first && stop.fromKm > MAX_LEG_KM;
+  // The leg cap the route search uses (route.ts legCost): door-to-door hours at van speed, so a ferry's sailing and
+  // a border count the same here as there.
+  const long = !first && Math.round(stop.fromHours * VAN_KMH) > MAX_LEG_KM;
 
   return (
     <li className={s.day}>
@@ -76,7 +78,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
           )}
           {long && <span className={s.sizeNote}> A long jump: no city with rooms within reach could break it up.</span>}
         </span>
-        {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} />}
+        {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} places={[...stop.rooms, ...(stop.posters ?? []), ...stop.after]} />}
       </div>
 
       <div className={s.what}>

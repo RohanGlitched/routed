@@ -75,3 +75,180 @@ export function localMap(tiles: LocalTile[], places: LocalPoint[], size = 180): 
   // km across the whole square, for a scale line: one degree of latitude is 111 km.
   return { dots, marks: places.map(xy), scaleKm: +(span * 111).toFixed(1) };
 }
+
+/* ───────────── naming the hottest blocks, and whether the booked room is in them ───────────── */
+
+/**
+ * A Qloo place on the stop (a room, a poster shop, an after-show bar) with the neighbourhood Qloo files it under
+ * (`properties.geocode.name`). Those names are Qloo's own localities: in Portland, 13 of 14 rooms' names matched
+ * the locality polygon Qloo's heatmap returns around them (`output.heatmap.boundary=urn:entity:locality`, probed
+ * Oct 25), so a vote over them names the hot tile in Qloo's words without another call per city.
+ */
+export type LocalPlace = { id?: string; name: string; lat?: number; lon?: number; area?: string; areaTrait?: string };
+
+/** Places farther than this from the hottest tile don't vote on its name (the old 2 km reached across rivers). */
+export const NAME_KM = 1;
+/** The winning name needs at least this share of the weighted vote, or the area stays unnamed (a near split is no name). */
+export const NAME_QUORUM = 0.6;
+/** A name carried by a single place needs that place this close to the hottest tile. */
+export const NAME_ONE_KM = 0.5;
+/** The nearest place within this distance labels the hottest blocks when no neighbourhood is named. */
+export const NEAR_KM = 0.6;
+
+/** "Hosford-Abernethy" and "hosford abernethy", "William Wells Brown Neighborhood" and "William Wells Brown": one area. */
+export function foldArea(s: string): string {
+  return s
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/^the |\bneighbou?rhood\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const placed = (p: LocalPlace): p is LocalPlace & LocalPoint => typeof p.lat === "number" && typeof p.lon === "number";
+
+/** Each place once (a room can also come back as an after-show bar), by id, else by name. */
+function uniquePlaces(places: LocalPlace[]): (LocalPlace & LocalPoint)[] {
+  const seen = new Set<string>();
+  return places.filter(placed).filter((p) => {
+    const k = p.id ?? p.name;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+/** The strength of the strongest tile within 0.25 km of a point (0 on a cold block). */
+function heatAt(tiles: LocalTile[], p: LocalPoint): number {
+  let s = 0;
+  for (const t of tiles) if (kmBetween({ lat: t[0], lon: t[1] }, p) < 0.25) s = Math.max(s, t[2]);
+  return s;
+}
+
+/**
+ * Names the hottest tile by a vote of the Qloo places around it: each place within NAME_KM votes for the area
+ * Qloo files it under, nearer places and places on hotter tiles counting more (a place filed under the city
+ * alone abstains). The winner needs NAME_QUORUM of the weight and either two places or one within
+ * NAME_ONE_KM; otherwise the area stays unnamed rather than guessed.
+ */
+export function nameHot(tiles: LocalTile[], places: LocalPlace[]): { name?: string; trait?: string; votes: number; voters: number } {
+  const hot = hotSpot(tiles);
+  if (!hot) return { votes: 0, voters: 0 };
+  const votes = new Map<string, { name: string; w: number; n: number; nearest: number; traits: Map<string, number> }>();
+  let total = 0;
+  let voters = 0;
+  for (const p of uniquePlaces(places)) {
+    const d = kmBetween(hot, p);
+    const area = p.area?.trim();
+    if (d > NAME_KM || !area) continue;
+    const w = (0.5 + 0.5 * heatAt(tiles, p)) / (0.2 + d) ** 2;
+    total += w;
+    voters++;
+    const k = foldArea(area);
+    const v = votes.get(k) ?? { name: area, w: 0, n: 0, nearest: Infinity, traits: new Map<string, number>() };
+    v.w += w;
+    v.n++;
+    v.nearest = Math.min(v.nearest, d);
+    if (p.areaTrait) v.traits.set(p.areaTrait, (v.traits.get(p.areaTrait) ?? 0) + 1);
+    votes.set(k, v);
+  }
+  const best = [...votes.values()].sort((a, b) => b.w - a.w)[0];
+  if (!best || best.w < NAME_QUORUM * total || (best.n < 2 && best.nearest > NAME_ONE_KM)) return { votes: best?.n ?? 0, voters };
+  const trait = [...best.traits.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+  return { name: best.name, ...(trait ? { trait } : {}), votes: best.n, voters };
+}
+
+/**
+ * The hottest tile as a stop stores it. `named: "near"` marks a name (or its absence) settled at run time by a
+ * vote of the Qloo places within NEAR_VOTE_M of the tile (lib/agent/local.ts, from Oct 25): that vote saw more
+ * places than the stop keeps, so it stands. A tour saved before it has no mark, and its stored name (from a
+ * majority of places within 2 km, which reached across rivers) is re-derived from the stop's own places instead.
+ */
+export type HotName = { lat: number; lon: number; name?: string; trait?: string; named?: "near" };
+
+/** The radius of the run-time vote around the hottest tile (one Qloo places call per city). */
+export const NEAR_VOTE_M = 600;
+
+/** What the day sheet and the pitch may say about a stop at street level, all from the stored tiles and places. */
+export type LocalRead = {
+  /** The neighbourhood of the fans' hottest blocks, by the vote; absent when Qloo's places there don't say. */
+  area?: string;
+  /** How Qloo characterises that neighbourhood ("Creative hub"), from the places filed under it. */
+  trait?: string;
+  /** The nearest Qloo place to the hottest blocks (within NEAR_KM), to point at when no neighbourhood is named. */
+  near?: { name: string; km: number };
+  /** The booked room against the hottest blocks. `sitsIn` only when Qloo files the room under the fans' area. */
+  room?: { name: string; area?: string; km: number; inHot: boolean; sitsIn: boolean };
+};
+
+/**
+ * Reads a stop's street level from what it stores (tiles, hot tile, rooms, poster shops, bars), so a tour saved
+ * before this rule reads right without re-running: the hot area's name is the run-time vote's when the stop has
+ * one (HotName), else a vote of the stop's own places; the room's area is its own Qloo place's; and "sits in"
+ * needs the two to match.
+ */
+export function readLocal(local: { tiles: LocalTile[]; hot?: HotName }, room: LocalPlace | undefined, places: LocalPlace[]): LocalRead {
+  const all = room ? [room, ...places] : places;
+  const named = local.hot?.named === "near" ? { name: local.hot.name, trait: local.hot.trait } : nameHot(local.tiles, all);
+  const out: LocalRead = { ...(named.name ? { area: named.name } : {}), ...(named.trait ? { trait: named.trait } : {}) };
+  const hot = hotSpot(local.tiles);
+  if (hot) {
+    const near = uniquePlaces(all)
+      .map((p) => ({ name: p.name, km: +kmBetween(hot, p).toFixed(1) }))
+      .filter((p) => p.km <= NEAR_KM)
+      .sort((a, b) => a.km - b.km)[0];
+    if (near) out.near = near;
+  }
+  if (room && placed(room)) {
+    const h = placeHeat(local.tiles, room);
+    if (h) {
+      const area = room.area?.trim() || undefined;
+      out.room = { name: room.name, ...(area ? { area } : {}), km: h.km, inHot: h.inHot, sitsIn: !!(area && named.name && foldArea(area) === foldArea(named.name)) };
+    }
+  }
+  return out;
+}
+
+const kmFrom = (km: number) => (km < 0.1 ? "under 100 m from" : `${km} km from`);
+
+/**
+ * The day sheet's words: `lead` + `name` (bold, only ever a real neighbourhood) + `tail`, then `verdict` on the
+ * room. With no name the lead says so plainly and points at the nearest Qloo place instead.
+ */
+export function localWords(r: LocalRead, city: string, who = "fans"): { lead: string; name?: string; tail: string; verdict: string } {
+  const head = `Inside ${city}, ${who} over-index most`;
+  const words = r.area
+    ? { lead: `${head} around `, name: `${r.area}${r.trait ? ` (${r.trait.toLowerCase()})` : ""}`, tail: "." }
+    : r.near && r.near.name !== r.room?.name
+      ? { lead: `${head} in the blocks around ${r.near.name}; Qloo names no neighbourhood there.`, tail: "" }
+      : { lead: `${head} in one cluster of blocks; Qloo names no neighbourhood there.`, tail: "" };
+  return { ...words, verdict: roomVerdict(r) };
+}
+
+/** "Dante's sits in Downtown, 0.6 km from the hottest blocks." or "Roseland is 1.9 km from the fans' hottest blocks (Buckman); Qloo files it under Old Town." */
+export function roomVerdict(r: LocalRead): string {
+  const m = r.room;
+  if (!m) return "";
+  if (m.sitsIn) return `${m.name} sits in ${r.area}, ${kmFrom(m.km)} the hottest blocks.`;
+  const strong = m.inHot && m.km > HOT_KM ? ", on one of their strongest tiles" : "";
+  const filed = m.area ? `; Qloo files it under ${m.area}` : "";
+  return `${m.name} is ${kmFrom(m.km)} the fans' hottest blocks${r.area ? ` (${r.area})` : ""}${strong}${filed}.`;
+}
+
+/**
+ * The pitch's evidence line for the same facts, with the rule a writer must keep: say the room is in the fans'
+ * neighbourhood only when Qloo files the room there.
+ */
+export function localEvidence(r: LocalRead, city: string, artist: string): string {
+  const where = r.area ? `around ${r.area}${r.trait ? `, ${r.trait.toLowerCase()}` : ""}` : r.near ? `in the blocks around ${r.near.name} (Qloo names no neighbourhood there)` : "in one cluster of blocks (Qloo names no neighbourhood there)";
+  const lead = `Qloo's street-level heatmap puts ${artist} fans' strongest area in ${city} ${where}`;
+  const m = r.room;
+  if (!m) return `${lead}.`;
+  if (m.sitsIn) return `${lead}; ${m.name} sits in ${r.area}, ${kmFrom(m.km)} the hottest blocks.`;
+  const strong = m.inHot && m.km > HOT_KM ? ", on one of the fans' strongest tiles" : "";
+  const filed = m.area ? ` Qloo files ${m.name} under ${m.area}.` : "";
+  const rule = r.area ? ` Do not write that ${m.name} is in ${r.area}.` : " Name no neighbourhood for the fans.";
+  return `${lead}; ${m.name} is ${kmFrom(m.km)} those blocks${strong}.${filed}${rule}`;
+}

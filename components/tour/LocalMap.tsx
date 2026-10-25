@@ -1,4 +1,4 @@
-import { HOT_KM, localMap } from "@/lib/geo/local";
+import { localMap, localWords, readLocal, type LocalPlace } from "@/lib/geo/local";
 import type { Local, Room } from "@/lib/types";
 import s from "./tour.module.css";
 
@@ -7,17 +7,21 @@ const SIZE = 180;
 /**
  * The city at street level, printed like the poster's map: each blue dot is a Qloo heatmap tile (about 150 m)
  * sized by how strongly the artist's fans over-index there; the booked room is the fire mark, the other rooms
- * these fans go to are small ink marks. A scale line says how wide the square is.
+ * these fans go to are small ink marks. A scale line says how wide the square is. The words are read from the
+ * stop's own tiles and places at render time (lib/geo/local.ts readLocal), so a tour saved under the old naming
+ * rule reads right too: a neighbourhood is bold only when Qloo's places name it, and the room "sits in" it only
+ * when Qloo files the room there.
  */
-export function LocalMap({ local, room, others, city, artist }: { local: Local; room?: Room; others: Room[]; city: string; artist: string }) {
+export function LocalMap({ local, room, others, city, artist, places }: { local: Local; room?: Room; others: Room[]; city: string; artist: string; /** Every Qloo place on the stop (rooms, poster shops, bars): they name the hottest blocks. */ places?: LocalPlace[] }) {
   const placed = [room, ...others].filter((r): r is Room => r?.lat !== undefined && r?.lon !== undefined);
   const { dots, marks, scaleKm } = localMap(local.tiles, placed.map((r) => ({ lat: r.lat!, lon: r.lon! })), SIZE);
   if (!dots.length) return null;
   const booked = room && placed[0] === room ? marks[0] : undefined;
   const rest = marks.slice(booked ? 1 : 0);
-  const hot = local.hot.name ? `${local.hot.name}${local.hot.trait ? ` (${local.hot.trait.toLowerCase()})` : ""}` : "one neighbourhood";
-  const verdict = room && local.inHot !== undefined && local.roomKm !== undefined ? (local.roomKm <= HOT_KM ? `${room.name} sits in it.` : local.inHot ? `${room.name} sits on one of their strongest tiles, ${local.roomKm} km away.` : `${room.name} is ${local.roomKm} km from it.`) : "";
-  const label = `Inside ${city}: ${artist} fans over-index most around ${hot}. ${verdict}`.trim();
+  const read = readLocal(local, room, places ?? [room, ...others].filter((r): r is Room => !!r));
+  const words = localWords(read, city);
+  const aria = localWords(read, city, `${artist} fans`);
+  const label = `${aria.lead}${aria.name ?? ""}${aria.tail} ${aria.verdict}`.trim();
   const bar = Math.max(1, Math.round(scaleKm / 4));
   const barPx = (bar / scaleKm) * SIZE;
   return (
@@ -50,7 +54,10 @@ export function LocalMap({ local, room, others, city, artist }: { local: Local; 
         </text>
       </svg>
       <figcaption>
-        Inside {city}, fans over-index most around <b>{hot}</b>.{verdict ? ` ${verdict}` : ""}
+        {words.lead}
+        {words.name && <b>{words.name}</b>}
+        {words.tail}
+        {words.verdict ? ` ${words.verdict}` : ""}
       </figcaption>
     </figure>
   );

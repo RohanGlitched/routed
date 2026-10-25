@@ -1,7 +1,7 @@
 import "server-only";
-import { HOT_KM, hotSpot, kmBetween, localTiles, placeHeat, type LocalTile } from "../geo/local";
+import { hotSpot, localTiles, localWords, nameHot, NEAR_VOTE_M, readLocal, type HotName, type LocalPlace, type LocalPoint, type LocalTile } from "../geo/local";
 import { marketById } from "../geo/markets";
-import { describeRequest, sharedTastes, wherePopular } from "../qloo";
+import { describeRequest, recommend, sharedTastes, wherePopular } from "../qloo";
 import type { Artist, Local, Opener, Room, Spot } from "../types";
 import { cityArea, type Log } from "./tools";
 
@@ -11,7 +11,10 @@ import { cityArea, type Log } from "./tools";
  * the model.
  */
 
-/** The city's heatmap at street level: a few hundred tiles about 150 m across, strongest kept. */
+/**
+ * The city's heatmap at street level: a few hundred tiles about 150 m across, strongest kept; then one more call
+ * names the hottest tile, from the neighbourhoods Qloo files the places around it under.
+ */
 export async function lookUpLocal(artist: Artist, marketId: string, log: Log): Promise<Local | null> {
   const m = marketById(marketId);
   if (!m) return null;
@@ -25,34 +28,48 @@ export async function lookUpLocal(artist: Artist, marketId: string, log: Log): P
       return null;
     }
     log({ kind: "qloo", text: `Where inside ${m.name} do ${artist.name} fans over-index, street by street?`, result: `${r.tiles.length} tiles about 150 m across`, request: describeRequest(r.request), ms: Date.now() - t });
-    return { tiles, hot };
+    return { tiles, hot: await nameNear(artist, tiles, hot, m.name, log) };
   } catch (e) {
     log({ kind: "qloo", text: `Where inside ${m.name} do ${artist.name} fans over-index, street by street?`, result: (e as Error).message, failed: true });
     return null;
   }
 }
 
-/** Names the hot neighbourhood from the places Qloo filed there, and measures the booked room against it. */
+/**
+ * One Qloo call per city (cached with every other GET): the places these fans go to within NEAR_VOTE_M of the
+ * hottest tile, each filed by Qloo under a neighbourhood, vote on its name (lib/geo/local.ts nameHot). The
+ * locality heatmap (`output.heatmap.boundary=urn:entity:locality`) names it too, but answers 5–6 MB per city
+ * with every state and country polygon and has no neighbourhoods at all for cities like Nashville (probed Oct 25).
+ * If the call fails the tile keeps no mark, and the stop's own places name it later.
+ */
+async function nameNear(artist: Artist, tiles: LocalTile[], hot: LocalPoint, city: string, log: Log): Promise<HotName> {
+  const t = Date.now();
+  const text = `Which neighbourhood holds ${city}'s hottest blocks?`;
+  try {
+    const r = await recommend({ type: "urn:entity:place", signals: [artist.id], near: { ...hot, radiusM: NEAR_VOTE_M }, take: 25 });
+    const places: LocalPlace[] = r.entities.map((e) => ({ id: e.id, name: e.name, lat: e.place?.lat, lon: e.place?.lon, area: e.place?.area, areaTrait: e.tags.find((x) => x.id.startsWith("urn:tag:neighborhood_characteristic:"))?.name }));
+    const v = nameHot(tiles, places);
+    log({ kind: "qloo", text, result: v.name ? `${v.name}: ${v.votes} of the ${v.voters} places nearby with a neighbourhood are filed there` : v.voters ? `No one name: ${v.voters} places nearby, split across neighbourhoods` : `Qloo files no place nearby under a neighbourhood (${places.length} places)`, request: describeRequest(r.request), ms: Date.now() - t });
+    return { ...hot, ...(v.name ? { name: v.name } : {}), ...(v.trait ? { trait: v.trait } : {}), named: "near" };
+  } catch (e) {
+    log({ kind: "qloo", text, result: (e as Error).message, failed: true });
+    return hot;
+  }
+}
+
+/**
+ * Settles the hot neighbourhood's name (the run-time vote's, else a vote of the stop's own places) and measures
+ * the booked room against it. "Sits in" is said only when Qloo files the room under that same neighbourhood.
+ */
 export function placeLocal(local: Local, room: Room | undefined, nearby: Spot[], city: string, log: Log, rooms: Room[] = []): Local {
-  const names = new Map<string, number>();
-  // Places within 2 km of the hottest tile name the neighbourhood: the shops and bars found there, then rooms.
-  const close = (p: { lat?: number; lon?: number }) => p.lat !== undefined && p.lon !== undefined && kmBetween(local.hot, { lat: p.lat, lon: p.lon }) <= 2;
-  for (const s of nearby) if (s.area && (s.lat === undefined || close(s))) names.set(s.area, (names.get(s.area) ?? 0) + 1);
-  if (!names.size) for (const r of rooms) if (r.area && close(r)) names.set(r.area, (names.get(r.area) ?? 0) + 1);
-  const name = [...names.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
-  const trait = nearby.find((s) => s.area === name && s.areaTrait)?.areaTrait;
-  const out: Local = { ...local, hot: { ...local.hot, ...(name ? { name } : {}), ...(trait ? { trait } : {}) } };
-  if (room?.lat !== undefined && room.lon !== undefined) {
-    const h = placeHeat(local.tiles, { lat: room.lat, lon: room.lon });
-    if (h) {
-      out.roomKm = h.km;
-      out.inHot = h.inHot;
-      log({
-        kind: "rule",
-        text: `Is ${room.name} where ${city}'s fans are?`,
-        result: h.km <= HOT_KM ? `Yes: it sits in the fans' strongest area${name ? ` (${name})` : ""}.` : h.inHot ? `It sits on one of the fans' strongest tiles, ${h.km} km from ${name ?? "the hottest one"}.` : `${h.km} km from the fans' strongest area${name ? ` (${name})` : ""}.`,
-      });
-    }
+  const read = readLocal(local, room, [...nearby, ...rooms]);
+  const hot: HotName = local.hot;
+  // The mark rides along untyped until Local.hot declares it (lib/geo/local.ts HotName).
+  const out: Local = { ...local, hot: { lat: hot.lat, lon: hot.lon, ...(hot.named ? { named: hot.named } : {}), ...(read.area ? { name: read.area } : {}), ...(read.trait ? { trait: read.trait } : {}) } };
+  if (read.room) {
+    out.roomKm = read.room.km;
+    out.inHot = read.room.inHot;
+    log({ kind: "rule", text: `Is ${read.room.name} where ${city}'s fans are?`, result: localWords(read, city).verdict });
   }
   return out;
 }

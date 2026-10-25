@@ -215,7 +215,7 @@ Each rule is deterministic, tested, and logged on the call sheet when it changes
 
 ## Inside each city
 
-For every stop Routed asks Qloo for the heatmap of that one city: a few hundred tiles about 150 m across. A rule finds the hottest tile, names the neighbourhood from the shops and bars Qloo files there (with how Qloo characterises it: a creative hub, a historic district), measures the booked room against it, and anchors the poster run on it, so posters go up where the fans live. The map sits under the date on every day sheet, and the pitch can say "the venue sits in Buckman, where the heatmap shows the strongest concentration" because the evidence line does.
+For every stop Routed asks Qloo for the heatmap of that one city: a few hundred tiles about 150 m across. A rule finds the hottest tile, names its neighbourhood by a vote of the places within 600 m of it, each filed by Qloo under a neighbourhood (with how Qloo characterises it: a creative hub, a historic district), measures the booked room against it, and anchors the poster run on it, so posters go up where the fans live. A room "sits in" the fans' neighbourhood only when Qloo files the room under that same name: in Portland, Sierra Ferrell's hottest blocks are Downtown and so is Dante's, so the sheet says "Dante's sits in Downtown, 0.6 km from the hottest blocks"; a room filed elsewhere gets its distance instead ("1.6 km from the fans' hottest blocks (Chinatown); Qloo files it under Northern Liberties"). Where Qloo files no neighbourhood at all (Nashville's places carry none), the sheet says so and points at the nearest place. The map sits under the date on every day sheet.
 
 ## Use it from your own agent
 

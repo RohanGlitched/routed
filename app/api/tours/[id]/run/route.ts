@@ -11,6 +11,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
+/**
+ * Before maxDuration stops the function, the record is saved as failed with a plain message, so a run that ran out
+ * of time never stays "running" (Ghost's European run did, twice, Oct 26). The run itself budgets for 270 s
+ * (lib/agent/run.ts LOOKUPS_MS); this is the net under it.
+ */
+const WATCHDOG_MS = 285_000;
+
 /** Longer than maxDuration, so a run that is still alive can't be claimed twice. */
 const STALE_MS = 6 * 60_000;
 
@@ -62,6 +69,21 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       };
       let release: () => void = () => {};
       finished = new Promise<void>((r) => (release = r));
+      const watchdog = setTimeout(() => {
+        if (acc.status) return;
+        acc.status = "failed";
+        acc.error = "This routing ran out of time before it finished. Run it again: much of what it looked up is remembered, so the next run is quicker.";
+        void save().then(() => {
+          send({ t: "error", message: acc.error! });
+          if (open) {
+            open = false;
+            try {
+              controller.close();
+            } catch {}
+          }
+          release();
+        });
+      }, WATCHDOG_MS - (Date.now() - Date.parse(claimedAt)));
       try {
         let done: Event | null = null;
         for await (const e of runTour(claimed.input, useModel)) {
@@ -74,8 +96,14 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
             continue;
           }
           send(e);
-          if (e.t === "log") acc.log.push(e.line);
-          else if (e.t === "plan") {
+          if (e.t === "log") {
+            acc.log.push(e.line);
+            // The call sheet is saved as it grows too, so a run stopped mid-plan shows how far it got.
+            if (Date.now() - lastSave > 5000) {
+              lastSave = Date.now();
+              await save();
+            }
+          } else if (e.t === "plan") {
             plan = { ...plan, ...e.plan };
             if (Date.now() - lastSave > 2500) {
               lastSave = Date.now();
@@ -86,13 +114,16 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
             acc.error = e.message;
           }
         }
-        if (!acc.status) acc.status = "failed";
+        clearTimeout(watchdog);
+        if (!acc.status || (acc.status === "failed" && done)) acc.status = done ? "done" : "failed";
+        if (done) acc.error = undefined;
         await save();
         if (done) send(done);
         if (open) controller.close();
         release();
         return;
       } catch (err) {
+        clearTimeout(watchdog);
         console.error("[run] tour failed", err);
         acc.status = "failed";
         acc.error = "The routing stopped partway. Run it again in a minute.";

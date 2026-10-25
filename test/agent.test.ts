@@ -669,3 +669,67 @@ test("the hometown objection isn't raised against a fan city inside its radius (
   const out = checkPlan([phl, la].map((c) => ({ city_id: c.marketId, room_id: `${c.marketId}-a`, opener_id: "o", why: "" })), { byId: new Map([phl, bal, la].map((c) => [c.marketId, c])), rooms, shows: 2, from: bal, radius: 150, mustKeep: new Set([phl.marketId, la.marketId]) });
   assert.ok(!out.some((o) => o.rule === "home"), out.map((o) => o.text).join(" | "));
 });
+
+/* ───────────── the run's time budget (Ghost's European run was stopped at 300 s, Oct 26) ───────────── */
+
+function slowRun(o: { delay: number; until: number; draw: number; names?: (m: string, i: number) => string }) {
+  const eight = ["Stockholm", "Oslo", "Copenhagen", "Hamburg", "Berlin", "Amsterdam", "Cologne", "Munich"].map((n, i) => city(n, i + 1));
+  let inFlight = 0, most = 0;
+  const asked: string[] = [];
+  const deps: PlanDeps = {
+    ask: (async () => {
+      throw new Error("fixed plan");
+    }) as Ask,
+    lookUpRooms: async (_a, m) => Array.from({ length: 9 }, (_, i): Room => ({ id: `${m}-${i}`, name: o.names?.(m, i) ?? `${m} Theatre ${i}`, tags: [] })),
+    lookUpOpeners: async () => [],
+    roomCapacity: async (r) => {
+      asked.push(r.name);
+      most = Math.max(most, ++inFlight);
+      await new Promise((ok) => setTimeout(ok, o.delay));
+      inFlight--;
+      return null;
+    },
+  };
+  const lines: Omit<LogLine, "at">[] = [];
+  const st = eight[0]!;
+  const p = planTour({ artist, audience, cities: eight, from: { lat: st.lat, lon: st.lon, label: st.label }, region: "eu", shows: 8, draw: o.draw, useModel: false, log: (l) => lines.push(l), lookupsUntil: Date.now() + o.until }, deps);
+  return { p, lines, asked, most: () => most };
+}
+
+test("40 slow capacity lookups run four at a time a city and stop when the run's time for lookups is up", async () => {
+  const t = Date.now();
+  const { p, lines, asked, most } = slowRun({ delay: 250, until: 400, draw: 3000 });
+  const r = await p;
+  const took = Date.now() - t;
+  assert.equal(r.picks.length, 8);
+  assert.ok(took < 1500, `took ${took} ms for ${asked.length} lookups (serial would be ${asked.length * 250} ms)`);
+  assert.ok(most() >= 4, `at most ${most()} lookups at once`);
+  // Each city: the first room, then one batch of four before the 400 ms budget runs out; the other 32 never start.
+  assert.equal(asked.length, 40, `${asked.length} lookups started of 72 rooms`);
+  assert.ok(lines.some((l) => l.failed && /^The run's time for capacity lookups is used up/.test(l.text)));
+  assert.equal(lines.filter((l) => /time for capacity lookups is used up/.test(l.text)).length, 1, "said once");
+});
+
+test("from 3,000 up, rooms whose name says small (a café, a bar) aren't measured at all", async () => {
+  const { p, asked } = slowRun({ delay: 1, until: 60_000, draw: 8000, names: (m, i) => (i < 3 ? ["Marula Café", "The Dive Bar", "Jazz Club"][i]! : `${m} Arena ${i}`) });
+  await p;
+  assert.ok(asked.length > 0);
+  assert.ok(!asked.some((n) => /Café|Bar|Club/.test(n)), asked.join(", "));
+});
+
+test("a capacity lookup that never answers is left when the run's time for lookups is up", async () => {
+  const eight = ["Stockholm", "Oslo", "Copenhagen", "Hamburg"].map((n, i) => city(n, i + 1));
+  const deps: PlanDeps = {
+    ask: (async () => {
+      throw new Error("fixed plan");
+    }) as Ask,
+    lookUpRooms: async (_a, m) => [{ id: `${m}-0`, name: `${m} Theatre`, tags: [] }],
+    lookUpOpeners: async () => [],
+    roomCapacity: () => new Promise(() => {}),
+  };
+  const t = Date.now();
+  const st = eight[0]!;
+  const r = await planTour({ artist, audience, cities: eight, from: { lat: st.lat, lon: st.lon, label: st.label }, region: "eu", shows: 4, draw: 3000, useModel: false, log: () => {}, lookupsUntil: Date.now() + 300 }, deps);
+  assert.equal(r.picks.length, 4);
+  assert.ok(Date.now() - t < 1500, `took ${Date.now() - t} ms`);
+});

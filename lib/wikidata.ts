@@ -9,7 +9,7 @@ import { kmBetween } from "./geo/local";
  * 30 km of the city when Wikidata has coordinates, or name the city in its description. Clubs Wikidata doesn't
  * know fall through to the web (lib/web.ts).
  *
- * Wikidata rate-limits shared serverless addresses, so requests go through a small gate (two in flight) and a
+ * Wikidata rate-limits shared serverless addresses, so requests go through a small gate (three in flight) and a
  * 429 or 5xx is retried with backoff. A lookup that failed is reported as `undefined` (try again later), never as
  * "not found": a failure stored as "not found" once hid 3Olympia's and O2 Academy Bristol's capacities.
  */
@@ -23,8 +23,10 @@ export type WikiCapacity = { value: number; source: string; quote: string };
 
 const memo = new Map<string, WikiCapacity | null>();
 
-const MAX_IN_FLIGHT = 1;
-const GAP_MS = 250;
+/** Three lookups at a time, starts 200 ms apart (one at a time made an 8-city European run spend 113 s measuring,
+ *  Oct 26); a 429 still backs off and retries below. */
+const MAX_IN_FLIGHT = 3;
+const GAP_MS = 200;
 let inFlight = 0;
 let lastStart = 0;
 const waiting: (() => void)[] = [];

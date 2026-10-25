@@ -7,7 +7,7 @@ import type { AgentCheck, Artist, Audience, Capacity, CityScore, LogLine, Opener
 import { AGE_LABEL, topAge } from "./audience";
 import { fit } from "./evidence";
 import { blendOrder, diffLine, qlooDiff, sizeRanks, type Ranks } from "./qloodiff";
-import { candidatesBySize, chooseRoom, fitWord, pickSupport, roomFit, REDUCED_MAX, reducedHouse, roomCheck, roomGrade, twoNights } from "./rooms";
+import { BIG_ROOM_DRAW, candidatesBySize, chooseRoom, fitWord, pickSupport, roomFit, roomNameOk, sizePrior, REDUCED_MAX, reducedHouse, roomCheck, roomGrade, twoNights } from "./rooms";
 import type { Log } from "./tools";
 import { concertRoom, type LadderRoom } from "./rooms";
 
@@ -72,6 +72,10 @@ export { ANCHOR_RANK };
 export const POOL_SIZE = 60;
 /** Rooms measured per city, after the agent's choice, until one is a close fit for the crowd. */
 export const MEASURE_PER_CITY = 8;
+/** Capacity lookups run this many at a time in a city (each still goes through the Wikidata and web gates). */
+export const MEASURE_BATCH = 4;
+/** How long the measuring before the book call may take. */
+export const PRE_MEASURE_MS = 45_000;
 /** Rooms measured per shortlisted city before the book call, in the order the room rule would measure them. */
 export const PRE_MEASURE = 4;
 /** check_plan's objections go back to the agent at most this many times. */
@@ -667,7 +671,7 @@ export async function populationPlan(o: { cities: CityScore[]; region: RegionId;
 /* ───────────────────────── the agent ───────────────────────── */
 
 export async function planTour(
-  opts: { artist: Artist; audience: Audience; cities: CityScore[]; from: { lat: number; lon: number; label: string }; region?: RegionId; shows: number; draw?: number; useModel: boolean; log: Log; /** Epoch ms by which the agent's model calls must be done (run.ts gives planning a share of the run). */ deadline?: number; /** Least time worth starting a model call with (tests shorten it). */ minCallMs?: number },
+  opts: { artist: Artist; audience: Audience; cities: CityScore[]; from: { lat: number; lon: number; label: string }; region?: RegionId; shows: number; draw?: number; useModel: boolean; log: Log; /** Epoch ms by which the agent's model calls must be done (run.ts gives planning a share of the run). */ deadline?: number; /** Least time worth starting a model call with (tests shorten it). */ minCallMs?: number; /** Epoch ms after which no capacity or Wikidata lookup starts (run.ts: the run's time budget). */ lookupsUntil?: number },
   deps: PlanDeps,
 ): Promise<PlanResult> {
   const { artist, shows, log, draw } = opts;
@@ -715,25 +719,52 @@ export async function planTour(
   };
   /** A room's capacity: Wikidata, then the web (a search costs a credit, so only for rooms about to be booked). */
   const measured = new Set<string>();
-  const measure = async (room: Room, city: string) => {
+  let outOfTime = false;
+  /** Measuring before the book call gets its own share of the run (Ghost's spent 113 s of 242 there, Oct 26); what
+   *  it doesn't reach is measured after booking, for the rooms the agent books. Set when the measuring starts. */
+  let premeasureUntil = Infinity;
+  const inTimeForLookups = () => {
+    if (Date.now() <= (opts.lookupsUntil ?? Infinity)) return true;
+    if (!outOfTime) log({ kind: "rule", text: "The run's time for capacity lookups is used up, so the rooms not yet measured stay unmeasured and their sheets say to ask the room.", failed: true });
+    outOfTime = true;
+    return false;
+  };
+  /**
+   * A lookup that hasn't answered by `until` (the run's budget, or the measuring before booking's own share) is left:
+   * the room stays unmeasured this run, and the answer, when it comes, is remembered for the next (lib/web.ts).
+   */
+  const measure = async (room: Room, city: string, until = opts.lookupsUntil ?? Infinity) => {
     if (room.capacity !== undefined || measured.has(room.id)) return;
+    if (!inTimeForLookups()) return;
     measured.add(room.id);
-    const cap = await deps.roomCapacity(room, city).catch(() => null);
+    const cap = await inTime(deps.roomCapacity(room, city), Math.min(until, opts.lookupsUntil ?? Infinity) - Date.now()).catch(() => null);
     if (cap) room.capacity = cap;
     log({ kind: "web", text: `How many does ${room.name} hold?`, result: cap ? `${n(cap.value)}, per ${host(cap.source)}` : "Not found; ask the room." });
   };
+  /**
+   * Whether a room is worth a lookup at this crowd: from 3,000 up, not a room whose name or tags say small (a café,
+   * a variety theatre's bar, a club) and not one the name rules already rule out. Ghost's 8,000 once spent 10 s a
+   * room measuring Marula Café and CLAP Mataró.
+   */
+  const worthMeasuring = (r: Room) => !draw || draw < BIG_ROOM_DRAW || (sizePrior(r) !== "small" && roomNameOk(r.name, draw));
+  /** Measures rooms in order, MEASURE_BATCH at a time, stopping after the batch that finds a close fit (85–130%):
+   *  a loose fit or one the fans sell out doesn't stop it, so a closer room can still turn up. */
+  const measureInOrder = async (order: Room[], city: string, until?: number) => {
+    for (let i = 0; i < order.length; i += MEASURE_BATCH) {
+      if (until !== undefined && Date.now() > until) break;
+      const batch = order.slice(i, i + MEASURE_BATCH);
+      await Promise.all(batch.map((r) => measure(r, city, until)));
+      if (batch.some((r) => roomFit(r, draw) === "close") || outOfTime) break;
+    }
+  };
   /** Before booking: the rooms the agent named, then the likeliest of the rest in the order the room rule measures
-   *  them, until one is a close fit (85–130%). */
+   *  them, until one is a close fit. */
   const premeasure = async (id: string) => {
     const c = allById.get(id) ?? byId.get(id);
     if (!draw || !c) return;
     const all = rooms.get(id) ?? [];
-    const order = [...all.filter((r) => r.origin === "agent"), ...candidatesBySize(all.filter((r) => r.origin !== "agent"), draw).slice(0, PRE_MEASURE)];
-    for (const r of order) {
-      await measure(r, c.label);
-      // A close fit ends the search; a loose one or one the fans sell out doesn't, so a closer room can still turn up.
-      if (roomFit(r, draw) === "close") break;
-    }
+    const order = [...all.filter((r) => r.origin === "agent"), ...candidatesBySize(all.filter((r) => r.origin !== "agent" && worthMeasuring(r)), draw).slice(0, PRE_MEASURE)];
+    await measureInOrder(order, c.label, premeasureUntil);
   };
 
   /**
@@ -844,6 +875,7 @@ export async function planTour(
       if (deps.findPlace && named.some((c) => c.names.length)) await addNamedRooms(named);
       if (draw) {
         const before = measured.size;
+        premeasureUntil = Date.now() + PRE_MEASURE_MS;
         await Promise.all([...shortlist, ...kept].map(premeasure));
         const fitting = shortlist.filter((id) => (rooms.get(id) ?? []).some((r) => fit(r, draw) === "fits")).length;
         log({ kind: "rule", text: `Measured the likeliest rooms in the ${shortlist.length} shortlisted cities before booking, so the agent books knowing what each holds.`, result: `${measured.size - before} rooms checked; a room confirmed to fit about ${n(draw)} in ${fitting} of ${shortlist.length} cities` });
@@ -1046,19 +1078,15 @@ export async function planTour(
   const pickFor = async (c: Chosen): Promise<{ pick: Pick; bookable: boolean; reason?: string }> => {
       const [r, o] = await Promise.all([getRooms(c.score.marketId), getOpeners(c.score.marketId)]);
       const city = c.score.label;
-      const first = r.find((x) => x.id === c.roomId) ?? r[0];
+      // The agent's room is always measured; without one, the first room worth a lookup at this crowd.
+      const first = r.find((x) => x.id === c.roomId) ?? r.find(worthMeasuring) ?? r[0];
       if (first) await measure(first, city);
-      if (draw && first && roomFit(first, draw) !== "close") {
-        for (const next of candidatesBySize(r.filter((x) => x !== first), draw).slice(0, MEASURE_PER_CITY)) {
-          await measure(next, city);
-          if (roomFit(next, draw) === "close") break;
-        }
-      }
+      if (draw && first && roomFit(first, draw) !== "close") await measureInOrder(candidatesBySize(r.filter((x) => x !== first && worthMeasuring(x)), draw).slice(0, MEASURE_PER_CITY), city);
       let check = roomCheck(r, c.roomId ?? first?.id, draw);
       // No one-night fit on Qloo's list (only two nights, a reduced house, a short room, unmeasured rooms or misfits:
       // Ghost's Paris got a 32,000 arena for 8,000, Milan a 3,250 club): the city's Wikidata rooms of the right size,
       // each found on Qloo first. From a crowd of 1,000 up, or whenever nothing can take the crowd.
-      if (draw && (!check.bookable || (draw >= LADDER_DRAW && !roomFit(check.room!, draw))) && (await addLadderRooms(c.score, r))) check = roomCheck(r, c.roomId ?? first?.id, draw);
+      if (draw && (!check.bookable || (draw >= LADDER_DRAW && !roomFit(check.room!, draw))) && inTimeForLookups() && (await addLadderRooms(c.score, r))) check = roomCheck(r, c.roomId ?? first?.id, draw);
       const room = check.room;
       const nights = room && twoNights(room, draw) && !r.some((x) => fit(x, draw) === "fits") ? 2 : 1;
       if (room && c.roomId && room.id !== c.roomId) {

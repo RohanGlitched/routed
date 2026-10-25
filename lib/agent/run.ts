@@ -34,6 +34,12 @@ const now = () => new Date().toISOString();
  */
 export const RUN_DEADLINE_MS = 240_000;
 export const PLAN_DEADLINE_MS = 160_000;
+/**
+ * The run's time budget (the function is stopped at 300 s; Ghost's 8-city European run was, Oct 26): after 200 s no
+ * capacity or Wikidata lookup starts, the street-level advance and the control group's scoring are skipped, and the
+ * pitches come from the template, so the record is saved well before the run route's watchdog at 280 s.
+ */
+export const LOOKUPS_MS = 200_000;
 
 /**
  * A heatmap this thin can't route a tour (H10): fewer cities than the shows asked for plus two, or fewer than six.
@@ -183,7 +189,7 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
 
     // 3. The agent picks cities, rooms and openers.
     const shows = Math.min(input.shows, cities.length);
-    const picked = await planTour({ artist, audience, cities, from, region, shows, draw, useModel, log, deadline: started + PLAN_DEADLINE_MS }, AGENT);
+    const picked = await planTour({ artist, audience, cities, from, region, shows, draw, useModel, log, deadline: started + PLAN_DEADLINE_MS, lookupsUntil: started + LOOKUPS_MS }, AGENT);
     engine.planned = picked.planned;
     if (picked.model) engine.agent = modelLabel(picked.model);
     if (picked.check) engine.check = picked.check;
@@ -227,7 +233,9 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
     //    over-index in, and whether the booked room is there), the poster run anchored on that neighbourhood,
     //    where fans go after, and what the headliner's and the opener's audiences share.
     const sharedMemo = new Map<string, Promise<string[]>>();
-    await Promise.all(
+    const late = () => Date.now() - started > LOOKUPS_MS;
+    if (late()) log({ kind: "rule", text: "The run is short of time, so the street-level advance (neighbourhoods, poster runs, where fans go after) is left out of this tour book.", failed: true });
+    else await Promise.all(
       stops.map(async (s) => {
         const skip = s.rooms.map((x) => x.id);
         const booked = room(s);
@@ -251,20 +259,22 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
     for (const s of stops) if (s.why) s.why = checkWhy(plan, s, draw, { keepModel: true });
     ch.push({ t: "plan", plan });
 
-    const raw = await guessP;
-    if (raw?.stops.length) {
+    const raw = late() ? null : await guessP;
+    if (late() && useModel) log({ kind: "rule", text: "The run is short of time, so the model-alone comparison is left out.", failed: true });
+    else if (raw?.stops.length) {
       plan.guess = await scoreGuess({ artist, region, cities, stops, raw, log });
       ch.push({ t: "plan", plan });
     } else if (useModel) log({ kind: "model", text: "The model-alone tour didn't come back, so there's no comparison this time.", failed: true });
 
     // 6. A pitch for every room.
     t = Date.now();
-    const pitched = await writePitches(plan, useModel && picked.planned === "model", draw);
+    const pitched = await writePitches(plan, useModel && picked.planned === "model" && !late(), draw);
     if (pitched.model) engine.writer = modelLabel(pitched.model);
     stops.forEach((s, i) => (s.pitch = pitched.pitches[i]));
     const struck = pitched.pitches.reduce((n, p) => n + p.struck.length, 0);
     log({ kind: pitched.model ? "model" : "rule", text: `Drafted ${stops.length} hold requests from each stop's evidence.`, result: struck ? `${struck} figure${struck === 1 ? "" : "s"} not in the evidence ${struck === 1 ? "was" : "were"} struck` : "Every figure checked against the evidence", ms: Date.now() - t });
     ch.push({ t: "plan", plan });
+    usage.seconds = Math.round((Date.now() - started) / 1000);
     ch.push({ t: "done", at: now(), engine });
     ch.close();
   })).catch((e) => {

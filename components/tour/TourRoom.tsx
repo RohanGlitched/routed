@@ -174,7 +174,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
               {rec.engine.writer ? `; pitches by ${rec.engine.writer}` : "; template pitches"}.
               {rec.engine.check ? ` ${checkLine(rec.engine.check)}` : ""}
               {rec.engine.usage
-                ? ` This run cost ${rec.engine.usage.qloo} Qloo requests${rec.engine.usage.qlooCached ? ` (and ${rec.engine.usage.qlooCached} answered from the cache)` : ""}, ${rec.engine.usage.modelCalls} model calls and ${(rec.engine.usage.tokensIn + rec.engine.usage.tokensOut).toLocaleString("en-US")} tokens.`
+                ? ` This run${rec.engine.usage.seconds ? ` took ${rec.engine.usage.seconds} s and` : ""} cost ${rec.engine.usage.qloo} Qloo requests${rec.engine.usage.qlooCached ? ` (and ${rec.engine.usage.qlooCached} answered from the cache)` : ""}, ${rec.engine.usage.modelCalls} model calls and ${(rec.engine.usage.tokensIn + rec.engine.usage.tokensOut).toLocaleString("en-US")} tokens.`
                 : ""}{" "}
               Every Qloo call is listed at the end of the tour book.
             </p>

@@ -258,7 +258,7 @@ export type LogLine = {
 };
 
 /** What a run cost: Qloo requests over the network and from the six-hour cache, model calls and tokens. */
-export type Usage = { qloo: number; qlooCached: number; modelCalls: number; tokensIn: number; tokensOut: number };
+export type Usage = { qloo: number; qlooCached: number; modelCalls: number; tokensIn: number; tokensOut: number; /** Wall-clock seconds the run took (absent before Oct 26). */ seconds?: number };
 
 export type Engine = { agent?: string; writer?: string; planned: "model" | "fixed"; usage?: Usage; check?: AgentCheck };
 

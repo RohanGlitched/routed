@@ -1,0 +1,7432 @@
+{
+ "scored": "2026-10-29T19:10:56.054Z",
+ "protocol": "data/outside2/PROTOCOL-4.md",
+ "script": "scripts/rooms4.ts",
+ "seed": 20261025,
+ "usage": {
+  "qloo": 190,
+  "qlooCap": 320,
+  "modelCalls": 0
+ },
+ "n": 34,
+ "cities": 102,
+ "arms": {
+  "shipped": "Routed's booked room (agent's names, Wikidata ladder, size rule)",
+  "shippedNoChoice": "The same, with no agent choice",
+  "popAffinity": "Qloo's rooms by popularity and fan affinity together",
+  "qloo": "Qloo, the artist's room ranking (round 2)",
+  "popular": "Qloo places by popularity, no artist (round 2)",
+  "ladder": "Biggest fitting room on Wikidata (round 2)",
+  "model": "The model alone (round 2)"
+ },
+ "primary": [
+  {
+   "name": "Routed's booked room vs the model alone, hit@1",
+   "n": 34,
+   "meanA": 0.4509803921568627,
+   "meanB": 0.5392156862745098,
+   "diff": -0.08823529411764708,
+   "lo": -0.19607843137254902,
+   "hi": 0.019607843137254905,
+   "wins": 5,
+   "losses": 12,
+   "ties": 17,
+   "p": 0.143463134765625
+  },
+  {
+   "name": "Routed's room order vs the model alone, hit@3",
+   "n": 34,
+   "meanA": 0.5588235294117646,
+   "meanB": 0.735294117647059,
+   "diff": -0.17647058823529413,
+   "lo": -0.30392156862745096,
+   "hi": -0.058823529411764705,
+   "wins": 5,
+   "losses": 15,
+   "ties": 14,
+   "p": 0.04138946533203125
+  },
+  {
+   "name": "Qloo by popularity and affinity vs Qloo by affinity, hit@3",
+   "n": 34,
+   "meanA": 0.303921568627451,
+   "meanB": 0.28431372549019607,
+   "diff": 0.0196078431372549,
+   "lo": 0,
+   "hi": 0.04901960784313725,
+   "wins": 2,
+   "losses": 0,
+   "ties": 32,
+   "p": 0.5
+  }
+ ],
+ "secondary": [
+  {
+   "name": "Routed's room order vs Qloo's list, hit@3",
+   "n": 34,
+   "meanA": 0.5588235294117646,
+   "meanB": 0.28431372549019607,
+   "diff": 0.2745098039215686,
+   "lo": 0.15686274509803919,
+   "hi": 0.3921568627450981,
+   "wins": 20,
+   "losses": 2,
+   "ties": 12,
+   "p": 0.00012111663818359375
+  },
+  {
+   "name": "Routed's booked room vs Qloo's first room, hit@1",
+   "n": 34,
+   "meanA": 0.4509803921568627,
+   "meanB": 0.15686274509803919,
+   "diff": 0.29411764705882354,
+   "lo": 0.18627450980392157,
+   "hi": 0.4019607843137256,
+   "wins": 19,
+   "losses": 1,
+   "ties": 14,
+   "p": 0.0000400543212890625
+  },
+  {
+   "name": "Routed's booked room with no agent choice vs the model alone, hit@1",
+   "n": 34,
+   "meanA": 0.41176470588235303,
+   "meanB": 0.5392156862745098,
+   "diff": -0.12745098039215688,
+   "lo": -0.23529411764705882,
+   "hi": -0.019607843137254895,
+   "wins": 5,
+   "losses": 16,
+   "ties": 13,
+   "p": 0.02660369873046875
+  },
+  {
+   "name": "Routed's booked room vs the biggest fitting Wikidata room, hit@1",
+   "n": 34,
+   "meanA": 0.4509803921568627,
+   "meanB": 0.2647058823529412,
+   "diff": 0.18627450980392157,
+   "lo": 0.09803921568627451,
+   "hi": 0.28431372549019607,
+   "wins": 16,
+   "losses": 2,
+   "ties": 16,
+   "p": 0.001312255859375
+  },
+  {
+   "name": "Qloo by popularity and affinity vs Qloo popularity only, hit@3",
+   "n": 34,
+   "meanA": 0.303921568627451,
+   "meanB": 0.3431372549019608,
+   "diff": -0.0392156862745098,
+   "lo": -0.0980392156862745,
+   "hi": 0.00980392156862745,
+   "wins": 1,
+   "losses": 4,
+   "ties": 29,
+   "p": 0.375
+  },
+  {
+   "name": "Qloo by popularity and affinity vs the model alone, hit@3",
+   "n": 34,
+   "meanA": 0.303921568627451,
+   "meanB": 0.735294117647059,
+   "diff": -0.43137254901960775,
+   "lo": -0.5490196078431373,
+   "hi": -0.3137254901960785,
+   "wins": 1,
+   "losses": 26,
+   "ties": 7,
+   "p": 4.172325134277344e-7
+  }
+ ],
+ "pooled": {
+  "shipped": {
+   "cities": 102,
+   "hit1": 46,
+   "hit3": 57,
+   "listed": 70
+  },
+  "shippedNoChoice": {
+   "cities": 102,
+   "hit1": 42,
+   "hit3": 55,
+   "listed": 70
+  },
+  "popAffinity": {
+   "cities": 102,
+   "hit1": 19,
+   "hit3": 31,
+   "listed": 39
+  },
+  "qloo": {
+   "cities": 102,
+   "hit1": 16,
+   "hit3": 29,
+   "listed": 39
+  },
+  "popular": {
+   "cities": 102,
+   "hit1": 25,
+   "hit3": 35,
+   "listed": 49
+  },
+  "ladder": {
+   "cities": 102,
+   "hit1": 27,
+   "hit3": 38,
+   "listed": 42
+  },
+  "model": {
+   "cities": 102,
+   "hit1": 55,
+   "hit3": 75,
+   "listed": 78
+  }
+ },
+ "sources": {
+  "cities": 102,
+  "booked": 99,
+  "fromQlooList": 62,
+  "fromAgentNames": 33,
+  "fromLadder": 4,
+  "agentsChoice": 59,
+  "measured": 80,
+  "ladderRun": 34,
+  "notBookable": 20
+ },
+ "rows": [
+  {
+   "artist": "Ledisi",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Good Life Tour",
+   "draw": 2700,
+   "cities": [
+    {
+     "marketId": "dallas-us-tx",
+     "city": "Dallas",
+     "real": [
+      "Music Hall at Fair Park"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Mesquite Arts Center",
+       "South Side Ballroom",
+       "Uptown Theater in Grand Prairie"
+      ],
+      "shippedNoChoice": [
+       "Mesquite Arts Center",
+       "Uptown Theater in Grand Prairie",
+       "Moody Performance Hall"
+      ],
+      "popAffinity": [
+       "Uptown Theater in Grand Prairie",
+       "Moody Performance Hall",
+       "House of Blues"
+      ],
+      "qloo": [
+       "Uptown Theater in Grand Prairie",
+       "The Epic",
+       "Mesquite Arts Center"
+      ],
+      "popular": [
+       "House of Blues",
+       "Dos Equis Pavilion",
+       "The Bomb Factory"
+      ],
+      "ladder": [
+       "Mesquite Arena",
+       "Annette Strauss Square",
+       "Gas Monkey Live"
+      ],
+      "model": [
+       "The Factory in Deep Ellum",
+       "South Side Ballroom",
+       "House of Blues"
+      ]
+     },
+     "booked": {
+      "name": "Mesquite Arts Center",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 5500,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 7,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "real": [
+      "Theater At MGM National Harbor"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Echostage",
+       "The Howard Theatre",
+       "The Fillmore Silver Spring"
+      ],
+      "shippedNoChoice": [
+       "Echostage",
+       "The Howard Theatre",
+       "The Fillmore Silver Spring"
+      ],
+      "popAffinity": [
+       "The Howard Theatre",
+       "The Fillmore Silver Spring",
+       "Dance Place"
+      ],
+      "qloo": [
+       "The Howard Theatre",
+       "Joe's Movement Emporium",
+       "Dance Place"
+      ],
+      "popular": [
+       "The Fillmore Silver Spring",
+       "Echostage",
+       "9:30 Club"
+      ],
+      "ladder": [
+       "The Show Place Arena",
+       "Charles E. Smith Athletic Center",
+       "Bender Arena"
+      ],
+      "model": [
+       "The Anthem",
+       "Echostage",
+       "The Fillmore Silver Spring"
+      ]
+     },
+     "booked": {
+      "name": "Echostage",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": false,
+      "capacity": 3000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 11,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "birmingham-us-al",
+     "city": "Birmingham",
+     "real": [
+      "Alabama Theatre"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 6,
+      "qloo": 9,
+      "popular": 2,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Alabama Theatre",
+       "Bartow Arena",
+       "Alys Robinson Stephens Performing Arts Center"
+      ],
+      "shippedNoChoice": [
+       "Alabama Theatre",
+       "Bartow Arena",
+       "Alys Robinson Stephens Performing Arts Center"
+      ],
+      "popAffinity": [
+       "WORKPLAY",
+       "Iron City Bham",
+       "Bartow Arena"
+      ],
+      "qloo": [
+       "The Fennec - Sports, Live Music, Events",
+       "WORKPLAY",
+       "Alys Robinson Stephens Performing Arts Center"
+      ],
+      "popular": [
+       "Iron City Bham",
+       "Alabama Theatre",
+       "Saturn"
+      ],
+      "ladder": [
+       "Bill Harris Arena",
+       "Bartow Arena",
+       "Oak Mountain Amphitheatre"
+      ],
+      "model": [
+       "Iron City",
+       "Avondale Brewing Company",
+       "Zydeco"
+      ]
+     },
+     "booked": {
+      "name": "Alabama Theatre",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2176,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 10,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0
+   }
+  },
+  {
+   "artist": "The 1975",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Still... At Their Very Best",
+   "draw": 18400,
+   "cities": [
+    {
+     "marketId": "chicago-us-il",
+     "city": "Chicago",
+     "real": [
+      "Allstate Arena"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 2,
+      "popAffinity": 3,
+      "qloo": 5,
+      "popular": 3,
+      "ladder": 2,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "United Center",
+       "Allstate Arena",
+       "Credit Union 1 Arena"
+      ],
+      "shippedNoChoice": [
+       "United Center",
+       "Allstate Arena",
+       "Credit Union 1 Arena"
+      ],
+      "popAffinity": [
+       "Credit Union 1 Arena",
+       "Wintrust Arena",
+       "Allstate Arena"
+      ],
+      "qloo": [
+       "Credit Union 1 Arena",
+       "Wintrust Arena",
+       "Petrillo Music Shell"
+      ],
+      "popular": [
+       "Wintrust Arena",
+       "Credit Union 1 Arena",
+       "Allstate Arena"
+      ],
+      "ladder": [
+       "United Center",
+       "Allstate Arena",
+       "Wintrust Arena"
+      ],
+      "model": [
+       "United Center",
+       "Allstate Arena",
+       "Credit Union 1 Arena"
+      ]
+     },
+     "booked": {
+      "name": "United Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 23500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 9,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "st-louis-us-mo",
+     "city": "St. Louis",
+     "real": [
+      "Enterprise Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Enterprise Center",
+       "Chaifetz Arena"
+      ],
+      "shippedNoChoice": [
+       "Enterprise Center",
+       "Chaifetz Arena"
+      ],
+      "popAffinity": [
+       "Chaifetz Arena"
+      ],
+      "qloo": [
+       "Chaifetz Arena"
+      ],
+      "popular": [
+       "Chaifetz Arena",
+       "Jefferson Barracks Veterans Memorial Amphitheater"
+      ],
+      "ladder": [
+       "Enterprise Center",
+       "St. Louis Municipal Opera Theatre",
+       "Chaifetz Arena"
+      ],
+      "model": [
+       "Enterprise Center",
+       "Chaifetz Arena",
+       "The Dome at America's Center"
+      ]
+     },
+     "booked": {
+      "name": "Enterprise Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 18400,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "vancouver-ca",
+     "city": "Vancouver",
+     "real": [
+      "Rogers Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 2,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Rogers Arena",
+       "Pacific Coliseum",
+       "Moody Park Arena"
+      ],
+      "shippedNoChoice": [
+       "Pacific Coliseum",
+       "Rogers Arena",
+       "Moody Park Arena"
+      ],
+      "popAffinity": [
+       "Malkin Bowl",
+       "PNE Forum",
+       "Moody Park Arena"
+      ],
+      "qloo": [
+       "Malkin Bowl",
+       "PNE Forum",
+       "Moody Park Arena"
+      ],
+      "popular": [
+       "PNE Forum",
+       "Malkin Bowl",
+       "Poirier Sport & Leisure Complex"
+      ],
+      "ladder": [
+       "Rogers Arena",
+       "Pacific Coliseum",
+       "Richmond Olympic Oval"
+      ],
+      "model": [
+       "Rogers Arena",
+       "Pacific Coliseum",
+       "Thunderbird Arena"
+      ]
+     },
+     "booked": {
+      "name": "Rogers Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 18422,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 6,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0.6666666666666666,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0,
+    "popular": 0.3333333333333333,
+    "ladder": 1,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Omar Apollo",
+   "set": "held-out",
+   "region": "na",
+   "tour": "God Said No World Tour",
+   "draw": 8500,
+   "cities": [
+    {
+     "marketId": "chicago-us-il",
+     "city": "Chicago",
+     "real": [
+      "Huntington Bank Pavilion"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 18,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Credit Union 1 Arena",
+       "Wintrust Arena",
+       "The Chicago Theatre"
+      ],
+      "shippedNoChoice": [
+       "Credit Union 1 Arena",
+       "Wintrust Arena",
+       "The Chicago Theatre"
+      ],
+      "popAffinity": [
+       "The Second City",
+       "Cadillac Palace Theatre",
+       "The Riviera Theatre"
+      ],
+      "qloo": [
+       "The Second City",
+       "OuterSpace Studios",
+       "The Theatre School at DePaul University"
+      ],
+      "popular": [
+       "The Chicago Theatre",
+       "House of Blues Chicago",
+       "CIBC Theatre"
+      ],
+      "ladder": [
+       "Allstate Arena",
+       "Wintrust Arena",
+       "Credit Union 1 Arena"
+      ],
+      "model": [
+       "Byline Bank Aragon Ballroom",
+       "Chicago Theatre",
+       "The Salt Shed"
+      ]
+     },
+     "booked": {
+      "name": "Credit Union 1 Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 9500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 20,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "dallas-us-tx",
+     "city": "Dallas",
+     "real": [
+      "The Pavilion at Toyota Music Factory"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 5,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "American Airlines Center",
+       "The Pavilion At Toyota Music Factory",
+       "South Side Music Hall"
+      ],
+      "shippedNoChoice": [
+       "American Airlines Center",
+       "South Side Music Hall",
+       "Dos Equis Pavilion"
+      ],
+      "popAffinity": [
+       "House of Blues",
+       "American Airlines Center",
+       "Granada Theater"
+      ],
+      "qloo": [
+       "House of Blues",
+       "Granada Theater",
+       "South Side Music Hall"
+      ],
+      "popular": [
+       "American Airlines Center",
+       "House of Blues",
+       "Dos Equis Pavilion"
+      ],
+      "ladder": [
+       "American Airlines Center",
+       "Mesquite Arena",
+       "Annette Strauss Square"
+      ],
+      "model": [
+       "The Pavilion at Toyota Music Factory",
+       "South Side Ballroom",
+       "The Bomb Factory"
+      ]
+     },
+     "booked": {
+      "name": "American Airlines Center",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 19200,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 17,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "miami-us-fl",
+     "city": "Miami",
+     "real": [
+      "FPL Solar Amphitheater"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Kaseya Center",
+       "The Fillmore Miami Beach",
+       "Maurice Gusman Concert Hall"
+      ],
+      "shippedNoChoice": [
+       "Kaseya Center",
+       "Maurice Gusman Concert Hall",
+       "Olympia Theater"
+      ],
+      "popAffinity": [
+       "Kaseya Center",
+       "Faena Theater",
+       "Olympia Theater"
+      ],
+      "qloo": [
+       "Kaseya Center",
+       "Maurice Gusman Concert Hall",
+       "Olympia Theater"
+      ],
+      "popular": [
+       "Kaseya Center",
+       "Faena Theater",
+       "Adrienne Arsht Center for the Performing Arts of Miami-Dade County"
+      ],
+      "ladder": [
+       "Kaseya Center",
+       "Miami-Dade County Auditorium",
+       "New World Center"
+      ],
+      "model": [
+       "The Fillmore Miami Beach",
+       "Oasis Wynwood",
+       "The Ground"
+      ]
+     },
+     "booked": {
+      "name": "Kaseya Center",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 16500,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 15,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   }
+  },
+  {
+   "artist": "Flo",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Access All Areas Tour (Flo)",
+   "draw": 2300,
+   "cities": [
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "real": [
+      "Brooklyn Paramount Theater"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "New York City Center",
+       "Lunt-Fontanne Theatre",
+       "Al Hirschfeld Theatre"
+      ],
+      "shippedNoChoice": [
+       "New York City Center",
+       "Lunt-Fontanne Theatre",
+       "Al Hirschfeld Theatre"
+      ],
+      "popAffinity": [
+       "Gershwin Theatre",
+       "Pier 36 NYC",
+       "New York City Center"
+      ],
+      "qloo": [
+       "Ambassador Theatre",
+       "Gershwin Theatre",
+       "Pier 36 NYC"
+      ],
+      "popular": [
+       "Infosys Theater at Madison Square Garden",
+       "Jazz At Lincoln Center",
+       "Webster Hall"
+      ],
+      "ladder": [
+       "Infosys Theater",
+       "Four Seasons Arena",
+       "Rose Hill Gymnasium"
+      ],
+      "model": [
+       "Brooklyn Steel",
+       "Terminal 5",
+       "The Rooftop at Pier 17"
+      ]
+     },
+     "booked": {
+      "name": "New York City Center",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2750,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 15,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "vancouver-ca",
+     "city": "Vancouver",
+     "real": [
+      "Commodore Ballroom"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 1,
+      "ladder": null,
+      "model": 4
+     },
+     "top": {
+      "shipped": [
+       "Orpheum",
+       "Queen Elizabeth Theatre",
+       "Vogue Theatre"
+      ],
+      "shippedNoChoice": [
+       "Orpheum",
+       "Queen Elizabeth Theatre",
+       "Massey Theatre"
+      ],
+      "popAffinity": [
+       "Orpheum",
+       "Vogue Theatre",
+       "The Chan Centre for the Performing Arts"
+      ],
+      "qloo": [
+       "Royal Palace Banquet Hall",
+       "Anvil Centre",
+       "Orpheum"
+      ],
+      "popular": [
+       "Commodore Ballroom",
+       "Vogue Theatre",
+       "Orpheum"
+      ],
+      "ladder": [
+       "Vancouver Forum",
+       "Queen Elizabeth Theatre (Auditorium)",
+       "Orpheum Auditorium"
+      ],
+      "model": [
+       "The Centre in Vancouver for Performing Arts",
+       "Vogue Theatre",
+       "The Imperial Vancouver"
+      ]
+     },
+     "booked": {
+      "name": "Orpheum",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2672,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 15,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 1
+    },
+    {
+     "marketId": "boston-us-ma",
+     "city": "Boston",
+     "real": [
+      "Citizens House of Blues Boston"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 1,
+      "ladder": null,
+      "model": 3
+     },
+     "top": {
+      "shipped": [
+       "Orpheum Theatre",
+       "Leader Bank Pavilion",
+       "Strand Theatre"
+      ],
+      "shippedNoChoice": [
+       "Orpheum Theatre",
+       "Leader Bank Pavilion",
+       "Strand Theatre"
+      ],
+      "popAffinity": [
+       "Big Night Live",
+       "Orpheum Theatre",
+       "Regent Theatre"
+      ],
+      "qloo": [
+       "Strand Theatre",
+       "The Norwood Theatre",
+       "Big Night Live"
+      ],
+      "popular": [
+       "Citizens House of Blues Boston",
+       "Paradise Rock Club",
+       "Leader Bank Pavilion"
+      ],
+      "ladder": [
+       "Leader Bank Pavilion",
+       "Matthews Arena",
+       "Aleppo Shrine Auditorium"
+      ],
+      "model": [
+       "MGM Music Hall at Fenway",
+       "Roadrunner",
+       "House of Blues"
+      ]
+     },
+     "booked": {
+      "name": "Orpheum Theatre",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2700,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 14,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0.6666666666666666,
+    "ladder": 0,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0.6666666666666666,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   }
+  },
+  {
+   "artist": "Queen + Adam Lambert",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Rhapsody Tour",
+   "draw": 19100,
+   "cities": [
+    {
+     "marketId": "boston-us-ma",
+     "city": "Boston",
+     "real": [
+      "TD Garden"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "TD Garden",
+       "Matthews Arena - Originally The Boston Arena",
+       "Stoneham Arena"
+      ],
+      "shippedNoChoice": [
+       "TD Garden",
+       "Matthews Arena - Originally The Boston Arena",
+       "Stoneham Arena"
+      ],
+      "popAffinity": [
+       "Leader Bank Pavilion",
+       "Walter Brown Arena",
+       "Matthews Arena - Originally The Boston Arena"
+      ],
+      "qloo": [
+       "Leader Bank Pavilion",
+       "Walter Brown Arena",
+       "Conte Forum"
+      ],
+      "popular": [
+       "Leader Bank Pavilion",
+       "Matthews Arena - Originally The Boston Arena",
+       "Walter Brown Arena"
+      ],
+      "ladder": [
+       "TD Garden",
+       "The Stage at Suffolk Downs",
+       "Agganis Arena"
+      ],
+      "model": [
+       "TD Garden",
+       "Xfinity Center",
+       "MGM Music Hall at Fenway"
+      ]
+     },
+     "booked": {
+      "name": "TD Garden",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 18624,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "austin-us-tx",
+     "city": "Austin",
+     "real": [
+      "Circuit of the Americas"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Moody Amphitheater",
+       "Moody Center",
+       "Germania Insurance Amphitheater"
+      ],
+      "shippedNoChoice": [
+       "Moody Amphitheater",
+       "Moody Center",
+       "Germania Insurance Amphitheater"
+      ],
+      "popAffinity": [
+       "Gregory Gym",
+       "Moody Amphitheater",
+       "Germania Insurance Amphitheater"
+      ],
+      "qloo": [
+       "Moody Amphitheater",
+       "Gregory Gym",
+       "Moody Center"
+      ],
+      "popular": [
+       "Gregory Gym",
+       "Germania Insurance Amphitheater",
+       "Moody Amphitheater"
+      ],
+      "ladder": [
+       "Moody Center",
+       "Gregory Gymnasium",
+       "Ritz"
+      ],
+      "model": [
+       "Moody Center",
+       "ACL Live at Moody Theater",
+       "H-E-B Center at Cedar Park"
+      ]
+     },
+     "booked": {
+      "name": "Moody Amphitheater",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 15000,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 5,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "real": [
+      "The Forum",
+      "BMO Stadium"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 2,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Kia Forum",
+       "Pauley Pavilion",
+       "Riot Games Arena"
+      ],
+      "shippedNoChoice": [
+       "Kia Forum",
+       "Pauley Pavilion",
+       "Riot Games Arena"
+      ],
+      "popAffinity": [
+       "Hollywood Bowl",
+       "Lucha Underground Arena",
+       "Pauley Pavilion"
+      ],
+      "qloo": [
+       "Lucha Underground Arena",
+       "Hollywood Bowl",
+       "The Greek Theatre"
+      ],
+      "popular": [
+       "Hollywood Bowl",
+       "Pauley Pavilion",
+       "Galen Center"
+      ],
+      "ladder": [
+       "Crypto.com Arena",
+       "Kia Forum",
+       "Hollywood Bowl"
+      ],
+      "model": [
+       "Kia Forum",
+       "Intuit Dome",
+       "Hollywood Bowl"
+      ]
+     },
+     "booked": {
+      "name": "Kia Forum",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 17500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0.3333333333333333,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0.6666666666666666,
+    "model": 0.6666666666666666
+   }
+  },
+  {
+   "artist": "Queens of the Stone Age",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Catacombs Tour",
+   "draw": 2800,
+   "cities": [
+    {
+     "marketId": "toronto-ca",
+     "city": "Toronto",
+     "real": [
+      "Massey Hall"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 3,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Massey Hall",
+       "Danforth Music Hall",
+       "Queen Elizabeth Theatre"
+      ],
+      "shippedNoChoice": [
+       "Massey Hall",
+       "Danforth Music Hall",
+       "Queen Elizabeth Theatre"
+      ],
+      "popAffinity": [
+       "Danforth Music Hall",
+       "The Mod Club",
+       "Lee's Palace"
+      ],
+      "qloo": [
+       "Velvet Underground",
+       "Lee's Palace",
+       "The Mod Club"
+      ],
+      "popular": [
+       "RBC Amphitheatre",
+       "Rebel",
+       "Danforth Music Hall"
+      ],
+      "ladder": [
+       "Mississauga Sports and Entertainment Centre",
+       "CAA Centre",
+       "Massey Hall"
+      ],
+      "model": [
+       "History",
+       "The Danforth Music Hall",
+       "The Phoenix Concert Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Massey Hall",
+      "from": "the Wikidata ladder, found on Qloo",
+      "agentsChoice": false,
+      "capacity": 2752,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 16,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 1
+    },
+    {
+     "marketId": "santa-barbara-us-ca",
+     "city": "Santa Barbara",
+     "real": [
+      "Arlington Theatre"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 5,
+      "qloo": 5,
+      "popular": 6,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Arlington Theatre",
+       "Santa Barbara Bowl",
+       "The Granada Theatre"
+      ],
+      "shippedNoChoice": [
+       "Arlington Theatre",
+       "Santa Barbara Bowl",
+       "The Granada Theatre"
+      ],
+      "popAffinity": [
+       "Santa Barbara Bowl",
+       "Lobero Theatre",
+       "The Granada Theatre"
+      ],
+      "qloo": [
+       "Lobero Theatre",
+       "Santa Barbara Bowl",
+       "The Granada Theatre"
+      ],
+      "popular": [
+       "Santa Barbara Bowl",
+       "The Granada Theatre",
+       "Lobero Theatre"
+      ],
+      "ladder": [
+       "Santa Barbara Bowl",
+       "Lobero Theatre"
+      ],
+      "model": [
+       "Santa Barbara Bowl",
+       "Arlington Theatre",
+       "The Granada Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Arlington Theatre",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2018,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 5,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "palm-springs-us-ca",
+     "city": "Palm Springs",
+     "real": [
+      "Joshua Tree Retreat Center",
+      "Agua Caliente Casino"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "McCallum Theatre"
+      ],
+      "shippedNoChoice": [
+       "McCallum Theatre"
+      ],
+      "popAffinity": [
+       "McCallum Theatre"
+      ],
+      "qloo": [
+       "McCallum Theatre"
+      ],
+      "popular": [
+       "McCallum Theatre"
+      ],
+      "ladder": [
+       "McCallum Theatre",
+       "Acrisure Arena"
+      ],
+      "model": [
+       "The Show at Agua Caliente",
+       "McCallum Theatre",
+       "Richards Center for the Arts"
+      ]
+     },
+     "booked": {
+      "name": "McCallum Theatre",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 1127,
+      "fit": "too small"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 1,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0.3333333333333333,
+    "model": 0.3333333333333333
+   }
+  },
+  {
+   "artist": "Clairo",
+   "set": "bench",
+   "region": "na",
+   "tour": "Charm Tour (2024 North American leg)",
+   "draw": 3500,
+   "cities": [
+    {
+     "marketId": "san-diego-us-ca",
+     "city": "San Diego",
+     "real": [
+      "The Rady Shell at Jacobs Park"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "San Diego Civic Theatre",
+       "Viejas Arena",
+       "Spreckels Theatre"
+      ],
+      "shippedNoChoice": [
+       "San Diego Civic Theatre",
+       "Viejas Arena",
+       "Spreckels Theatre"
+      ],
+      "popAffinity": [
+       "Brick By Brick",
+       "San Diego Civic Theatre",
+       "Viejas Arena"
+      ],
+      "qloo": [
+       "Spreckels Theatre",
+       "Brick By Brick",
+       "Teatro Cala-Fórnix"
+      ],
+      "popular": [
+       "San Diego Civic Theatre",
+       "Music Box",
+       "SOMA SAN DIEGO"
+      ],
+      "ladder": [
+       "Auditorio Fausto Gutierrez Moreno",
+       "Peterson Gym",
+       "San Diego Civic Theatre"
+      ],
+      "model": [
+       "The Observatory North Park",
+       "SOMA San Diego",
+       "The Magnolia"
+      ]
+     },
+     "booked": {
+      "name": "San Diego Civic Theatre",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2967,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 16,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "real": [
+      "The Anthem"
+     ],
+     "ranks": {
+      "shipped": 8,
+      "shippedNoChoice": 16,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 13,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "CareFirst Arena",
+       "The Howard Theatre",
+       "Lincoln Theatre"
+      ],
+      "shippedNoChoice": [
+       "CareFirst Arena",
+       "The Howard Theatre",
+       "Lincoln Theatre"
+      ],
+      "popAffinity": [
+       "Capital One Arena",
+       "Echostage",
+       "Flash"
+      ],
+      "qloo": [
+       "Flash",
+       "Capital One Arena",
+       "Echostage"
+      ],
+      "popular": [
+       "Capital One Arena",
+       "The Fillmore Silver Spring",
+       "Echostage"
+      ],
+      "ladder": [
+       "Wolf Trap National Park for the Performing Arts",
+       "The Show Place Arena",
+       "Charles E. Smith Athletic Center"
+      ],
+      "model": [
+       "The Anthem",
+       "Echostage",
+       "9:30 Club"
+      ]
+     },
+     "booked": {
+      "name": "CareFirst Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 4200,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 18,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "charlotte-us-nc",
+     "city": "Charlotte",
+     "real": [
+      "Ovens Auditorium"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 12,
+      "ladder": 2,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Ovens Auditorium",
+       "Bojangles Coliseum",
+       "The Fillmore Charlotte"
+      ],
+      "shippedNoChoice": [
+       "Ovens Auditorium",
+       "Bojangles Coliseum",
+       "Skyla Credit Union Amphitheatre"
+      ],
+      "popAffinity": [
+       "The Underground",
+       "Skyla Credit Union Amphitheatre",
+       "The Fillmore Charlotte"
+      ],
+      "qloo": [
+       "The Underground",
+       "Skyla Credit Union Amphitheatre",
+       "World"
+      ],
+      "popular": [
+       "The Fillmore Charlotte",
+       "The Underground",
+       "Skyla Credit Union Amphitheatre"
+      ],
+      "ladder": [
+       "Grady Cole Center",
+       "Ovens Auditorium",
+       "Dale F. Halton Arena"
+      ],
+      "model": [
+       "The Fillmore Charlotte",
+       "The Underground",
+       "Neighborhood Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Ovens Auditorium",
+      "from": "the Wikidata ladder, found on Qloo",
+      "agentsChoice": false,
+      "capacity": 2460,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 16,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 1
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0.3333333333333333,
+    "model": 0.3333333333333333
+   }
+  },
+  {
+   "artist": "Doja Cat",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Tour Ma Vie World Tour",
+   "draw": 19000,
+   "cities": [
+    {
+     "marketId": "tampa-us-fl",
+     "city": "Tampa",
+     "real": [
+      "Benchmark International Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Benchmark International Arena",
+       "Yuengling Center"
+      ],
+      "shippedNoChoice": [
+       "Benchmark International Arena",
+       "Yuengling Center"
+      ],
+      "popAffinity": [
+       "Benchmark International Arena"
+      ],
+      "qloo": [
+       "Benchmark International Arena"
+      ],
+      "popular": [
+       "Benchmark International Arena"
+      ],
+      "ladder": [
+       "Yuengling Center",
+       "Mahaffey Theater",
+       "Jannus Live"
+      ],
+      "model": [
+       "Amalie Arena",
+       "Yuengling Center",
+       "MidFlorida Credit Union Amphitheatre"
+      ]
+     },
+     "booked": {
+      "name": "Benchmark International Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 19204,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "las-vegas-us-nv",
+     "city": "Las Vegas",
+     "real": [
+      "T-Mobile Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "T-Mobile Arena",
+       "MGM Grand",
+       "Orleans Arena"
+      ],
+      "shippedNoChoice": [
+       "T-Mobile Arena",
+       "MGM Grand",
+       "Orleans Arena"
+      ],
+      "popAffinity": [
+       "Orleans Arena",
+       "South Point Arena & Equestrian Center",
+       "Cox Pavilion"
+      ],
+      "qloo": [
+       "Orleans Arena",
+       "Cox Pavilion",
+       "South Point Arena & Equestrian Center"
+      ],
+      "popular": [
+       "Orleans Arena",
+       "South Point Arena & Equestrian Center",
+       "City National Arena"
+      ],
+      "ladder": [
+       "T-Mobile Arena",
+       "Sphere",
+       "Silver State Arena"
+      ],
+      "model": [
+       "T-Mobile Arena",
+       "MGM Grand Garden Arena",
+       "Michelob Ultra Arena"
+      ]
+     },
+     "booked": {
+      "name": "T-Mobile Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 20000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "san-antonio-us-tx",
+     "city": "San Antonio",
+     "real": [
+      "Frost Bank Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Frost Bank Center",
+       "Lila Cockrell Theatre",
+       "Sunken Garden Theater"
+      ],
+      "shippedNoChoice": [
+       "Frost Bank Center",
+       "Lila Cockrell Theatre",
+       "Sunken Garden Theater"
+      ],
+      "popAffinity": [
+       "Lila Cockrell Theatre",
+       "Sunken Garden Theater",
+       "Bexar County Community Arenas"
+      ],
+      "qloo": [
+       "Lila Cockrell Theatre",
+       "Sunken Garden Theater",
+       "Bexar County Community Arenas"
+      ],
+      "popular": [
+       "Lila Cockrell Theatre",
+       "Sunken Garden Theater",
+       "Bexar County Community Arenas"
+      ],
+      "ladder": [
+       "Frost Bank Center",
+       "Freeman Coliseum",
+       "McDermott Convocation Center"
+      ],
+      "model": [
+       "Frost Bank Center",
+       "AT&T Center",
+       "Freeman Coliseum"
+      ]
+     },
+     "booked": {
+      "name": "Frost Bank Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 18581,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 4,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0.6666666666666666,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0.6666666666666666,
+    "model": 0.6666666666666666
+   }
+  },
+  {
+   "artist": "Depeche Mode",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "Memento Mori World Tour",
+   "draw": 23000,
+   "cities": [
+    {
+     "marketId": "turin-it",
+     "city": "Turin",
+     "real": [
+      "Pala Alpitour"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Duca's Guest House"
+      ],
+      "shippedNoChoice": [
+       "Duca's Guest House"
+      ],
+      "popAffinity": [
+       "Duca's Guest House"
+      ],
+      "qloo": [
+       "Duca's Guest House"
+      ],
+      "popular": [
+       "Duca's Guest House"
+      ],
+      "ladder": [
+       "Torino Palasport Olimpico",
+       "PalaTorino",
+       "Torino Palavela"
+      ],
+      "model": [
+       "Stadio Olimpico Grande Torino",
+       "Pala Alpitour",
+       "PalaRuffini"
+      ]
+     },
+     "booked": {
+      "name": "Duca's Guest House",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 1,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "barcelona-es",
+     "city": "Barcelona",
+     "real": [
+      "Palau Sant Jordi"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Palau Sant Jordi"
+      ],
+      "shippedNoChoice": [
+       "Palau Sant Jordi"
+      ],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [],
+      "ladder": [
+       "Palau Sant Jordi",
+       "Palau Municipal d'Esports de Badalona",
+       "Palau Blaugrana"
+      ],
+      "model": [
+       "Estadi Olímpic Lluís Companys",
+       "Palau Sant Jordi",
+       "WiZink Center"
+      ]
+     },
+     "booked": {
+      "name": "Palau Sant Jordi",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 17960,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 1,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "lodz-pl",
+     "city": "Łódź",
+     "real": [
+      "Atlas Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Atlas Arena"
+      ],
+      "shippedNoChoice": [
+       "Atlas Arena"
+      ],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [
+       "Powiatowa Hala Sportowa przy II Liceum Ogólnokształcącym im. Królowej Jadwigi w Pabianicach"
+      ],
+      "ladder": [
+       "Arena Łódź",
+       "Hala MOSiR"
+      ],
+      "model": [
+       "Stadion Miejski",
+       "Atlas Arena",
+       "Łódź Sport Arena"
+      ]
+     },
+     "booked": {
+      "name": "Atlas Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 1,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 1,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 1,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Billy Joel",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Billy Joel in Concert",
+   "draw": 37900,
+   "cities": [
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "real": [
+      "Hollywood Bowl",
+      "Dodger Stadium",
+      "SoFi Stadium"
+     ],
+     "ranks": {
+      "shipped": 4,
+      "shippedNoChoice": 4,
+      "popAffinity": 3,
+      "qloo": 2,
+      "popular": 4,
+      "ladder": 3,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Crypto.com Arena",
+       "BMO Stadium",
+       "Kia Forum"
+      ],
+      "shippedNoChoice": [
+       "Crypto.com Arena",
+       "BMO Stadium",
+       "Kia Forum"
+      ],
+      "popAffinity": [
+       "Crypto.com Arena",
+       "Kia Forum",
+       "SoFi Stadium"
+      ],
+      "qloo": [
+       "LightSpace Studios West | Event Venue | Film Productions",
+       "SoFi Stadium",
+       "Crypto.com Arena"
+      ],
+      "popular": [
+       "Crypto.com Arena",
+       "Kia Forum",
+       "Rose Bowl Stadium"
+      ],
+      "ladder": [
+       "Crypto.com Arena",
+       "Kia Forum",
+       "Hollywood Bowl"
+      ],
+      "model": [
+       "SoFi Stadium",
+       "Rose Bowl",
+       "Los Angeles Memorial Coliseum"
+      ]
+     },
+     "booked": {
+      "name": "Crypto.com Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 19060,
+      "fit": "too small"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 18,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "winston-salem-us-nc",
+     "city": "Winston-Salem",
+     "real": [
+      "BB&T Field"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Lawrence Joel Veterans Memorial Coliseum",
+       "Deaton-Thompson Stadium"
+      ],
+      "shippedNoChoice": [
+       "Lawrence Joel Veterans Memorial Coliseum",
+       "Deaton-Thompson Stadium"
+      ],
+      "popAffinity": [
+       "Deaton-Thompson Stadium",
+       "Lawrence Joel Veterans Memorial Coliseum"
+      ],
+      "qloo": [
+       "Deaton-Thompson Stadium",
+       "Lawrence Joel Veterans Memorial Coliseum"
+      ],
+      "popular": [
+       "Lawrence Joel Veterans Memorial Coliseum",
+       "Deaton-Thompson Stadium",
+       "Winston-Salem State University Football Field"
+      ],
+      "ladder": [
+       "Qubein Center",
+       "Reynolds Gymnasium"
+      ],
+      "model": [
+       "Truist Field",
+       "Lawrence Joel Veterans Memorial Coliseum",
+       "Bowman Gray Stadium"
+      ]
+     },
+     "booked": {
+      "name": "Lawrence Joel Veterans Memorial Coliseum",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "tampa-us-fl",
+     "city": "Tampa",
+     "real": [
+      "Tampa Bay Times Forum",
+      "Raymond James Stadium"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Raymond James Stadium",
+       "Benchmark International Arena",
+       "MIDFLORIDA Credit Union Amphitheatre"
+      ],
+      "shippedNoChoice": [
+       "Raymond James Stadium",
+       "Benchmark International Arena",
+       "MIDFLORIDA Credit Union Amphitheatre"
+      ],
+      "popAffinity": [
+       "Raymond James Stadium",
+       "MIDFLORIDA Credit Union Amphitheatre",
+       "Benchmark International Arena"
+      ],
+      "qloo": [
+       "Raymond James Stadium",
+       "MIDFLORIDA Credit Union Amphitheatre",
+       "USF School of Music"
+      ],
+      "popular": [
+       "Raymond James Stadium",
+       "MIDFLORIDA Credit Union Amphitheatre",
+       "Benchmark International Arena"
+      ],
+      "ladder": [
+       "Yuengling Center",
+       "Mahaffey Theater",
+       "Jannus Live"
+      ],
+      "model": [
+       "Raymond James Stadium",
+       "Amalie Arena",
+       "Yuengling Center"
+      ]
+     },
+     "booked": {
+      "name": "Raymond James Stadium",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 65890,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.3333333333333333,
+    "ladder": 0.3333333333333333,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Sugababes",
+   "set": "held-out",
+   "region": "uk",
+   "tour": "Sugababes '25 Tour",
+   "draw": 13000,
+   "cities": [
+    {
+     "marketId": "glasgow-gb",
+     "city": "Glasgow",
+     "real": [
+      "OVO Hydro"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "OVO Hydro",
+       "Braehead Arena"
+      ],
+      "shippedNoChoice": [
+       "OVO Hydro",
+       "Braehead Arena"
+      ],
+      "popAffinity": [
+       "OVO Hydro",
+       "Braehead Arena"
+      ],
+      "qloo": [
+       "OVO Hydro",
+       "Braehead Arena"
+      ],
+      "popular": [
+       "OVO Hydro",
+       "Braehead Arena"
+      ],
+      "ladder": [
+       "The OVO Hydro",
+       "Commonwealth Arena and Sir Chris Hoy Velodrome",
+       "Braehead Arena"
+      ],
+      "model": [
+       "OVO Hydro",
+       "The SSE Hydro",
+       "Barrowland Ballroom"
+      ]
+     },
+     "booked": {
+      "name": "OVO Hydro",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 13000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "newcastle-upon-tyne-gb",
+     "city": "Newcastle upon Tyne",
+     "real": [
+      "Utilita Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Utilita Arena Newcastle",
+       "Vertu Motors Arena"
+      ],
+      "shippedNoChoice": [
+       "Utilita Arena Newcastle",
+       "Vertu Motors Arena"
+      ],
+      "popAffinity": [
+       "Utilita Arena Newcastle"
+      ],
+      "qloo": [
+       "Utilita Arena Newcastle"
+      ],
+      "popular": [
+       "Utilita Arena Newcastle",
+       "Sunderland Live Arena"
+      ],
+      "ladder": [
+       "Utilita Arena",
+       "Sunderland Empire Theatre",
+       "Boiler Shop"
+      ],
+      "model": [
+       "Utilita Arena Newcastle",
+       "Vertu Motors Arena",
+       "Newcastle City Hall"
+      ]
+     },
+     "booked": {
+      "name": "Utilita Arena Newcastle",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 11000,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "manchester-gb",
+     "city": "Manchester",
+     "real": [
+      "Co-op Live"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "AO Arena",
+       "National Squash Centre"
+      ],
+      "shippedNoChoice": [
+       "AO Arena",
+       "National Squash Centre"
+      ],
+      "popAffinity": [
+       "AO Arena",
+       "National Squash Centre"
+      ],
+      "qloo": [
+       "AO Arena",
+       "National Squash Centre"
+      ],
+      "popular": [
+       "AO Arena",
+       "National Squash Centre"
+      ],
+      "ladder": [
+       "Manchester Arena",
+       "Bolton Arena",
+       "Manchester Velodrome"
+      ],
+      "model": [
+       "Co-op Live",
+       "AO Arena",
+       "Manchester Arena (Victoria Warehouse)"
+      ]
+     },
+     "booked": {
+      "name": "AO Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Green Day",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Saviors Tour",
+   "draw": 41100,
+   "cities": [
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "real": [
+      "Citi Field"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "The Bowery Ballroom",
+       "Webster Hall",
+       "Gramercy Theatre"
+      ],
+      "shippedNoChoice": [
+       "The Bowery Ballroom",
+       "Webster Hall",
+       "Gramercy Theatre"
+      ],
+      "popAffinity": [
+       "Madison Square Garden",
+       "Arthur Ashe Stadium",
+       "Barclays Center"
+      ],
+      "qloo": [
+       "Arthur Ashe Stadium",
+       "Madison Square Garden",
+       "Forest Hills Stadium"
+      ],
+      "popular": [
+       "Madison Square Garden",
+       "Barclays Center",
+       "Infosys Theater at Madison Square Garden"
+      ],
+      "ladder": [
+       "Meadowlands Arena",
+       "Madison Square Garden",
+       "Barclays Center"
+      ],
+      "model": [
+       "MetLife Stadium",
+       "Citi Field",
+       "Yankee Stadium"
+      ]
+     },
+     "booked": {
+      "name": "The Bowery Ballroom",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 20,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "pittsburgh-us-pa",
+     "city": "Pittsburgh",
+     "real": [
+      "PNC Park"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "PPG Paints Arena",
+       "Hartwood Acres Amphitheater",
+       "UPMC Events Center"
+      ],
+      "shippedNoChoice": [
+       "PPG Paints Arena",
+       "Hartwood Acres Amphitheater",
+       "UPMC Events Center"
+      ],
+      "popAffinity": [
+       "Stage AE",
+       "F.N.B. Stadium",
+       "Petersen Events Center"
+      ],
+      "qloo": [
+       "Stage AE",
+       "F.N.B. Stadium",
+       "Petersen Events Center"
+      ],
+      "popular": [
+       "PPG Paints Arena",
+       "Stage AE",
+       "F.N.B. Stadium"
+      ],
+      "ladder": [
+       "PPG Paints Arena",
+       "UPMC Cooper Fieldhouse",
+       "Heinz Hall"
+      ],
+      "model": [
+       "Acrisure Stadium",
+       "PNC Park",
+       "PPG Paints Arena"
+      ]
+     },
+     "booked": {
+      "name": "PPG Paints Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 18387,
+      "fit": "too small"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 9,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "portland-us-or",
+     "city": "Portland",
+     "real": [
+      "Providence Park"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Moda Center",
+       "Keller Auditorium",
+       "Oregon Airsoft Arena"
+      ],
+      "shippedNoChoice": [
+       "Moda Center",
+       "Keller Auditorium",
+       "Oregon Airsoft Arena"
+      ],
+      "popAffinity": [
+       "Roseland Theater",
+       "McMenamins Crystal Ballroom",
+       "Keller Auditorium"
+      ],
+      "qloo": [
+       "Roseland Theater",
+       "McMenamins Crystal Ballroom",
+       "Chiles Center"
+      ],
+      "popular": [
+       "McMenamins Crystal Ballroom",
+       "Roseland Theater",
+       "Keller Auditorium"
+      ],
+      "ladder": [
+       "Moda Center",
+       "Veterans Memorial Coliseum",
+       "Arlene Schnitzer Concert Hall"
+      ],
+      "model": [
+       "Providence Park",
+       "Moda Center",
+       "Nike World Headquarters"
+      ]
+     },
+     "booked": {
+      "name": "Moda Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 19980,
+      "fit": "too small"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 12,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   },
+   "hit3": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Dua Lipa",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Radical Optimism Tour",
+   "draw": 18600,
+   "cities": [
+    {
+     "marketId": "boston-us-ma",
+     "city": "Boston",
+     "real": [
+      "TD Garden"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "TD Garden",
+       "Lavietes Pavilion",
+       "Matthews Arena - Originally The Boston Arena"
+      ],
+      "shippedNoChoice": [
+       "TD Garden",
+       "Lavietes Pavilion",
+       "Matthews Arena - Originally The Boston Arena"
+      ],
+      "popAffinity": [
+       "Leader Bank Pavilion",
+       "Walter Brown Arena",
+       "Matthews Arena - Originally The Boston Arena"
+      ],
+      "qloo": [
+       "Leader Bank Pavilion",
+       "Lavietes Pavilion",
+       "Walter Brown Arena"
+      ],
+      "popular": [
+       "Leader Bank Pavilion",
+       "Matthews Arena - Originally The Boston Arena",
+       "Walter Brown Arena"
+      ],
+      "ladder": [
+       "TD Garden",
+       "The Stage at Suffolk Downs",
+       "Agganis Arena"
+      ],
+      "model": [
+       "TD Garden",
+       "Fenway Park",
+       "Gillette Stadium"
+      ]
+     },
+     "booked": {
+      "name": "TD Garden",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 18624,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "real": [
+      "Madison Square Garden"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 2,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Madison Square Garden",
+       "Nassau Veterans Memorial Coliseum",
+       "Meadowlands Arena"
+      ],
+      "shippedNoChoice": [
+       "Madison Square Garden",
+       "Nassau Veterans Memorial Coliseum",
+       "Meadowlands Arena"
+      ],
+      "popAffinity": [
+       "Barclays Center",
+       "Prudential Center",
+       "Coney Island Amphitheater"
+      ],
+      "qloo": [
+       "Barclays Center",
+       "Meadowlands Arena",
+       "Coney Island Amphitheater"
+      ],
+      "popular": [
+       "Barclays Center",
+       "Prudential Center",
+       "Nassau Veterans Memorial Coliseum"
+      ],
+      "ladder": [
+       "Meadowlands Arena",
+       "Madison Square Garden",
+       "Barclays Center"
+      ],
+      "model": [
+       "Madison Square Garden",
+       "Barclays Center",
+       "UBS Arena"
+      ]
+     },
+     "booked": {
+      "name": "Madison Square Garden",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 19812,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 11,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "real": [
+      "Kia Forum"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 2,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 2,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Kia Forum",
+       "Crypto.com Arena",
+       "Pauley Pavilion"
+      ],
+      "shippedNoChoice": [
+       "Crypto.com Arena",
+       "Kia Forum",
+       "Pauley Pavilion"
+      ],
+      "popAffinity": [
+       "Hollywood Bowl",
+       "Galen Center",
+       "Pauley Pavilion"
+      ],
+      "qloo": [
+       "Hollywood Bowl",
+       "Galen Center",
+       "Pauley Pavilion"
+      ],
+      "popular": [
+       "Hollywood Bowl",
+       "Pauley Pavilion",
+       "Galen Center"
+      ],
+      "ladder": [
+       "Crypto.com Arena",
+       "Kia Forum",
+       "Hollywood Bowl"
+      ],
+      "model": [
+       "Kia Forum",
+       "Crypto.com Arena",
+       "Intuit Dome"
+      ]
+     },
+     "booked": {
+      "name": "Kia Forum",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 17500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 9,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 1,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0.3333333333333333,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 1,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Nine Inch Nails",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Peel It Back Tour",
+   "draw": 18500,
+   "cities": [
+    {
+     "marketId": "cleveland-us-oh",
+     "city": "Cleveland",
+     "real": [
+      "Rocket Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 2,
+      "qloo": 2,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Rocket Arena",
+       "Wolstein Center"
+      ],
+      "shippedNoChoice": [
+       "Rocket Arena",
+       "Wolstein Center"
+      ],
+      "popAffinity": [
+       "Wolstein Center",
+       "Rocket Arena"
+      ],
+      "qloo": [
+       "Wolstein Center",
+       "Rocket Arena"
+      ],
+      "popular": [
+       "Rocket Arena",
+       "Wolstein Center"
+      ],
+      "ladder": [
+       "Rocket Arena",
+       "Wolstein Center",
+       "Connor Palace"
+      ],
+      "model": [
+       "Rocket Mortgage FieldHouse",
+       "Wolstein Center",
+       "Rocket Arena"
+      ]
+     },
+     "booked": {
+      "name": "Rocket Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 20562,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "irvine-us-ca",
+     "city": "Irvine",
+     "real": [
+      "Honda Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Honda Center",
+       "The Pacific Amphitheatre"
+      ],
+      "shippedNoChoice": [
+       "Honda Center",
+       "The Pacific Amphitheatre"
+      ],
+      "popAffinity": [
+       "The Pacific Amphitheatre"
+      ],
+      "qloo": [
+       "The Pacific Amphitheatre"
+      ],
+      "popular": [
+       "The Pacific Amphitheatre"
+      ],
+      "ladder": [
+       "Honda Center",
+       "Hyperion Theater",
+       "Carpenter Performing Arts Center"
+      ],
+      "model": [
+       "FivePoint Amphitheatre",
+       "Honda Center",
+       "Pacific Amphitheatre"
+      ]
+     },
+     "booked": {
+      "name": "Honda Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 17174,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "fort-worth-us-tx",
+     "city": "Fort Worth",
+     "real": [
+      "Dickies Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 2,
+      "popAffinity": 1,
+      "qloo": 2,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Dickies Arena",
+       "Cowtown Coliseum",
+       "Stockyards Championship Rodeo"
+      ],
+      "shippedNoChoice": [
+       "Cowtown Coliseum",
+       "Dickies Arena",
+       "Stockyards Championship Rodeo"
+      ],
+      "popAffinity": [
+       "Dickies Arena",
+       "Cowtown Coliseum",
+       "Stockyards Championship Rodeo"
+      ],
+      "qloo": [
+       "Cowtown Coliseum",
+       "Dickies Arena",
+       "Stockyards Championship Rodeo"
+      ],
+      "popular": [
+       "Dickies Arena",
+       "Stockyards Championship Rodeo",
+       "Cowtown Coliseum"
+      ],
+      "ladder": [
+       "NYTEX Sports Centre",
+       "Bass Performance Hall",
+       "Casa Mañana"
+      ],
+      "model": [
+       "Dickies Arena",
+       "Bass Performance Hall",
+       "Will Rogers Coliseum"
+      ]
+     },
+     "booked": {
+      "name": "Dickies Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 5,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 1,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0,
+    "popular": 0.6666666666666666,
+    "ladder": 0.6666666666666666,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   }
+  },
+  {
+   "artist": "For King & Country",
+   "set": "held-out",
+   "region": "na",
+   "tour": "A Drummer Boy Christmas Tour",
+   "draw": 18200,
+   "cities": [
+    {
+     "marketId": "duluth-us-mn",
+     "city": "Duluth",
+     "real": [
+      "Gas South Arena"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Amsoil Arena",
+       "Wessman Arena",
+       "Mars Lakeview Arena"
+      ],
+      "shippedNoChoice": [
+       "Wessman Arena",
+       "Mars Lakeview Arena",
+       "Amsoil Arena"
+      ],
+      "popAffinity": [
+       "Wessman Arena",
+       "Mars Lakeview Arena"
+      ],
+      "qloo": [
+       "Wessman Arena",
+       "Mars Lakeview Arena"
+      ],
+      "popular": [
+       "Wessman Arena",
+       "Amsoil Arena",
+       "Mars Lakeview Arena"
+      ],
+      "ladder": [],
+      "model": [
+       "Amsoil Arena",
+       "DECC Arena",
+       "Essentia Health Duluth Heritage Center"
+      ]
+     },
+     "booked": {
+      "name": "Amsoil Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 4,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "college-station-us-tx",
+     "city": "College Station",
+     "real": [
+      "Reed Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Reed Arena"
+      ],
+      "shippedNoChoice": [
+       "Reed Arena"
+      ],
+      "popAffinity": [
+       "Reed Arena"
+      ],
+      "qloo": [
+       "Reed Arena"
+      ],
+      "popular": [
+       "Reed Arena",
+       "Wolf Pen Creek Amphitheater"
+      ],
+      "ladder": [],
+      "model": [
+       "Reed Arena",
+       "Kyle Field",
+       "Veterans Park & Athletic Complex"
+      ]
+     },
+     "booked": {
+      "name": "Reed Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 12989,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 1,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "pensacola-us-fl",
+     "city": "Pensacola",
+     "real": [
+      "Five Flags Speedway"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Pensacola Bay Center"
+      ],
+      "shippedNoChoice": [
+       "Pensacola Bay Center"
+      ],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [
+       "Pensacola Bay Center"
+      ],
+      "ladder": [
+       "Pensacola Civic Center",
+       "Saenger Theatre"
+      ],
+      "model": [
+       "Pensacola Bay Center",
+       "Community Maritime Park",
+       "Veterans Memorial Park"
+      ]
+     },
+     "booked": {
+      "name": "Pensacola Bay Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 1,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   }
+  },
+  {
+   "artist": "Bonnie Tyler",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "40 Years \"Total Eclipse of the Heart\" Tour",
+   "draw": 15000,
+   "cities": [
+    {
+     "marketId": "bremen-de",
+     "city": "Bremen",
+     "real": [
+      "Metropol Theater"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "ÖVB Arena"
+      ],
+      "shippedNoChoice": [
+       "ÖVB Arena"
+      ],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [],
+      "ladder": [
+       "Stedingsehre",
+       "ÖVB Arena"
+      ],
+      "model": [
+       "ÖVB Arena",
+       "Stadthalle Bremen",
+       "Freilichtbühne Bürgerpark"
+      ]
+     },
+     "booked": {
+      "name": "ÖVB Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 14300,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 1,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "enschede-nl",
+     "city": "Enschede",
+     "real": [
+      "EmslandArena"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [],
+      "shippedNoChoice": [],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [],
+      "ladder": [],
+      "model": [
+       "GelreDome",
+       "Evenemententerrein De Baarsjes",
+       "Podium"
+      ]
+     },
+     "booked": null,
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 0,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "reutlingen-de",
+     "city": "Reutlingen",
+     "real": [
+      "Volksbankmesse"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [],
+      "shippedNoChoice": [],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [
+       "Paul Horn-Arena"
+      ],
+      "ladder": [
+       "Paul Horn-Arena",
+       "Stadthalle Reutlingen"
+      ],
+      "model": [
+       "Messe Reutlingen",
+       "Stadthalle Reutlingen",
+       "Freilichtbühne Markwasen"
+      ]
+     },
+     "booked": null,
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 0,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0
+   }
+  },
+  {
+   "artist": "Chappell Roan",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Midwest Princess Tour",
+   "draw": 1600,
+   "cities": [
+    {
+     "marketId": "madison-us-wi",
+     "city": "Madison",
+     "real": [
+      "The Sylvee"
+     ],
+     "ranks": {
+      "shipped": 7,
+      "shippedNoChoice": 7,
+      "popAffinity": 2,
+      "qloo": 2,
+      "popular": 2,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Hartmeyer Ice Arena",
+       "Barrymore Theatre",
+       "Middleton Performing Arts Center"
+      ],
+      "shippedNoChoice": [
+       "Hartmeyer Ice Arena",
+       "Barrymore Theatre",
+       "Middleton Performing Arts Center"
+      ],
+      "popAffinity": [
+       "Barrymore Theatre",
+       "The Sylvee",
+       "Overture Center for the Arts"
+      ],
+      "qloo": [
+       "Barrymore Theatre",
+       "The Sylvee",
+       "Middleton Performing Arts Center"
+      ],
+      "popular": [
+       "Overture Center for the Arts",
+       "The Sylvee",
+       "Barrymore Theatre"
+      ],
+      "ladder": [
+       "Hartmeyer Ice Arena",
+       "LaBahn Arena",
+       "Stoughton Opera House"
+      ],
+      "model": [
+       "The Sylvee",
+       "Barrymore Theatre",
+       "Capitol Theater"
+      ]
+     },
+     "booked": {
+      "name": "Hartmeyer Ice Arena",
+      "from": "the Wikidata ladder, found on Qloo",
+      "agentsChoice": false,
+      "capacity": 3500,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 10,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 1
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "real": [
+      "Brooklyn Steel"
+     ],
+     "ranks": {
+      "shipped": 15,
+      "shippedNoChoice": 15,
+      "popAffinity": 5,
+      "qloo": 9,
+      "popular": 6,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Majestic Theatre",
+       "The Town Hall",
+       "Richard Rodgers Theatre"
+      ],
+      "shippedNoChoice": [
+       "Majestic Theatre",
+       "The Town Hall",
+       "Richard Rodgers Theatre"
+      ],
+      "popAffinity": [
+       "Jazz At Lincoln Center",
+       "Richard Rodgers Theatre",
+       "Pier 36 NYC"
+      ],
+      "qloo": [
+       "Jazz At Lincoln Center",
+       "Richard Rodgers Theatre",
+       "Sleep No More"
+      ],
+      "popular": [
+       "Infosys Theater at Madison Square Garden",
+       "Jazz At Lincoln Center",
+       "Webster Hall"
+      ],
+      "ladder": [
+       "Rose Hill Gymnasium",
+       "New York City Center",
+       "Walsh Gymnasium"
+      ],
+      "model": [
+       "Webster Hall",
+       "Town Hall",
+       "Le Poisson Rouge"
+      ]
+     },
+     "booked": {
+      "name": "Majestic Theatre",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 1645,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 16,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "pittsburgh-us-pa",
+     "city": "Pittsburgh",
+     "real": [
+      "Stage AE"
+     ],
+     "ranks": {
+      "shipped": 12,
+      "shippedNoChoice": 12,
+      "popAffinity": 2,
+      "qloo": 2,
+      "popular": 1,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Byham Theater",
+       "Benedum Center for the Performing Arts",
+       "Mr. Smalls Theatre"
+      ],
+      "shippedNoChoice": [
+       "Byham Theater",
+       "Benedum Center for the Performing Arts",
+       "Mr. Smalls Theatre"
+      ],
+      "popAffinity": [
+       "Mr. Smalls Theatre",
+       "Stage AE",
+       "Roxian Theatre"
+      ],
+      "qloo": [
+       "Mr. Smalls Theatre",
+       "Stage AE",
+       "Pittsburgh Ballet Theatre"
+      ],
+      "popular": [
+       "Stage AE",
+       "Mr. Smalls Theatre",
+       "Roxian Theatre"
+      ],
+      "ladder": [
+       "UPMC Cooper Fieldhouse",
+       "Heinz Hall",
+       "O'Reilly Theater"
+      ],
+      "model": [
+       "Mr. Smalls Theatre",
+       "Thunderbird Cafe",
+       "Club Cafe"
+      ]
+     },
+     "booked": {
+      "name": "Byham Theater",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 1300,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 14,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   },
+   "hit3": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   }
+  },
+  {
+   "artist": "Travis Scott",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Circus Maximus Tour",
+   "draw": 19200,
+   "cities": [
+    {
+     "marketId": "raleigh-us-nc",
+     "city": "Raleigh",
+     "real": [
+      "PNC Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "shippedNoChoice": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "popAffinity": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "qloo": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "popular": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek",
+       "Koka Booth Amphitheatre"
+      ],
+      "ladder": [
+       "Lenovo Center",
+       "Reynolds Coliseum",
+       "Koka Booth Amphitheatre"
+      ],
+      "model": [
+       "PNC Arena",
+       "Lenovo Center",
+       "Coastal Credit Union Music Park"
+      ]
+     },
+     "booked": {
+      "name": "Lenovo Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 19722,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "detroit-us-mi",
+     "city": "Detroit",
+     "real": [
+      "Little Caesars Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 2,
+      "qloo": 3,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Little Caesars Arena",
+       "The Aretha Franklin Amphitheatre",
+       "Detroit City Fieldhouse"
+      ],
+      "shippedNoChoice": [
+       "Little Caesars Arena",
+       "The Aretha Franklin Amphitheatre",
+       "Detroit City Fieldhouse"
+      ],
+      "popAffinity": [
+       "Yack Arena",
+       "Little Caesars Arena",
+       "Detroit City Fieldhouse"
+      ],
+      "qloo": [
+       "Yack Arena",
+       "Detroit City Fieldhouse",
+       "Little Caesars Arena"
+      ],
+      "popular": [
+       "Little Caesars Arena",
+       "The Aretha Franklin Amphitheatre",
+       "Yack Arena"
+      ],
+      "ladder": [
+       "Calihan Hall",
+       "WFCU Centre",
+       "Windsor Arena"
+      ],
+      "model": [
+       "Little Caesars Arena",
+       "Pine Knob Music Theatre",
+       "Fox Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Little Caesars Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 4,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "miami-us-fl",
+     "city": "Miami",
+     "real": [
+      "Kaseya Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Kaseya Center",
+       "Hard Rock Live (in Seminole Hard Rock Hollywood)"
+      ],
+      "shippedNoChoice": [
+       "Kaseya Center",
+       "Hard Rock Live (in Seminole Hard Rock Hollywood)"
+      ],
+      "popAffinity": [
+       "Kaseya Center"
+      ],
+      "qloo": [
+       "Kaseya Center"
+      ],
+      "popular": [
+       "Kaseya Center",
+       "Watsco Center",
+       "Ocean Bank Convocation Center"
+      ],
+      "ladder": [
+       "Kaseya Center",
+       "Miami-Dade County Auditorium",
+       "New World Center"
+      ],
+      "model": [
+       "Kaseya Center",
+       "Hard Rock Live",
+       "FPL Solar Amphitheatre"
+      ]
+     },
+     "booked": {
+      "name": "Kaseya Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 16500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 1,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 1,
+    "qloo": 1,
+    "popular": 1,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   }
+  },
+  {
+   "artist": "21 Savage",
+   "set": "held-out",
+   "region": "na",
+   "tour": "American Dream Tour",
+   "draw": 18400,
+   "cities": [
+    {
+     "marketId": "atlanta-us-ga",
+     "city": "Atlanta",
+     "real": [
+      "Cellairis Amphitheatre at Lakewood"
+     ],
+     "ranks": {
+      "shipped": 3,
+      "shippedNoChoice": 3,
+      "popAffinity": 3,
+      "qloo": 3,
+      "popular": 2,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Mable House Barnes Amphitheatre",
+       "Chastain Park Amphitheater",
+       "Lakewood Amphitheatre"
+      ],
+      "shippedNoChoice": [
+       "Mable House Barnes Amphitheatre",
+       "Chastain Park Amphitheater",
+       "Lakewood Amphitheatre"
+      ],
+      "popAffinity": [
+       "Mable House Barnes Amphitheatre",
+       "Chastain Park Amphitheater",
+       "Lakewood Amphitheatre"
+      ],
+      "qloo": [
+       "Mable House Barnes Amphitheatre",
+       "Chastain Park Amphitheater",
+       "Lakewood Amphitheatre"
+      ],
+      "popular": [
+       "Mable House Barnes Amphitheatre",
+       "Lakewood Amphitheatre",
+       "Chastain Park Amphitheater"
+      ],
+      "ladder": [
+       "McCamish Pavilion",
+       "Cadence Bank Amphitheatre",
+       "GSU Sports Arena"
+      ],
+      "model": [
+       "State Farm Arena",
+       "Gas South Arena",
+       "Coca-Cola Roxy Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Mable House Barnes Amphitheatre",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 3,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "tampa-us-fl",
+     "city": "Tampa",
+     "real": [
+      "MidFlorida Credit Union Amphitheatre"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 2,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Benchmark International Arena",
+       "MIDFLORIDA Credit Union Amphitheatre"
+      ],
+      "shippedNoChoice": [
+       "Benchmark International Arena",
+       "MIDFLORIDA Credit Union Amphitheatre"
+      ],
+      "popAffinity": [
+       "Benchmark International Arena"
+      ],
+      "qloo": [
+       "Benchmark International Arena"
+      ],
+      "popular": [
+       "Benchmark International Arena"
+      ],
+      "ladder": [
+       "Yuengling Center",
+       "Mahaffey Theater",
+       "Jannus Live"
+      ],
+      "model": [
+       "Amalie Arena",
+       "MidFlorida Credit Union Amphitheatre",
+       "Yuengling Center"
+      ]
+     },
+     "booked": {
+      "name": "Benchmark International Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 19204,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "brockton-us-ma",
+     "city": "Brockton",
+     "real": [
+      "Xfinity Center"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 4
+     },
+     "top": {
+      "shipped": [],
+      "shippedNoChoice": [],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [
+       "Foxboro Sports Center"
+      ],
+      "ladder": [
+       "Leader Bank Pavilion",
+       "Matthews Arena",
+       "Reggie Lewis Track and Athletic Center"
+      ],
+      "model": [
+       "Gillette Stadium",
+       "Campanelli Stadium",
+       "MassMutual Center (Worcester)"
+      ]
+     },
+     "booked": null,
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 0,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   }
+  },
+  {
+   "artist": "SZA",
+   "set": "held-out",
+   "region": "na",
+   "tour": "SOS Tour",
+   "draw": 19000,
+   "cities": [
+    {
+     "marketId": "dallas-us-tx",
+     "city": "Dallas",
+     "real": [
+      "American Airlines Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "American Airlines Center",
+       "Dos Equis Pavilion",
+       "Gomez Western Wear Arena"
+      ],
+      "shippedNoChoice": [
+       "American Airlines Center",
+       "Dos Equis Pavilion",
+       "Gomez Western Wear Arena"
+      ],
+      "popAffinity": [
+       "American Airlines Center",
+       "College Park Center",
+       "Dos Equis Pavilion"
+      ],
+      "qloo": [
+       "American Airlines Center",
+       "College Park Center",
+       "Dos Equis Pavilion"
+      ],
+      "popular": [
+       "American Airlines Center",
+       "Dos Equis Pavilion",
+       "College Park Center"
+      ],
+      "ladder": [
+       "American Airlines Center",
+       "Mesquite Arena",
+       "Annette Strauss Square"
+      ],
+      "model": [
+       "American Airlines Center",
+       "Dos Equis Pavilion",
+       "Dickies Arena"
+      ]
+     },
+     "booked": {
+      "name": "American Airlines Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 19200,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 5,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "chicago-us-il",
+     "city": "Chicago",
+     "real": [
+      "United Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "United Center",
+       "Allstate Arena",
+       "Credit Union 1 Arena"
+      ],
+      "shippedNoChoice": [
+       "United Center",
+       "Allstate Arena",
+       "Credit Union 1 Arena"
+      ],
+      "popAffinity": [
+       "Credit Union 1 Arena",
+       "Wintrust Arena",
+       "Welsh Ryan Arena"
+      ],
+      "qloo": [
+       "Credit Union 1 Arena",
+       "Wintrust Arena",
+       "Welsh Ryan Arena"
+      ],
+      "popular": [
+       "Wintrust Arena",
+       "Credit Union 1 Arena",
+       "Allstate Arena"
+      ],
+      "ladder": [
+       "United Center",
+       "Allstate Arena",
+       "Wintrust Arena"
+      ],
+      "model": [
+       "United Center",
+       "Allstate Arena",
+       "Northerly Island Pavilion"
+      ]
+     },
+     "booked": {
+      "name": "United Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 23500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 9,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "nashville-us-tn",
+     "city": "Nashville",
+     "real": [
+      "Bridgestone Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Bridgestone Arena",
+       "Ascend Federal Credit Union Amphitheater",
+       "Allen Arena"
+      ],
+      "shippedNoChoice": [
+       "Bridgestone Arena",
+       "Ascend Federal Credit Union Amphitheater",
+       "Allen Arena"
+      ],
+      "popAffinity": [
+       "Ascend Federal Credit Union Amphitheater",
+       "Memorial Gymnasium",
+       "Allen Arena"
+      ],
+      "qloo": [
+       "Ascend Federal Credit Union Amphitheater",
+       "Memorial Gymnasium",
+       "Allen Arena"
+      ],
+      "popular": [
+       "Ascend Federal Credit Union Amphitheater",
+       "Memorial Gymnasium",
+       "Allen Arena"
+      ],
+      "ladder": [
+       "Bridgestone Arena",
+       "Nashville Municipal Auditorium",
+       "The Pinnacle"
+      ],
+      "model": [
+       "Bridgestone Arena",
+       "Nissan Stadium",
+       "FirstBank Amphitheater"
+      ]
+     },
+     "booked": {
+      "name": "Bridgestone Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 19395,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 4,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 1,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 1,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Halsey",
+   "set": "held-out",
+   "region": "na",
+   "tour": "For My Last Trick: The Tour",
+   "draw": 17500,
+   "cities": [
+    {
+     "marketId": "raleigh-us-nc",
+     "city": "Raleigh",
+     "real": [
+      "Coastal Credit Union Music Park"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 2,
+      "popAffinity": 2,
+      "qloo": 2,
+      "popular": 2,
+      "ladder": null,
+      "model": 3
+     },
+     "top": {
+      "shipped": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "shippedNoChoice": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "popAffinity": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "qloo": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek"
+      ],
+      "popular": [
+       "Lenovo Center",
+       "Coastal Credit Union Music Park at Walnut Creek",
+       "Koka Booth Amphitheatre"
+      ],
+      "ladder": [
+       "Lenovo Center",
+       "Reynolds Coliseum",
+       "Koka Booth Amphitheatre"
+      ],
+      "model": [
+       "PNC Arena",
+       "Lenovo Center",
+       "Coastal Credit Union Music Park"
+      ]
+     },
+     "booked": {
+      "name": "Lenovo Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 19722,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "farmington-hills-us-mi",
+     "city": "Farmington Hills",
+     "real": [
+      "Pine Knob Music Theatre"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Little Caesars Arena",
+       "Pine Knob Music Theatre"
+      ],
+      "shippedNoChoice": [
+       "Pine Knob Music Theatre",
+       "Little Caesars Arena"
+      ],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [],
+      "ladder": [
+       "Calihan Hall",
+       "USA Hockey Arena",
+       "OU Credit Union O'rena"
+      ],
+      "model": [
+       "Little Caesars Arena",
+       "Pine Knob Music Theatre",
+       "Fox Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Little Caesars Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 2,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "salt-lake-city-us-ut",
+     "city": "Salt Lake City",
+     "real": [
+      "Utah First Credit Union Amphitheatre"
+     ],
+     "ranks": {
+      "shipped": 3,
+      "shippedNoChoice": 3,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Delta Center",
+       "Maverik Center",
+       "Utah First Credit Union Amphitheatre"
+      ],
+      "shippedNoChoice": [
+       "Delta Center",
+       "Maverik Center",
+       "Utah First Credit Union Amphitheatre"
+      ],
+      "popAffinity": [
+       "Utah First Credit Union Amphitheatre",
+       "Maverik Center",
+       "Utah Olympic Oval"
+      ],
+      "qloo": [
+       "Utah First Credit Union Amphitheatre",
+       "Maverik Center",
+       "Utah Olympic Oval"
+      ],
+      "popular": [
+       "Utah First Credit Union Amphitheatre",
+       "Maverik Center",
+       "Utah Olympic Oval"
+      ],
+      "ladder": [
+       "Delta Center",
+       "Maverik Center",
+       "Nielsen Fieldhouse"
+      ],
+      "model": [
+       "Delta Center",
+       "USANA Amphitheatre",
+       "The Complex"
+      ]
+     },
+     "booked": {
+      "name": "Delta Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 19911,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 5,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 0,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Pink",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Summer Carnival (tour)",
+   "draw": 42300,
+   "cities": [
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "real": [
+      "Citizens Bank Park",
+      "Lincoln Financial Field"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Theatre of The Living Arts",
+       "The Fillmore Philadelphia",
+       "The Tower Theater"
+      ],
+      "shippedNoChoice": [
+       "Theatre of The Living Arts",
+       "The Fillmore Philadelphia",
+       "The Tower Theater"
+      ],
+      "popAffinity": [
+       "The Fillmore Philadelphia",
+       "Union Transfer",
+       "The 2300 Arena"
+      ],
+      "qloo": [
+       "Theatre of The Living Arts",
+       "The Fillmore Philadelphia",
+       "The 2300 Arena"
+      ],
+      "popular": [
+       "The Fillmore Philadelphia",
+       "Union Transfer",
+       "The Liacouras Center"
+      ],
+      "ladder": [
+       "Palestra",
+       "Finneran Pavilion",
+       "Tom Gola Arena"
+      ],
+      "model": [
+       "Lincoln Financial Field",
+       "Wells Fargo Center",
+       "Citizens Bank Park"
+      ]
+     },
+     "booked": {
+      "name": "Theatre of The Living Arts",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 16,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "real": [
+      "Citi Field",
+      "MetLife Stadium"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 5,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Barclays Center",
+       "Madison Square Garden",
+       "Meadowlands Arena"
+      ],
+      "shippedNoChoice": [
+       "Madison Square Garden",
+       "Barclays Center",
+       "Meadowlands Arena"
+      ],
+      "popAffinity": [
+       "Madison Square Garden",
+       "Barclays Center",
+       "Gramercy Theatre"
+      ],
+      "qloo": [
+       "Madison Square Garden",
+       "Barclays Center",
+       "Pier 17"
+      ],
+      "popular": [
+       "Madison Square Garden",
+       "Barclays Center",
+       "Infosys Theater at Madison Square Garden"
+      ],
+      "ladder": [
+       "Meadowlands Arena",
+       "Madison Square Garden",
+       "Barclays Center"
+      ],
+      "model": [
+       "MetLife Stadium",
+       "Barclays Center",
+       "Citi Field"
+      ]
+     },
+     "booked": {
+      "name": "Barclays Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 17732,
+      "fit": "too small"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 19,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "missoula-us-mt",
+     "city": "Missoula",
+     "real": [
+      "Washington–Grizzly Stadium"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Washington-Grizzly Stadium",
+       "Adams Center",
+       "The Wilma"
+      ],
+      "shippedNoChoice": [
+       "Washington-Grizzly Stadium",
+       "Adams Center",
+       "The Wilma"
+      ],
+      "popAffinity": [
+       "Washington-Grizzly Stadium",
+       "Adams Center",
+       "The Wilma"
+      ],
+      "qloo": [
+       "Washington-Grizzly Stadium",
+       "Adams Center",
+       "The Wilma"
+      ],
+      "popular": [
+       "Washington-Grizzly Stadium",
+       "The Wilma",
+       "Adams Center"
+      ],
+      "ladder": [
+       "Dahlberg Arena",
+       "Glacier Ice Rink"
+      ],
+      "model": [
+       "Washington–Grizzly Stadium",
+       "Adams Center",
+       "Dennison Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Washington-Grizzly Stadium",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 3,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Pierce the Veil",
+   "set": "held-out",
+   "region": "na",
+   "tour": "I Can't Hear You World Tour",
+   "draw": 17500,
+   "cities": [
+    {
+     "marketId": "seattle-us-wa",
+     "city": "Seattle",
+     "real": [
+      "WaMu Theater"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 3
+     },
+     "top": {
+      "shipped": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "shippedNoChoice": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "popAffinity": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "qloo": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "popular": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "ladder": [
+       "Climate Pledge Arena",
+       "Hec Edmundson Pavilion",
+       "accesso ShoWare Center"
+      ],
+      "model": [
+       "Climate Pledge Arena",
+       "T-Mobile Park",
+       "WaMu Theater"
+      ]
+     },
+     "booked": {
+      "name": "Climate Pledge Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 18000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "west-palm-beach-us-fl",
+     "city": "West Palm Beach",
+     "real": [
+      "ITHINK Financial Amphitheatre"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "iTHINK Financial Amphitheatre"
+      ],
+      "shippedNoChoice": [
+       "iTHINK Financial Amphitheatre"
+      ],
+      "popAffinity": [
+       "iTHINK Financial Amphitheatre"
+      ],
+      "qloo": [
+       "iTHINK Financial Amphitheatre"
+      ],
+      "popular": [
+       "iTHINK Financial Amphitheatre",
+       "Meyer Amphitheater"
+      ],
+      "ladder": [
+       "Raymond F. Kravis Center for the Performing Arts"
+      ],
+      "model": [
+       "iTHINK Financial Amphitheatre",
+       "FLA Live Arena",
+       "Hard Rock Live"
+      ]
+     },
+     "booked": {
+      "name": "iTHINK Financial Amphitheatre",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 1,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "los-angeles-us-ca",
+     "city": "Los Angeles",
+     "real": [
+      "Kia Forum"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 2,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Kia Forum",
+       "Pauley Pavilion",
+       "Riot Games Arena"
+      ],
+      "shippedNoChoice": [
+       "Kia Forum",
+       "Pauley Pavilion",
+       "Riot Games Arena"
+      ],
+      "popAffinity": [
+       "Hollywood Bowl",
+       "The Greek Theatre",
+       "Lucha Underground Arena"
+      ],
+      "qloo": [
+       "The Greek Theatre",
+       "Lucha Underground Arena",
+       "Hollywood Bowl"
+      ],
+      "popular": [
+       "Hollywood Bowl",
+       "Pauley Pavilion",
+       "Galen Center"
+      ],
+      "ladder": [
+       "Crypto.com Arena",
+       "Kia Forum",
+       "Hollywood Bowl"
+      ],
+      "model": [
+       "Kia Forum",
+       "YouTube Theater",
+       "Greek Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Kia Forum",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 17500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0.3333333333333333,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "set": "bench",
+   "region": "na",
+   "tour": "The Melancholy Tour (spring 2025 North American leg)",
+   "draw": 2800,
+   "cities": [
+    {
+     "marketId": "atlanta-us-ga",
+     "city": "Atlanta",
+     "real": [
+      "Tabernacle"
+     ],
+     "ranks": {
+      "shipped": 15,
+      "shippedNoChoice": 14,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 12,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Buckhead Theatre",
+       "Synchronicity Theatre",
+       "Alliance Theatre"
+      ],
+      "shippedNoChoice": [
+       "Buckhead Theatre",
+       "Synchronicity Theatre",
+       "Alliance Theatre"
+      ],
+      "popAffinity": [
+       "The Drunken Unicorn",
+       "The Masquerade",
+       "Terminal West"
+      ],
+      "qloo": [
+       "The Drunken Unicorn",
+       "Dad's Garage",
+       "Terminal West"
+      ],
+      "popular": [
+       "Fox Theatre",
+       "The Masquerade",
+       "Coca-Cola Roxy"
+      ],
+      "ladder": [
+       "Cadence Bank Amphitheatre",
+       "GSU Sports Arena",
+       "Cobb Energy Performing Arts Centre"
+      ],
+      "model": [
+       "The Eastern",
+       "The Tabernacle",
+       "Coca-Cola Roxy Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Buckhead Theatre",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 1800,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 16,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "nashville-us-tn",
+     "city": "Nashville",
+     "real": [
+      "Ryman Auditorium"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 3,
+      "popAffinity": 8,
+      "qloo": 11,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "War Memorial Auditorium",
+       "Ryman Auditorium",
+       "Nashville Children's Theatre"
+      ],
+      "shippedNoChoice": [
+       "War Memorial Auditorium",
+       "Nashville Children's Theatre",
+       "Ryman Auditorium"
+      ],
+      "popAffinity": [
+       "The East Room",
+       "OZ Arts Nashville",
+       "Brooklyn Bowl Nashville"
+      ],
+      "qloo": [
+       "The East Room",
+       "OZ Arts Nashville",
+       "Musicians Corner"
+      ],
+      "popular": [
+       "Ryman Auditorium",
+       "Marathon Music Works",
+       "The Basement East"
+      ],
+      "ladder": [
+       "The Pinnacle",
+       "War Memorial Auditorium",
+       "Schermerhorn Symphony Center"
+      ],
+      "model": [
+       "Ryman Auditorium",
+       "Brooklyn Bowl",
+       "Marathon Music Works"
+      ]
+     },
+     "booked": {
+      "name": "War Memorial Auditorium",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2000,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 11,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "real": [
+      "Metropolitan Opera House"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "The Met Philadelphia",
+       "Penn Live Arts/Annenberg Center for the Performing Arts",
+       "Plays & Players Theatre"
+      ],
+      "shippedNoChoice": [
+       "The Met Philadelphia",
+       "Penn Live Arts/Annenberg Center for the Performing Arts",
+       "Plays & Players Theatre"
+      ],
+      "popAffinity": [
+       "FringeArts",
+       "Underground Arts",
+       "23rd Street Armory"
+      ],
+      "qloo": [
+       "FringeArts",
+       "Penn Live Arts/Annenberg Center for the Performing Arts",
+       "23rd Street Armory"
+      ],
+      "popular": [
+       "The Fillmore Philadelphia",
+       "Union Transfer",
+       "Underground Arts"
+      ],
+      "ladder": [
+       "Finneran Pavilion",
+       "Tom Gola Arena",
+       "Academy of Music"
+      ],
+      "model": [
+       "The Met Philadelphia",
+       "Franklin Music Hall",
+       "Keswick Theatre"
+      ]
+     },
+     "booked": {
+      "name": "The Met Philadelphia",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 3500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 16,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Ado",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Hibana World Tour",
+   "draw": 18800,
+   "cities": [
+    {
+     "marketId": "toronto-ca",
+     "city": "Toronto",
+     "real": [
+      "Scotiabank Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 6,
+      "qloo": 9,
+      "popular": 4,
+      "ladder": 2,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Scotiabank Arena",
+       "Coca-Cola Coliseum",
+       "McCormick Arena"
+      ],
+      "shippedNoChoice": [
+       "Scotiabank Arena",
+       "Coca-Cola Coliseum",
+       "McCormick Arena"
+      ],
+      "popAffinity": [
+       "Coca-Cola Coliseum",
+       "Downsview Arena",
+       "McCormick Arena"
+      ],
+      "qloo": [
+       "McCormick Arena",
+       "Coca-Cola Coliseum",
+       "Downsview Arena"
+      ],
+      "popular": [
+       "RBC Amphitheatre",
+       "Coca-Cola Coliseum",
+       "Mississauga Sports & Entertainment Centre"
+      ],
+      "ladder": [
+       "Mississauga Celebration Square",
+       "Scotiabank Arena",
+       "Coca-Cola Coliseum"
+      ],
+      "model": [
+       "Scotiabank Arena",
+       "Budweiser Stage",
+       "Coca-Cola Coliseum"
+      ]
+     },
+     "booked": {
+      "name": "Scotiabank Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 19800,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 13,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "fort-worth-us-tx",
+     "city": "Fort Worth",
+     "real": [
+      "Dickies Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 2,
+      "popAffinity": 1,
+      "qloo": 2,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Dickies Arena",
+       "Cowtown Coliseum",
+       "Stockyards Championship Rodeo"
+      ],
+      "shippedNoChoice": [
+       "Cowtown Coliseum",
+       "Dickies Arena",
+       "Stockyards Championship Rodeo"
+      ],
+      "popAffinity": [
+       "Dickies Arena",
+       "Cowtown Coliseum",
+       "Stockyards Championship Rodeo"
+      ],
+      "qloo": [
+       "Cowtown Coliseum",
+       "Dickies Arena",
+       "Stockyards Championship Rodeo"
+      ],
+      "popular": [
+       "Dickies Arena",
+       "Stockyards Championship Rodeo",
+       "Cowtown Coliseum"
+      ],
+      "ladder": [
+       "NYTEX Sports Centre",
+       "Bass Performance Hall",
+       "Casa Mañana"
+      ],
+      "model": [
+       "Dickies Arena",
+       "Will Rogers Memorial Center",
+       "Texas Trust CU Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Dickies Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 4,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "new-york-city-us-ny",
+     "city": "New York",
+     "real": [
+      "Prudential Center"
+     ],
+     "ranks": {
+      "shipped": 7,
+      "shippedNoChoice": 7,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 2,
+      "ladder": 4,
+      "model": 4
+     },
+     "top": {
+      "shipped": [
+       "Barclays Center",
+       "Madison Square Garden",
+       "Nassau Veterans Memorial Coliseum"
+      ],
+      "shippedNoChoice": [
+       "Madison Square Garden",
+       "Barclays Center",
+       "Nassau Veterans Memorial Coliseum"
+      ],
+      "popAffinity": [
+       "Prudential Center",
+       "Barclays Center",
+       "Nassau Veterans Memorial Coliseum"
+      ],
+      "qloo": [
+       "Prudential Center",
+       "Jersey City Armory",
+       "Barclays Center"
+      ],
+      "popular": [
+       "Barclays Center",
+       "Prudential Center",
+       "Nassau Veterans Memorial Coliseum"
+      ],
+      "ladder": [
+       "Meadowlands Arena",
+       "Madison Square Garden",
+       "Barclays Center"
+      ],
+      "model": [
+       "Barclays Center",
+       "Madison Square Garden",
+       "UBS Arena"
+      ]
+     },
+     "booked": {
+      "name": "Barclays Center",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 17732,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 11,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 0.3333333333333333,
+    "model": 0.6666666666666666
+   }
+  },
+  {
+   "artist": "Ghost",
+   "set": "bench",
+   "region": "eu",
+   "tour": "Skeletour World Tour (2025 European leg)",
+   "draw": 13500,
+   "cities": [
+    {
+     "marketId": "berlin-de",
+     "city": "Berlin",
+     "real": [
+      "Uber Arena"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Max-Schmeling-Halle",
+       "Velodrom",
+       "UFO Berlin - Konzerthalle"
+      ],
+      "shippedNoChoice": [
+       "Velodrom",
+       "Max-Schmeling-Halle",
+       "UFO Berlin - Konzerthalle"
+      ],
+      "popAffinity": [
+       "Parkbühne Wuhlheide",
+       "UFO Berlin - Konzerthalle",
+       "Velodrom"
+      ],
+      "qloo": [
+       "UFO Berlin - Konzerthalle",
+       "Parkbühne Wuhlheide",
+       "Velodrom"
+      ],
+      "popular": [
+       "Parkbühne Wuhlheide",
+       "Velodrom",
+       "BOLLE Festsäle"
+      ],
+      "ladder": [
+       "Uber Arena",
+       "Uber Eats Music Hall",
+       "Matrix"
+      ],
+      "model": [
+       "Mercedes-Benz Arena",
+       "Max-Schmeling-Halle",
+       "Uber Arena"
+      ]
+     },
+     "booked": {
+      "name": "Max-Schmeling-Halle",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 11600,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 5,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "oslo-no",
+     "city": "Oslo",
+     "real": [
+      "Oslo Spektrum"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 2,
+      "popAffinity": 3,
+      "qloo": 3,
+      "popular": 1,
+      "ladder": 3,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Unity Arena",
+       "Oslo Spektrum",
+       "SALT - Art & Music"
+      ],
+      "shippedNoChoice": [
+       "Unity Arena",
+       "Oslo Spektrum",
+       "SALT - Art & Music"
+      ],
+      "popAffinity": [
+       "SALT - Art & Music",
+       "Sentrum Scene",
+       "Oslo Spektrum"
+      ],
+      "qloo": [
+       "SALT - Art & Music",
+       "Sentrum Scene",
+       "Oslo Spektrum"
+      ],
+      "popular": [
+       "Oslo Spektrum",
+       "Sentrum Scene",
+       "SALT - Art & Music"
+      ],
+      "ladder": [
+       "Holmenkollen National Arena",
+       "Unity Arena",
+       "Oslo Spektrum"
+      ],
+      "model": [
+       "Oslo Spektrum",
+       "Telenor Arena",
+       "Oslo Konserthus"
+      ]
+     },
+     "booked": {
+      "name": "Unity Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 15000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 7,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "linkoeping-se",
+     "city": "Linköping",
+     "real": [
+      "Saab Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Saab Arena"
+      ],
+      "shippedNoChoice": [
+       "Saab Arena"
+      ],
+      "popAffinity": [
+       "Saab Arena"
+      ],
+      "qloo": [
+       "Saab Arena"
+      ],
+      "popular": [
+       "Saab Arena"
+      ],
+      "ladder": [
+       "Saab Arena",
+       "Stångebro Ishall",
+       "Stora teatern"
+      ],
+      "model": [
+       "Saab Arena",
+       "Linköping Konserthus",
+       "Stadshallen"
+      ]
+     },
+     "booked": {
+      "name": "Saab Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 8500,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 1,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.6666666666666666,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 1,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Troye Sivan",
+   "set": "held-out",
+   "region": "eu",
+   "tour": "Something to Give Each Other Tour",
+   "draw": 7500,
+   "cities": [
+    {
+     "marketId": "stockholm-se",
+     "city": "Stockholm",
+     "real": [
+      "Hovet"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 13,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Avicii Arena",
+       "Nya Rågsveds Folkets Hus",
+       "Solvalla"
+      ],
+      "shippedNoChoice": [
+       "Avicii Arena",
+       "Nya Rågsveds Folkets Hus",
+       "Solvalla"
+      ],
+      "popAffinity": [
+       "Strawberry Arena",
+       "Solvalla",
+       "Södra Teatern"
+      ],
+      "qloo": [
+       "Nya Rågsveds Folkets Hus",
+       "Solvalla",
+       "Riksteatern"
+      ],
+      "popular": [
+       "Strawberry Arena",
+       "Cirkus",
+       "Södra Teatern"
+      ],
+      "ladder": [
+       "Renew Arena",
+       "Täljehallen",
+       "Stockholm Concert Hall"
+      ],
+      "model": [
+       "Avicii Arena",
+       "Hovet",
+       "Annexet"
+      ]
+     },
+     "booked": {
+      "name": "Avicii Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 13850,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 15,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "berlin-de",
+     "city": "Berlin",
+     "real": [
+      "Velodrom"
+     ],
+     "ranks": {
+      "shipped": 15,
+      "shippedNoChoice": 15,
+      "popAffinity": 14,
+      "qloo": 16,
+      "popular": 15,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Uber Arena",
+       "Columbia-Theater",
+       "CHAMÄLEON Theater GmbH"
+      ],
+      "shippedNoChoice": [
+       "Uber Arena",
+       "Columbia-Theater",
+       "CHAMÄLEON Theater GmbH"
+      ],
+      "popAffinity": [
+       "Konzerthaus Berlin",
+       "Columbia-Theater",
+       "Badehaus Berlin"
+      ],
+      "qloo": [
+       "Konzerthaus Berlin",
+       "Badehaus Berlin",
+       "Columbia-Theater"
+      ],
+      "popular": [
+       "Konzerthaus Berlin",
+       "Friedrichstadt-Palast",
+       "Huxleys Neue Welt"
+      ],
+      "ladder": [
+       "Uber Arena",
+       "Uber Eats Music Hall",
+       "Matrix"
+      ],
+      "model": [
+       "Uber Arena",
+       "Velodrom",
+       "Max-Schmeling-Halle"
+      ]
+     },
+     "booked": {
+      "name": "Uber Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 17000,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 17,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "zuerich-ch",
+     "city": "Zürich",
+     "real": [
+      "The Hall"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 3
+     },
+     "top": {
+      "shipped": [
+       "Hallenstadion",
+       "Theater 11",
+       "Bernhard-Theater"
+      ],
+      "shippedNoChoice": [
+       "Hallenstadion",
+       "Theater 11",
+       "Bernhard-Theater"
+      ],
+      "popAffinity": [
+       "Bogen F",
+       "Theater 11",
+       "Tanzhaus Zürich"
+      ],
+      "qloo": [
+       "Zentralwäscherei Space",
+       "Bogen F",
+       "Tanzhaus Zürich"
+      ],
+      "popular": [
+       "Theater 11",
+       "Salzhaus",
+       "Halle 622 Zürich / Eventhalle"
+      ],
+      "ladder": [
+       "Stimo Arena",
+       "Eishalle Herti",
+       "St. Galler Kantonalbank Arena"
+      ],
+      "model": [
+       "Hallenstadion",
+       "Samsung Hall",
+       "The Hall"
+      ]
+     },
+     "booked": {
+      "name": "Hallenstadion",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 11200,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 16,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0
+   },
+   "hit3": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Nicki Minaj",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Pink Friday 2 World Tour",
+   "draw": 19000,
+   "cities": [
+    {
+     "marketId": "new-orleans-us-la",
+     "city": "New Orleans",
+     "real": [
+      "Smoothie King Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Smoothie King Center",
+       "Champions Square",
+       "Sugar Bowl"
+      ],
+      "shippedNoChoice": [
+       "Smoothie King Center",
+       "Champions Square",
+       "Sugar Bowl"
+      ],
+      "popAffinity": [
+       "Champions Square",
+       "Sugar Bowl"
+      ],
+      "qloo": [
+       "Champions Square",
+       "Sugar Bowl"
+      ],
+      "popular": [
+       "Champions Square",
+       "Sugar Bowl",
+       "XULA Convocation Center"
+      ],
+      "ladder": [
+       "Smoothie King Center",
+       "Lakefront Arena",
+       "Avron B. Fogelman Arena in Devlin Fieldhouse"
+      ],
+      "model": [
+       "Smoothie King Center",
+       "Caesars Superdome",
+       "Lakefront Arena"
+      ]
+     },
+     "booked": {
+      "name": "Smoothie King Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 17805,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 3,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "real": [
+      "Wells Fargo Center"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Hagan Arena St Joseph's University",
+       "Pearson & McGonigle Hall",
+       "The Dell Music Center"
+      ],
+      "shippedNoChoice": [
+       "Hagan Arena St Joseph's University",
+       "Pearson & McGonigle Hall",
+       "The Dell Music Center"
+      ],
+      "popAffinity": [
+       "The 2300 Arena",
+       "The Dell Music Center",
+       "Tom Gola Arena"
+      ],
+      "qloo": [
+       "The Dell Music Center",
+       "The 2300 Arena",
+       "Tom Gola Arena"
+      ],
+      "popular": [
+       "The 2300 Arena",
+       "Pearson & McGonigle Hall",
+       "Hagan Arena St Joseph's University"
+      ],
+      "ladder": [
+       "Palestra",
+       "Finneran Pavilion",
+       "Tom Gola Arena"
+      ],
+      "model": [
+       "Wells Fargo Center",
+       "Lincoln Financial Field",
+       "The Mann Center"
+      ]
+     },
+     "booked": {
+      "name": "Hagan Arena St Joseph's University",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 7,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "montreal-ca",
+     "city": "Montréal",
+     "real": [
+      "Bell Centre"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Centre Bell",
+       "Verdun Auditorium",
+       "McConnell Arena"
+      ],
+      "shippedNoChoice": [
+       "Centre Bell",
+       "Verdun Auditorium",
+       "McConnell Arena"
+      ],
+      "popAffinity": [
+       "Place Bell",
+       "Aréna Martin Brodeur",
+       "Combat d'Archers - Combat Archery"
+      ],
+      "qloo": [
+       "Place Bell",
+       "Aréna Martin Brodeur",
+       "Combat d'Archers - Combat Archery"
+      ],
+      "popular": [
+       "Place Bell",
+       "Centre Bell",
+       "CEPSUM"
+      ],
+      "ladder": [
+       "Bell Centre",
+       "Place Bell",
+       "Mount Royal Arena"
+      ],
+      "model": [
+       "Bell Centre",
+       "Olympic Stadium",
+       "Videotron Centre"
+      ]
+     },
+     "booked": {
+      "name": "Centre Bell",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 21273,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 15,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0.6666666666666666,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Addison Rae",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Addison Tour",
+   "draw": 5900,
+   "cities": [
+    {
+     "marketId": "philadelphia-us-pa",
+     "city": "Philadelphia",
+     "real": [
+      "The Fillmore Philadelphia"
+     ],
+     "ranks": {
+      "shipped": 4,
+      "shippedNoChoice": 4,
+      "popAffinity": 2,
+      "qloo": 4,
+      "popular": 1,
+      "ladder": null,
+      "model": 3
+     },
+     "top": {
+      "shipped": [
+       "Finneran Pavilion",
+       "The Palestra",
+       "The Met Philadelphia"
+      ],
+      "shippedNoChoice": [
+       "Finneran Pavilion",
+       "The Palestra",
+       "The Met Philadelphia"
+      ],
+      "popAffinity": [
+       "Underground Arts",
+       "The Fillmore Philadelphia",
+       "Union Transfer"
+      ],
+      "qloo": [
+       "FringeArts",
+       "Underground Arts",
+       "Ruba"
+      ],
+      "popular": [
+       "The Fillmore Philadelphia",
+       "Union Transfer",
+       "Underground Arts"
+      ],
+      "ladder": [
+       "Palestra",
+       "Finneran Pavilion",
+       "Tom Gola Arena"
+      ],
+      "model": [
+       "The Met Philadelphia",
+       "Franklin Music Hall",
+       "The Fillmore Philadelphia"
+      ]
+     },
+     "booked": {
+      "name": "Finneran Pavilion",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 6500,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 23,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 1
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "real": [
+      "The Anthem"
+     ],
+     "ranks": {
+      "shipped": 12,
+      "shippedNoChoice": 20,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 13,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "CareFirst Arena",
+       "Bender Arena",
+       "Capital One Arena"
+      ],
+      "shippedNoChoice": [
+       "CareFirst Arena",
+       "Bender Arena",
+       "Capital One Arena"
+      ],
+      "popAffinity": [
+       "Flash",
+       "Echostage",
+       "The Howard Theatre"
+      ],
+      "qloo": [
+       "Flash",
+       "The DC Arts Center (DCAC)",
+       "Dance Place"
+      ],
+      "popular": [
+       "Capital One Arena",
+       "The Fillmore Silver Spring",
+       "Echostage"
+      ],
+      "ladder": [
+       "Patriot Center",
+       "D.C. Armory",
+       "Wolf Trap National Park for the Performing Arts"
+      ],
+      "model": [
+       "The Anthem",
+       "Echostage",
+       "The Fillmore Silver Spring"
+      ]
+     },
+     "booked": {
+      "name": "CareFirst Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 4200,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 21,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "denver-us-co",
+     "city": "Denver",
+     "real": [
+      "Mission Ballroom"
+     ],
+     "ranks": {
+      "shipped": 10,
+      "shippedNoChoice": 10,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": 12,
+      "ladder": null,
+      "model": 2
+     },
+     "top": {
+      "shipped": [
+       "Fillmore Auditorium",
+       "Denver Coliseum",
+       "Denver Performing Arts Complex"
+      ],
+      "shippedNoChoice": [
+       "Fillmore Auditorium",
+       "Denver Coliseum",
+       "Denver Performing Arts Complex"
+      ],
+      "popAffinity": [
+       "Ogden Theatre",
+       "Bluebird Theater",
+       "Fillmore Auditorium"
+      ],
+      "qloo": [
+       "Bluebird Theater",
+       "Ogden Theatre",
+       "Levitt Pavilion Denver"
+      ],
+      "popular": [
+       "Ogden Theatre",
+       "Fillmore Auditorium",
+       "Bluebird Theater"
+      ],
+      "ladder": [
+       "Denver Auditorium Arena",
+       "Denver Coliseum",
+       "Red Rocks Amphitheatre"
+      ],
+      "model": [
+       "Fillmore Auditorium",
+       "Mission Ballroom",
+       "Ogden Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Fillmore Auditorium",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 3900,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 15,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.3333333333333333
+   },
+   "hit3": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 1
+   }
+  },
+  {
+   "artist": "Twenty One Pilots",
+   "set": "held-out",
+   "region": "na",
+   "tour": "The Clancy World Tour",
+   "draw": 19200,
+   "cities": [
+    {
+     "marketId": "austin-us-tx",
+     "city": "Austin",
+     "real": [
+      "Moody Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 2,
+      "qloo": 2,
+      "popular": 3,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Moody Amphitheater",
+       "Moody Center",
+       "Germania Insurance Amphitheater"
+      ],
+      "shippedNoChoice": [
+       "Moody Amphitheater",
+       "Moody Center",
+       "Germania Insurance Amphitheater"
+      ],
+      "popAffinity": [
+       "Gregory Gym",
+       "Moody Amphitheater",
+       "Germania Insurance Amphitheater"
+      ],
+      "qloo": [
+       "Gregory Gym",
+       "Moody Amphitheater",
+       "Moody Center"
+      ],
+      "popular": [
+       "Gregory Gym",
+       "Germania Insurance Amphitheater",
+       "Moody Amphitheater"
+      ],
+      "ladder": [
+       "Moody Center",
+       "Gregory Gymnasium",
+       "Ritz"
+      ],
+      "model": [
+       "Moody Center",
+       "Germania Insurance Amphitheater",
+       "H-E-B Center at Cedar Park"
+      ]
+     },
+     "booked": {
+      "name": "Moody Amphitheater",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 15000,
+      "fit": "sells out"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 4,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "las-vegas-us-nv",
+     "city": "Las Vegas",
+     "real": [
+      "MGM Grand Garden Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 2,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 5,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "MGM Grand",
+       "T-Mobile Arena",
+       "Orleans Arena"
+      ],
+      "shippedNoChoice": [
+       "T-Mobile Arena",
+       "MGM Grand",
+       "Orleans Arena"
+      ],
+      "popAffinity": [
+       "Orleans Arena",
+       "South Point Arena & Equestrian Center",
+       "Cox Pavilion"
+      ],
+      "qloo": [
+       "Orleans Arena",
+       "South Point Arena & Equestrian Center",
+       "Cox Pavilion"
+      ],
+      "popular": [
+       "Orleans Arena",
+       "South Point Arena & Equestrian Center",
+       "City National Arena"
+      ],
+      "ladder": [
+       "T-Mobile Arena",
+       "Sphere",
+       "Silver State Arena"
+      ],
+      "model": [
+       "MGM Grand Garden Arena",
+       "T-Mobile Arena",
+       "Michelob Ultra Arena"
+      ]
+     },
+     "booked": {
+      "name": "MGM Grand",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 16800,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "harrisburg-us-pa",
+     "city": "Harrisburg",
+     "real": [
+      "Hersheypark Stadium"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "GIANT"
+      ],
+      "shippedNoChoice": [
+       "GIANT"
+      ],
+      "popAffinity": [],
+      "qloo": [],
+      "popular": [],
+      "ladder": [
+       "Hersheypark Arena",
+       "Hershey Theatre"
+      ],
+      "model": [
+       "Giant Center",
+       "Santander Arena",
+       "Hollywood Casino at Penn National Race Course"
+      ]
+     },
+     "booked": {
+      "name": "GIANT",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": false,
+     "ladderUsed": true,
+     "candidates": 1,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0.6666666666666666,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0.6666666666666666,
+    "model": 0.6666666666666666
+   }
+  },
+  {
+   "artist": "Gary Barlow",
+   "set": "held-out",
+   "region": "uk",
+   "tour": "The Songbook Tour (2025)",
+   "draw": 2400,
+   "cities": [
+    {
+     "marketId": "manchester-gb",
+     "city": "Manchester",
+     "real": [
+      "O2 Apollo Manchester"
+     ],
+     "ranks": {
+      "shipped": 3,
+      "shippedNoChoice": 3,
+      "popAffinity": 9,
+      "qloo": 10,
+      "popular": 11,
+      "ladder": 10,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "The Bridgewater Hall",
+       "Manchester Academy",
+       "O2 Apollo"
+      ],
+      "shippedNoChoice": [
+       "The Bridgewater Hall",
+       "Manchester Academy",
+       "O2 Apollo"
+      ],
+      "popAffinity": [
+       "AO Arena",
+       "Manchester Academy",
+       "O2 Victoria Warehouse Manchester"
+      ],
+      "qloo": [
+       "AO Arena",
+       "O2 Victoria Warehouse Manchester",
+       "The Bridgewater Hall"
+      ],
+      "popular": [
+       "AO Arena",
+       "Manchester Academy",
+       "O2 Ritz Manchester"
+      ],
+      "ladder": [
+       "Bolton Arena",
+       "Manchester Velodrome",
+       "Manchester Academy 1"
+      ],
+      "model": [
+       "O2 Apollo Manchester",
+       "O2 Victoria Warehouse",
+       "Manchester Academy"
+      ]
+     },
+     "booked": {
+      "name": "The Bridgewater Hall",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 2400,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 14,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "brighton-gb",
+     "city": "Brighton",
+     "real": [
+      "Brighton Centre"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Brighton Music Hall",
+       "Theatre Royal Brighton",
+       "Brighton Open Air Theatre"
+      ],
+      "shippedNoChoice": [
+       "Brighton Music Hall",
+       "Theatre Royal Brighton",
+       "Brighton Open Air Theatre"
+      ],
+      "popAffinity": [
+       "Komedia Brighton",
+       "Brighton Music Hall",
+       "Theatre Royal Brighton"
+      ],
+      "qloo": [
+       "Brighton Music Hall",
+       "Theatre Royal Brighton",
+       "Komedia Brighton"
+      ],
+      "popular": [
+       "Komedia Brighton",
+       "Green Door Store",
+       "Theatre Royal Brighton"
+      ],
+      "ladder": [
+       "The Saffrons",
+       "Connaught Theatre",
+       "Lamb Theatre"
+      ],
+      "model": [
+       "Brighton Centre",
+       "The Brighton Dome",
+       "Concorde 2"
+      ]
+     },
+     "booked": {
+      "name": "Brighton Music Hall",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 9,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "nottingham-gb",
+     "city": "Nottingham",
+     "real": [
+      "Nottingham Royal Concert Hall"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 3,
+      "qloo": 3,
+      "popular": 2,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Theatre Royal & Royal Concert Hall",
+       "Mansfield Palace Theatre",
+       "Albert Hall Conference Centre"
+      ],
+      "shippedNoChoice": [
+       "Theatre Royal & Royal Concert Hall",
+       "Mansfield Palace Theatre",
+       "Albert Hall Conference Centre"
+      ],
+      "popAffinity": [
+       "Motorpoint Arena Nottingham",
+       "Derby Arena",
+       "Theatre Royal & Royal Concert Hall"
+      ],
+      "qloo": [
+       "Motorpoint Arena Nottingham",
+       "Derby Arena",
+       "Nottingham Arts Theatre"
+      ],
+      "popular": [
+       "Motorpoint Arena Nottingham",
+       "Theatre Royal & Royal Concert Hall",
+       "Derby Arena"
+      ],
+      "ladder": [
+       "Derby Arena",
+       "Motorpoint Arena Nottingham",
+       "Derby Theatre"
+      ],
+      "model": [
+       "Rock City",
+       "Nottingham Forum",
+       "Rescue Rooms"
+      ]
+     },
+     "booked": {
+      "name": "Theatre Royal & Royal Concert Hall",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": null,
+      "fit": "unmeasured"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 9,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.6666666666666666,
+    "shippedNoChoice": 0.6666666666666666,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.6666666666666666,
+    "qloo": 0.6666666666666666,
+    "popular": 0.6666666666666666,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   }
+  },
+  {
+   "artist": "Turnstile",
+   "set": "bench",
+   "region": "na",
+   "tour": "Never Enough Tour (fall 2025 North American leg)",
+   "draw": 7000,
+   "cities": [
+    {
+     "marketId": "des-moines-us-ia",
+     "city": "Des Moines",
+     "real": [
+      "Water Works Park"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Casey's Center",
+       "Val Air Ballroom",
+       "Horizon Events Center"
+      ],
+      "shippedNoChoice": [
+       "Casey's Center",
+       "Val Air Ballroom",
+       "Horizon Events Center"
+      ],
+      "popAffinity": [
+       "Hoyt Sherman Place",
+       "Val Air Ballroom",
+       "Knapp Center"
+      ],
+      "qloo": [
+       "Val Air Ballroom",
+       "Hoyt Sherman Place",
+       "Knapp Center"
+      ],
+      "popular": [
+       "Hoyt Sherman Place",
+       "Casey's Center",
+       "Knapp Center"
+      ],
+      "ladder": [
+       "Casey's Center",
+       "Buccaneer Arena"
+      ],
+      "model": [
+       "Wells Fargo Arena",
+       "Val Air Ballroom",
+       "Hoyt Sherman Place"
+      ]
+     },
+     "booked": {
+      "name": "Casey's Center",
+      "from": "the Wikidata ladder, found on Qloo",
+      "agentsChoice": false,
+      "capacity": 16980,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": true,
+     "candidates": 7,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 1
+    },
+    {
+     "marketId": "minneapolis-us-mn",
+     "city": "Minneapolis",
+     "real": [
+      "The Armory"
+     ],
+     "ranks": {
+      "shipped": 15,
+      "shippedNoChoice": 18,
+      "popAffinity": 5,
+      "qloo": 8,
+      "popular": 2,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Williams Arena",
+       "3M Arena at Mariucci",
+       "Skyway Theatre"
+      ],
+      "shippedNoChoice": [
+       "Williams Arena",
+       "3M Arena at Mariucci",
+       "Skyway Theatre"
+      ],
+      "popAffinity": [
+       "Skyway Theatre",
+       "Palace Theatre",
+       "First Avenue"
+      ],
+      "qloo": [
+       "Skyway Theatre",
+       "The Cedar Cultural Center",
+       "Palace Theatre"
+      ],
+      "popular": [
+       "First Avenue",
+       "The Armory",
+       "Palace Theatre"
+      ],
+      "ladder": [
+       "Williams Arena",
+       "Roy Wilkins Auditorium",
+       "Orpheum Theatre"
+      ],
+      "model": [
+       "The Armory",
+       "First Avenue",
+       "Palace Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Williams Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 14625,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 20,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "san-francisco-us-ca",
+     "city": "San Francisco",
+     "real": [
+      "Bill Graham Civic Auditorium"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 3,
+      "popular": 3,
+      "ladder": 3,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Bill Graham Civic Auditorium",
+       "Oakland Arena",
+       "Social Hall SF"
+      ],
+      "shippedNoChoice": [
+       "Bill Graham Civic Auditorium",
+       "Oakland Arena",
+       "Social Hall SF"
+      ],
+      "popAffinity": [
+       "Bill Graham Civic Auditorium",
+       "Great American Music Hall",
+       "Fox Theater"
+      ],
+      "qloo": [
+       "Social Hall SF",
+       "Great American Music Hall",
+       "Bill Graham Civic Auditorium"
+      ],
+      "popular": [
+       "Fox Theater",
+       "Oakland Arena",
+       "Bill Graham Civic Auditorium"
+      ],
+      "ladder": [
+       "Cow Palace",
+       "Haas Pavilion",
+       "Bill Graham Civic Auditorium"
+      ],
+      "model": [
+       "Bill Graham Civic Auditorium",
+       "The Warfield",
+       "The Regency Ballroom"
+      ]
+     },
+     "booked": {
+      "name": "Bill Graham Civic Auditorium",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 7000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 18,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0.3333333333333333,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.6666666666666666,
+    "ladder": 0.3333333333333333,
+    "model": 0.6666666666666666
+   }
+  },
+  {
+   "artist": "Kim Petras",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Feed the Beast World Tour",
+   "draw": 9400,
+   "cities": [
+    {
+     "marketId": "seattle-us-wa",
+     "city": "Seattle",
+     "real": [
+      "WaMu Theater"
+     ],
+     "ranks": {
+      "shipped": 2,
+      "shippedNoChoice": 4,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Climate Pledge Arena",
+       "WAMU Theater",
+       "Paramount Theatre"
+      ],
+      "shippedNoChoice": [
+       "Climate Pledge Arena",
+       "Paramount Theatre",
+       "Alaska Airlines Arena"
+      ],
+      "popAffinity": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "qloo": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "popular": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "ladder": [
+       "Climate Pledge Arena",
+       "Hec Edmundson Pavilion",
+       "accesso ShoWare Center"
+      ],
+      "model": [
+       "WaMu Theater",
+       "Paramount Theatre",
+       "Moore Theatre"
+      ]
+     },
+     "booked": {
+      "name": "Climate Pledge Arena",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 18000,
+      "fit": "loose"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 4,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "washington-us-dc",
+     "city": "Washington",
+     "real": [
+      "The Anthem"
+     ],
+     "ranks": {
+      "shipped": 6,
+      "shippedNoChoice": 7,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": null,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "DC Armory",
+       "Capital One Arena",
+       "CareFirst Arena"
+      ],
+      "shippedNoChoice": [
+       "DC Armory",
+       "Capital One Arena",
+       "CareFirst Arena"
+      ],
+      "popAffinity": [
+       "Capital One Arena",
+       "CareFirst Arena",
+       "Washington Wizards"
+      ],
+      "qloo": [
+       "Capital One Arena",
+       "Washington Wizards",
+       "CareFirst Arena"
+      ],
+      "popular": [
+       "Capital One Arena",
+       "CareFirst Arena",
+       "DC Armory"
+      ],
+      "ladder": [
+       "Capital One Arena",
+       "Patriot Center",
+       "D.C. Armory"
+      ],
+      "model": [
+       "The Anthem",
+       "Warner Theatre",
+       "Lincoln Theatre"
+      ]
+     },
+     "booked": {
+      "name": "DC Armory",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 10000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "san-francisco-us-ca",
+     "city": "San Francisco",
+     "real": [
+      "Bill Graham Civic Auditorium"
+     ],
+     "ranks": {
+      "shipped": null,
+      "shippedNoChoice": null,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 5,
+      "model": null
+     },
+     "top": {
+      "shipped": [
+       "Haas Pavilion",
+       "Oakland Arena",
+       "Cow Palace Arena & Event Center"
+      ],
+      "shippedNoChoice": [
+       "Haas Pavilion",
+       "Oakland Arena",
+       "Cow Palace Arena & Event Center"
+      ],
+      "popAffinity": [
+       "Oakland Arena",
+       "The Greek Theatre",
+       "Cow Palace Arena & Event Center"
+      ],
+      "qloo": [
+       "The Greek Theatre",
+       "Oakland Arena",
+       "Cow Palace Arena & Event Center"
+      ],
+      "popular": [
+       "Oakland Arena",
+       "Cow Palace Arena & Event Center",
+       "The Greek Theatre"
+      ],
+      "ladder": [
+       "Oakland Arena",
+       "Chase Center",
+       "Cow Palace"
+      ],
+      "model": [
+       "The Masonic",
+       "The Warfield",
+       "SF Masonic Auditorium"
+      ]
+     },
+     "booked": {
+      "name": "Haas Pavilion",
+      "from": "Qloo's list",
+      "agentsChoice": false,
+      "capacity": 11877,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 8,
+     "agentRoomsAdded": 2,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 0,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   },
+   "hit3": {
+    "shipped": 0.3333333333333333,
+    "shippedNoChoice": 0,
+    "popAffinity": 0,
+    "qloo": 0,
+    "popular": 0,
+    "ladder": 0,
+    "model": 0.6666666666666666
+   }
+  },
+  {
+   "artist": "Tame Impala",
+   "set": "held-out",
+   "region": "na",
+   "tour": "Deadbeat Tour",
+   "draw": 19100,
+   "cities": [
+    {
+     "marketId": "portland-us-or",
+     "city": "Portland",
+     "real": [
+      "Moda Center"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Moda Center",
+       "Oregon Airsoft Arena",
+       "The Rose Quarter"
+      ],
+      "shippedNoChoice": [
+       "Moda Center",
+       "Oregon Airsoft Arena",
+       "The Rose Quarter"
+      ],
+      "popAffinity": [
+       "Chiles Center",
+       "The Rose Quarter",
+       "Oregon Airsoft Arena"
+      ],
+      "qloo": [
+       "Chiles Center",
+       "The Rose Quarter",
+       "Oregon Airsoft Arena"
+      ],
+      "popular": [
+       "The Rose Quarter",
+       "Chiles Center",
+       "Oregon Airsoft Arena"
+      ],
+      "ladder": [
+       "Moda Center",
+       "Veterans Memorial Coliseum",
+       "Arlene Schnitzer Concert Hall"
+      ],
+      "model": [
+       "Moda Center",
+       "Veterans Memorial Coliseum",
+       "Providence Park"
+      ]
+     },
+     "booked": {
+      "name": "Moda Center",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 19980,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 4,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "nashville-us-tn",
+     "city": "Nashville",
+     "real": [
+      "Bridgestone Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": null,
+      "qloo": null,
+      "popular": null,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Bridgestone Arena",
+       "Ascend Federal Credit Union Amphitheater",
+       "Allen Arena"
+      ],
+      "shippedNoChoice": [
+       "Bridgestone Arena",
+       "Ascend Federal Credit Union Amphitheater",
+       "Allen Arena"
+      ],
+      "popAffinity": [
+       "Ascend Federal Credit Union Amphitheater",
+       "Memorial Gymnasium",
+       "Allen Arena"
+      ],
+      "qloo": [
+       "Ascend Federal Credit Union Amphitheater",
+       "Memorial Gymnasium",
+       "Allen Arena"
+      ],
+      "popular": [
+       "Ascend Federal Credit Union Amphitheater",
+       "Memorial Gymnasium",
+       "Allen Arena"
+      ],
+      "ladder": [
+       "Bridgestone Arena",
+       "Nashville Municipal Auditorium",
+       "The Pinnacle"
+      ],
+      "model": [
+       "Bridgestone Arena",
+       "Nissan Stadium",
+       "Ascend Amphitheater"
+      ]
+     },
+     "booked": {
+      "name": "Bridgestone Arena",
+      "from": "the agent's names, found on Qloo",
+      "agentsChoice": true,
+      "capacity": 19395,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 4,
+     "agentRoomsAdded": 1,
+     "ladderRoomsAdded": 0
+    },
+    {
+     "marketId": "seattle-us-wa",
+     "city": "Seattle",
+     "real": [
+      "Climate Pledge Arena"
+     ],
+     "ranks": {
+      "shipped": 1,
+      "shippedNoChoice": 1,
+      "popAffinity": 1,
+      "qloo": 1,
+      "popular": 1,
+      "ladder": 1,
+      "model": 1
+     },
+     "top": {
+      "shipped": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "shippedNoChoice": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "popAffinity": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "qloo": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "popular": [
+       "Climate Pledge Arena",
+       "Alaska Airlines Arena"
+      ],
+      "ladder": [
+       "Climate Pledge Arena",
+       "Hec Edmundson Pavilion",
+       "accesso ShoWare Center"
+      ],
+      "model": [
+       "Climate Pledge Arena",
+       "T-Mobile Park",
+       "Lumen Field"
+      ]
+     },
+     "booked": {
+      "name": "Climate Pledge Arena",
+      "from": "Qloo's list",
+      "agentsChoice": true,
+      "capacity": 18000,
+      "fit": "close"
+     },
+     "bookable": true,
+     "ladderUsed": false,
+     "candidates": 2,
+     "agentRoomsAdded": 0,
+     "ladderRoomsAdded": 0
+    }
+   ],
+   "hit1": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 1,
+    "model": 1
+   },
+   "hit3": {
+    "shipped": 1,
+    "shippedNoChoice": 1,
+    "popAffinity": 0.3333333333333333,
+    "qloo": 0.3333333333333333,
+    "popular": 0.3333333333333333,
+    "ladder": 1,
+    "model": 1
+   }
+  }
+ ],
+ "missing": []
+}

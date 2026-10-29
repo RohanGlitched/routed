@@ -252,3 +252,83 @@ So on tours it can't have read, the model still names the smaller markets of a b
 map does. A likely reason, not tested here: most of these 13 are arena and theatre tours, whose smaller stops are
 metros a model knows. Qloo's whole-tour gain over population comes from re-ordering cities, not from finding small ones the
 model misses.
+
+## Round 4: the room Routed actually books (pre-registered)
+
+**Sources.**
+- Protocol: `data/outside2/PROTOCOL-4.md`, committed in 7d132d3 before any Qloo call for this test.
+- Amendment 1: committed in fbffff9 before scoring. The first run had skipped 11 artists whose Qloo ids were never
+  cached, so each was found again with one search.
+- Script: `scripts/rooms4.ts`.
+- Numbers: `rooms4.json`, with every city, list, booked room, its source and its Wikidata capacity.
+
+**Spend.**
+- 190 of 320 Qloo requests: name searches for the agent's rooms and ladder rooms, `scoreRooms` calls, and the
+  11 artist searches.
+- 0 model calls. The model's venue answers are round 2's.
+- Wikidata lookups for capacities are free.
+- All 34 artists and 102 cities were scored.
+
+**The test.** The same 102 cities as Test 1. Routed's room flow was replayed on round 2's cached Qloo lists:
+1. The agent's two named rooms per city were looked up on Qloo by name.
+2. The rooms were measured (overrides and Wikidata only).
+3. The Wikidata ladder ran where no room was a one-night fit.
+4. The size rule booked one room.
+
+The question is whether that room is the one the artist really played.
+
+| Contrast | n | A | B | A − B, pts [95% CI] | wins–losses–ties | sign test p |
+|---|---|---|---|---|---|---|
+| **Routed's booked room vs the model alone, hit@1** | 34 | 45.1% | 53.9% | −8.8 [−19.6, +2.0] | 5–12–17 | 0.143 |
+| **Routed's room order vs the model alone, hit@3** | 34 | 55.9% | 73.5% | −17.6 [−30.4, −5.9] | 5–15–14 | 0.041 |
+| **Qloo by popularity and affinity vs Qloo by affinity, hit@3** | 34 | 30.4% | 28.4% | +2.0 [+0.0, +4.9] | 2–0–32 | 0.500 |
+| Routed's room order vs Qloo's list, hit@3 | 34 | 55.9% | 28.4% | +27.5 [+15.7, +39.2] | 20–2–12 | < 0.001 |
+| Routed's booked room vs Qloo's first room, hit@1 | 34 | 45.1% | 15.7% | +29.4 [+18.6, +40.2] | 19–1–14 | < 0.001 |
+| Routed's booked room with no agent choice vs the model alone, hit@1 | 34 | 41.2% | 53.9% | −12.7 [−23.5, −2.0] | 5–16–13 | 0.027 |
+| Routed's booked room vs the biggest fitting Wikidata room, hit@1 | 34 | 45.1% | 26.5% | +18.6 [+9.8, +28.4] | 16–2–16 | 0.001 |
+| Qloo by popularity and affinity vs Qloo popularity only, hit@3 | 34 | 30.4% | 34.3% | −3.9 [−9.8, +1.0] | 1–4–29 | 0.375 |
+| Qloo by popularity and affinity vs the model alone, hit@3 | 34 | 30.4% | 73.5% | −43.1 [−54.9, −31.4] | 1–26–7 | < 0.001 |
+
+The first three rows (in bold) are the primary contrasts; the rest are secondary.
+
+| Method | Cities | Real venue at #1 | In top 3 | Listed at all |
+|---|---|---|---|---|
+| Routed's booked room, then its order | 102 | 46 | 57 | 70 |
+| The same, with no agent choice | 102 | 42 | 55 | 70 |
+| Qloo's rooms by popularity and affinity together | 102 | 19 | 31 | 39 |
+| Qloo, the artist's room ranking (round 2) | 102 | 16 | 29 | 39 |
+| Qloo places by popularity, no artist (round 2) | 102 | 25 | 35 | 49 |
+| Biggest fitting room on Wikidata (round 2) | 102 | 27 | 38 | 42 |
+| The model alone (round 2) | 102 | 55 | 75 | 78 |
+
+The round 2 rows were recomputed from the caches and match Test 1 exactly.
+
+**Where the booked room came from.** A room was booked in 99 of 102 cities:
+- 62 came from Qloo's own list;
+- 33 from the agent's names, found on Qloo;
+- 4 from the Wikidata ladder, found on Qloo.
+
+59 of the 99 were the agent's choice, and 80 had a measured capacity. Of the 46 that were the real venue, 22 came
+from Qloo's list, 22 from the agent's names and 2 from the ladder.
+
+**On crowds under 5,000** (7 tours, 21 cities; a descriptive split, not pre-registered):
+- Routed's booked room was the real venue in 7 cities, the model's first guess in 6.
+- Qloo's first room was the real venue in 1.
+
+**Reading.**
+- The room Routed books is far better than Qloo's list on its own: 46 of 102 at #1 against 16. The agent's names,
+  the measuring and the size rule do that work.
+- It still trails the model's first guess, 46 against 55. That gap is not significant at #1 (p = 0.14), but it is
+  at top 3 (p = 0.04).
+- In 18 cities the model's first guess was the real room and Routed booked another. The misses fall into three
+  kinds:
+  - **Stadium tours** (Billy Joel, Green Day, Pink), where no stadium was among Routed's candidates and it booked an
+    arena or a smaller room.
+  - **A real room ranked below another fit.** The size rule put the real room behind another measured fit: The
+    Anthem behind CareFirst Arena or the DC Armory in Washington, the Ryman behind War Memorial Auditorium in
+    Nashville, Oslo Spektrum behind Unity Arena.
+  - **Booked rooms that stayed unmeasured** (Hagan Arena, the Theatre of the Living Arts, AO Arena).
+- Ordering Qloo's rooms by popularity and affinity together moves Qloo's list only slightly (+2.0 pts, 2–0–32). It
+  stays below popularity alone.
+- These are 2023–2025 tours that the model may have read about. Rooms are measured here without the live service's
+  stored index or web search, so 19 booked rooms stayed unmeasured.

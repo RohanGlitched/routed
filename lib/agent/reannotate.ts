@@ -6,7 +6,7 @@ import { capacityOverride } from "./capacity";
 import { checkWhy, fit, room as bookedRoom, strongSource, whyProblems } from "./evidence";
 import { FAN_KEEP } from "./plan";
 import { qlooDiff } from "./qloodiff";
-import { chooseRoom, pickSupport, roomCheck, twoNights } from "./rooms";
+import { chooseRoom, civicOrCampus, pickSupport, roomCheck, roomNameOk, twoNights } from "./rooms";
 
 /**
  * Re-annotates a stored tour under the rules as they read now (Oct 30, after the Oct 29 judging round), with no
@@ -87,7 +87,10 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
     const was = bookedRoom(s);
     // A move only to a room whose capacity can be trusted without checking (Komedia's 2,124 in Bristol is a listing
     // site's guess); the booked room stays a candidate whatever its source.
-    const next = chooseRoom(s.rooms.filter((x) => x.id === s.roomId || strongSource(x.capacity)), s.roomId, draw);
+    // A free park stage or a campus arena opens the whole city's list (rooms by name, measured or not).
+    const cur = bookedRoom(s);
+    const pool = cur && civicOrCampus(cur) ? s.rooms.filter((x) => roomNameOk(x.name, draw) && !civicOrCampus(x)) : s.rooms.filter((x) => x.id === s.roomId || strongSource(x.capacity));
+    const next = chooseRoom(pool.length ? pool : s.rooms, s.roomId, draw);
     if (!next) return null;
     const nights = twoNights(next, draw) && !s.rooms.some((x) => fit(x, draw) === "fits") ? 2 : 1;
     const moved = next.id !== s.roomId || nights !== (s.nights ?? 1);

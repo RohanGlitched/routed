@@ -241,6 +241,50 @@
      "legWorse": false
     }
    ]
+  },
+  {
+   "label": "Oct 30, scored by severity, leg cap enforced, and scout_city: the agent may ask for 2 cities a round (commits 6a145b7 to a180653; the room-grade change landed between runs)",
+   "tours": [
+    {
+     "artist": "Sierra Ferrell",
+     "tour": "qisgzhe5tj",
+     "before": 3,
+     "after": 1,
+     "rounds": 3,
+     "revised": 3,
+     "modelCalls": 8,
+     "qloo": 83,
+     "longestLegObjected": 1895,
+     "longestLegFinal": 1490,
+     "legWorse": false
+    },
+    {
+     "artist": "Alvvays",
+     "tour": "jrp8bq4md8",
+     "before": 1,
+     "after": 0,
+     "rounds": 1,
+     "revised": 1,
+     "modelCalls": 6,
+     "qloo": 85,
+     "longestLegObjected": 3551,
+     "longestLegFinal": 1148,
+     "legWorse": false
+    },
+    {
+     "artist": "Japanese Breakfast",
+     "tour": "ipgunjvpgt",
+     "before": 3,
+     "after": 0,
+     "rounds": 1,
+     "revised": 2,
+     "modelCalls": 5,
+     "qloo": 87,
+     "longestLegObjected": 2231,
+     "longestLegFinal": 1770,
+     "legWorse": false
+    }
+   ]
   }
  ]
 }

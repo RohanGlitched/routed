@@ -33,7 +33,7 @@ const WALL: Record<string, { route: "keep" | "rules" | "detour"; carveHome?: boo
   fx3xht5bex: { route: "detour" },
   at2uxhew2q: { route: "detour" },
   "3nuqugrj3n": { route: "detour" },
-  w4cverzz63: { route: "rules" },
+  w4cverzz63: { route: "detour" },
   xf4rbjj9s9: { route: "rules", carveHome: true },
   xzm49sq9qt: { route: "detour" },
 };
@@ -48,7 +48,11 @@ const ids = rest.filter((x) => !x.startsWith("--"));
 const todo = ids.length ? ids : Object.keys(WALL);
 mkdirSync(outDir, { recursive: true });
 
-const all = readdirSync(inDir).filter((f) => f.endsWith(".json")).map((f) => JSON.parse(readFileSync(join(inDir, f), "utf8")) as TourRecord);
+// <in-dir> may list several folders, comma-separated: the first one's records win (the ones being re-annotated);
+// the others only add donor runs.
+const dirs = inDir.split(",");
+const seen = new Set<string>();
+const all = dirs.flatMap((d) => readdirSync(d).filter((f) => /^[a-z0-9]{10}\.json$/.test(f)).map((f) => JSON.parse(readFileSync(join(d, f), "utf8")) as TourRecord)).filter((r) => (seen.has(r.id) ? false : (seen.add(r.id), true)));
 const usage: Usage = newUsage();
 const at = new Date().toISOString();
 const summary: unknown[] = [];

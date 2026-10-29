@@ -215,6 +215,28 @@ export const SHORTLIST_SCHEMA = {
   required: ["cities", "alternates"],
 };
 
+/** scout_city: how many cities the agent may ask Routed to scout on Qloo in one revision round (Oct 30). */
+export const SCOUT_PER_ROUND = 2;
+
+/** A re-booking, with the agent's own scouting requests (scout_city): city_ids it wants looked up on Qloo now. */
+const REBOOK_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    stops: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        properties: { city_id: { type: "string" }, room_id: { type: "string" }, opener_id: { type: "string" }, why: { type: "string" } },
+        required: ["city_id", "room_id", "opener_id", "why"],
+      },
+    },
+    scout: { type: "array", items: { type: "string" } },
+  },
+  required: ["stops", "scout"],
+};
+
 const BOOK_SCHEMA = {
   type: "object",
   additionalProperties: false,
@@ -601,7 +623,9 @@ export function bookingSwaps(prev: BookStop[], next: BookStop[], objections: Obj
 const changedStops = (a: BookStop[], b: BookStop[]) => b.filter((x) => !a.some((y) => y.city_id === x.city_id && y.room_id === x.room_id)).length;
 
 function revisePrompt(objections: Objection[], shows: number, others: CityScore[], scouted: { city_id: string }[] = [], setAside: string[] = []): string {
-  return `${setAside.length ? `${setAside.join("\n")}\n\n` : ""}check_plan ran the tour's rules over your booking and objects to ${objections.length === 1 ? "one thing" : `${objections.length} things`}:\n${objections.map((o) => `- ${o.text}`).join("\n")}\n\n${scouted.length ? `Scouting results for the cities the check asks you to book (use these room_ids):\n${JSON.stringify(scouted)}\n\n` : ""}${others.length ? `Other candidate cities (not scouted yet; their rooms are looked up if you book one): ${others.map((c) => `${c.marketId} (${c.name}, fan #${c.rank})`).join(", ")}.\n\n` : ""}Re-book exactly ${shows} stops in the same JSON shape. Keep every stop the check didn't object to; change only what an objection names, using city_ids from the candidates and room_ids from that city's rooms. Write each "why" for the stop as you now book it.`;
+  return `${setAside.length ? `${setAside.join("\n")}\n\n` : ""}check_plan ran the tour's rules over your booking and objects to ${objections.length === 1 ? "one thing" : `${objections.length} things`}:\n${objections.map((o) => `- ${o.text}`).join("\n")}\n\n${scouted.length ? `Scouting results for the cities the check asks you to book (use these room_ids):\n${JSON.stringify(scouted)}\n\n` : ""}${others.length ? `Other candidate cities (not scouted yet; their rooms are looked up if you book one): ${others.map((c) => `${c.marketId} (${c.name}, fan #${c.rank})`).join(", ")}.\n\n` : ""}You also have one tool, scout_city: list in "scout" up to ${SCOUT_PER_ROUND} city_ids from the candidates whose rooms you haven't seen (or an empty list). Routed looks each one up on Qloo right away (the rooms these fans go to, measured against the crowd, and the support acts there); if you book a city you asked to scout, give any room_id and the size rule books the best room there. Its rooms are shown to you next round.
+
+Re-book exactly ${shows} stops in the same JSON shape. Keep every stop the check didn't object to; change only what an objection names, using city_ids from the candidates and room_ids from that city's rooms. Write each "why" for the stop as you now book it.`;
 }
 
 /* ───────────────────────── the city rules ───────────────────────── */
@@ -1103,6 +1127,7 @@ export async function planTour(
     const before = objections.length;
     log({ kind: "rule", text: objections.length ? `check_plan: ${objections.length === 1 ? "one objection" : `${objections.length} objections`} to the agent's booking, sent back to it.` : "check_plan: the agent's booking clears every rule (radius clause, leg cap, room fit, major markets).", result: objections.length ? objections.map((o) => `${o.city_id ? `${name(o.city_id)}: ` : ""}${o.short}`).join("; ") : undefined });
     let rounds = 0;
+    const scoutedByAgent: string[] = [];
     // The best booking so far by check_plan. A re-booking replaces it only with fewer objections; otherwise it is set
     // aside, the agent is told why, and the next round starts from the best one again (Oct 29: re-booking rounds that
     // added objections, Alvvays 1 to 4, were kept).
@@ -1125,14 +1150,25 @@ export async function planTour(
         await scout(id);
         await premeasure(id);
       }));
-      const scouted = asked.map((id) => ({ city_id: id, rooms: compactRooms(rooms.get(id) ?? [], draw), openers: compactOpeners(openers.get(id) ?? []) }));
+      const scouted = [...new Set([...asked, ...scoutedByAgent])].map((id) => ({ city_id: id, rooms: compactRooms(rooms.get(id) ?? [], draw), openers: compactOpeners(openers.get(id) ?? []) }));
       const others = candidates.filter((c) => !rooms.has(c.marketId)).slice(0, 12);
       const messages: Msg[] = [...bookMessages, { role: "assistant", content: JSON.stringify({ stops: booked }) }, { role: "user", content: revisePrompt(objections, shows, others, scouted, setAside) }];
       let next: BookStop[];
       try {
-        const r = await ask<{ stops: BookStop[] }>({ name: "rebook", schema: BOOK_SCHEMA, maxTokens: 8000, timeoutMs: 90_000, messages });
+        const r = await ask<{ stops: BookStop[]; scout?: string[] }>({ name: "rebook", schema: REBOOK_SCHEMA, maxTokens: 8000, timeoutMs: 90_000, messages });
         model = r.model;
         next = r.data.stops ?? [];
+        // scout_city: the agent's own Qloo lookups, at most SCOUT_PER_ROUND a round, cities it hasn't seen.
+        const wanted = [...new Set((r.data.scout ?? []).filter((id) => byId.has(id) && !rooms.has(id)))].slice(0, SCOUT_PER_ROUND);
+        if (wanted.length) {
+          const ts = Date.now();
+          await Promise.all(wanted.map(async (id) => {
+            await scout(id);
+            await premeasure(id);
+          }));
+          scoutedByAgent.push(...wanted);
+          log({ kind: "qloo", text: `The agent asked to scout ${wanted.map(name).join(" and ")} before re-booking (scout_city, round ${rounds}).`, result: wanted.map((id) => `${name(id)}: ${(rooms.get(id) ?? []).length} rooms, ${(openers.get(id) ?? []).length} support acts`).join("; "), ms: Date.now() - ts });
+        }
       } catch (e) {
         console.error("[plan] revision failed", e);
         log({ kind: "model", text: `The agent didn't answer the check (round ${rounds}), so the rules settle what's left.`, failed: true, ms: Date.now() - t });
@@ -1143,6 +1179,14 @@ export async function planTour(
         await scout(s.city_id);
         await premeasure(s.city_id);
       }));
+      // A city the agent asked to scout gets the size rule's room when the agent couldn't know its room ids.
+      next = next.map((s) => {
+        if (!scoutedByAgent.includes(s.city_id)) return s;
+        const rs = rooms.get(s.city_id) ?? [];
+        if (rs.some((x) => x.id === s.room_id)) return s;
+        const pick = chooseRoom(rs, undefined, draw);
+        return pick ? { ...s, room_id: pick.id } : s;
+      });
       const swaps = bookingSwaps(booked, next, objections, name, roomName);
       const after = checkPlan(next, ctx());
       const kept = better(best, { objections: after });

@@ -805,3 +805,24 @@ test("a round that fixes one thing and breaks another keeps the fix: the agent's
   assert.equal(r.check!.after, 0);
   assert.deepEqual(r.picks.map((x) => x.marketId).sort(), [id("Albuquerque"), id("Denver"), id("Salt Lake City")].sort());
 });
+
+test("scout_city: the agent asks Routed to scout a city it hasn't seen, books it, and the size rule picks the room", async () => {
+  const calls: string[] = [];
+  const looked: string[] = [];
+  const ask = model((name) => {
+    if (name === "shortlist") return { cities: [id("Denver"), id("Boulder"), id("Salt Lake City")].map((c) => ({ city_id: c, why: "strong" })), alternates: [] };
+    if (name === "book") return { stops: [stop(id("Denver")), stop(id("Boulder")), stop(id("Salt Lake City"))] };
+    if (name === "rebook") return { stops: [stop(id("Denver")), { ...stop(id("Omaha")), room_id: "a-guess" }, stop(id("Salt Lake City"))], scout: [id("Omaha"), id("Wichita"), id("Tulsa")] };
+    return { reasons: [] };
+  }, calls);
+  const deps = tools(ask);
+  const rooms0 = deps.lookUpRooms;
+  deps.lookUpRooms = async (a, m, ...rest) => (looked.push(m), rooms0(a, m, ...rest));
+  const { p, lines } = run(deps);
+  const r = await p;
+  assert.ok(lines.some((l) => /The agent asked to scout Omaha and Wichita before re-booking \(scout_city, round 1\)/.test(l.text)), "two at most a round");
+  assert.ok(!looked.includes(id("Tulsa")), "the third request is not looked up");
+  assert.equal(r.check!.after, 0);
+  const omaha = r.picks.find((x) => x.marketId === id("Omaha"));
+  assert.ok(omaha && omaha.rooms.some((x) => x.id === omaha.roomId), "a real room, chosen by the size rule");
+});

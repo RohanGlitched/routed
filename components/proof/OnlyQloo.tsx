@@ -28,7 +28,8 @@ export async function OnlyQloo() {
   return (
     <div className={s.only}>
       <p className={s.onlyLead}>
-        On the flagship tour, {p.artist.name} from {t.input.from.split(",")[0]}, {only.length} of Routed&apos;s {p.stops.length} cities came from Qloo&apos;s fan map. The same model, routing the same tour without Qloo, picked none of them.
+        On the flagship tour, {p.artist.name} from {t.input.from.split(",")[0]}, two counts, each against its own baseline: {p.qlooDiff ? `${p.qlooDiff.added.length} of ${p.stops.length} stops changed against the same rules on city size alone; ` : ""}
+        {only.length} of the {p.stops.length} cities the same model without Qloo didn&apos;t pick. Those {only.length}:
       </p>
       <ol className={s.onlyList}>
         {only.map((x) => {

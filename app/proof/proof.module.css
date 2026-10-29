@@ -151,3 +151,8 @@
   .toc { display: none; }
 }
 .tableWrap + .history { margin-top: 18px; }
+
+/* The lead (Oct 30, round 2): the comparison Routed wins in one sentence, then Qloo alone's figure. */
+.leadBox { display: grid; gap: 10px; max-width: 40em; border-left: 4px solid var(--fire); padding-left: 16px; }
+.leadLine { margin: 0; font-size: 18px; line-height: 1.45; font-weight: 600; color: var(--ink); }
+.leadSecond { margin: 0; font-size: 15px; color: var(--ink-2); }

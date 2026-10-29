@@ -6,6 +6,7 @@ import { findMarket, marketId, unrankedLabel, type RegionId } from "@/lib/geo/ma
 import { outsideRow, REAL_TOURS, realTourFor } from "@/lib/outside";
 import { benchTours } from "@/lib/showcase";
 import type { TourRecord } from "@/lib/types";
+import { ClubTheatre, HowWeChecked, ProofLead } from "@/components/proof/Checks";
 import { HeadToHead } from "@/components/proof/HeadToHead";
 import { ModelPlusQloo } from "@/components/proof/ModelPlusQloo";
 import { OnlyQloo } from "@/components/proof/OnlyQloo";
@@ -15,7 +16,7 @@ import s from "./proof.module.css";
 
 export const metadata: Metadata = {
   title: "With and without Qloo",
-  description: "What only Qloo found on the flagship tour, then Qloo against population and against the model alone: on tours announced after the model's release, on their smaller cities, on 49 older real tours, and on Qloo's own fan map, losses included.",
+  description: "The city ranking Routed ships is level with the model alone on tours it can't have read, and finds cities the model misses. Every test in one table, then each one: tours announced after the model's release, their smaller cities, club and theatre acts only, 49 older real tours and Qloo's own fan map, losses included.",
 };
 export const revalidate = 300;
 
@@ -120,9 +121,13 @@ export default async function Proof() {
       <header className={s.head}>
         <div className={s.headLeft}>
           <h1 className={s.h1}>With and without Qloo</h1>
+          <ProofLead />
           <nav className={s.toc} aria-label="On this page">
             <p>Every test on this page, the losses next to the wins:</p>
             <ol>
+              <li>
+                <a href="#checks">How we checked: every test in one table</a>
+              </li>
               <li>
                 <a href="#unread">Tours the model can&apos;t have read</a>
               </li>
@@ -131,6 +136,9 @@ export default async function Proof() {
               </li>
               <li>
                 <a href="#smaller-markets">Smaller cities only</a>
+              </li>
+              <li>
+                <a href="#club-theatre">Club and theatre acts only</a>
               </li>
               <li>
                 <a href="#rooms">The room Routed actually books</a>
@@ -147,9 +155,13 @@ export default async function Proof() {
         <OnlyQloo />
       </header>
 
+      <HowWeChecked ownRuler={r.length ? { n: r.length, routed: mean(r.map((x) => x.routed)), guess: mean(r.map((x) => x.guess)) } : undefined} />
+
       <PostCutoff />
 
       <ModelPlusQloo />
+
+      <ClubTheatre />
 
       <RoomPick />
 

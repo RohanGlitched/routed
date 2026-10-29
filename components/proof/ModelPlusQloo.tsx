@@ -6,8 +6,8 @@ import { ContrastTable, type Contrast } from "./HeadToHead";
 
 /**
  * Two Oct 30 additions to /proof. (1) The model + Qloo against the model alone, post hoc, from
- * data/outside2/model-plus-qloo.json (scripts/model-plus-qloo.ts). (2) The pre-registered secondary-market test
- * (data/outside2/PROTOCOL-3.md, committed before scoring), from data/outside2/secondary-markets.json. Both are shown
+ * data/outside2/model-plus-qloo.json (scripts/model-plus-qloo.ts). (2) The secondary-market test, protocol committed
+ * before scoring from offline caches (data/outside2/PROTOCOL-3.md), from data/outside2/secondary-markets.json. Both are shown
  * whatever they say.
  */
 
@@ -108,7 +108,7 @@ function PostHoc() {
   );
 }
 
-/** The pre-registered secondary-market test: each region's 25 biggest markets left out. */
+/** The secondary-market test (protocol committed before scoring, from offline caches): each region's 25 biggest markets left out. */
 function SmallerMarkets() {
   const [qm, bp] = S.primary as [Contrast, Contrast];
   const mp = S.secondary.find((c) => c.name === "The model alone vs population")!;
@@ -117,7 +117,7 @@ function SmallerMarkets() {
   const R = rows.map((x) => x.R).sort((a, b) => a - b);
   return (
     <section className={s.sec} aria-labelledby="smaller-markets">
-      <p className={s.flag}>Pre-registered</p>
+      <p className={s.flag}>Protocol committed before scoring, from offline caches</p>
       <h2 className={s.h2} id="smaller-markets">
         Smaller cities only
       </h2>
@@ -126,7 +126,7 @@ function SmallerMarkets() {
         <a href={`${REPO}/commit/${PROTOCOL3_COMMIT}`} target="_blank" rel="noreferrer">
           committed a protocol
         </a>{" "}
-        before scoring a narrower test. On the same {S.n} tours announced after the model&apos;s release, each region&apos;s {S.top} biggest cities are left out of every ranking and every tour. That leaves {R[0]} to {R.at(-1)} cities per tour. Which ranking finds more of the smaller cities a tour announced? It was scored from the same cached answers, with {S.calls.qloo} Qloo calls and {S.calls.model} model calls.
+        before scoring a narrower test, from caches already on disk (so it fixed the metric before any score, not before the data). On the same {S.n} tours announced after the model&apos;s release, each region&apos;s {S.top} biggest cities are left out of every ranking and every tour. That leaves {R[0]} to {R.at(-1)} cities per tour. Which ranking finds more of the smaller cities a tour announced? It was scored from the same cached answers, with {S.calls.qloo} Qloo calls and {S.calls.model} model calls.
       </p>
       <div className={s.stats} data-part="secondary-stats">
         <div className={s.stat}>

@@ -376,8 +376,11 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
   const ordered = orderStops(c.from, kept.map((k) => k.score));
   for (const l of longLegs(c.from, ordered)) {
     const a = ordered[l.index - 1]!, b = ordered[l.index]!;
-    const alt = clearing(kept.map((k) => k.score).filter((x) => x.marketId !== b.marketId), c);
-    out.push({ city_id: b.marketId, rule: "leg", text: `${a.name} to ${b.name} is ${n(l.km)} km of road with no show between, over the ${n(MAX_LEG_KM)} km leg cap: keep the tour in one part of the region.${alt ? ` Cities that clear it in ${b.name}'s place: ${alt}.` : ""}`, short: `${n(l.km)} km leg from ${a.name}` });
+    const guarded = (x: CityScore) => Boolean(c.mustKeep?.has(x.marketId)) || isAnchor({ rank: x.rank, pop: popOf(x.marketId) });
+    const rest = kept.map((k) => k.score).filter((x) => x.marketId !== b.marketId);
+    const keepB = guarded(b) ? bridgeFix(rest, b, c, guarded) : "";
+    const alt = keepB ? "" : clearing(rest, c);
+    out.push({ city_id: b.marketId, rule: "leg", text: `${a.name} to ${b.name} is ${n(l.km)} km of road with no show between, over the ${n(MAX_LEG_KM)} km leg cap: keep the tour in one part of the region.${keepB ? ` ${b.name} is a city the rules keep, so bridge the route rather than drop it: ${keepB}.` : alt ? ` Cities that clear it in ${b.name}'s place: ${alt}.` : ""}`, short: `${n(l.km)} km leg from ${a.name}` });
   }
   // The radius objections get the same: cities that clear every rule from the stops kept so far.
   for (const o of out) {
@@ -391,7 +394,8 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
     if (!isAnchor({ rank: a.rank, pop: popOf(a.marketId) }) || kept.some((k) => k.score.marketId === a.marketId)) continue;
     if (kept.some((k) => isAnchor({ rank: k.score.rank, pop: popOf(k.score.marketId) }) && tooClose(placed(k.score), placed(a), c.radius))) continue;
     if (kept.length && !kept.some((k) => roadKm(k.score, a) <= MAX_LEG_KM)) continue;
-    out.push({ city_id: a.marketId, rule: "anchor", text: `${a.name} (${a.marketId}) is a major market and #${a.rank} on the fan map: the anchor rule keeps it on the tour, so book it in place of your weakest stop.`, short: `${a.name} is a major market, #${a.rank} (anchor rule)` });
+    const anchorFix = bridgeFix(kept.map((k) => k.score), a, c, (x) => Boolean(c.mustKeep?.has(x.marketId)) || isAnchor({ rank: x.rank, pop: popOf(x.marketId) }));
+    out.push({ city_id: a.marketId, rule: "anchor", text: `${a.name} (${a.marketId}) is a major market and #${a.rank} on the fan map: the anchor rule keeps it on the tour, so ${anchorFix || "book it in place of your weakest stop"}.`, short: `${a.name} is a major market, #${a.rank} (anchor rule)` });
   }
 
   // Qloo's top fan cities stay, whatever their size, when another candidate is within the leg cap of them.
@@ -401,7 +405,11 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
     if (![...c.byId.values()].some((x) => x.marketId !== id && roadKm(x, f) <= MAX_LEG_KM)) continue;
     const near = kept.find((k) => tooClose(placed(k.score), placed(f), c.radius));
     if (near && c.mustKeep!.has(near.score.marketId)) continue;
-    out.push({ city_id: id, rule: "fan", text: `${f.name} (${id}) is #${f.rank} on Qloo's fan map, one of the artist's ${FAN_KEEP} strongest fan cities: keep it on the tour${near ? `, in place of ${near.score.name} inside its radius` : ", in place of your weakest stop"}.`, short: `${f.name} is fan city #${f.rank} (kept like an anchor)` });
+    const protectedCity = (x: CityScore) => Boolean(c.mustKeep?.has(x.marketId)) || isAnchor({ rank: x.rank, pop: popOf(x.marketId) });
+    const fix = near ? "" : bridgeFix(kept.map((k) => k.score), f, c, protectedCity);
+    // No booking the agent can make keeps it without a leg over the cap: the rules bridge it after the agent's turn.
+    if (!near && !fix) continue;
+    out.push({ city_id: id, rule: "fan", text: `${f.name} (${id}) is #${f.rank} on Qloo's fan map, one of the artist's ${FAN_KEEP} strongest fan cities: keep it on the tour${near ? `, in place of ${near.score.name} inside its radius` : `: ${fix}`}.`, short: `${f.name} is fan city #${f.rank} (kept like an anchor)` });
   }
 
   // The starting city, when it is in the artist's top HOME_RANK, opens the run (keepHome).
@@ -433,15 +441,50 @@ export function clearing(kept: CityScore[], c: CheckContext, k = ALTERNATIVES): 
   for (const x of pool) {
     if (out.length >= k) break;
     if (kept.some((y) => tooClose(placed(y), placed(x), c.radius))) continue;
-    const rs = c.rooms.get(x.marketId);
-    if (rs && !rs.length) continue;
-    if (rs && c.draw && !roomCheck(rs, undefined, c.draw).bookable) continue;
+    const pick = bookableRoom(x, c);
+    if (!pick) continue;
     const run = [...kept, x];
     if (longLegs(c.from, orderStops(c.from, run)).length) continue;
     const near = kept.length ? kept.reduce((best, y) => (roadKm(y, x) < roadKm(best, x) ? y : best)) : undefined;
-    out.push(`${x.marketId} (${x.name}, fan #${x.rank}${near ? `, ${n(roadKm(near, x))} km from ${near.name}` : ""}${rs ? "" : ", rooms looked up if you book it"})`);
+    out.push(`${x.marketId} (${x.name}, fan #${x.rank}${near ? `, ${n(roadKm(near, x))} km from ${near.name}` : ""}; room_id ${pick})`);
   }
   return out.join("; ");
+}
+
+/** The room the rule would book in a scouted city, as the agent would name it (its id), or null when the city
+ *  isn't scouted or nothing there can take the crowd. Only scouted cities are offered: a city the agent brings in
+ *  unscouted comes back with a room id it had to guess. */
+function bookableRoom(x: CityScore, c: CheckContext): string | null {
+  const rs = c.rooms.get(x.marketId);
+  if (!rs?.length) return null;
+  const rc = roomCheck(rs, undefined, c.draw);
+  return rc.bookable && rc.room ? rc.room.id : null;
+}
+
+/**
+ * How to keep a city the rules want (a top fan city, an anchor) on a run whose legs would break without help: book
+ * it in place of the weakest stop the rules don't protect, and, when one swap leaves a leg over the cap, a scouted
+ * bridge city in place of the next weakest. Returns the fix in words with ids, or "" when none clears every leg.
+ */
+export function bridgeFix(kept: CityScore[], want: CityScore, c: CheckContext, protect: (x: CityScore) => boolean): string {
+  const ok = (run: CityScore[]) => !longLegs(c.from, orderStops(c.from, run)).length && !run.some((a, i) => run.some((b, j) => j > i && tooClose(placed(a), placed(b), c.radius)));
+  const room = bookableRoom(want, c);
+  const weak = kept.filter((x) => !protect(x) && x.marketId !== want.marketId).sort((a, b) => b.rank - a.rank);
+  const book = (x: CityScore, r: string | null) => `${x.name} (${x.marketId}${r ? `, room_id ${r}` : ""})`;
+  for (const w of weak) {
+    const run = [...kept.filter((x) => x !== w), want];
+    if (ok(run)) return `book ${book(want, room)} in place of ${w.name}`;
+  }
+  const pool = [...c.byId.values()].filter((x) => x.marketId !== want.marketId && !kept.some((y) => y.marketId === x.marketId) && bookableRoom(x, c)).sort((a, b) => a.rank - b.rank).slice(0, 12);
+  for (let i = 0; i < weak.length; i++)
+    for (let j = 0; j < weak.length; j++) {
+      if (i === j) continue;
+      for (const x of pool) {
+        const run = [...kept.filter((y) => y !== weak[i] && y !== weak[j]), want, x];
+        if (ok(run)) return `book ${book(want, room)} in place of ${weak[i]!.name}, and ${book(x, bookableRoom(x, c))} in place of ${weak[j]!.name} to bridge the route`;
+      }
+    }
+  return "";
 }
 
 /** The better of two bookings by check_plan: fewer objections wins; on a tie the earlier one stands. */

@@ -123,7 +123,7 @@ test("a re-booking that makes things worse is set aside: the earlier booking sta
   const r = await p;
   assert.deepEqual(calls, ["shortlist", "book", "rebook", "rebook"]);
   assert.match(prompts[0]!, /Cities that clear it: .*albuquerque/i, "the radius objection names cities that clear it");
-  assert.match(prompts[1]!, /Your round 1 re-booking .* left 3 objections, no fewer than the 1 before, so it was set aside/);
+  assert.match(prompts[1]!, /Your round 1 re-booking .* left \d objections, no fewer than the 1 before, so it was set aside/);
   assert.match(prompts[1]!, /Boulder is 39 km from Denver/, "round 2 starts again from the best booking, not the worse one");
   assert.ok(lines.some((l) => /so the earlier booking stands/.test(l.result ?? "")));
   assert.ok(lines.some((l) => /The agent cleared all 1 of check_plan's objections itself, in 2 rounds\./.test(l.text)));
@@ -773,4 +773,16 @@ test("a capacity lookup that never answers is left when the run's time for looku
   const r = await planTour({ artist, audience, cities: eight, from: { lat: st.lat, lon: st.lon, label: st.label }, region: "eu", shows: 4, draw: 3000, useModel: false, log: () => {}, lookupsUntil: Date.now() + 300 }, deps);
   assert.equal(r.picks.length, 4);
   assert.ok(Date.now() - t < 1500, `took ${Date.now() - t} ms`);
+});
+
+test("check_plan says how to keep a fan city a leg would break: book it and a bridge city in place of the weakest stops", () => {
+  const C = ["Denver", "Portland", "Salt Lake City", "Albuquerque", "Omaha", "Wichita"].map((n, i) => city(n, i + 1));
+  const byId = new Map(C.map((c) => [c.marketId, c]));
+  const rooms = new Map(C.map((c) => [c.marketId, [{ id: `${c.marketId}-a`, name: `${c.name} Hall`, tags: [], capacity: { value: 1500, source: "https://www.wikidata.org/wiki/Q1", quote: "q" } }] as Room[]]));
+  const ctx = { byId, rooms, shows: 3, draw: 1500, from: { lat: C[0]!.lat, lon: C[0]!.lon }, radius: 150, mustKeep: new Set([C[1]!.marketId]) };
+  // Denver, Omaha, Wichita: Portland (fan #2) can't join without a bridge.
+  const o = checkPlan([C[0]!, C[4]!, C[5]!].map((c) => ({ city_id: c.marketId, room_id: `${c.marketId}-a`, opener_id: "op1", why: "x" })), ctx);
+  const fan = o.find((x) => x.rule === "fan");
+  assert.ok(fan, JSON.stringify(o));
+  assert.match(fan!.text, /book Portland \(portland-us-or, room_id portland-us-or-a\) in place of (Wichita|Omaha)/);
 });

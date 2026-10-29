@@ -167,7 +167,7 @@ function Drawing({ g, counts, className, label }: { g: Geometry; counts: Counts;
   );
 }
 
-export function AgentLoop({ log, usage, artist }: { log?: LogLine[]; usage?: Usage; artist?: string }) {
+export function AgentLoop({ log, usage, artist, typical }: { log?: LogLine[]; usage?: Usage; artist?: string; /** Measured on the poster wall ("81 to 104 Qloo requests and 6 model calls"). */ typical?: string }) {
   const counts = countCalls(log);
   const label = `The agent loop: ${STEPS.map((x) => `${x.title} (${x.lane === "rule" ? "a rule" : x.lane === "model" ? "the model" : "Qloo"})`).join(", then ")}. check_plan's objections go back to the model for up to ${MAX_REVISIONS} rounds.`;
   return (
@@ -182,8 +182,8 @@ export function AgentLoop({ log, usage, artist }: { log?: LogLine[]; usage?: Usa
       <Drawing g={NARROW} counts={counts} className={s.loopNarrow} label={label} />
       <figcaption>
         {log && artist
-          ? `Call counts from the run for ${artist} below${usage ? `: ${usage.qloo} Qloo calls${usage.qlooCached ? ` (${usage.qlooCached} from the cache)` : ""} and ${usage.modelCalls} model calls in all` : ""}. A typical eight-show tour makes about 70 Qloo calls and 4 to 6 model calls.`
-          : "Call counts for a typical eight-show tour: about 70 Qloo calls and 4 to 6 model calls."}
+          ? `Call counts from the run for ${artist} below${usage ? `: ${usage.qloo} Qloo requests over the network${usage.qlooCached ? ` (${usage.qlooCached} more answered from the cache)` : ""} and ${usage.modelCalls} model calls in all` : ""}.${typical ? ` The eight-show tours on the poster wall made ${typical}.` : ""}`
+          : typical ? `The eight-show tours on the poster wall made ${typical}.` : "Call counts from a run appear here once a tour is on the poster wall."}
       </figcaption>
     </figure>
   );

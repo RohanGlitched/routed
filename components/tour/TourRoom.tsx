@@ -135,7 +135,7 @@ export function TourRoom({ initial, rerun }: { initial: TourRecord; /** A re-run
         </div>
 
         <div className={s.head}>
-          <p className={s.kicker}>{running ? "Routing now" : rec.status === "failed" ? "Routing stopped" : `Routed ${new Date(rec.finishedAt ?? rec.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}</p>
+          <p className={s.kicker}>{running ? "Routing now" : rec.status === "failed" ? "Routing stopped" : `Routed ${new Date(rec.finishedAt ?? rec.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}`}</p>
           <h1 className={s.title}>{title}</h1>
           {stops.length > 0 ? (
             <p className={s.summary}>

@@ -25,6 +25,8 @@ export type Reannotated = { rec: TourRecord; changes: string[]; stale: boolean }
 const popOf = (id: string) => marketById(id)?.pop ?? 0;
 const pt = (s: { lat: number; lon: number; marketId: string }) => ({ lat: s.lat, lon: s.lon, pop: popOf(s.marketId), id: s.marketId });
 const n0 = (v: number) => v.toLocaleString("en-US");
+/** An administrative unit, not a neighbourhood a booker would name ("Ward 2", Washington's council ward). */
+export const ADMIN_AREA = /^(ward|district|precinct)\s*\d+$|\d/i;
 
 /** A place Qloo files under a kind its name contradicts (Sun Studio, a "record store"; Seattle Antiques Market). */
 export function placeKind(name: string, kind?: string): string | undefined {
@@ -203,8 +205,15 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
   // 6. OpenStreetMap's neighbourhood where Qloo's places name none.
   const named: string[] = [];
   for (const s of plan.stops) {
-    if (!s.local?.hot || s.local.hot.name) continue;
+    if (!s.local?.hot || (s.local.hot.name && !ADMIN_AREA.test(s.local.hot.name))) continue;
     const got = o.osm?.get(s.marketId);
+    if (!got && s.local.hot.name && ADMIN_AREA.test(s.local.hot.name)) {
+      // A ward number is no neighbourhood: say none rather than "Ward 2".
+      named.push(`${s.city}: ${s.local.hot.name} dropped (an administrative ward, not a neighbourhood)`);
+      const { name: _drop, ...rest } = s.local.hot;
+      s.local.hot = rest;
+      continue;
+    }
     if (!got) continue;
     const { name, km } = typeof got === "string" ? { name: got, km: undefined } : got;
     s.local.hot = { ...s.local.hot, name, named: "osm", ...(km ? { osmKm: km } : {}) };

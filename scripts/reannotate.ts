@@ -21,7 +21,7 @@ function loadEnv() {
 }
 loadEnv();
 
-const { reannotate } = await import("../lib/agent/reannotate.ts");
+const { reannotate, ADMIN_AREA } = await import("../lib/agent/reannotate.ts");
 const { writePitches } = await import("../lib/agent/pitch.ts");
 const { osmNeighbourhoodNear } = await import("../lib/osm.ts");
 const { newUsage, withUsage } = await import("../lib/usage.ts");
@@ -36,6 +36,9 @@ const WALL: Record<string, { route: "keep" | "rules" | "detour"; carveHome?: boo
   w4cverzz63: { route: "detour" },
   xf4rbjj9s9: { route: "rules", carveHome: true },
   xzm49sq9qt: { route: "detour" },
+  // Oct 30 re-runs where the agent cleared its own objections, promoted to the wall in place of 5ezd3ab55f and w4cverzz63.
+  ipgunjvpgt: { route: "keep" },
+  jrp8bq4md8: { route: "keep" },
 };
 /** Donor runs must come from the booking-rules pass on (Oct 15), so their rooms were sized the current way. */
 const DONOR_FROM = "2026-10-15";
@@ -67,7 +70,7 @@ for (const id of todo) {
   // OpenStreetMap for the hottest tile of each stop Qloo's places named nothing for (donor stops included: one may come in).
   const osm = new Map<string, { name: string; km?: number }>();
   for (const s of [...rec.plan.stops, ...donors.map((d) => d.stop)]) {
-    if (osm.has(s.marketId) || !s.local?.hot || s.local.hot.name) continue;
+    if (osm.has(s.marketId) || !s.local?.hot || (s.local.hot.name && !ADMIN_AREA.test(s.local.hot.name))) continue;
     const found = await osmNeighbourhoodNear(s.local.hot.lat, s.local.hot.lon, s.city);
     if (found) osm.set(s.marketId, found);
   }

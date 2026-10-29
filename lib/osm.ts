@@ -21,7 +21,7 @@ export function neighbourhoodOf(address: Address | undefined, city: string): str
   const c = fold(city);
   // Administrative units and housing estates aren't neighbourhoods a booker would name ("Ward 2", "North City ED",
   // "The Estates at Wiedemann Mansion").
-  const BAD = /\d|\bward\b|\bed\b|\bestates?\b|\bmansion\b|\bapartments?\b|\bcondo|\bsubdivision\b|\bhomes\b|\belectoral\b|\bdistrict of\b/;
+  const BAD = /\d|\bward\b|\bed\b|\bestates?\b|\bmansion\b|\bapartments?\b|\bcondo|\bsubdivision\b|\bhomes\b|\belectoral\b|\bdistrict of\b|\bemployment area\b/;
   const ok = (v?: string) => {
     const f = v ? fold(v) : "";
     return Boolean(v && v.length <= 40 && f && f !== c && f !== `city of ${c}` && !/\bcounty\b/.test(f) && !BAD.test(f));

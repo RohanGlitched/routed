@@ -27,9 +27,15 @@ for (const dir of DIRS) {
       for (const row of data.venues?.rows ?? []) for (const c of row.cities ?? []) for (const k of QLOO_TOP) if (c.top) delete c.top[k];
       for (const row of data.support?.rows ?? []) delete row.qloo;
     }
-    const indent = /^\{\n( +)"/.exec(text)?.[1]?.length ?? 0;
-    const out = JSON.stringify(data, null, indent || undefined) + (text.endsWith("\n") ? "\n" : "");
-    if (out !== text) {
+    // Round 4's room test (Oct 30): the lists Qloo returned per city (artist signal, popularity only, popularity with
+    // affinity, and Routed's list before the agent's choice) go; the ranks, hits, the booked room and the model's and
+    // Wikidata's lists stay. Stripped Oct 30, after the round 2 judges found them in 73f7861 (history kept).
+    if (path === "data/outside2/rooms4.json") for (const row of data.rows ?? []) for (const c of row.cities ?? []) for (const k of ["qloo", "popular", "popAffinity", "shippedNoChoice"]) if (c.top) delete c.top[k];
+    // A Windows checkout may carry CRLF: compare and indent as LF, so a file nothing was stripped from stays put.
+    const lf = text.replace(/\r\n/g, "\n");
+    const indent = /^\{\n( +)"/.exec(lf)?.[1]?.length ?? 0;
+    const out = JSON.stringify(data, null, indent || undefined) + (lf.endsWith("\n") ? "\n" : "");
+    if (out !== lf) {
       writeFileSync(path, out);
       changed++;
       console.log(`stripped ${path}`);

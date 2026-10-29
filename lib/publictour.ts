@@ -7,7 +7,8 @@ import type { Artist, Audience, CityScore, Guess, Local, LogLine, Named, Opener,
  * streamed piece, so a stop's room and booked-room id still match) and image links go; every score left is rounded
  * to two places; the poster's heatmap and the street maps are snapped to grids finer than their dots can show;
  * cities keep their place on the fan map, not Qloo's raw scores; the call sheet's requests show their shape with
- * the ids masked. The stored record is untouched, so the pitches, the re-checks and the MCP tools still read
+ * the ids masked; Qloo's descriptive text (descriptions, place tags, addresses, websites) stays out too. The
+ * stored record is untouched, so the pitches, the re-checks and the MCP tools still read
  * everything. (Before Oct 30 the API still carried Qloo's ids, image links and full-precision affinities.)
  */
 
@@ -64,11 +65,11 @@ export const maskRequest = (s: string) => s.replace(UUID, "‹id›");
 const city = (c: CityScore): CityScore => ({ marketId: c.marketId, name: c.name, label: c.label, lat: c.lat, lon: c.lon, rank: c.rank }) as CityScore;
 /** A room as the day sheet prints it: its fan affinity (two places), capacity and place, not Qloo's id, image,
  *  popularity or rating. */
-const room = ({ popularity: _p, rating: _r, image: _i, ...r }: Room): Room => ({ ...at4(round(r, ["affinity"])), id: opaque(r.id) });
-const opener = ({ popularity: _p, image: _i, ...o }: Opener): Opener => ({ ...round(o, ["affinity"]), id: opaque(o.id) });
-const spot = ({ affinity: _a, ...s }: Spot): Spot => ({ ...at4(s), id: opaque(s.id) });
+const room = ({ popularity: _p, rating: _r, image: _i, website: _w, address: _ad, tags: _t, ...r }: Room): Room => ({ ...at4(round(r, ["affinity"])), tags: [], id: opaque(r.id) });
+const opener = ({ popularity: _p, image: _i, description: _d, ...o }: Opener): Opener => ({ ...round(o, ["affinity"]), id: opaque(o.id) });
+const spot = ({ affinity: _a, address: _ad, ...s }: Spot): Spot => ({ ...at4(s), id: opaque(s.id) });
 const named = ({ affinity: _a, image: _i, ...n }: Named): Named => ({ ...n, id: opaque(n.id) });
-const artist = ({ image: _i, ...a }: Artist): Artist => ({ ...round(a, ["popularity"]), id: opaque(a.id) });
+const artist = ({ image: _i, description: _d, ...a }: Artist): Artist => ({ ...round(a, ["popularity"]), id: opaque(a.id) });
 
 function audience(a: Audience): Audience {
   const list = (x?: Named[]) => x?.map(named);

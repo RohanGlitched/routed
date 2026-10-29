@@ -28,6 +28,7 @@ const { marketById, marketLabel } = await import("../lib/geo/markets.ts");
 const { avg, meanCI, signTest } = await import("../lib/headtohead.ts");
 const { newUsage, withUsage } = await import("../lib/usage.ts");
 const { findPlace, scoreRooms } = await import("../lib/agent/tools.ts");
+const { search } = await import("../lib/qloo.ts");
 const { BIG_ROOM_DRAW, candidatesBySize, concertRoom, ladderTier, mergeLadder, pickArtist, roomCheck, roomFit, roomGrade, roomLadder, roomNameOk, sizePrior, venueTier } = await import("../lib/agent/rooms.ts");
 const { LADDER_DRAW, MEASURE_BATCH, MEASURE_PER_CITY, NAMED_PER_CITY, PRE_MEASURE, placeWords, roomNameMatches } = await import("../lib/agent/plan.ts");
 const { capacityOverride } = await import("../lib/agent/capacity.ts");
@@ -119,8 +120,21 @@ const ladderRows = (marketId: string): LadderRoom[] => {
   return existsSync(p) ? readJson<LadderRoom[]>(p) : [];
 };
 
-/** The artist as round 2 used it (cached: the bench tour's record, or round 2's Qloo search), genres left empty. */
-function artistOf(v: VenueSubject): Artist | null {
+/**
+ * The artist as round 2 used it (cached: the bench tour's record, or round 2's Qloo search), genres left empty; for
+ * an artist round 2 found through the head-to-head's stripped ids, one Qloo search by name (PROTOCOL-4.md, amendment 1).
+ */
+async function artistOf(v: VenueSubject): Promise<Artist | null> {
+  const cachedArtist = artistFromCache(v);
+  if (cachedArtist) return cachedArtist;
+  const found = await cachedStep<{ id: string; name: string; popularity?: number }[]>(`${CACHE}/artist/${slug(v.artist)}.json`, 1, async () =>
+    (await search(v.artist, "urn:entity:artist", 5).catch((e: Error) => Promise.reject(new StepFailed(`artist search: ${e.message}`)))).entities.map((e) => ({ id: e.id, name: e.name, popularity: e.popularity })),
+  );
+  const e = found.find((x) => fold(x.name) === fold(v.artist)) ?? pickArtist(v.artist, found).pick;
+  return e ? { id: e.id, name: e.name, popularity: e.popularity, genres: [], genreKeys: [] } : null;
+}
+
+function artistFromCache(v: VenueSubject): Artist | null {
   if (v.benchId) {
     const p = `${H2H_CACHE}/bench/${v.benchId}.json`;
     if (!existsSync(p)) return null;
@@ -279,12 +293,12 @@ async function run() {
   for (const v of subjects()) {
     const p = `${CACHE}/city/${slug(v.artist)}.json`;
     if (existsSync(p)) continue;
-    const artist = artistOf(v);
-    if (!artist) {
-      console.log(`${v.artist}: no cached Qloo artist; left out`);
-      continue;
-    }
     try {
+      const artist = await artistOf(v);
+      if (!artist) {
+        console.log(`${v.artist}: not found on Qloo; left out`);
+        continue;
+      }
       const states = await shipped(v, artist);
       writeJson(p, states);
     } catch (e) {

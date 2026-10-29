@@ -159,3 +159,21 @@ The same as rounds 1–3:
   model's names, including S.
 - **A single real venue.** A tour plays one room per city. Another room of the right size is a miss here, but it
   could be a fine booking.
+
+## Amendment 1 (Oct 30, before scoring)
+
+**What went wrong.** The first run (118 Qloo requests) left out 11 of the 34 artists:
+- Queen + Adam Lambert, Queens of the Stone Age, Billy Joel, Sugababes, Nine Inch Nails, For King & Country;
+- Chappell Roan, Ado, Troye Sivan, Addison Rae, Kim Petras.
+
+Round 2 took their Qloo ids from the head-to-head's sample stage. Those ids were stripped from the committed files
+(no Qloo ids are published), and round 2's search cache doesn't hold them. So the script found no cached artist and
+skipped them. That is a gap in the script, not a result. No score of any arm had been computed when it was found.
+
+**The fix.**
+- Each of these artists is found again the way the head-to-head's notes say a later stage finds them: one Qloo
+  artist search by name, then `pickArtist` (an exact name wins).
+- That costs 1 request each, 11 in all, inside the same 320 cap and ledger.
+- Everything else is unchanged.
+- The re-found id is used for `findPlace` (where the artist only sets the orchestra-hall rule) and for `scoreRooms`
+  (the fans' affinity for added rooms). Qloo's room list for these artists is still round 2's cached list.

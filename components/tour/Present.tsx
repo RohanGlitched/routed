@@ -5,8 +5,10 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import { Poster } from "@/components/poster/Poster";
 import { posterFor } from "@/lib/poster";
 import { displayTags } from "@/lib/tags";
-import type { Plan, Stop, TourRecord } from "@/lib/types";
-import { checkLine, plural, sheetCounts, shownCapacity } from "./display";
+import { fillDates, runLegs } from "@/lib/geo/fill";
+import type { LogLine, Plan, Stop, TourRecord } from "@/lib/types";
+import type { Rerun } from "./AgentCheck";
+import { agentStory, checkLine, fillOption, jumpsLine, legsLead, plural, sheetCounts, shownCapacity } from "./display";
 import { LocalMap } from "./LocalMap";
 import p from "./present.module.css";
 
@@ -37,9 +39,9 @@ const Checked = ({ text }: { text: string }) => (
  * call sheet in numbers and /proof's headline. It reads the stored tour only (no run), and steps with the arrow
  * keys, a click or a tap (left third goes back); F goes full screen and Escape leaves.
  */
-export function Present({ rec, proof }: { rec: TourRecord; proof: ProofHeadline | null }) {
+export function Present({ rec, proof, rerun }: { rec: TourRecord; proof: ProofHeadline | null; /** A re-run where the agent cleared its own objections. */ rerun?: Rerun }) {
   const plan = rec.plan as Plan;
-  const slides = useMemo(() => buildSlides(rec, plan, proof), [rec, plan, proof]);
+  const slides = useMemo(() => buildSlides(rec, plan, proof, rerun), [rec, plan, proof, rerun]);
   const [i, setI] = useState(0);
   const n = slides.length;
   const go = useCallback((to: number) => setI(Math.max(0, Math.min(n - 1, to))), [n]);
@@ -139,12 +141,15 @@ function toggleFull() {
   else void document.documentElement.requestFullscreen?.().catch(() => {});
 }
 
-function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): Slide[] {
+function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null, rerun?: Rerun): Slide[] {
   const stops = plan.stops;
   const artist = plan.artist.name;
   const shows = stops.reduce((k, s) => k + (s.nights ?? 1), 0);
   const poster = posterFor(plan);
   const out: Slide[] = [];
+  // The run in legs and the fill dates on its dark days, from the stored stops and fan map (lib/geo/fill.ts).
+  const legs = runLegs(stops);
+  const fills = plan.cities?.length ? fillDates(stops, plan.cities, plan.region).filter((f) => f.options.length) : [];
 
   out.push({
     key: "poster",
@@ -165,7 +170,40 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): 
               "."
             )}
           </p>
-          <p className={p.note}>Every blue dot is a tile of {artist}&apos;s Qloo heatmap, sized by how strongly fans over-index there. The fire line is the route.</p>
+          {legs && (
+            <p className={p.legs}>
+              <b>{legsLead(legs)}</b> {jumpsLine(legs)}
+            </p>
+          )}
+          {fills.length > 0 && (
+            <div className={p.fills}>
+              <h3>Fill dates on the way</h3>
+              <ul>
+                {fills.map((f) => (
+                  <li key={f.index}>
+                    <span className={p.fillLeg}>
+                      {f.from} to {f.to}
+                    </span>
+                    <span>
+                      {f.options.map((o, k) => {
+                        const x = fillOption(o);
+                        return (
+                          <span key={o.marketId}>
+                            {k > 0 && ", "}
+                            <b>{x.city}</b> ({x.note})
+                          </span>
+                        );
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <p className={p.note}>
+            Every blue dot is a tile of {artist}&apos;s Qloo heatmap, sized by how strongly fans over-index there. The fire line is the route.
+            {fills.length ? " Fill dates are fan cities from the same map that the band could play on a dark day and still make the next show." : ""}
+          </p>
         </div>
       </div>
     ),
@@ -174,6 +212,9 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): 
   const d = plan.qlooDiff;
   if (d) {
     const total = d.kept + d.added.length;
+    // The other baseline: the same model routing the same tour without Qloo (the control group on the tour page).
+    const guessed = plan.guess?.stops.length ? new Set(plan.guess.stops.map((g) => g.marketId ?? g.city)) : null;
+    const missed = guessed ? stops.filter((x) => !guessed.has(x.marketId) && !guessed.has(x.city)).length : null;
     out.push({
       key: "changed",
       title: "Stops Qloo changed",
@@ -181,9 +222,18 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): 
         <div className={p.changed}>
           <div className={p.changedHead}>
             <h2 className={p.h2}>Stops Qloo changed</h2>
-            <p className={p.big}>
-              <b className="num">{d.added.length}</b> of <span className="num">{total}</span>
-            </p>
+            <div className={p.bigs}>
+              <p className={p.big}>
+                <b className="num">{d.added.length}</b> of <span className="num">{total}</span>
+                <span className={p.bigLabel}>stops changed against the same rules on city size alone</span>
+              </p>
+              {missed !== null && (
+                <p className={`${p.big} ${p.bigBlue}`}>
+                  <b className="num">{missed}</b> of <span className="num">{stops.length}</span>
+                  <span className={p.bigLabel}>cities the same model without Qloo didn&apos;t pick</span>
+                </p>
+              )}
+            </div>
           </div>
           <p className={p.lead}>
             {d.added.length
@@ -232,7 +282,9 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): 
 
   const counts = sheetCounts(rec.log);
   const u = rec.engine?.usage;
-  const swaps = rec.log.flatMap((l) => l.swaps ?? []).filter((s) => !/agent's own change/i.test(s.objection)).slice(0, 3);
+  const swaps = swapRows(rec.log, stops).slice(0, 3);
+  const story = agentStory(rec.log);
+  const c = rec.engine?.check;
   out.push({
     key: "calls",
     title: "The call sheet",
@@ -264,7 +316,15 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): 
             <span>web lookups, for room sizes</span>
           </div>
         </div>
-        {rec.engine?.check && <p className={p.lead}>{checkLine(rec.engine.check)}</p>}
+        {c && story ? (
+          <p className={p.lead}>
+            {story.first.length ? `The agent proposed, check_plan objected ${story.first.length === 1 ? "once" : `${story.first.length} times`}` : "The agent's booking cleared every rule"}
+            {story.rounds.length ? `, and the agent re-booked over ${plural(story.rounds.length, "round")}` : ""}
+            {story.first.length ? (story.cleared ? ", clearing every objection itself." : `; the rules settled the last ${story.rounds.at(-1)?.left.length ?? story.first.length}${c.ruled ? `, changing ${c.ruled} of ${c.stops} stops` : ""}.`) : "."}
+          </p>
+        ) : (
+          c && <p className={p.lead}>{checkLine(c)}</p>
+        )}
         {swaps.length > 0 && (
           <table className={p.swaps}>
             <thead>
@@ -272,6 +332,7 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): 
                 <th scope="col">Agent proposed</th>
                 <th scope="col">Rule objected</th>
                 <th scope="col">Agent re-chose</th>
+                <th scope="col">Booked</th>
               </tr>
             </thead>
             <tbody>
@@ -280,11 +341,24 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null): 
                   <td className={p.proposed}>{s.proposed}</td>
                   <td>{s.objection}</td>
                   <td className={p.chose}>{s.chose}</td>
+                  <td className={p.booked}>
+                    <b>{s.booked}</b>
+                    {s.rule && <span>By rule: {s.rule}</span>}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
+        {rerun && c?.after && rerun.id !== rec.id ? (
+          <p className={p.note}>
+            On a re-run with the {rerun.date} loop the agent cleared its own:{" "}
+            <Link href={`/tour/${rerun.id}`}>
+              {rerun.artist}, {rerun.before === 1 ? "one objection" : `${rerun.before} objections`} to none in {rerun.rounds === 1 ? "one round" : `${rerun.rounds} rounds`}
+            </Link>
+            .
+          </p>
+        ) : null}
         <p className={p.note}>
           {u ? `${counts.withRequest} of the ${plural(counts.qloo, "Qloo line")} carry their exact request; the rest of the requests are place searches by name, summed up in one line each. ` : ""}
           Every step is on the call sheet at the end of the tour book.
@@ -400,4 +474,51 @@ function DaySlide({ stop, plan, artist, draw }: { stop: Stop; plan: Plan; artist
       </div>
     </div>
   );
+}
+
+type SwapRow = { proposed: string; objection: string; chose: string; booked: string; rule?: string };
+
+/**
+ * The call-sheet slide's rows: what the agent proposed, what the rule objected, what the agent chose instead and
+ * what the tour finally booked, with the rule that booked it when that differs. The rounds on one city's room are
+ * one row ("Madison Theater, then Taft Theatre"); an objection that rested on a web capacity the hand check
+ * overturned is not shown as a row of its own (Madison Theater's 17,556), and the agent's own changes aren't
+ * objections.
+ */
+function swapRows(log: LogLine[], stops: Stop[]): SwapRow[] {
+  const rows: (SwapRow & { city?: string })[] = [];
+  const all = log.flatMap((l) => l.swaps ?? []).filter((x) => !/agent's own change/i.test(x.objection));
+  const bookedIn = (city: string) => {
+    const st = stops.find((x) => x.city === city);
+    return st ? (st.rooms.find((r) => r.id === st.roomId)?.name ?? null) : null;
+  };
+  const ruleFor = (city: string, room: string) => {
+    const tail = `, so ${city} gets ${room}.`;
+    const l = log.find((x) => x.kind === "rule" && x.text.endsWith(tail));
+    return l ? l.text.slice(0, -tail.length) : undefined;
+  };
+  for (const sw of all) {
+    const m = /^(.+), ([^,]+)$/.exec(sw.proposed);
+    if (m) {
+      // A room in a city: later rounds on the same city's room join its row.
+      const room = m[1]!;
+      const city = m[2]!;
+      const row = rows.find((r) => r.city === city);
+      if (row) {
+        row.chose = `${row.chose}, then ${sw.chose}`;
+        continue;
+      }
+      if (/\(a web figure,/.test(sw.objection)) continue;
+      rows.push({ city, proposed: room === "an unlisted room" ? `${city}: a room Qloo doesn't list there` : `${room}, ${city}`, objection: sw.objection, chose: sw.chose, booked: bookedIn(city) ?? "Not on the tour" });
+    } else {
+      // A city swapped for another.
+      const booked = bookedIn(sw.chose);
+      rows.push({ proposed: sw.proposed, objection: sw.objection, chose: sw.chose, booked: booked ? `${booked}, ${sw.chose}` : "Not on the tour", ...(booked ? { rule: ruleFor(sw.chose, booked) } : {}) });
+    }
+  }
+  return rows.map(({ city, ...r }) => {
+    if (!city) return r;
+    const last = r.chose.split(", then ").at(-1)!;
+    return { ...r, ...(r.booked !== last && r.booked !== "Not on the tour" ? { rule: ruleFor(city, r.booked) } : {}) };
+  });
 }

@@ -15,7 +15,9 @@ import { Control } from "./Control";
 import { QlooDiff } from "./QlooDiff";
 import { AssumedDraw } from "@/components/home/AssumedDraw";
 import { aside } from "@/lib/tags";
-import { checkLine, plural, sheetCounts, stopAnchor } from "./display";
+import { fillDates, runLegs } from "@/lib/geo/fill";
+import { AgentCheck, type Rerun } from "./AgentCheck";
+import { agentStory, checkLine, jumpsLine, legsLead, plural, sheetCounts, stopAnchor } from "./display";
 import { StopStrip } from "./StopStrip";
 import a from "./agent.module.css";
 import s from "./tour.module.css";
@@ -28,7 +30,7 @@ const short = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("
  * One tour: streams the agent's run when it's fresh (each Qloo call appears on the call sheet as it happens, the
  * poster fills in as the plan does), and shows the finished tour book on a revisit or a shared link.
  */
-export function TourRoom({ initial }: { initial: TourRecord }) {
+export function TourRoom({ initial, rerun }: { initial: TourRecord; /** A re-run where the agent cleared its own objections, for tours where it didn't. */ rerun?: Rerun }) {
   const [rec, setRec] = useState<TourRecord>(initial);
   const started = useRef(false);
   const posterRef = useRef<HTMLDivElement>(null);
@@ -99,6 +101,12 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
   const running = rec.status === "queued" || rec.status === "running";
   const stops = plan?.stops ?? [];
   const title = plan?.artist?.name ?? rec.input.artist;
+  const done = rec.status === "done";
+  // Fill dates for the dark days and the run in legs, from the stored stops and fan map only (lib/geo/fill.ts).
+  const fills = useMemo(() => (done && plan?.stops?.length && plan.cities?.length ? fillDates(plan.stops, plan.cities, plan.region) : []), [done, plan]);
+  const legs = useMemo(() => (done && plan?.stops?.length ? runLegs(plan.stops) : null), [done, plan]);
+  const firstFill = fills.find((f) => f.options.length);
+  const story = useMemo(() => (done ? agentStory(rec.log) : null), [done, rec.log]);
 
   return (
     <div className={`wrap ${s.room}`} data-status={rec.status}>
@@ -146,6 +154,17 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
             </p>
           )}
 
+          {legs && (
+            <p className={s.legs}>
+              <b>{legsLead(legs)}</b> {jumpsLine(legs)}
+              {firstFill ? (
+                <>
+                  {" "}
+                  <a href={`#${stopAnchor(firstFill.index)}`}>Fill dates for the dark days</a> are on the day sheets.
+                </>
+              ) : null}
+            </p>
+          )}
           {plan?.assumedDraw ? <AssumedDraw draw={plan.assumedDraw} artist={plan.artist.name} from={rec.input.from} /> : null}
           {plan?.readThrough?.length ? (
             <p className={a.note}>
@@ -178,10 +197,11 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
             <p className={s.engine}>
               {rec.engine.planned === "model" ? `Planned by ${rec.engine.agent ?? "the agent"}` : "Planned by the fixed plan (the agent model was unavailable)"}
               {rec.engine.writer ? `; pitches by ${rec.engine.writer}` : "; template pitches"}.
-              {rec.engine.check ? ` ${checkLine(rec.engine.check)}` : ""}
+              {rec.engine.check && !story ? ` ${checkLine(rec.engine.check)}` : ""}
               {rec.engine.usage ? ` ${usageLine(rec.engine.usage)}` : ""} The call sheet at the end of the tour book lists every step.
             </p>
           )}
+          {rec.engine?.check && story && <AgentCheck log={rec.log} check={rec.engine.check} rerun={rerun && rerun.id !== rec.id ? rerun : undefined} />}
         </div>
       </div>
 
@@ -197,7 +217,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           {!running && <QlooDiff plan={plan!} />}
           <ol className={s.sheets}>
             {stops.map((st, i) => (
-              <DaySheet key={st.marketId} anchor={stopAnchor(i)} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} genres={plan!.artist.genreKeys ?? plan!.artist.genres} />
+              <DaySheet key={st.marketId} anchor={stopAnchor(i)} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} genres={plan!.artist.genreKeys ?? plan!.artist.genres} fill={fills.find((f) => f.index === i)} />
             ))}
           </ol>
         </section>

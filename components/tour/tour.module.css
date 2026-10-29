@@ -27,6 +27,9 @@
 .title { margin: 0; font-family: var(--wood); font-weight: 900; font-size: clamp(48px, 6vw, 88px); line-height: 0.9; letter-spacing: -0.005em; }
 .summary { margin: 16px 0 28px; font-size: 18px; color: var(--ink-2); max-width: 38em; }
 .engine { margin: 20px 0 0; font-size: 13px; color: var(--mute); }
+.legs { margin: -12px 0 24px; font-size: 15px; color: var(--ink-2); max-width: 42em; }
+.legs b { color: var(--ink); font-weight: 600; }
+.legs a { color: var(--blue); font-weight: 600; }
 
 .failed { border-left: 4px solid var(--fire); background: var(--panel); padding: 14px 16px; margin-bottom: 20px; }
 .failed p { margin: 0 0 8px; }
@@ -49,6 +52,8 @@
 .q { margin: 0; font-weight: 600; font-size: 15px; }
 .a { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); overflow-wrap: anywhere; }
 .callFailed .a { color: var(--fire-deep); }
+.a del { text-decoration-color: var(--fire); text-decoration-thickness: 2px; color: var(--mute); }
+.rejected { margin: 2px 0 0; font-size: 13px; font-weight: 600; color: var(--fire-deep); }
 .req { display: block; margin-top: 6px; font-size: 12px; color: var(--mute); overflow-wrap: anywhere; background: none; }
 .ms { font-size: 12px; color: var(--mute); padding-top: 3px; }
 .working .kind i { display: block; width: 12px; height: 12px; margin-top: 4px; border-radius: 50%; background: var(--fire); animation: pulse 900ms ease-in-out infinite alternate; }
@@ -131,17 +136,16 @@
 /* The stop strip: sticky for the rest of the tour book, one link a day sheet, then the jumps. */
 .strip { position: sticky; top: 0; z-index: 5; margin: clamp(48px, 7vw, 96px) calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); background: rgba(251, 251, 249, 0.95); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-bottom: 1px solid var(--rule); }
 .stripRow { display: flex; align-items: center; gap: 6px; padding: 8px 0; }
-.stripStops { position: relative; list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.stripStopsBox { position: relative; flex: 0 1 auto; min-width: 0; display: flex; }
+.stripStops { list-style: none; display: flex; gap: 5px; margin: 0; padding: 0; flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
 .stripRow::-webkit-scrollbar,
 .stripStops::-webkit-scrollbar { display: none; }
 .stripStops li { flex: none; }
-@media (min-width: 861px) {
-  .stripStops { -webkit-mask-image: linear-gradient(to right, transparent, #000 12px, #000 calc(100% - 20px), transparent); mask-image: linear-gradient(to right, transparent, #000 12px, #000 calc(100% - 20px), transparent); padding: 0 12px; margin: 0 -12px 0 -12px; }
-}
 .stripStop,
-.stripJump { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 999px; font-size: 14px; font-weight: 600; white-space: nowrap; text-decoration: none; color: var(--ink); }
+.stripJump { display: inline-flex; align-items: center; gap: 5px; min-height: 40px; padding: 0 11px; border-radius: 999px; font-size: 14px; font-weight: 600; white-space: nowrap; text-decoration: none; color: var(--ink); }
 .stripStop { border: 1.5px solid var(--rule); background: var(--panel); }
 .stripStop b { color: var(--fire-deep); font-weight: 700; }
+.stripStop abbr { text-decoration: none; }
 .stripStop:hover { border-color: var(--ink); }
 .stripStop[aria-current] { border-color: var(--ink); background: var(--ink); color: #fff; }
 .stripStop[aria-current] b { color: #ff8db1; }
@@ -149,10 +153,21 @@
 .stripJump:hover { color: var(--ink); }
 .stripSep { flex: none; align-self: stretch; width: 1px; margin: 6px 4px; background: var(--rule); }
 .strip + .book { margin-top: 36px; }
+/* More to scroll to: the edge fades and an arrow steps the strip along. */
+.stripStopsBox[data-end] .stripStops,
+[data-end] > .stripRow { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }
+.stripStopsBox[data-start] .stripStops,
+[data-start] > .stripRow { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px); mask-image: linear-gradient(to right, transparent, #000 28px); }
+.stripStopsBox[data-start][data-end] .stripStops,
+[data-start][data-end] > .stripRow { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 56px), transparent); }
+.stripMore { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--panel); color: var(--ink); font: 700 17px/1 var(--text); cursor: pointer; display: grid; place-items: center; box-shadow: 0 1px 6px rgba(22, 21, 27, 0.12); }
+.stripMore:hover { box-shadow: 2px 2px 0 var(--fire); }
+.stripMoreRow { right: var(--gutter); }
 /* On a phone the whole row scrolls, the jumps after the last stop. */
 @media (max-width: 860px) {
   .stripRow { position: relative; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
-  .stripStops { flex: none; overflow: visible; position: static; }
+  .stripStopsBox { flex: none; }
+  .stripStops { flex: none; overflow: visible; }
 }
 
 /* Poster date rows link to their day sheets. */
@@ -199,4 +214,23 @@
 }
 
 .kindNote { color: var(--mute); font-weight: 400; }
+
+/* Fill dates on the leg before a stop, and the rows a phone keeps behind "More for this stop". */
+.fill { font-size: 14px; color: var(--ink-2); }
+.fill b { color: var(--ink); font-weight: 600; }
+.extra { display: contents; }
+.moreBtn { display: none; }
+@media (max-width: 600px) {
+  .day:not([data-more]) .extra,
+  .day:not([data-more]) .extraInline,
+  .day:not([data-more]):not([data-lead]) .localSvg,
+  .day:not([data-more]):not([data-lead]) .legend { display: none; }
+  .moreBtn { display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px; padding: 0 14px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--panel); font: 600 14px/1 var(--text); color: var(--ink); cursor: pointer; }
+  .moreBtn[aria-expanded="true"] { border-color: var(--rule); color: var(--mute); }
+}
+@media print {
+  .extra { display: contents !important; }
+  .extraInline { display: block !important; }
+  .moreBtn { display: none !important; }
+}
 .sizeNote { color: var(--fire-deep); }

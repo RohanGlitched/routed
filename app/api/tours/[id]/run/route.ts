@@ -3,7 +3,7 @@ import { runTour, type Event } from "@/lib/agent/run";
 import { takeModelRun } from "@/lib/budget";
 import { hasKey } from "@/lib/nebius";
 import { hasQloo } from "@/lib/qloo";
-import { publicPlan } from "@/lib/publictour";
+import { publicLine, publicPlan } from "@/lib/publictour";
 import { loadTour, updateTour } from "@/lib/store";
 import type { Plan, TourRecord } from "@/lib/types";
 
@@ -55,7 +55,7 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
         if (!open) return;
         try {
           // The live stream carries the plan trimmed like GET /api/tours/[id] (M8); the record saved is whole.
-          controller.enqueue(enc.encode(JSON.stringify(e.t === "plan" ? { ...e, plan: publicPlan(e.plan) } : e) + "\n"));
+          controller.enqueue(enc.encode(JSON.stringify(e.t === "plan" ? { ...e, plan: publicPlan(e.plan) } : e.t === "log" ? { ...e, line: publicLine(e.line) } : e) + "\n"));
         } catch {
           open = false;
         }

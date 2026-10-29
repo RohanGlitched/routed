@@ -50,3 +50,21 @@ test("a published tour keeps what the pages print and drops Qloo's raw scores", 
   assert.equal(out.audience.tags[0]!.affinity, undefined);
   assert.equal(plan.cities[0]!.affinity, 0.991, "the stored plan is untouched");
 });
+
+test("the published tour carries no Qloo entity id, image link or full-precision score, and a stop's ids still match", async () => {
+  const { readFileSync, existsSync } = await import("node:fs");
+  const path = ".data/tours/8v4ce57nx6.json";
+  if (!existsSync(path)) return;
+  const rec = JSON.parse(readFileSync(path, "utf8")) as TourRecord;
+  const out = publicTour(rec);
+  const json = JSON.stringify(out);
+  assert.equal((json.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi) ?? []).length, 0, "no Qloo UUIDs");
+  assert.ok(!/images\.qloo\.com/.test(json), "no image links");
+  assert.ok(!/"(affinity|popularity|venueAffinity)":0\.\d{3,}/.test(json), "scores to two places");
+  for (const s of out.plan!.stops) {
+    assert.ok(s.rooms.some((r) => r.id === s.roomId), `${s.city}: the booked room's id matches a room`);
+    assert.ok(!s.openerId || s.openers.some((o) => o.id === s.openerId));
+    if (s.local) assert.ok(s.local.tiles.length <= rec.plan!.stops.find((x) => x.marketId === s.marketId)!.local!.tiles.length);
+  }
+  assert.equal(publicTour(rec).plan!.stops[0]!.roomId, out.plan!.stops[0]!.roomId, "stable across calls");
+});

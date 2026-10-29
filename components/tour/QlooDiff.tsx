@@ -11,7 +11,7 @@ export function QlooDiff({ plan }: { plan: Plan }) {
   if (!d) return null;
   const stops = d.kept + d.added.length;
   return (
-    <section className={a.diff} aria-labelledby="qloo-diff-title">
+    <section className={a.diff} aria-labelledby="qloo-diff-title" id="qloo-changed">
       <header className={a.diffHead}>
         <h3 id="qloo-diff-title">Stops Qloo changed</h3>
         <p className={a.diffCount}>
@@ -32,7 +32,7 @@ export function QlooDiff({ plan }: { plan: Plan }) {
                 <li key={x.marketId}>
                   <b>{x.city}</b>
                   <span>
-                    fan <span className="num">#{x.fanRank}</span> · size <span className="num">#{x.popRank}</span>
+                    fan <span className="num">#{x.fanRank}</span>, size <span className="num">#{x.popRank}</span>
                   </span>
                 </li>
               ))}
@@ -45,7 +45,7 @@ export function QlooDiff({ plan }: { plan: Plan }) {
                 <li key={x.marketId}>
                   <b>{x.city}</b>
                   <span>
-                    size <span className="num">#{x.popRank}</span> · {x.fanRank ? (
+                    size <span className="num">#{x.popRank}</span>, {x.fanRank ? (
                       <>
                         fan <span className="num">#{x.fanRank}</span>
                       </>

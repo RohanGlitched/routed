@@ -57,23 +57,40 @@ export function placeHeat(tiles: LocalTile[], place: LocalPoint): { km: number; 
 
 export type LocalMark = { x: number; y: number; r: number };
 
+/** With `focus`, the square frames the fans' core: the stronger half of the tiles within this distance of the hottest one. */
+export const CORE_KM = 5;
+
 /**
  * Projects tiles and places into a square of `size` px: a plate carrée scaled by cos(latitude), fitted to the
  * tiles' bounding box with a margin, so a city of any shape fills the square. Tile radius grows with strength.
+ * With `focus` (the booked room, say), the square frames the fans' core instead: the stronger half of the tiles
+ * within CORE_KM of the hottest one, plus the focus points near it, so a few far tiles don't shrink the
+ * neighbourhood to a smudge; tiles outside that square are left off.
  */
-export function localMap(tiles: LocalTile[], places: LocalPoint[], size = 180): { dots: LocalMark[]; marks: { x: number; y: number }[]; scaleKm: number } {
+export function localMap(tiles: LocalTile[], places: LocalPoint[], size = 180, opts: { focus?: LocalPoint[] } = {}): { dots: LocalMark[]; marks: { x: number; y: number }[]; scaleKm: number; /** The hottest tile in the square. */ hot?: { x: number; y: number }; /** Pixels per km, for rings drawn to scale. */ kmPx?: number } {
   if (!tiles.length) return { dots: [], marks: [], scaleKm: 0 };
-  const lats = tiles.map((t) => t[0]), lons = tiles.map((t) => t[1]);
+  const hot = hotSpot(tiles)!;
+  let frame: LocalPoint[] = tiles.map((t) => ({ lat: t[0], lon: t[1] }));
+  let minSpan = 0.02;
+  if (opts.focus) {
+    const near = tiles.filter((t) => kmBetween(hot, { lat: t[0], lon: t[1] }) <= CORE_KM).sort((a, b) => b[2] - a[2]);
+    const core = near.slice(0, Math.max(6, Math.ceil(near.length / 2)));
+    frame = [hot, ...core.map((t) => ({ lat: t[0], lon: t[1] })), ...opts.focus.filter((p) => kmBetween(hot, p) <= CORE_KM * 1.6)];
+    minSpan = 0.025;
+  }
+  const lats = frame.map((t) => t.lat), lons = frame.map((t) => t.lon);
   const lat0 = (Math.min(...lats) + Math.max(...lats)) / 2;
   const cos = Math.cos((lat0 * Math.PI) / 180);
   const spanLat = Math.max(...lats) - Math.min(...lats);
   const spanLon = (Math.max(...lons) - Math.min(...lons)) * cos;
-  const span = Math.max(spanLat, spanLon, 0.02) * 1.12;
+  const span = Math.max(spanLat, spanLon, minSpan) * (opts.focus ? 1.25 : 1.12);
   const cLat = lat0, cLon = (Math.min(...lons) + Math.max(...lons)) / 2;
   const xy = (p: LocalPoint) => ({ x: +(size / 2 + ((p.lon - cLon) * cos * size) / span).toFixed(1), y: +(size / 2 - ((p.lat - cLat) * size) / span).toFixed(1) });
-  const dots = tiles.map((t) => ({ ...xy({ lat: t[0], lon: t[1] }), r: +(1.4 + 4.2 * Math.sqrt(t[2])).toFixed(1) }));
+  // Dots keep their look at any size: radii are set for the 180 px square and scale with it.
+  const k = size / 180;
+  const dots = tiles.map((t) => ({ ...xy({ lat: t[0], lon: t[1] }), r: +((1.4 + 4.2 * Math.sqrt(t[2])) * k).toFixed(1) })).filter((d) => d.x >= -d.r && d.x <= size + d.r && d.y >= -d.r && d.y <= size + d.r);
   // km across the whole square, for a scale line: one degree of latitude is 111 km.
-  return { dots, marks: places.map(xy), scaleKm: +(span * 111).toFixed(1) };
+  return { dots, marks: places.map(xy), scaleKm: +(span * 111).toFixed(1), hot: xy(hot), kmPx: +(size / (span * 111)).toFixed(3) };
 }
 
 /* ───────────── naming the hottest blocks, and whether the booked room is in them ───────────── */

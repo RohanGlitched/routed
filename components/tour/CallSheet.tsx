@@ -2,14 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import { readLine } from "@/lib/log";
+import { dropEchoes } from "@/lib/tags";
 import type { LogLine } from "@/lib/types";
+import { shownLine } from "./display";
 import a from "./agent.module.css";
 import s from "./tour.module.css";
 
 const KIND: Record<LogLine["kind"], string> = { qloo: "Qloo", model: "Agent", rule: "Rule", web: "Web" };
-
-/** Stored tours asked Qloo's weekly trend, which is flat for every artist on the hackathon host: not shown. */
-const shown = (l: LogLine) => !(l.kind === "qloo" && /^Is this audience growing\?$/.test(l.text));
 
 /**
  * The agent's call sheet: every question it put to Qloo (and the web, and its own rules) in plain words, with
@@ -26,12 +25,12 @@ export function CallSheet({ log, running, full = false }: { log: LogLine[]; runn
 
   return (
     <ol className={`${s.sheet} ${full ? s.sheetFull : ""}`} aria-live={running ? "polite" : undefined} aria-label="Agent call sheet">
-      {log.filter(shown).map(readLine).map((l, i) => (
+      {log.filter(shownLine).map(readLine).map((l, i) => (
         <li key={i} className={`${s.call} ${s[l.kind]} ${l.failed ? s.callFailed : ""}`}>
           <span className={s.kind}>{KIND[l.kind]}</span>
           <div className={s.callBody}>
-            <p className={s.q}>{l.text}</p>
-            {l.result && <p className={s.a}>{l.result}</p>}
+            <p className={s.q}>{dropEchoes(l.text)}</p>
+            {l.result && <p className={s.a}>{dropEchoes(l.result)}</p>}
             {l.swaps && l.swaps.length > 0 && (
               <ul className={a.swaps} aria-label="What the agent changed after the check">
                 {l.swaps.map((sw, j) => (

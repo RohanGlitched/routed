@@ -1,4 +1,5 @@
 import { AGE_LABEL, AGE_ORDER } from "@/lib/agent/audience";
+import { displayTag } from "@/lib/tags";
 import type { Plan } from "@/lib/types";
 import s from "./tour.module.css";
 
@@ -37,7 +38,7 @@ export function Audience({ plan }: { plan: Plan }) {
           <figcaption>The sound and mood these fans love</figcaption>
           <ul className={s.chips}>
             {a.tags.slice(0, 8).map((t) => (
-              <li key={t.id}>{t.name}</li>
+              <li key={t.id}>{displayTag(t.name)}</li>
             ))}
           </ul>
         </figure>

@@ -97,3 +97,17 @@ test("the calendar file carries every show, the travel days and the day off, fol
   assert.ok(ics.includes("SUMMARY:Travel day: Asheville to Portland"));
   for (const l of lines) assert.ok(Buffer.byteLength(l, "utf8") <= 75, `line too long: ${l}`);
 });
+
+test("framed on the fans' core, the map drops far tiles and keeps the booked room in the square", () => {
+  const tiles = localTiles(raw);
+  const room = { lat: 45.519, lon: -122.652 };
+  const all = localMap(tiles, [room], 260);
+  const core = localMap(tiles, [room], 260, { focus: [room] });
+  assert.ok(core.scaleKm <= all.scaleKm, `${core.scaleKm} vs ${all.scaleKm}`);
+  assert.ok(core.dots.length > 0 && core.dots.length <= tiles.length);
+  for (const d of core.dots) assert.ok(d.x >= -d.r && d.x <= 260 + d.r && d.y >= -d.r && d.y <= 260 + d.r, JSON.stringify(d));
+  const m = core.marks[0]!;
+  assert.ok(m.x > 0 && m.x < 260 && m.y > 0 && m.y < 260, JSON.stringify(m));
+  assert.ok(core.hot && core.hot.x > 0 && core.hot.x < 260, "the hottest tile is in the square");
+  assert.ok(core.kmPx && Math.abs(core.kmPx * core.scaleKm - 260) < 260 * 0.03, "km per pixel matches the scale");
+});

@@ -30,6 +30,8 @@ export type PosterProps = {
   /** Smaller type for the wall. */
   compact?: boolean;
   label?: string;
+  /** Where each date row links (the tour book's day sheets); ignored on a compact poster. */
+  rowHref?: (i: number) => string;
 };
 
 const W = 540;
@@ -41,7 +43,7 @@ const fmt = (iso: string) => {
   return `${Number(m)}/${Number(d)}`;
 };
 
-export function Poster({ artist, season, region, dots, route, start, stops, topCity, topRank = 1, support, print = false, compact = false, label }: PosterProps) {
+export function Poster({ artist, season, region, dots, route, start, stops, topCity, topRank = 1, support, print = false, compact = false, label, rowHref }: PosterProps) {
   // The print runs in CSS from the first paint (poster.module.css .press), so the server's HTML is never a blank
   // sheet waiting for hydration; at phone width or with reduced motion the poster is simply printed.
   const state = print ? "press" : "printed";
@@ -158,6 +160,23 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
       </g>
 
       <rect width={W} height={H} filter="url(#grain)" style={{ mixBlendMode: "multiply" }} pointerEvents="none" />
+
+      {/* Date rows as links to their day sheets, over both plates. The poster is one image to a screen reader, so
+          these are for the pointer; the stop strip under the poster carries the same links for everyone. */}
+      {rowHref && !compact && (
+        <g aria-hidden="true">
+          {stops.map((st, i) => {
+            const col = i < rows ? 0 : 1;
+            const row = i % rows;
+            return (
+              <a key={`l${i}`} href={rowHref(i)} tabIndex={-1}>
+                <title>{`${fmt(st.date)} ${st.city}: the day sheet`}</title>
+                <rect x={32 + col * (colW + 24)} y={datesTop + row * rowH} width={colW} height={rowH} fill="transparent" style={{ cursor: "pointer" }} />
+              </a>
+            );
+          })}
+        </g>
+      )}
     </svg>
   );
 }

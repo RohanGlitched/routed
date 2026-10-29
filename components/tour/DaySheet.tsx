@@ -6,6 +6,8 @@ import { addDays, MAX_LEG_KM, VAN_KMH } from "@/lib/geo/route";
 import { independents } from "@/lib/chains";
 import { sharedGenres } from "@/lib/agent/rooms";
 import type { Spot, Stop } from "@/lib/types";
+import { displayTag, displayTags } from "@/lib/tags";
+import { otherRoomLabel, shownCapacity } from "./display";
 import { LocalMap } from "./LocalMap";
 import s from "./tour.module.css";
 
@@ -37,11 +39,13 @@ function Checked({ text }: { text: string }) {
 }
 
 /** One stop, laid out like a tour manager's day sheet. */
-export function DaySheet({ stop, prev, total, artist, pending, draw, first = false, genres }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number; first?: boolean; /** The headliner's genre keys, so only tastes both acts are filed under are shown as shared. */ genres?: string[] }) {
+export function DaySheet({ stop, prev, total, artist, pending, draw, first = false, genres, anchor }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number; first?: boolean; /** The headliner's genre keys, so only tastes both acts are filed under are shown as shared. */ genres?: string[]; /** The sheet's id, for the poster's rows and the stop strip ("stop-3"). */ anchor?: string }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const d = new Date(`${stop.date}T12:00:00Z`);
   const room = stop.rooms.find((r) => r.id === stop.roomId) ?? stop.rooms[0];
+  // A capacity impossible for the kind of room (a theatre over 10,000) is not printed (display.ts shownCapacity).
+  const cap = room ? shownCapacity(room) : undefined;
   const others = stop.rooms.filter((r) => r !== room).slice(0, 2);
   // The city's affinity chip read 99 or 100 on nearly every stop; where the booked room sits among the rooms Qloo
   // ranked for these fans in this city varies, and says something.
@@ -49,6 +53,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
   const roomRank = room && ranked.length > 1 ? ranked.indexOf(room) + 1 : 0;
   const opener = stop.openers.find((o) => o.id === stop.openerId) ?? stop.openers[0];
   const locals = stop.openers.filter((o) => o !== opener).slice(0, 3);
+  const shared = opener ? displayTags(sharedGenres(opener.shared, genres ?? [], opener.genres)) : [];
   const pitch = stop.pitch;
   const nights = stop.nights ?? 1;
   const last = new Date(`${addDays(stop.date, nights - 1)}T12:00:00Z`);
@@ -57,7 +62,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
   const long = !first && Math.round(stop.fromHours * VAN_KMH) > MAX_LEG_KM;
 
   return (
-    <li className={s.day}>
+    <li className={s.day} id={anchor}>
       <div className={s.when}>
         <span className={s.dow}>{d.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })}</span>
         <time dateTime={stop.date} className={s.date}>
@@ -82,7 +87,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
           )}
           {long && <span className={s.sizeNote}> A long jump: no city with rooms within reach could break it up.</span>}
         </span>
-        {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} places={[...stop.rooms, ...(stop.posters ?? []), ...stop.after]} />}
+        {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} places={[...stop.rooms, ...(stop.posters ?? []), ...stop.after]} spots={[...independents(stop.posters), ...stop.after]} />}
       </div>
 
       <div className={s.what}>
@@ -113,21 +118,21 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                 {room.origin === "wikidata" && <span className={s.alt}>Found on Wikidata by size, then on Qloo</span>}
                 <span className={s.meta}>
                   {room.affinity !== undefined && <span className={s.aff}>Fan affinity {pct(room.affinity)}. </span>}
-                  {room.capacity ? (
+                  {cap ? (
                     <>
-                      Holds {room.capacity.value.toLocaleString("en-US")}, per{" "}
-                      {/^https?:\/\//.test(room.capacity.source) ? (
-                        <a href={room.capacity.source} target="_blank" rel="noreferrer" title={room.capacity.quote}>
-                          {host(room.capacity.source)}
+                      Holds {cap.value.toLocaleString("en-US")}, per{" "}
+                      {/^https?:\/\//.test(cap.source) ? (
+                        <a href={cap.source} target="_blank" rel="noreferrer" title={cap.quote}>
+                          {host(cap.source)}
                         </a>
                       ) : (
-                        <span title={room.capacity.quote}>{room.capacity.source}</span>
+                        <span title={cap.quote}>{cap.source}</span>
                       )}
                       .
                       {draw
                         ? (() => {
                             // "Fits" only at 85–130% of the crowd, "cover" only when the nights hold it (lib/agent/evidence.ts).
-                            const note = sizeNote(room.capacity.value, draw, nights);
+                            const note = sizeNote(cap.value, draw, nights);
                             // Red only for a misfit; a room inside the booking window (60–250%) reads as a plain note.
                             return note.alarm ? <span className={s.sizeNote}> {note.text}</span> : <span className={s.alt}>{note.text}</span>;
                           })()
@@ -137,7 +142,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                     !pending && (unmeasuredNote(draw).alarm ? <span className={s.sizeNote}>{unmeasuredNote(draw).text}</span> : unmeasuredNote(draw).text)
                   )}
                 </span>
-                {others.length > 0 && <span className={s.alt}>Other rooms these fans go to: {others.map((r) => `${r.name}${r.capacity ? ` (holds ${r.capacity.value.toLocaleString("en-US")})` : r.affinity !== undefined ? ` (${pct(r.affinity)})` : ""}`).join(", ")}</span>}
+                {others.length > 0 && <span className={s.alt}>Other rooms these fans go to: {others.map(otherRoomLabel).join(", ")}</span>}
               </dd>
             </>
           )}
@@ -148,9 +153,9 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                 <b>{opener.name}</b>
                 <span className={s.meta}>
                   {opener.affinity !== undefined && <span className={s.aff}>Audience affinity {pct(opener.affinity)}. </span>}
-                  {opener.genres?.length ? `${opener.genres.slice(0, 2).join(", ")}. ` : ""}
+                  {opener.genres?.length ? `${displayTags(opener.genres).slice(0, 2).join(", ")}. ` : ""}
                 </span>
-                {sharedGenres(opener.shared, genres ?? [], opener.genres).length > 0 && <span className={s.alt}>What both audiences share: {sharedGenres(opener.shared, genres ?? [], opener.genres).slice(0, 3).join(", ")}</span>}
+                {shared.length > 0 && <span className={s.alt}>What both audiences share: {shared.slice(0, 3).join(", ")}</span>}
                 {locals.length > 0 && <span className={s.alt}>Local options here: {locals.map((o) => o.name).join(", ")}</span>}
               </dd>
             </>
@@ -225,7 +230,7 @@ function Spots({ spots }: { spots: Spot[] }) {
         <span key={x.id}>
           {i > 0 && ", "}
           <b>{x.name}</b>
-          {x.kind && <span className={s.kindNote}> ({x.kind.toLowerCase()})</span>}
+          {x.kind && <span className={s.kindNote}> ({displayTag(x.kind)})</span>}
         </span>
       ))}
     </span>

@@ -14,6 +14,9 @@ import { Campaign } from "./Campaign";
 import { Control } from "./Control";
 import { QlooDiff } from "./QlooDiff";
 import { AssumedDraw } from "@/components/home/AssumedDraw";
+import { aside } from "@/lib/tags";
+import { checkLine, plural, sheetCounts, stopAnchor } from "./display";
+import { StopStrip } from "./StopStrip";
 import a from "./agent.module.css";
 import s from "./tour.module.css";
 
@@ -102,7 +105,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
       <div className={s.top}>
         <div className={s.posterCol}>
           <div className={s.posterBox} ref={posterRef}>
-            {poster ? <Poster {...poster} print={rec.status === "done" && initial.status !== "done"} /> : <div className={s.posterBlank}>{running ? "Reading the taste graph…" : "No poster"}</div>}
+            {poster ? <Poster {...poster} print={rec.status === "done" && initial.status !== "done"} rowHref={rec.status === "done" ? (i) => `#${stopAnchor(i)}` : undefined} /> : <div className={s.posterBlank}>{running ? "Reading the taste graph…" : "No poster"}</div>}
           </div>
           {rec.status === "done" && poster && (
             <div className={s.posterActions}>
@@ -116,6 +119,9 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
                 Print the tour book
               </button>
               <CopyLink />
+              <Link href={`/tour/${rec.id}/present`} className={s.presentLink}>
+                Present it
+              </Link>
             </div>
           )}
         </div>
@@ -148,12 +154,12 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           ) : null}
           {plan?.artist?.others?.length ? (
             <p className={s.others}>
-              Qloo matched <b>{plan.artist.name}</b>{plan.artist.disambiguation ? ` (${plan.artist.disambiguation})` : ""}. Not the one you meant? Route{" "}
+              Qloo matched <b>{plan.artist.name}</b>{aside(plan.artist.name, plan.artist.disambiguation) ? ` (${aside(plan.artist.name, plan.artist.disambiguation)})` : ""}. Not the one you meant? Route{" "}
               {plan.artist.others.map((o, i) => (
                 <span key={o.name}>
                   {i > 0 && (i === plan.artist.others!.length - 1 ? " or " : ", ")}
                   <Link href={`/?artist=${encodeURIComponent(o.name)}&from=${encodeURIComponent(rec.input.from)}`}>{o.name}</Link>
-                  {o.disambiguation ? ` (${o.disambiguation})` : ""}
+                  {aside(o.name, o.disambiguation) ? ` (${aside(o.name, o.disambiguation)})` : ""}
                 </span>
               ))}
               {" "}instead.
@@ -173,14 +179,13 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
               {rec.engine.planned === "model" ? `Planned by ${rec.engine.agent ?? "the agent"}` : "Planned by the fixed plan (the agent model was unavailable)"}
               {rec.engine.writer ? `; pitches by ${rec.engine.writer}` : "; template pitches"}.
               {rec.engine.check ? ` ${checkLine(rec.engine.check)}` : ""}
-              {rec.engine.usage
-                ? ` This run${rec.engine.usage.seconds ? ` took ${rec.engine.usage.seconds} s and` : ""} cost ${rec.engine.usage.qloo} Qloo requests${rec.engine.usage.qlooCached ? ` (and ${rec.engine.usage.qlooCached} answered from the cache)` : ""}, ${rec.engine.usage.modelCalls} model calls and ${(rec.engine.usage.tokensIn + rec.engine.usage.tokensOut).toLocaleString("en-US")} tokens.`
-                : ""}{" "}
-              Every Qloo call is listed at the end of the tour book.
+              {rec.engine.usage ? ` ${usageLine(rec.engine.usage)}` : ""} The call sheet at the end of the tour book lists every step.
             </p>
           )}
         </div>
       </div>
+
+      {stops.length > 0 && !running && <StopStrip stops={stops} control={!!plan?.guess?.stops.length} callSheet={rec.log.length > 0} />}
 
       {stops.length > 0 && (
         <section className={s.book} aria-labelledby="book-title">
@@ -192,7 +197,7 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
           {!running && <QlooDiff plan={plan!} />}
           <ol className={s.sheets}>
             {stops.map((st, i) => (
-              <DaySheet key={st.marketId} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} genres={plan!.artist.genreKeys ?? plan!.artist.genres} />
+              <DaySheet key={st.marketId} anchor={stopAnchor(i)} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} genres={plan!.artist.genreKeys ?? plan!.artist.genres} />
             ))}
           </ol>
         </section>
@@ -202,10 +207,9 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
       {!running && plan?.audience && <Campaign plan={plan} />}
 
       {!running && rec.log.length > 0 && (
-        <details className={s.trace}>
-          <summary>
-            How the agent got here: {rec.log.filter((l) => l.kind === "qloo").length} Qloo calls, {rec.log.filter((l) => l.kind === "web").length} web lookups
-          </summary>
+        <details className={s.trace} id="call-sheet">
+          <summary>How the agent got here: the call sheet, {traceLine(sheetCounts(rec.log))}</summary>
+          {rec.engine?.usage && <p className={s.traceNote}>{gapLine(sheetCounts(rec.log), rec.engine.usage)}</p>}
           <CallSheet log={rec.log} running={false} full />
         </details>
       )}
@@ -213,14 +217,30 @@ export function TourRoom({ initial }: { initial: TourRecord }) {
   );
 }
 
-const list = (xs: string[]) => (xs.length <= 1 ? (xs[0] ?? "") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
-
-/** How the rules and the agent settled the booking, in one sentence (the counts /proof can total). */
-function checkLine(c: NonNullable<NonNullable<TourRecord["engine"]>["check"]>): string {
-  const obj = (n: number) => `${n} objection${n === 1 ? "" : "s"}`;
-  const first = c.before ? `The rules raised ${obj(c.before)} to the agent's booking${c.rounds ? `; it re-booked ${c.revised} pick${c.revised === 1 ? "" : "s"} in ${c.rounds} round${c.rounds === 1 ? "" : "s"}, leaving ${c.after ? obj(c.after) : "none"}` : ""}.` : "The agent's booking cleared every rule.";
-  return `${first} ${c.ruled ? `A rule still changed ${c.ruled} of ${c.stops} stops.` : `Every stop is the agent's own.`}`;
+/** The run's own tally, in one sentence: requests that went to Qloo over the network, and the model's share. */
+function usageLine(u: NonNullable<NonNullable<TourRecord["engine"]>["usage"]>): string {
+  const stored = u.qlooCached ? ` (${u.qlooCached} more ${u.qlooCached === 1 ? "was" : "were"} answered from a stored copy)` : "";
+  return `This run${u.seconds ? ` took ${u.seconds} s,` : ""} sent ${plural(u.qloo, "request")} to Qloo${stored}, made ${plural(u.modelCalls, "model call")} and used ${u.tokensIn + u.tokensOut > 0 ? (u.tokensIn + u.tokensOut).toLocaleString("en-US") : "no"} tokens.`;
 }
+
+/** "76 Qloo lines, 6 agent steps, 23 rule checks and 67 web lookups". */
+function traceLine(c: ReturnType<typeof sheetCounts>): string {
+  return list([plural(c.qloo, "Qloo line"), ...(c.model ? [plural(c.model, "agent step")] : []), ...(c.rule ? [plural(c.rule, "rule check")] : []), ...(c.web ? [plural(c.web, "web lookup")] : [])]);
+}
+
+/**
+ * Why the head's request count and the call sheet's Qloo lines differ: the tally counts every request sent
+ * (lib/usage.ts, retries included), while the sheet gives one line to each question, and a set of place
+ * searches by name (the rooms the agent and the model-alone tour named) is summed up in one line.
+ */
+function gapLine(c: ReturnType<typeof sheetCounts>, u: NonNullable<NonNullable<TourRecord["engine"]>["usage"]>): string {
+  const sent = u.qloo + u.qlooCached;
+  const lead = `This run sent ${plural(u.qloo, "request")} to Qloo${u.qlooCached ? ` and answered ${u.qlooCached} from a stored copy` : ""}.`;
+  if (sent <= c.withRequest) return `${lead} Each one is listed below with its exact request.`;
+  return `${lead} ${c.withRequest} of the ${plural(c.qloo, "Qloo line")} below carry their exact request; the other requests are place searches by name for the rooms the agent and the model-alone tour named, each set summed up in the line that reports it, and any retries.`;
+}
+
+const list = (xs: string[]) => (xs.length <= 1 ? (xs[0] ?? "") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 
 /** The tour as an .ics file: every show, travel day and day off, for the band's shared calendar. */
 function saveCalendar(plan: Plan, id: string, title: string) {

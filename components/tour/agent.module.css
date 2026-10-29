@@ -2,20 +2,20 @@
 .swaps { list-style: none; margin: 8px 0 2px; padding: 0; display: grid; gap: 4px; font-size: 13px; }
 .swap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 6px 0 0; border-top: 1px dashed var(--rule); }
 .swap span { min-width: 0; overflow-wrap: anywhere; }
-.swap i { display: block; font-style: normal; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--mute); }
+.swap i { display: block; font-style: normal; font-size: 12px; font-weight: 600; color: var(--mute); }
 .proposed { color: var(--mute); text-decoration: line-through; text-decoration-color: var(--fire); text-decoration-thickness: 2px; }
 .objection { color: var(--ink-2); }
 .chose { font-weight: 700; color: var(--fire-deep); }
 
 /* Stops Qloo changed, on the tour book. */
-.diff { margin: 0 0 32px; padding: 18px 20px 16px; background: var(--panel); border: 1px solid var(--rule); border-top: 4px solid var(--fire); border-radius: 6px; }
+.diff { scroll-margin-top: 64px; margin: 0 0 32px; padding: 18px 20px 16px; background: var(--panel); border: 1px solid var(--rule); border-top: 4px solid var(--fire); border-radius: 6px; }
 .diffHead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
-.diffHead h3 { margin: 0; font-family: var(--wood); font-weight: 800; font-size: 28px; line-height: 1; letter-spacing: 0.01em; text-transform: uppercase; }
+.diffHead h3 { margin: 0; font-family: var(--wood); font-weight: 800; font-size: 32px; line-height: 1; letter-spacing: 0.005em; }
 .diffCount { margin: 0; font-size: 14px; color: var(--mute); white-space: nowrap; }
 .diffCount b { font-family: var(--wood); font-weight: 900; font-size: 36px; line-height: 1; color: var(--fire); margin-right: 2px; }
 .diffLede { margin: 8px 0 14px; font-size: 15px; color: var(--ink-2); max-width: 46em; }
 .diffCols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.diffCols h4 { margin: 0 0 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.diffCols h4 { margin: 0 0 6px; font-size: 14px; font-weight: 700; }
 .diffAdded h4 { color: var(--fire-deep); }
 .diffDropped h4 { color: var(--mute); }
 .diffCols ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }

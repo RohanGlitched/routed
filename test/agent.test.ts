@@ -1,4 +1,4 @@
-import { test } from "node:test";
+import { test, type TestContext } from "node:test";
 import assert from "node:assert/strict";
 import { checkPlan, planTour, sameRoomName, type Ask, type BookStop, type PlanDeps } from "../lib/agent/plan.ts";
 import { findMarket, marketId, marketLabel } from "../lib/geo/markets.ts";
@@ -43,6 +43,32 @@ function tools(ask: Ask, caps: Record<string, number> = {}, rooms = 2): PlanDeps
     lookUpOpeners: async () => [{ id: "op1", name: "Opener One", affinity: 0.8, shared: [] }],
     roomCapacity: async (r) => (caps[r.id] ? { value: caps[r.id]!, source: "https://example.org/", quote: "capacity" } : null),
   };
+}
+
+/**
+ * Runs `start` on node:test's mocked clock (Date and setTimeout), stepping it 10 ms at a time between turns of the
+ * event loop, so the deadline and lookup-budget tests depend on no machine's speed: the same steps happen on a
+ * laptop and a busy CI runner. Returns the result and how much fake time passed.
+ */
+async function onFakeClock<T>(t: TestContext, start: () => Promise<T>, maxMs = 60_000): Promise<{ value: T; ms: number }> {
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"], now: Date.UTC(2026, 9, 30, 6, 0, 0) });
+  const t0 = Date.now();
+  let settled = false;
+  let value: T | undefined;
+  let error: unknown;
+  start().then(
+    (v) => ((settled = true), (value = v)),
+    (e) => ((settled = true), (error = e)),
+  );
+  for (let ms = 0; ms <= maxMs && !settled; ms += 10) {
+    for (let i = 0; i < 5; i++) await new Promise((r) => setImmediate(r));
+    if (!settled) t.mock.timers.tick(10);
+  }
+  const ms = Date.now() - t0;
+  t.mock.timers.reset();
+  if (!settled) throw new Error(`did not finish within ${maxMs} ms of fake time`);
+  if (error) throw error;
+  return { value: value as T, ms };
 }
 
 const stop = (cityId: string, room = "a"): BookStop => ({ city_id: cityId, room_id: `${cityId}-${room}`, opener_id: "op1", why: `${cityId} is a strong city for these fans.` });
@@ -206,33 +232,36 @@ test("a model error falls back to the fixed plan", async () => {
   assert.ok(!(r.picks.some((x) => x.marketId === id("Denver")) && r.picks.some((x) => x.marketId === id("Boulder"))));
 });
 
-test("a model that never answers falls back to the fixed plan within the deadline", async () => {
+test("a model that never answers falls back to the fixed plan within the deadline", async (t) => {
   const never = (() => new Promise(() => {})) as Ask;
-  const t = Date.now();
-  const { p, lines } = run(tools(never), { deadline: Date.now() + 400, minCallMs: 100 });
-  const r = await p;
+  let lines: Omit<LogLine, "at">[] = [];
+  const { value: r, ms } = await onFakeClock(t, () => {
+    const x = run(tools(never), { deadline: Date.now() + 400, minCallMs: 100 });
+    lines = x.lines;
+    return x.p;
+  });
   assert.equal(r.planned, "fixed");
   assert.equal(r.picks.length, 3);
-  // Generous for a shared CI runner: the point is that it ends at all (the model never answers).
-  assert.ok(Date.now() - t < 8000, `took ${Date.now() - t} ms`);
+  assert.ok(ms <= 500, `took ${ms} ms of fake time against a 400 ms deadline`);
   assert.ok(lines.some((l) => l.failed && /the fixed plan takes over/.test(l.text)));
 });
 
-test("a revision that never answers leaves the rest to the rules, in time", async () => {
+test("a revision that never answers leaves the rest to the rules, in time", async (t) => {
   const calls: string[] = [];
   const answer = model((name) => {
     if (name === "shortlist") return { cities: [id("Denver"), id("Boulder"), id("Salt Lake City")].map((c) => ({ city_id: c, why: "strong" })), alternates: [] };
     return { stops: [stop(id("Denver")), stop(id("Boulder")), stop(id("Salt Lake City"))] };
   }, calls);
   const ask = ((o: Parameters<Ask>[0]) => (o.name === "rebook" ? new Promise(() => {}) : answer(o))) as Ask;
-  const t = Date.now();
-  // 2.5 s of planning time: enough on a slow shared runner for the check to run before the rebook is asked.
-  const { p, lines } = run(tools(ask), { deadline: Date.now() + 2500, minCallMs: 100 });
-  const r = await p;
-  assert.ok(Date.now() - t < 8000, `took ${Date.now() - t} ms`);
+  let lines: Omit<LogLine, "at">[] = [];
+  const { value: r, ms } = await onFakeClock(t, () => {
+    const x = run(tools(ask), { deadline: Date.now() + 500, minCallMs: 100 });
+    lines = x.lines;
+    return x.p;
+  });
+  assert.ok(ms <= 600, `took ${ms} ms of fake time against a 500 ms deadline`);
   assert.equal(r.planned, "model");
-  // Either the rebook was asked and timed out, or (on a very slow machine) no time was left to ask it: the rules settle.
-  assert.ok(lines.some((l) => l.failed && /didn't answer the check|No time left for the agent to answer the check/.test(l.text)));
+  assert.ok(lines.some((l) => l.failed && /didn't answer the check/.test(l.text)));
   assert.ok(!r.picks.some((x) => x.marketId === id("Boulder")), "the guard still drops Boulder");
   assert.equal(r.picks.length, 3);
 });
@@ -740,18 +769,18 @@ function slowRun(o: { delay: number; until: number; draw: number; names?: (m: st
   return { p, lines, asked, most: () => most };
 }
 
-test("40 slow capacity lookups run four at a time a city and stop when the run's time for lookups is up", async () => {
-  const t = Date.now();
-  const { p, lines, asked, most } = slowRun({ delay: 250, until: 400, draw: 3000 });
-  const r = await p;
-  const took = Date.now() - t;
+test("40 slow capacity lookups run four at a time a city and stop when the run's time for lookups is up", async (t) => {
+  let x!: ReturnType<typeof slowRun>;
+  const { value: r, ms: took } = await onFakeClock(t, () => {
+    x = slowRun({ delay: 250, until: 400, draw: 3000 });
+    return x.p;
+  });
+  const { lines, asked, most } = x;
   assert.equal(r.picks.length, 8);
-  assert.ok(took < 6000, `took ${took} ms for ${asked.length} lookups (serial would be ${asked.length * 250} ms)`);
+  assert.ok(took < 1500, `took ${took} ms of fake time for ${asked.length} lookups (serial would be ${asked.length * 250} ms)`);
   assert.ok(most() >= 4, `at most ${most()} lookups at once`);
-  // Each city: the first room, then batches of four until the 400 ms budget runs out (one batch on a quiet machine,
-  // 40 lookups; a slow CI runner may fit fewer or one more); most of the 72 rooms never start.
-  // (CI saw 60 once: the point is that the budget stops lookups before every room is tried.)
-  assert.ok(asked.length >= 8 && asked.length < 72, `${asked.length} lookups started of 72 rooms`);
+  // Each city: the first room, then one batch of four before the 400 ms budget runs out; the other 32 never start.
+  assert.equal(asked.length, 40, `${asked.length} lookups started of 72 rooms`);
   assert.ok(lines.some((l) => l.failed && /^The run's time for capacity lookups is used up/.test(l.text)));
   assert.equal(lines.filter((l) => /time for capacity lookups is used up/.test(l.text)).length, 1, "said once");
 });
@@ -763,7 +792,7 @@ test("from 3,000 up, rooms whose name says small (a café, a bar) aren't measure
   assert.ok(!asked.some((n) => /Café|Bar|Club/.test(n)), asked.join(", "));
 });
 
-test("a capacity lookup that never answers is left when the run's time for lookups is up", async () => {
+test("a capacity lookup that never answers is left when the run's time for lookups is up", async (t) => {
   const eight = ["Stockholm", "Oslo", "Copenhagen", "Hamburg"].map((n, i) => city(n, i + 1));
   const deps: PlanDeps = {
     ask: (async () => {
@@ -773,11 +802,10 @@ test("a capacity lookup that never answers is left when the run's time for looku
     lookUpOpeners: async () => [],
     roomCapacity: () => new Promise(() => {}),
   };
-  const t = Date.now();
   const st = eight[0]!;
-  const r = await planTour({ artist, audience, cities: eight, from: { lat: st.lat, lon: st.lon, label: st.label }, region: "eu", shows: 4, draw: 3000, useModel: false, log: () => {}, lookupsUntil: Date.now() + 300 }, deps);
+  const { value: r, ms } = await onFakeClock(t, () => planTour({ artist, audience, cities: eight, from: { lat: st.lat, lon: st.lon, label: st.label }, region: "eu", shows: 4, draw: 3000, useModel: false, log: () => {}, lookupsUntil: Date.now() + 300 }, deps));
   assert.equal(r.picks.length, 4);
-  assert.ok(Date.now() - t < 6000, `took ${Date.now() - t} ms`);
+  assert.ok(ms <= 400, `took ${ms} ms of fake time against a 300 ms budget`);
 });
 
 test("check_plan says how to keep a fan city a leg would break: book it and a bridge city in place of the weakest stops", () => {

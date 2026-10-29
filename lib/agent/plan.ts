@@ -929,7 +929,7 @@ export async function planTour(
    *  it doesn't reach is measured after booking, for the rooms the agent books. Set when the measuring starts. */
   let premeasureUntil = Infinity;
   const inTimeForLookups = () => {
-    if (Date.now() <= (opts.lookupsUntil ?? Infinity)) return true;
+    if (Date.now() < (opts.lookupsUntil ?? Infinity)) return true;
     if (!outOfTime) log({ kind: "rule", text: "The run's time for capacity lookups is used up, so the rooms not yet measured stay unmeasured and their sheets say to ask the room.", failed: true });
     outOfTime = true;
     return false;
@@ -956,7 +956,7 @@ export async function planTour(
    *  a loose fit or one the fans sell out doesn't stop it, so a closer room can still turn up. */
   const measureInOrder = async (order: Room[], city: string, until?: number) => {
     for (let i = 0; i < order.length; i += MEASURE_BATCH) {
-      if (until !== undefined && Date.now() > until) break;
+      if (until !== undefined && Date.now() >= until) break;
       const batch = order.slice(i, i + MEASURE_BATCH);
       await Promise.all(batch.map((r) => measure(r, city, until)));
       if (batch.some((r) => roomFit(r, draw) === "close") || outOfTime) break;

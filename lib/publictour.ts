@@ -48,6 +48,8 @@ export function snapTiles(tiles: Local["tiles"]): Local["tiles"] {
 export const opaque = (id: string) => (id ? `x${createHash("sha256").update(`routed:${id}`).digest("hex").slice(0, 12)}` : id);
 
 const r2 = (v: number | undefined) => (v === undefined ? undefined : Math.round(v * 100) / 100);
+/** A place's coordinates to four places (about 10 m): enough for the street map, not Qloo's geocode as returned. */
+const at4 = <T extends { lat?: number; lon?: number }>(o: T): T => ({ ...o, ...(o.lat !== undefined ? { lat: +o.lat.toFixed(4) } : {}), ...(o.lon !== undefined ? { lon: +o.lon.toFixed(4) } : {}) });
 const round = <T extends object>(o: T, keys: (keyof T)[]): T => {
   const out = { ...o };
   for (const k of keys) if (typeof out[k] === "number") (out as Record<keyof T, unknown>)[k] = r2(out[k] as number);
@@ -62,9 +64,9 @@ export const maskRequest = (s: string) => s.replace(UUID, "‹id›");
 const city = (c: CityScore): CityScore => ({ marketId: c.marketId, name: c.name, label: c.label, lat: c.lat, lon: c.lon, rank: c.rank }) as CityScore;
 /** A room as the day sheet prints it: its fan affinity (two places), capacity and place, not Qloo's id, image,
  *  popularity or rating. */
-const room = ({ popularity: _p, rating: _r, image: _i, ...r }: Room): Room => ({ ...round(r, ["affinity"]), id: opaque(r.id) });
+const room = ({ popularity: _p, rating: _r, image: _i, ...r }: Room): Room => ({ ...at4(round(r, ["affinity"])), id: opaque(r.id) });
 const opener = ({ popularity: _p, image: _i, ...o }: Opener): Opener => ({ ...round(o, ["affinity"]), id: opaque(o.id) });
-const spot = ({ affinity: _a, ...s }: Spot): Spot => ({ ...s, id: opaque(s.id) });
+const spot = ({ affinity: _a, ...s }: Spot): Spot => ({ ...at4(s), id: opaque(s.id) });
 const named = ({ affinity: _a, image: _i, ...n }: Named): Named => ({ ...n, id: opaque(n.id) });
 const artist = ({ image: _i, ...a }: Artist): Artist => ({ ...round(a, ["popularity"]), id: opaque(a.id) });
 

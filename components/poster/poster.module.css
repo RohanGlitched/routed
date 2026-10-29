@@ -16,16 +16,16 @@
 .stampSmall { font-weight: 800; font-size: 12px; letter-spacing: 0.1em; }
 .stampBig { font-weight: 900; font-size: 32px; }
 
-/* The print: the blue plate rolls on from the top, then the fire plate lands out of register and settles. */
-.idle .blue,
-.idle .fire { opacity: 0; }
-
-.printing .blue { animation: roll 900ms cubic-bezier(0.3, 0.6, 0.2, 1) both; }
-.printing .fire { animation: roll 900ms cubic-bezier(0.3, 0.6, 0.2, 1) 650ms both, land 900ms cubic-bezier(0.3, 0.6, 0.2, 1) 650ms both; }
-.printing .route { stroke-dasharray: 1; animation: draw 1400ms ease-in-out 1300ms both; }
+/* The print: the blue plate rolls on from the top, then the fire plate lands out of register and settles. It plays
+   from the first paint, wide screens only: a phone, where the poster is the whole first screen, gets it printed. */
+@media (min-width: 861px) and (prefers-reduced-motion: no-preference) {
+  .press .blue { animation: roll 900ms cubic-bezier(0.3, 0.6, 0.2, 1) both; }
+  .press .fire { animation: roll 900ms cubic-bezier(0.3, 0.6, 0.2, 1) 650ms both, land 900ms cubic-bezier(0.3, 0.6, 0.2, 1) 650ms both; }
+  .press .route { stroke-dasharray: 1; animation: draw 1400ms ease-in-out 1300ms both; }
+}
 
 .printed .fire,
-.printing .fire { transform: translate(2.2px, -1.4px); }
+.press .fire { transform: translate(2.2px, -1.4px); }
 
 @keyframes roll {
   from { clip-path: inset(0 0 100% 0); }
@@ -38,10 +38,4 @@
 @keyframes draw {
   from { stroke-dashoffset: 1; }
   to { stroke-dashoffset: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .printing .blue,
-  .printing .fire,
-  .printing .route { animation: none; }
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import type { Dot } from "@/lib/geo/map";
 import { fitTitle, stampCity, STAMP_BASELINE, supportBand } from "@/lib/posterfit";
 import s from "./poster.module.css";
@@ -8,8 +7,8 @@ import s from "./poster.module.css";
 /**
  * The tour poster, printed in two inks the way a letterpress shop would: the blue plate carries the halftone map
  * (each dot sized by Qloo fan affinity) and the type; the fire plate carries the artist, the route and the dates.
- * Where the inks cross they multiply to purple. It "prints" once when it first comes into view (blue plate,
- * then fire plate landing slightly out of register); with reduced motion it is simply there.
+ * Where the inks cross they multiply to purple. On a wide screen it "prints" once as the page paints (blue plate,
+ * then fire plate landing slightly out of register); on a phone or with reduced motion it is simply there.
  */
 export type PosterStop = { date: string; city: string; venue?: string };
 
@@ -26,7 +25,7 @@ export type PosterProps = {
   topRank?: number;
   /** The support act on every date, printed under the rule; older tours had one per city. */
   support?: string;
-  /** Print on first view. */
+  /** Print once as it first paints (wide screens, motion allowed); otherwise drawn printed. */
   print?: boolean;
   /** Smaller type for the wall. */
   compact?: boolean;
@@ -43,29 +42,9 @@ const fmt = (iso: string) => {
 };
 
 export function Poster({ artist, season, region, dots, route, start, stops, topCity, topRank = 1, support, print = false, compact = false, label }: PosterProps) {
-  const ref = useRef<SVGSVGElement>(null);
-  const [state, setState] = useState<"idle" | "printing" | "printed">(print ? "idle" : "printed");
-
-  useEffect(() => {
-    if (!print || state !== "idle") return;
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setState("printed");
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting && e.intersectionRatio >= 0.5)) {
-          setState("printing");
-          io.disconnect();
-        }
-      },
-      { threshold: [0.5] },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [print, state]);
+  // The print runs in CSS from the first paint (poster.module.css .press), so the server's HTML is never a blank
+  // sheet waiting for hydration; at phone width or with reduced motion the poster is simply printed.
+  const state = print ? "press" : "printed";
 
   // Wood type set to fill the block without stretching a short line into slabs (lib/posterfit.ts).
   const title = fitTitle(artist);
@@ -76,7 +55,7 @@ export function Poster({ artist, season, region, dots, route, start, stops, topC
   const colW = (W - 64 - 24) / 2;
 
   return (
-    <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className={`${s.poster} ${s[state]}`} role="img" aria-label={label ?? `${artist} tour poster: ${stops.map((x) => `${fmt(x.date)} ${x.city}`).join(", ")}`}>
+    <svg viewBox={`0 0 ${W} ${H}`} className={`${s.poster} ${s[state]}`} role="img" aria-label={label ?? `${artist} tour poster: ${stops.map((x) => `${fmt(x.date)} ${x.city}`).join(", ")}`}>
       <defs>
         <filter id="grain" x="0" y="0" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" stitchTiles="stitch" />

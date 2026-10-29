@@ -34,13 +34,12 @@
   border: 2px dashed var(--rule);
   display: grid;
   place-items: center;
-  font-family: var(--wood);
-  font-weight: 800;
-  font-size: 28px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #b8b7bf;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--mute);
 }
+/* Phones: the "Route a tour" button sits right under the poster, in the first screen (components/home/StickyRoute.tsx). */
+.jumpRow { display: none; }
 
 .h2 { margin: 0 0 32px; font-family: var(--wood); font-weight: 800; font-size: clamp(40px, 4.6vw, 64px); line-height: 0.95; }
 
@@ -77,9 +76,11 @@
 .picked i { background: var(--fire) !important; }
 
 .legs { list-style: none; margin: 0; padding: 0; font-size: 14px; }
-.legs li { display: flex; gap: 10px; align-items: baseline; padding: 5px 0; border-bottom: 1px solid var(--rule); }
-.legs b { font-family: var(--wood); font-weight: 900; font-size: 17px; color: var(--fire); min-width: 44px; }
-.legs span { margin-left: auto; color: var(--mute); font-size: 13px; }
+.legs li { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 5px 0; border-bottom: 1px solid var(--rule); }
+.legs b { font-family: var(--wood); font-weight: 900; font-size: 17px; color: var(--fire); }
+.legs span { color: var(--mute); font-size: 13px; white-space: nowrap; }
+.legs .legCity { color: var(--ink); font-size: 14px; white-space: normal; min-width: 0; }
+.legs .legCity em { display: block; font-style: normal; font-size: 12px; font-weight: 600; color: var(--fire-deep); }
 
 .quote { margin: 0 0 12px; padding: 12px 14px; background: var(--panel); border-left: 3px solid var(--blue); font-size: 14px; line-height: 1.5; color: var(--ink-2); }
 
@@ -92,12 +93,14 @@
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; gap: 28px; }
   .stage { order: -1; max-width: 420px; width: 100%; margin: 0 auto; }
+  .jumpRow { display: block; order: -1; width: 100%; max-width: 420px; margin: -4px auto 8px; }
   .pitch { padding-top: 0; }
   .caption { margin-top: 18px; }
 }
 @media (max-width: 560px) {
   .steps { grid-template-columns: 1fr; }
   .stage { max-width: 340px; }
+  .jumpRow { max-width: 340px; }
   .h1 { margin-bottom: 20px; }
   .lede { font-size: 16px; }
 }

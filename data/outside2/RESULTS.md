@@ -166,3 +166,43 @@ Test 3 is the only test that removes memory of the tour itself, and on it the pi
 
 Thirteen tours is a small sample. Read with that limit, Qloo's live taste data adds to the cities a model can name
 for a tour it hasn't read about. It does not pick the rooms or the openers.
+
+## The model + Qloo against the model alone (post hoc, exploratory, not pre-registered)
+
+**Added Oct 30.** Script: `scripts/model-plus-qloo.ts`. Numbers: `model-plus-qloo.json`. Nothing here was fixed before
+the data were seen, so it shows a direction, not a tested claim.
+
+**The question.** Does Qloo add anything to the model's own city ranking? Each market's place in the model's ranking
+and its place in Qloo's heatmap ranking are averaged, with no weight to tune and ties going to the bigger city
+(`blendTwo` in `lib/headtohead.ts`). The blend is scored against the model's ranking alone by R-precision, on the
+13 post-cutoff tours above and the 49 older tours of the head-to-head.
+
+**How it was run.**
+- Offline only, from the cached rankings: the model's answers in the two committed `model-runs.json` files, Qloo's
+  rankings as stored market ids in the gitignored `.probe` caches, and the Wikipedia coordinates the published runs
+  had already fetched to place the model's towns.
+- The script replaces `fetch` with a function that throws and checks at the end that it was never called. It made
+  0 Qloo calls, 0 model calls and 0 network calls.
+- Both published tests already carried this contrast as an exploratory row, added after their results were seen.
+  The script recomputes both from the caches, and every artist's hits match the published rows (13 of 13 and 49 of
+  49). The adversary's "+5.8 pts (7–1–5)" is that post-cutoff row; the head-to-head's "the model + Qloo = the model"
+  is the −0.8 row.
+- The bootstrap uses each test's own seed (20261025 for the post-cutoff tours, 20261018 for the head-to-head), so
+  the rows match the published ones to the digit. The pooled row uses 20261025.
+
+| Tours | n | The model + Qloo | The model alone | Difference, pts [95% CI] | wins–losses–ties | sign test p |
+|---|---|---|---|---|---|---|
+| Announced after the model's release | 13 | 56.7% | 50.9% | +5.8 [+1.9, +10.1] | 7–1–5 | 0.070 |
+| Older tours, 2024–2025 (head-to-head) | 49 | 57.2% | 58.0% | −0.8 [−3.2, +1.7] | 13–20–16 | 0.296 |
+| Older tours, the 19 benchmark artists | 19 | 47.4% | 46.2% | +1.2 [−1.6, +4.6] | 4–7–8 | 0.549 |
+| Older tours, the 30 held-out artists | 30 | 63.4% | 65.5% | −2.1 [−5.5, +1.3] | 9–13–8 | 0.523 |
+| Both sets together | 62 | 57.1% | 56.5% | +0.6 [−1.6, +2.8] | 20–21–21 | 1.000 |
+
+Pooled hits: after the cutoff, 163 of 277 cities for the blend against 150 for the model; on the older tours, 762
+of 1,271 against 753.
+
+**Reading.** On tours the model can't have read, adding Qloo to its ranking found more of the real cities for 7 of
+13 artists and fewer for 1. The interval is clear of zero, but the sign test is not significant (p = 0.07), and the
+contrast was chosen after the data. On older tours, which the model may remember, the blend is level with the model
+alone. That fits the reading above: Qloo's data helps where the model's memory runs out, and adds little where the
+model has read the answer. A fresh, pre-registered test on new tours is the way to settle it.

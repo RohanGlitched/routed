@@ -1,0 +1,1120 @@
+{
+ "scored": "2026-10-29T18:45:19.017Z",
+ "status": "post hoc, exploratory, not pre-registered",
+ "script": "scripts/model-plus-qloo.ts",
+ "question": "Does averaging Qloo's heatmap ranking into the model's own city ranking find more of a real tour's cities than the model's ranking alone?",
+ "method": "Each market's place in the model's ranking (completed by population) and in Qloo's heatmap ranking (completed by population) averaged, ties to the bigger city (lib/headtohead.ts blendTwo); R-precision against the real tour's markets in its region (lib/headtohead.ts rPrecision); per-artist paired differences, exact two-sided sign test, mean with a 95% percentile bootstrap interval (10,000 resamples).",
+ "seeds": {
+  "postcut": 20261025,
+  "h2h": 20261018,
+  "pooled": 20261025
+ },
+ "calls": {
+  "qloo": 0,
+  "model": 0,
+  "network": 0
+ },
+ "reconciled": [
+  {
+   "against": "data/outside2/results.json postcut.rows (exploratory row: +5.8 pts, 7-1-5)",
+   "rows": 13,
+   "matches": true,
+   "differences": []
+  },
+  {
+   "against": "data/head-to-head/results.json test1Rows (exploratory row: -0.8 pts, 13-20-16)",
+   "rows": 49,
+   "matches": true,
+   "differences": []
+  }
+ ],
+ "results": {
+  "postcut": {
+   "label": "Tours announced after the model's release (outside2, Test 3)",
+   "n": 13,
+   "contrast": {
+    "name": "The model + Qloo vs the model alone",
+    "n": 13,
+    "meanA": 0.5673119913153953,
+    "meanB": 0.5092222789860608,
+    "diff": 0.0580897123293346,
+    "lo": 0.01949182039679777,
+    "hi": 0.1008742061270096,
+    "wins": 7,
+    "losses": 1,
+    "ties": 5,
+    "p": 0.0703125
+   },
+   "pooled": {
+    "model": {
+     "hits": 150,
+     "of": 277,
+     "share": 0.5415162454873647
+    },
+    "modelQloo": {
+     "hits": 163,
+     "of": 277,
+     "share": 0.5884476534296029
+    }
+   }
+  },
+  "h2h": {
+   "label": "Older tours, 2024–2025 (the head-to-head, Test 1)",
+   "n": 49,
+   "contrast": {
+    "name": "The model + Qloo vs the model alone",
+    "n": 49,
+    "meanA": 0.572228909991143,
+    "meanB": 0.5800707885835842,
+    "diff": -0.007841878592441252,
+    "lo": -0.03227987870150634,
+    "hi": 0.016883947202468195,
+    "wins": 13,
+    "losses": 20,
+    "ties": 16,
+    "p": 0.296206368599087
+   },
+   "pooled": {
+    "model": {
+     "hits": 753,
+     "of": 1271,
+     "share": 0.5924468922108576
+    },
+    "modelQloo": {
+     "hits": 762,
+     "of": 1271,
+     "share": 0.5995279307631786
+    }
+   }
+  },
+  "h2hBench": {
+   "label": "Older tours: the 19 benchmark artists (mid-size acts)",
+   "n": 19,
+   "contrast": {
+    "name": "The model + Qloo vs the model alone",
+    "n": 19,
+    "meanA": 0.4743009789346155,
+    "meanB": 0.46193162297946094,
+    "diff": 0.012369355955154636,
+    "lo": -0.015825448789437712,
+    "hi": 0.046270533595129726,
+    "wins": 4,
+    "losses": 7,
+    "ties": 8,
+    "p": 0.548828125
+   },
+   "pooled": {
+    "model": {
+     "hits": 192,
+     "of": 406,
+     "share": 0.4729064039408867
+    },
+    "modelQloo": {
+     "hits": 199,
+     "of": 406,
+     "share": 0.49014778325123154
+    }
+   }
+  },
+  "h2hHeldOut": {
+   "label": "Older tours: the 30 held-out artists (mostly arena acts)",
+   "n": 30,
+   "contrast": {
+    "name": "The model + Qloo vs the model alone",
+    "n": 30,
+    "meanA": 0.6342499329936103,
+    "meanB": 0.6548922601328625,
+    "diff": -0.02064232713925198,
+    "lo": -0.05522447296654549,
+    "hi": 0.01326821180016119,
+    "wins": 9,
+    "losses": 13,
+    "ties": 8,
+    "p": 0.5234670639038086
+   },
+   "pooled": {
+    "model": {
+     "hits": 561,
+     "of": 865,
+     "share": 0.6485549132947976
+    },
+    "modelQloo": {
+     "hits": 563,
+     "of": 865,
+     "share": 0.6508670520231213
+    }
+   }
+  },
+  "pooled": {
+   "label": "Both sets together (62 tours; one artist can appear in both with different tours)",
+   "n": 62,
+   "contrast": {
+    "name": "The model + Qloo vs the model alone",
+    "n": 62,
+    "meanA": 0.5711979431720347,
+    "meanB": 0.565215455926039,
+    "diff": 0.0059824872459956204,
+    "lo": -0.015919095809075006,
+    "hi": 0.028492046524087624,
+    "wins": 20,
+    "losses": 21,
+    "ties": 21,
+    "p": 1
+   },
+   "pooled": {
+    "model": {
+     "hits": 903,
+     "of": 1548,
+     "share": 0.5833333333333334
+    },
+    "modelQloo": {
+     "hits": 925,
+     "of": 1548,
+     "share": 0.5975452196382429
+    }
+   }
+  }
+ },
+ "rows": {
+  "postcut": [
+   {
+    "artist": "Flo",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 17,
+    "model": 10,
+    "modelQloo": 13,
+    "gained": [
+     "Houston",
+     "Dallas",
+     "San Diego"
+    ],
+    "lost": []
+   },
+   {
+    "artist": "Beabadoobee",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 17,
+    "model": 10,
+    "modelQloo": 11,
+    "gained": [
+     "San Diego"
+    ],
+    "lost": []
+   },
+   {
+    "artist": "Lizzy McAlpine",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 26,
+    "model": 17,
+    "modelQloo": 17,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Karol G",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 17,
+    "model": 10,
+    "modelQloo": 11,
+    "gained": [
+     "El Paso",
+     "Washington"
+    ],
+    "lost": [
+     "Atlanta"
+    ]
+   },
+   {
+    "artist": "Garth Brooks",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 9,
+    "model": 1,
+    "modelQloo": 3,
+    "gained": [
+     "Kansas City",
+     "Tulsa",
+     "Indianapolis"
+    ],
+    "lost": [
+     "Chicago"
+    ]
+   },
+   {
+    "artist": "Take That",
+    "set": "post-cutoff",
+    "region": "eu",
+    "R": 23,
+    "model": 5,
+    "modelQloo": 8,
+    "gained": [
+     "Paris",
+     "Rome",
+     "Vienna",
+     "Madrid"
+    ],
+    "lost": [
+     "Bremen"
+    ]
+   },
+   {
+    "artist": "Role Model",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 22,
+    "model": 17,
+    "modelQloo": 16,
+    "gained": [
+     "Pittsburgh"
+    ],
+    "lost": [
+     "Vancouver",
+     "Houston"
+    ]
+   },
+   {
+    "artist": "Sugarland",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 21,
+    "model": 1,
+    "modelQloo": 1,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Victoria Monét",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 26,
+    "model": 15,
+    "modelQloo": 17,
+    "gained": [
+     "Las Vegas",
+     "San Francisco",
+     "Phoenix"
+    ],
+    "lost": [
+     "Vancouver"
+    ]
+   },
+   {
+    "artist": "Phoebe Bridgers",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 21,
+    "model": 15,
+    "modelQloo": 15,
+    "gained": [
+     "Columbus"
+    ],
+    "lost": [
+     "Atlanta"
+    ]
+   },
+   {
+    "artist": "James Blunt",
+    "set": "post-cutoff",
+    "region": "eu",
+    "R": 26,
+    "model": 12,
+    "modelQloo": 14,
+    "gained": [
+     "Budapest",
+     "Florence"
+    ],
+    "lost": []
+   },
+   {
+    "artist": "Jonas Brothers",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 43,
+    "model": 32,
+    "modelQloo": 32,
+    "gained": [
+     "Pittsburgh",
+     "Irvine",
+     "Salt Lake City"
+    ],
+    "lost": [
+     "Houston",
+     "Atlanta",
+     "Charlotte"
+    ]
+   },
+   {
+    "artist": "Charli XCX",
+    "set": "post-cutoff",
+    "region": "na",
+    "R": 9,
+    "model": 5,
+    "modelQloo": 5,
+    "gained": [],
+    "lost": []
+   }
+  ],
+  "h2h": [
+   {
+    "artist": "Zach Bryan",
+    "set": "bench",
+    "region": "na",
+    "R": 43,
+    "model": 16,
+    "modelQloo": 19,
+    "gained": [
+     "Denver",
+     "Phoenix",
+     "Pittsburgh",
+     "Chicago"
+    ],
+    "lost": [
+     "Greensboro"
+    ]
+   },
+   {
+    "artist": "Tyler Childers",
+    "set": "bench",
+    "region": "na",
+    "R": 27,
+    "model": 7,
+    "modelQloo": 6,
+    "gained": [
+     "Salt Lake City"
+    ],
+    "lost": [
+     "Tampa",
+     "Virginia Beach"
+    ]
+   },
+   {
+    "artist": "Caamp",
+    "set": "bench",
+    "region": "na",
+    "R": 28,
+    "model": 15,
+    "modelQloo": 15,
+    "gained": [
+     "Cleveland",
+     "Raleigh",
+     "Charlotte"
+    ],
+    "lost": [
+     "Los Angeles",
+     "Houston",
+     "Dallas"
+    ]
+   },
+   {
+    "artist": "Waxahatchee",
+    "set": "bench",
+    "region": "na",
+    "R": 36,
+    "model": 21,
+    "modelQloo": 20,
+    "gained": [
+     "Madison",
+     "Toronto"
+    ],
+    "lost": [
+     "Houston",
+     "Phoenix",
+     "San Diego"
+    ]
+   },
+   {
+    "artist": "Khruangbin",
+    "set": "bench",
+    "region": "na",
+    "R": 20,
+    "model": 8,
+    "modelQloo": 8,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Durand Jones & The Indications",
+    "set": "bench",
+    "region": "na",
+    "R": 34,
+    "model": 19,
+    "modelQloo": 27,
+    "gained": [
+     "San Diego",
+     "Toronto",
+     "Montréal",
+     "Houston",
+     "Vancouver",
+     "Dallas",
+     "Phoenix",
+     "Las Vegas",
+     "Sacramento",
+     "New Orleans"
+    ],
+    "lost": [
+     "Columbus",
+     "Indianapolis"
+    ]
+   },
+   {
+    "artist": "Ghost",
+    "set": "bench",
+    "region": "eu",
+    "R": 19,
+    "model": 10,
+    "modelQloo": 9,
+    "gained": [
+     "Frankfurt am Main",
+     "Lyon",
+     "Hannover"
+    ],
+    "lost": [
+     "Copenhagen",
+     "Oslo",
+     "Prague",
+     "Zürich"
+    ]
+   },
+   {
+    "artist": "Knocked Loose",
+    "set": "bench",
+    "region": "na",
+    "R": 20,
+    "model": 4,
+    "modelQloo": 3,
+    "gained": [
+     "Columbus",
+     "San Antonio"
+    ],
+    "lost": [
+     "San Francisco",
+     "Washington",
+     "Houston"
+    ]
+   },
+   {
+    "artist": "Turnstile",
+    "set": "bench",
+    "region": "na",
+    "R": 21,
+    "model": 11,
+    "modelQloo": 13,
+    "gained": [
+     "Columbus",
+     "San Diego",
+     "Buffalo"
+    ],
+    "lost": [
+     "Nashville"
+    ]
+   },
+   {
+    "artist": "Cuco",
+    "set": "bench",
+    "region": "na",
+    "R": 28,
+    "model": 19,
+    "modelQloo": 18,
+    "gained": [
+     "El Paso"
+    ],
+    "lost": [
+     "Detroit",
+     "Nashville"
+    ]
+   },
+   {
+    "artist": "MJ Lenderman",
+    "set": "bench",
+    "region": "na",
+    "R": 24,
+    "model": 7,
+    "modelQloo": 6,
+    "gained": [
+     "Salt Lake City"
+    ],
+    "lost": [
+     "Los Angeles",
+     "Vancouver"
+    ]
+   },
+   {
+    "artist": "Parcels",
+    "set": "bench",
+    "region": "eu",
+    "R": 5,
+    "model": 3,
+    "modelQloo": 3,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Alvvays",
+    "set": "bench",
+    "region": "na",
+    "R": 17,
+    "model": 0,
+    "modelQloo": 0,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Arlo Parks",
+    "set": "bench",
+    "region": "uk",
+    "R": 6,
+    "model": 3,
+    "modelQloo": 3,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Wet Leg",
+    "set": "bench",
+    "region": "uk",
+    "R": 8,
+    "model": 2,
+    "modelQloo": 3,
+    "gained": [
+     "Liverpool",
+     "Southampton"
+    ],
+    "lost": [
+     "Dublin"
+    ]
+   },
+   {
+    "artist": "Japanese Breakfast",
+    "set": "bench",
+    "region": "na",
+    "R": 11,
+    "model": 5,
+    "modelQloo": 5,
+    "gained": [
+     "Philadelphia"
+    ],
+    "lost": [
+     "Toronto"
+    ]
+   },
+   {
+    "artist": "Fontaines D.C.",
+    "set": "bench",
+    "region": "uk",
+    "R": 9,
+    "model": 5,
+    "modelQloo": 5,
+    "gained": [
+     "Dublin"
+    ],
+    "lost": [
+     "Birmingham"
+    ]
+   },
+   {
+    "artist": "JPEGMAFIA",
+    "set": "bench",
+    "region": "na",
+    "R": 28,
+    "model": 20,
+    "modelQloo": 20,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Clairo",
+    "set": "bench",
+    "region": "na",
+    "R": 22,
+    "model": 17,
+    "modelQloo": 16,
+    "gained": [],
+    "lost": [
+     "Nashville"
+    ]
+   },
+   {
+    "artist": "Pierce the Veil",
+    "set": "held-out",
+    "region": "na",
+    "R": 37,
+    "model": 21,
+    "modelQloo": 21,
+    "gained": [
+     "Las Vegas",
+     "Albuquerque"
+    ],
+    "lost": [
+     "Nashville",
+     "Raleigh"
+    ]
+   },
+   {
+    "artist": "Dua Lipa",
+    "set": "held-out",
+    "region": "na",
+    "R": 10,
+    "model": 7,
+    "modelQloo": 7,
+    "gained": [
+     "San Francisco",
+     "Boston"
+    ],
+    "lost": [
+     "Dallas",
+     "Atlanta"
+    ]
+   },
+   {
+    "artist": "Troye Sivan",
+    "set": "held-out",
+    "region": "eu",
+    "R": 11,
+    "model": 7,
+    "modelQloo": 6,
+    "gained": [],
+    "lost": [
+     "Hamburg"
+    ]
+   },
+   {
+    "artist": "Queen + Adam Lambert",
+    "set": "held-out",
+    "region": "na",
+    "R": 27,
+    "model": 19,
+    "modelQloo": 14,
+    "gained": [
+     "Nashville",
+     "Austin"
+    ],
+    "lost": [
+     "Chicago",
+     "Washington",
+     "Houston",
+     "Atlanta",
+     "Phoenix",
+     "Tampa",
+     "Pittsburgh"
+    ]
+   },
+   {
+    "artist": "Chappell Roan",
+    "set": "held-out",
+    "region": "na",
+    "R": 57,
+    "model": 41,
+    "modelQloo": 44,
+    "gained": [
+     "New Orleans",
+     "Grand Rapids",
+     "Richmond"
+    ],
+    "lost": []
+   },
+   {
+    "artist": "Billy Joel",
+    "set": "held-out",
+    "region": "na",
+    "R": 54,
+    "model": 38,
+    "modelQloo": 43,
+    "gained": [
+     "New Orleans",
+     "Memphis",
+     "Fort Lauderdale",
+     "Louisville",
+     "Portland"
+    ],
+    "lost": []
+   },
+   {
+    "artist": "Kim Petras",
+    "set": "held-out",
+    "region": "na",
+    "R": 22,
+    "model": 20,
+    "modelQloo": 17,
+    "gained": [
+     "Orlando"
+    ],
+    "lost": [
+     "Atlanta",
+     "Nashville",
+     "Dallas",
+     "Houston"
+    ]
+   },
+   {
+    "artist": "Tame Impala",
+    "set": "held-out",
+    "region": "na",
+    "R": 25,
+    "model": 21,
+    "modelQloo": 17,
+    "gained": [],
+    "lost": [
+     "Atlanta",
+     "Dallas",
+     "Houston",
+     "Columbus"
+    ]
+   },
+   {
+    "artist": "Queens of the Stone Age",
+    "set": "held-out",
+    "region": "na",
+    "R": 15,
+    "model": 10,
+    "modelQloo": 10,
+    "gained": [],
+    "lost": []
+   },
+   {
+    "artist": "Nine Inch Nails",
+    "set": "held-out",
+    "region": "na",
+    "R": 40,
+    "model": 32,
+    "modelQloo": 31,
+    "gained": [
+     "New Orleans",
+     "Irvine"
+    ],
+    "lost": [
+     "Tampa",
+     "Raleigh",
+     "Charlotte"
+    ]
+   },
+   {
+    "artist": "Flo",
+    "set": "held-out",
+    "region": "na",
+    "R": 26,
+    "model": 21,
+    "modelQloo": 21,
+    "gained": [
+     "Raleigh"
+    ],
+    "lost": [
+     "Portland"
+    ]
+   },
+   {
+    "artist": "Omar Apollo",
+    "set": "held-out",
+    "region": "na",
+    "R": 26,
+    "model": 19,
+    "modelQloo": 19,
+    "gained": [
+     "Portland"
+    ],
+    "lost": [
+     "Charlotte"
+    ]
+   },
+   {
+    "artist": "Sugababes",
+    "set": "held-out",
+    "region": "uk",
+    "R": 9,
+    "model": 7,
+    "modelQloo": 6,
+    "gained": [],
+    "lost": [
+     "Dublin"
+    ]
+   },
+   {
+    "artist": "Travis Scott",
+    "set": "held-out",
+    "region": "na",
+    "R": 31,
+    "model": 21,
+    "modelQloo": 22,
+    "gained": [
+     "Austin",
+     "Boston",
+     "Montréal",
+     "Vancouver",
+     "Seattle",
+     "Pittsburgh"
+    ],
+    "lost": [
+     "Baltimore",
+     "Charlotte",
+     "Nashville",
+     "Kansas City",
+     "Raleigh"
+    ]
+   },
+   {
+    "artist": "Halsey",
+    "set": "held-out",
+    "region": "na",
+    "R": 23,
+    "model": 10,
+    "modelQloo": 7,
+    "gained": [],
+    "lost": [
+     "Dallas",
+     "Tampa",
+     "Charlotte"
+    ]
+   },
+   {
+    "artist": "Bonnie Tyler",
+    "set": "held-out",
+    "region": "eu",
+    "R": 27,
+    "model": 12,
+    "modelQloo": 10,
+    "gained": [],
+    "lost": [
+     "Nuremberg",
+     "Lyon"
+    ]
+   },
+   {
+    "artist": "Ado",
+    "set": "held-out",
+    "region": "na",
+    "R": 12,
+    "model": 6,
+    "modelQloo": 4,
+    "gained": [
+     "Orlando"
+    ],
+    "lost": [
+     "Toronto",
+     "San Francisco",
+     "Phoenix"
+    ]
+   },
+   {
+    "artist": "Doja Cat",
+    "set": "held-out",
+    "region": "na",
+    "R": 31,
+    "model": 27,
+    "modelQloo": 26,
+    "gained": [
+     "San Antonio"
+    ],
+    "lost": [
+     "Charlotte",
+     "Kansas City"
+    ]
+   },
+   {
+    "artist": "Depeche Mode",
+    "set": "held-out",
+    "region": "eu",
+    "R": 34,
+    "model": 24,
+    "modelQloo": 24,
+    "gained": [
+     "Leipzig",
+     "Kraków"
+    ],
+    "lost": [
+     "Lyon",
+     "Bordeaux"
+    ]
+   },
+   {
+    "artist": "Addison Rae",
+    "set": "held-out",
+    "region": "na",
+    "R": 14,
+    "model": 11,
+    "modelQloo": 8,
+    "gained": [],
+    "lost": [
+     "Atlanta",
+     "Denver",
+     "Washington"
+    ]
+   },
+   {
+    "artist": "Nicki Minaj",
+    "set": "held-out",
+    "region": "na",
+    "R": 41,
+    "model": 29,
+    "modelQloo": 32,
+    "gained": [
+     "Las Vegas",
+     "Austin",
+     "Boston",
+     "Columbus",
+     "Milwaukee",
+     "Minneapolis"
+    ],
+    "lost": [
+     "Birmingham",
+     "Seattle",
+     "Denver"
+    ]
+   },
+   {
+    "artist": "Gary Barlow",
+    "set": "held-out",
+    "region": "uk",
+    "R": 25,
+    "model": 19,
+    "modelQloo": 18,
+    "gained": [
+     "Bournemouth",
+     "Oxford"
+    ],
+    "lost": [
+     "Belfast",
+     "Dublin",
+     "Middlesbrough"
+    ]
+   },
+   {
+    "artist": "The 1975",
+    "set": "held-out",
+    "region": "na",
+    "R": 36,
+    "model": 28,
+    "modelQloo": 26,
+    "gained": [
+     "Sacramento"
+    ],
+    "lost": [
+     "Atlanta",
+     "Miami",
+     "Charlotte"
+    ]
+   },
+   {
+    "artist": "21 Savage",
+    "set": "held-out",
+    "region": "na",
+    "R": 27,
+    "model": 5,
+    "modelQloo": 9,
+    "gained": [
+     "Chicago",
+     "Charlotte",
+     "Phoenix",
+     "Austin"
+    ],
+    "lost": []
+   },
+   {
+    "artist": "Green Day",
+    "set": "held-out",
+    "region": "na",
+    "R": 27,
+    "model": 18,
+    "modelQloo": 18,
+    "gained": [
+     "Austin",
+     "Milwaukee"
+    ],
+    "lost": [
+     "Atlanta",
+     "St. Louis"
+    ]
+   },
+   {
+    "artist": "Pink",
+    "set": "held-out",
+    "region": "na",
+    "R": 29,
+    "model": 18,
+    "modelQloo": 18,
+    "gained": [
+     "Nashville"
+    ],
+    "lost": [
+     "Cincinnati"
+    ]
+   },
+   {
+    "artist": "SZA",
+    "set": "held-out",
+    "region": "na",
+    "R": 28,
+    "model": 15,
+    "modelQloo": 18,
+    "gained": [
+     "Austin",
+     "Las Vegas",
+     "San Diego",
+     "Seattle"
+    ],
+    "lost": [
+     "Nashville"
+    ]
+   },
+   {
+    "artist": "For King & Country",
+    "set": "held-out",
+    "region": "na",
+    "R": 48,
+    "model": 14,
+    "modelQloo": 20,
+    "gained": [
+     "Indianapolis",
+     "Louisville",
+     "Kansas City",
+     "Minneapolis",
+     "Omaha",
+     "Tampa",
+     "St. Louis",
+     "Fort Wayne"
+    ],
+    "lost": [
+     "New York",
+     "Los Angeles"
+    ]
+   },
+   {
+    "artist": "Ledisi",
+    "set": "held-out",
+    "region": "na",
+    "R": 29,
+    "model": 16,
+    "modelQloo": 19,
+    "gained": [
+     "Nashville",
+     "New Orleans",
+     "Cleveland"
+    ],
+    "lost": []
+   },
+   {
+    "artist": "Twenty One Pilots",
+    "set": "held-out",
+    "region": "na",
+    "R": 44,
+    "model": 25,
+    "modelQloo": 28,
+    "gained": [
+     "San Diego",
+     "Phoenix",
+     "Orlando",
+     "Salt Lake City",
+     "Sacramento",
+     "Tampa"
+    ],
+    "lost": [
+     "Baltimore",
+     "Raleigh",
+     "Hartford"
+    ]
+   }
+  ]
+ }
+}

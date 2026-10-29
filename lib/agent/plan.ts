@@ -7,7 +7,7 @@ import type { AgentCheck, Artist, Audience, Capacity, CityScore, LogLine, Opener
 import { AGE_LABEL, topAge } from "./audience";
 import { fit } from "./evidence";
 import { blendOrder, diffLine, qlooDiff, sizeRanks, type Ranks } from "./qloodiff";
-import { BIG_ROOM_DRAW, candidatesBySize, chooseRoom, fitWord, pickSupport, roomFit, roomNameOk, sizePrior, REDUCED_MAX, reducedHouse, roomCheck, roomGrade, twoNights } from "./rooms";
+import { BIG_ROOM_DRAW, candidatesBySize, chooseRoom, fitWord, pickSupport, SUPPORT_RATIO, roomFit, roomNameOk, sizePrior, REDUCED_MAX, reducedHouse, roomCheck, roomGrade, twoNights } from "./rooms";
 import type { Log } from "./tools";
 import { concertRoom, type LadderRoom } from "./rooms";
 
@@ -155,7 +155,20 @@ export function aliasesOf(name: string): string[] {
  * that sites add or drop ("Ryman" and "Ryman Auditorium"; "The Basement East" and "Basement East", but never
  * "The Basement" and "The Basement East").
  */
+/** Operators and brands that some lists put before a room's own name and others drop ("McMenamins Crystal Ballroom" is
+ *  the "Crystal Ballroom"). Stripped only when a name is left after it. */
+export const OPERATOR_PREFIX = /^\s*(the\s+)?(mcmenamins|house of blues|brooklyn bowl|fillmore|live nation|aeg presents|c3 presents|first avenue)\b[\s:'’-]*/i;
+export const withoutOperator = (s: string) => {
+  const t = s.replace(OPERATOR_PREFIX, "").trim();
+  return t.length >= 3 ? t : s;
+};
+
 export function sameRoomName(a: string, b: string, place: string[] = []): boolean {
+  if (OPERATOR_PREFIX.test(a) !== OPERATOR_PREFIX.test(b) && sameRoomWords(withoutOperator(a), withoutOperator(b), place)) return true;
+  return sameRoomWords(a, b, place);
+}
+
+function sameRoomWords(a: string, b: string, place: string[] = []): boolean {
   const words = (s: string) => fold(s).split(" ").filter((w) => w.length > 1 && !ROOM_WORDS.has(w) && !place.includes(w));
   const x = [...new Set(words(a))], y = [...new Set(words(b))];
   if (!x.length || !y.length) return a.trim().toLowerCase() === b.trim().toLowerCase();
@@ -800,7 +813,7 @@ export async function planTour(
           }
           if (!r || !roomNameMatches(name, r.name, place)) {
             missed.push(`${name} in ${city}`);
-            log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo has no such room here.`, failed: true });
+            log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo's place search didn't return it there, so it isn't booked.` });
             continue;
           }
           if (list.some((x) => x.id === r.id) || found.some((f) => f.room.id === r.id)) {
@@ -1060,7 +1073,7 @@ export async function planTour(
     for (const l of rungs) {
       const r = await deps.findPlace(artist, l.name, score.marketId, draw).catch(() => null);
       if (!r || list.some((x) => x.id === r.id)) {
-        log({ kind: "qloo", text: `Wikidata lists ${l.name} in ${score.name} (holds ${n(l.capacity)}); Qloo has no such room here.`, failed: true });
+        log({ kind: "qloo", text: `Wikidata lists ${l.name} in ${score.name} (holds ${n(l.capacity)}); Qloo's place search didn't return it there, so it isn't booked.` });
         continue;
       }
       added.push({ ...r, origin: "wikidata", capacity: { value: l.capacity, source: `https://www.wikidata.org/wiki/${l.qid}`, quote: `${l.name}${l.description ? `: ${l.description}` : ""}; maximum capacity ${n(l.capacity)} (Wikidata P1083)` } });
@@ -1131,7 +1144,9 @@ export async function planTour(
   const picks = results.map((x) => x.pick);
 
   // One support act for the whole run, travelling with the tour: the opener the agent picked most often.
-  const support = pickSupport(picks);
+  const support = pickSupport(picks, artist.popularity);
+  const voted = pickSupport(picks);
+  if (support && voted && voted.id !== support.id) log({ kind: "rule", text: `${voted.name} is nearly as big as ${artist.name} on Qloo, a co-headliner priced like one, so the support slot goes to ${support.name}.`, result: `A support act sits well below the headliner on Qloo's popularity (at least ${SUPPORT_RATIO} times further from the top)` });
   if (support) {
     for (const p of picks) {
       if (!p.openers.some((o) => o.id === support.id)) p.openers = [support, ...p.openers];

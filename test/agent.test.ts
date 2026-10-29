@@ -350,7 +350,7 @@ test("a room the agent names, found on Qloo and measured to fit, beats Qloo's un
   assert.equal(denver.roomId, "mission");
   assert.equal(denver.rooms.find((x) => x.id === "mission")!.origin, "agent");
   assert.equal(r.check!.suggested, 1);
-  assert.ok(lines.some((l) => l.failed && l.text === "The agent suggested Ogden Theatre in Denver; Qloo has no such room here."));
+  assert.ok(lines.some((l) => !l.failed && l.text === "The agent suggested Ogden Theatre in Denver; Qloo's place search didn't return it there, so it isn't booked."));
   assert.ok(lines.some((l) => /^Looked up the rooms the agent named on Qloo/.test(l.text) && /1 found and added: Mission Ballroom \(Denver\)/.test(l.result ?? "")));
   assert.deepEqual(models, ["shortlist", "book", "rebook"], "the names ride on the shortlist call: no extra model call");
 });
@@ -369,7 +369,7 @@ test("a room name Qloo can't find in the city is dropped, never booked, and said
   assert.ok(!denver.rooms.some((x) => x.origin === "agent" || x.id === "other" || x.id === "atlantis"));
   assert.ok(denver.roomId?.startsWith(id("Denver")), "a room with a Qloo id from the city's own list");
   assert.deepEqual(calls.score, [], "nothing found, nothing to score");
-  assert.ok(lines.some((l) => l.failed && l.text === "The agent suggested Atlantis Hall in Denver; Qloo has no such room here."));
+  assert.ok(lines.some((l) => !l.failed && l.text === "The agent suggested Atlantis Hall in Denver; Qloo's place search didn't return it there, so it isn't booked."));
   assert.equal(r.check!.suggested, 0);
 });
 
@@ -536,7 +536,7 @@ test("a city whose Qloo rooms can't take 15,000 gets Wikidata's arena there, fou
   assert.equal(room.capacity!.value, 19199);
   assert.equal(t.noRoom, undefined);
   assert.ok(found.includes("Expo Square Pavilion"));
-  assert.ok(lines.some((l) => l.failed && l.text === "Wikidata lists Expo Square Pavilion in Tulsa (holds 11,000); Qloo has no such room here."));
+  assert.ok(lines.some((l) => !l.failed && l.text === "Wikidata lists Expo Square Pavilion in Tulsa (holds 11,000); Qloo's place search didn't return it there, so it isn't booked."));
 });
 
 test("an agent-named room Qloo couldn't be asked about is logged as that, not as 'no such room'", async () => {
@@ -553,7 +553,7 @@ test("an agent-named room Qloo couldn't be asked about is logged as that, not as
   const { p, lines } = run(deps);
   await p;
   assert.ok(lines.some((l) => l.failed && l.text === "Couldn't look up Ball Arena in Denver: Qloo didn't answer."));
-  assert.ok(!lines.some((l) => /Ball Arena in Denver; Qloo has no such room/.test(l.text)));
+  assert.ok(!lines.some((l) => /Ball Arena in Denver; Qloo's place search didn't return it/.test(l.text)));
 });
 
 /* ───────────── Ghost's Milan at 8,000: Qloo's list has no one-night fit, so Wikidata's rooms of the right size come in ───────────── */

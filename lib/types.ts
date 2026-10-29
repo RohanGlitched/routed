@@ -85,8 +85,9 @@ export type Spot = { id: string; name: string; address?: string; affinity?: numb
  */
 export type Local = {
   tiles: [lat: number, lon: number, strength: number][];
-  /** `named: "near"` when the name came from the run-time vote of Qloo places around the tile (absent on older tours). */
-  hot: { lat: number; lon: number; name?: string; trait?: string; named?: "near" };
+  /** `named: "near"` when the name came from the run-time vote of Qloo places around the tile (absent on older tours);
+   *  "osm" when Qloo's places named none and the neighbourhood containing the tile came from OpenStreetMap. */
+  hot: { lat: number; lon: number; name?: string; trait?: string; named?: "near" | "osm" };
   /** Straight-line km from the booked room to the hottest tile. */
   roomKm?: number;
   /** The room sits in the fans' strongest area (within 1.5 km of the hottest tile, or on a top-tenth tile). */

@@ -397,7 +397,23 @@ export function openerProblem(headliner: { id?: string; name: string; popularity
  * most often; ties go to the one that turned up in the most cities' lookups, then to the higher summed affinity.
  * Returns undefined when no city has an opener.
  */
-export function pickSupport<O extends { id: string; affinity?: number }>(stops: { openers: O[]; openerId?: string }[]): O | undefined {
+/**
+ * How much smaller a support act must be than the headliner, on Qloo's popularity percentile: its distance from the
+ * top (1 − popularity) at least this many times the headliner's. Lukas Nelson & Promise of the Real (0.84) for Sierra
+ * Ferrell (0.91) is 1.9 times, a co-headliner priced like one; Kelsey Waldon (0.59) is 4.7 times. Every support the
+ * Oct 25 poster wall booked otherwise cleared 3.5.
+ */
+export const SUPPORT_RATIO = 2.5;
+export const smallEnough = (o: { popularity?: number }, headliner?: number) =>
+  headliner === undefined || o.popularity === undefined || 1 - o.popularity >= SUPPORT_RATIO * Math.max(0.005, 1 - headliner);
+
+export function pickSupport<O extends { id: string; affinity?: number; popularity?: number }>(stops: { openers: O[]; openerId?: string }[], headliner?: number): O | undefined {
+  const all = pickSupportFrom(stops);
+  return all.find((o) => smallEnough(o, headliner)) ?? all[0];
+}
+
+/** Every support candidate on the run, best first: the agent's votes, then how many cities' lookups found it, then affinity. */
+function pickSupportFrom<O extends { id: string; affinity?: number }>(stops: { openers: O[]; openerId?: string }[]): O[] {
   const tally = new Map<string, { o: O; votes: number; seen: number; aff: number }>();
   for (const s of stops) {
     for (const o of s.openers) {
@@ -411,7 +427,7 @@ export function pickSupport<O extends { id: string; affinity?: number }>(stops: 
       if (t) t.votes++;
     }
   }
-  return [...tally.values()].sort((a, b) => b.votes - a.votes || b.seen - a.seen || b.aff - a.aff)[0]?.o;
+  return [...tally.values()].sort((a, b) => b.votes - a.votes || b.seen - a.seen || b.aff - a.aff).map((t) => t.o);
 }
 
 /** The city as a point and a radius that grows with the metro: 18 km for a town, 40 km for a metropolis. */

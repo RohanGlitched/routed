@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { checkNumbers, checkWhy, evidenceLines, recheckPitch, showNights } from "../lib/agent/evidence.ts";
+import { checkNumbers, checkWhy, roomClause, whyProblems, evidenceLines, recheckPitch, showNights } from "../lib/agent/evidence.ts";
 import { recheckTour } from "../lib/agent/recheck.ts";
 import { readLine } from "../lib/log.ts";
 import type { Plan, Stop, TourRecord } from "../lib/types.ts";
@@ -96,8 +96,27 @@ test("a stop's reason may cite what the booking model saw (room popularity), and
   assert.equal(checkWhy(plan, s, 1500, keep), s.why);
   const stale = { ...lexington, why: "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds ~~1,200~~ a night over two nights." } as Stop;
   assert.equal(checkWhy(plan, stale, 1500, keep), "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 a night over two nights.");
+  // A figure the evidence doesn't hold: the rule's sentence replaces the line, never a struck number on the page.
   const wrong = { ...lexington, why: "Lexington ranks #19 for these fans." } as Stop;
-  assert.equal(checkWhy(plan, wrong, 1500, keep), "Lexington ranks #~~19~~ for these fans.");
+  assert.equal(checkWhy(plan, wrong, 1500, keep), "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 a night over two nights.");
+});
+
+test("a model's 'why' with prompt jargon, a false 'fits' or a score written as a rank gives way to the rule's sentence", () => {
+  const keep = { keepModel: true };
+  const one = { ...lexington, nights: 1 } as Stop;
+  const rule = "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 of a usual crowd of 1,500, so ask about a second night or a bigger room.";
+  for (const why of ["Lexington ranks #9 and the Lyric is the rule_pick room.", "Lexington ranks #9, marked named_by_you.", "Lexington ranks #9 and the Lyric fits the 1,500 crowd at 600 capacity.", "Lexington ranks #9; Kelsey Waldon ranked 98 for Sierra Ferrell's audience."]) {
+    assert.deepEqual(checkWhy(plan, { ...one, why } as Stop, 1500, keep), rule, why);
+  }
+  assert.ok(whyProblems(plan, { ...one, why: "Lexington ranks #9 and the Lyric fits the crowd." } as Stop, 1500).includes("'fits' outside 85-130% of the crowd"));
+});
+
+test("the rule's sentence says 'fits' only at 85-130% and names the next step for a room the fans sell out", () => {
+  const r = (value: number, source = "https://www.wikidata.org/wiki/Q1") => ({ id: `r${value}`, name: `Room ${value}`, tags: [], capacity: { value, source, quote: "q" } });
+  assert.equal(roomClause(r(1600), 1500, 1), "Room 1600 fits the usual crowd of 1,500 at 1,600");
+  assert.equal(roomClause(r(1050), 1500, 1, [r(1050), r(2000)]), "Room 1050 holds 1,050 of a usual crowd of 1,500: the fans should sell it out, so ask about a second night or Room 2000 (2,000)");
+  assert.equal(roomClause(r(1050), 1500, 1, [r(2000, "https://www.eventticketscenter.com/x")]), "Room 1050 holds 1,050 of a usual crowd of 1,500: the fans should sell it out, so ask about a second night");
+  assert.equal(roomClause(r(3000), 1500, 1), "Room 3000 holds 3,000 against a usual crowd of 1,500");
 });
 
 test("every stop's reason is the rule's sentence by default, and a broken model line never survives", () => {

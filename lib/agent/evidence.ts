@@ -1,6 +1,6 @@
 import type { Opener, Plan, Room, Stop } from "../types";
-import { localEvidence, readLocal, type LocalRead } from "../geo/local";
-import { addDays } from "../geo/route";
+import { kmBetween, localEvidence, readLocal, type LocalRead } from "../geo/local";
+import { addDays, radiusFor } from "../geo/route";
 import { AGE_LABEL, topAge } from "./audience";
 import { sharedGenres } from "./rooms";
 
@@ -106,6 +106,38 @@ function sizeEvidence(r: Room, draw: number | undefined, nights: number): string
   return cap < draw ? ` That holds ${cap} of the usual crowd of about ${draw} in one night: say so plainly, and don't call the room a fit.` : ` That is more than the usual crowd of about ${draw}: say it holds ${cap} against a usual crowd of about ${draw}, and don't call the room a fit.`;
 }
 
+/** "Radius: no other show on this run within 150 km of Denver." when that holds (it does by rule, except between two
+ *  major markets); nothing otherwise. A buyer asks for the radius clause before anything else. */
+export function radiusLine(plan: Pick<Plan, "stops" | "region">, s: Stop): string | undefined {
+  const r = radiusFor(plan.region);
+  const close = plan.stops.some((x) => x !== s && x.marketId !== s.marketId && kmBetween(x, s) < r);
+  return close ? undefined : `Radius: no other show on this run within ${r} km of ${s.city}.`;
+}
+
+/**
+ * What a talent buyer fills in before an offer, under every hold request: the fields the evidence can't know (ticket
+ * price, deal, set lengths, the last play in the market) left blank for the agent, and the radius as the run holds it.
+ * Written by code, never by the model, so every pitch carries the same fields.
+ */
+export function buyerBlock(plan: Pick<Plan, "stops" | "region">, s: Stop): string {
+  const radius = radiusLine(plan, s);
+  return [
+    "For the offer (to fill in before sending):",
+    "- Ticket price range: $__ to $__",
+    "- Deal ask: $__ guarantee vs __% of the door, or a straight door split",
+    "- Set lengths: headliner __ min, support __ min",
+    `- Last play in ${s.city}: __`,
+    `- ${radius ? `${radius.slice(0, -1)}; tell us your clause` : "Radius: tell us your clause"}`,
+  ].join("\n");
+}
+
+/** A hold request's body with the buyer's fields placed before the sign-off ("Thanks,"), or at the end. Idempotent. */
+export function withBuyerBlock(body: string, block: string): string {
+  const clean = body.replace(/\n*For the offer \(to fill in before sending\):[\s\S]*?(?=\n\nThanks,|\nThanks,|$)/, "").trimEnd();
+  const at = clean.search(/\n\s*Thanks,\s*(\n|$)/);
+  return at < 0 ? `${clean}\n\n${block}` : `${clean.slice(0, at).trimEnd()}\n\n${block}\n${clean.slice(at)}`;
+}
+
 /** The genres both acts are filed under among the tastes their audiences share (nothing off-genre in a pitch). */
 export const billGenres = (plan: Plan, o: Opener) => sharedGenres(o.shared, plan.artist.genreKeys ?? plan.artist.genres, o.genres);
 
@@ -132,8 +164,10 @@ export function evidenceLines(plan: Plan, s: Stop, draw?: number): string[] {
   if (read) lines.push(localEvidence(read, s.city, plan.artist.name));
   if (o) {
     const both = billGenres(plan, o);
-    lines.push(`Support act for the whole run (travelling with the tour): ${o.name}${o.affinity !== undefined ? `. Qloo ranks ${o.name} ${pct(o.affinity)} out of 100 for ${plan.artist.name}'s audience (a match score: write "ranked ${pct(o.affinity)} for ${plan.artist.name}'s audience", never "shares an affinity")` : ""}${both.length ? `; both acts are filed under ${both.slice(0, 2).join(" and ")}` : ""}.`);
+    lines.push(`Support act for the whole run (travelling with the tour): ${o.name}${o.affinity !== undefined ? `. Qloo scores ${o.name} ${pct(o.affinity)} out of 100 as a match for ${plan.artist.name}'s audience (a match score, not a rank: write "a ${pct(o.affinity)}/100 audience match on Qloo", never "ranked ${pct(o.affinity)}" and never "shares an affinity")` : ""}${both.length ? `; both acts are filed under ${both.slice(0, 2).join(" and ")}` : ""}.`);
   }
+  const radius = radiusLine(plan, s);
+  if (radius) lines.push(radius);
   if (top) lines.push(`Audience: Qloo says ${plan.artist.name} fans over-index most at ages ${AGE_LABEL[top.bucket]}.`);
   const t = plan.audience.taste;
   if (t?.music?.length) lines.push(`The sound these fans love (Qloo taste analysis): ${t.music.slice(0, 4).map((x) => x.name).join(", ")}.`);
@@ -273,11 +307,55 @@ export function whyEvidence(plan: Plan, s: Stop, draw?: number): string[] {
  * The plain sentence a rule writes when it changes a stop's room (plan.ts, resize.ts): the city's rank, and what the
  * room holds or how well it matches. Rebuilt from the stop as it stands, so a capacity measured later is the one shown.
  */
-export function ruleWhy(artist: string, s: Pick<Stop, "city" | "score" | "nights">, r: Room): string {
-  return `${s.city} is ${artist}'s #${s.score.rank} city on Qloo${r.capacity ? `, and ${r.name} holds ${r.capacity.value.toLocaleString("en-US")}${s.nights === 2 ? " a night over two nights" : ""}` : r.affinity !== undefined ? `, and ${r.name} matches these fans at ${Math.round(r.affinity * 100)}` : `, and ${r.name} is a room these fans go to`}.`;
+export function ruleWhy(artist: string, s: Pick<Stop, "city" | "score" | "nights"> & { rooms?: Room[] }, r: Room, draw?: number): string {
+  return `${s.city} is ${artist}'s #${s.score.rank} city on Qloo, and ${roomClause(r, draw, s.nights ?? 1, s.rooms ?? [])}.`;
 }
 
-const RULE_WHY = /^.+ is .+'s #\d+ city on Qloo, and .+ (holds [~\d,]+( a night over two nights)?|matches these fans at [~\d]+|is a room these fans go to)\.$/;
+/** A capacity a booker can trust without checking: Wikidata, Wikipedia or a hand-checked figure. */
+export const strongSource = (c?: { source: string; quote: string }) => Boolean(c && (/wikidata\.org|wikipedia\.org/.test(c.source) || /checked by hand/i.test(c.quote)));
+
+/** The room in the sentence, by the size rule's own words (sizeNote): "fits" only at 85–130% of the crowd. A room
+ *  the fans sell out names the next step (a second night, or a bigger room on the sheet with a trusted capacity). */
+export function roomClause(r: Room, draw: number | undefined, nights: number, rooms: Room[] = []): string {
+  if (!r.capacity) return r.affinity !== undefined ? `${r.name} matches these fans at ${Math.round(r.affinity * 100)} of 100 (its capacity isn't confirmed)` : `${r.name} is a room these fans go to`;
+  const cap = r.capacity.value;
+  if (nights > 1) return `${r.name} holds ${n0(cap)} a night over two nights`;
+  if (!draw) return `${r.name} holds ${n0(cap)}`;
+  if (snugFit(cap, draw)) return `${r.name} fits the usual crowd of ${n0(draw)} at ${n0(cap)}`;
+  if (cap < draw) {
+    const alt = rooms
+      .filter((x) => x.id !== r.id && x.capacity && strongSource(x.capacity) && x.capacity.value >= draw && x.capacity.value <= draw * 1.6)
+      .sort((a, b) => a.capacity!.value - b.capacity!.value)[0];
+    const next = `ask about a second night${alt ? ` or ${alt.name} (${n0(alt.capacity!.value)})` : cap < draw * 0.6 ? " or a bigger room" : ""}`;
+    return cap >= draw * 0.6 ? `${r.name} holds ${n0(cap)} of a usual crowd of ${n0(draw)}: the fans should sell it out, so ${next}` : `${r.name} holds ${n0(cap)} of a usual crowd of ${n0(draw)}, so ${next}`;
+  }
+  return `${r.name} holds ${n0(cap)} against a usual crowd of ${n0(draw)}${cap > draw * 2.5 ? ", so ask about a reduced configuration" : ""}`;
+}
+
+const RULE_WHY = /^.+ is .+'s #\d+ city on Qloo, and /;
+
+/** Prompt field names and their echoes that leaked into the model's sentences ("with rule_pick flag", "marked as
+ *  named_by_you", "the rule-picked room"). */
+export const PROMPT_TOKENS = /\b(rule[_ -]?pick(ed)?|named[_ ]by[_ ]you|must[_ ]keep|heatmap[_ ]rank|[a-z]+_id)\b/i;
+
+/**
+ * What's wrong with a model-written "why" for this stop, by rule: prompt jargon, "fits" for a room outside 85–130%
+ * of the crowd, a figure the evidence doesn't hold, a match score written as a rank, or broken text. Empty when it
+ * can stand.
+ */
+export function whyProblems(plan: Plan, s: Stop, draw?: number): string[] {
+  const why = s.why ? unstrike(s.why) : "";
+  if (!why) return [];
+  const out: string[] = [];
+  const r = room(s);
+  if (PROMPT_TOKENS.test(why)) out.push("prompt jargon");
+  const snug = Boolean(r?.capacity && draw && (s.nights ?? 1) === 1 && snugFit(r.capacity.value, draw));
+  if (/\b(fits?|fitting|a fit)\b/i.test(why) && !snug) out.push("'fits' outside 85-130% of the crowd");
+  if (checkNumbers(why, whyEvidence(plan, s, draw)).struck.length) out.push("a figure not in the evidence");
+  if (/\branked \d+ for\b/i.test(why)) out.push("a match score written as a rank");
+  if (garbled(why).length) out.push("broken text");
+  return out;
+}
 
 /**
  * A stop's "why", checked. By default every stop with a room gets the rule's sentence, rebuilt from the stop as it
@@ -289,7 +367,7 @@ export function checkWhy(plan: Plan, s: Stop, draw?: number, opts: { keepModel?:
   if (!s.why) return s.why;
   const r = room(s);
   const isRule = RULE_WHY.test(unstrike(s.why)) && Boolean(r && unstrike(s.why).includes(r.name));
-  const text = r && (!opts.keepModel || isRule || garbled(s.why).length) ? ruleWhy(plan.artist.name, s, r) : s.why;
+  const text = r && (!opts.keepModel || isRule || whyProblems(plan, s, draw).length) ? ruleWhy(plan.artist.name, s, r, draw) : s.why;
   return checkNumbers(text, whyEvidence(plan, s, draw)).text;
 }
 
@@ -342,6 +420,8 @@ export function templatePitch(plan: Plan, s: Stop, opts: { draw?: number; sign?:
     ...(o ? [`${o.name} supports on every date${both.length ? `; both acts are filed under ${both.slice(0, 2).join(" and ").toLowerCase()}` : ""}.`] : []),
     "",
     "Could you let me know about availability and your offer terms?",
+    "",
+    buyerBlock(plan, s),
     "",
     "Thanks,",
     ...(opts.sign?.trim() ? [opts.sign.trim()] : []),

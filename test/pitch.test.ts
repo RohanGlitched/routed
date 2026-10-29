@@ -63,7 +63,8 @@ test("every figure in the template is in the stop's evidence, so re-checking it 
 
 test("the evidence calls the support act's score a rank for the headliner's audience, and keeps only genres both acts carry", () => {
   const ev = evidenceLines(plan, lexington, 1500).join("\n");
-  assert.match(ev, /Qloo ranks Kelsey Waldon 98 out of 100 for Sierra Ferrell's audience/);
+  assert.match(ev, /Qloo scores Kelsey Waldon 98 out of 100 as a match for Sierra Ferrell's audience/);
+  assert.match(ev, /write "a 98\/100 audience match on Qloo", never "ranked 98"/);
   assert.match(ev, /never "shares an affinity"/);
   assert.doesNotMatch(ev, /Blues|Soulful|Red Dirt/);
   assert.match(ev, /1st hold/);

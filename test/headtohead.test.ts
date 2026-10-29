@@ -177,3 +177,20 @@ test("secondary-market R-precision drops the region's 25 biggest markets from th
   const uk = populationRanking("uk");
   assert.equal(secondaryRPrecision(uk, new Set([uk[0]!, uk[SECONDARY_TOP]!]), "uk").of, 1);
 });
+
+/* ───────────── room orders (data/outside2/PROTOCOL-4.md) ───────────── */
+
+test("popularity and affinity together average the two ranks, ties in Qloo's order", async () => {
+  const { popularityAffinityOrder } = await import("../lib/roomorder.ts");
+  const rooms = [
+    { name: "niche club", affinity: 0.9, popularity: 0.5 }, // affinity #1, popularity #4: 5
+    { name: "arena", affinity: 0.6, popularity: 0.99 }, // affinity #4, popularity #1: 5
+    { name: "theatre", affinity: 0.8, popularity: 0.9 }, // affinity #2, popularity #2: 4
+    { name: "hall", affinity: 0.7, popularity: 0.8 }, // affinity #3, popularity #3: 6
+  ];
+  assert.deepEqual(popularityAffinityOrder(rooms).map((r) => r.name), ["theatre", "niche club", "arena", "hall"]);
+  // A missing score ranks last on that score.
+  const two = popularityAffinityOrder([{ name: "a", affinity: 0.5 }, { name: "b", affinity: 0.4, popularity: 0.1 }]);
+  assert.deepEqual(two.map((r) => r.name), ["a", "b"]);
+  assert.deepEqual(popularityAffinityOrder([]), []);
+});

@@ -1,5 +1,5 @@
 .page { padding-top: clamp(24px, 5vw, 64px); }
-.head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(20px, 4vw, 56px); align-items: end; }
+.head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(20px, 4vw, 56px); align-items: start; }
 .h1 { margin: 0; font-family: var(--wood); font-weight: 900; font-size: clamp(56px, 7.4vw, 104px); line-height: 0.9; }
 .lede { margin: 0; font-size: 18px; color: var(--ink-2); max-width: 34em; }
 .empty { margin: 48px 0; font-size: 18px; color: var(--mute); }
@@ -106,3 +106,47 @@
 .history { margin: 0 0 18px; font-size: 15px; color: var(--ink-2); max-width: 52em; }
 .table tfoot th, .table tfoot td { font-weight: 700; border-top: 1px solid var(--ink); border-bottom: 0; }
 .tableWrap + .tableWrap { margin-top: 28px; }
+
+/* The top of the page (Oct 30): what only Qloo found on the flagship, then the post-cutoff chart. */
+.only { display: grid; gap: 12px; align-content: end; }
+.onlyLead { margin: 0; font-size: 19px; line-height: 1.4; color: var(--ink); font-weight: 600; max-width: 30em; }
+.onlyList { list-style: none; margin: 0; padding: 0; border-top: 3px solid var(--ink); }
+.onlyList li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 16px; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+.onlyList b { font-family: var(--wood); font-weight: 800; font-size: 28px; line-height: 1; color: var(--fire-deep); }
+.onlyList span { font-size: 15px; color: var(--ink-2); }
+.onlyNote { margin: 0; font-size: 15px; color: var(--ink-2); max-width: 36em; }
+.onlyFine { margin: 0; font-size: 13px; color: var(--mute); max-width: 42em; }
+.secTop { margin-top: clamp(40px, 6vw, 72px); }
+.plain { font-style: normal; font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--ink); max-width: 22em; }
+.flag { display: inline-block; margin: 0 0 12px; padding: 4px 10px; border: 1.5px solid var(--blue); border-radius: 999px; font-size: 13px; font-weight: 700; color: var(--blue); }
+.chartTop { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 56px); margin: 18px 0 clamp(28px, 4vw, 44px); border-top: 3px solid var(--ink); padding-top: 22px; }
+.chartStat { display: grid; gap: 8px; align-content: start; }
+.chartStat > b { font-family: var(--wood); font-weight: 900; font-size: clamp(72px, 9vw, 128px); line-height: 0.88; color: var(--fire); }
+.chartStat > b small { font-size: 0.36em; color: var(--mute); }
+.chartStat > span { font-size: 15px; color: var(--ink-2); max-width: 24em; }
+.chartStat > b.chartScore { margin-top: 18px; font-size: clamp(48px, 5.4vw, 76px); color: var(--blue); }
+.chartFig { margin: 0; min-width: 0; }
+.chartFig .dumbbells li { grid-template-columns: 150px minmax(0, 1fr) 96px; padding: 5px 0; }
+.chartFig .axis { grid-template-columns: 150px minmax(0, 1fr) 96px; }
+.chartFig .name { font-weight: 600; font-size: 15px; }
+.legend { flex-wrap: wrap; row-gap: 6px; }
+.legendNote { font-weight: 400; color: var(--mute); }
+@media (max-width: 860px) {
+  .chartTop { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .chartFig .dumbbells li { grid-template-columns: minmax(0, 1fr) 96px; }
+  .chartFig .axis { grid-template-columns: minmax(0, 1fr); }
+  .onlyList b { font-size: 24px; }
+}
+.headLeft { display: grid; gap: clamp(24px, 4vw, 48px); }
+.toc { font-size: 15px; color: var(--ink-2); }
+.toc p { margin: 0 0 8px; color: var(--mute); }
+.toc ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); max-width: 26em; }
+.toc li { border-bottom: 1px solid var(--rule); }
+.toc a { display: flex; align-items: center; min-height: 40px; font-weight: 600; text-decoration: none; }
+.toc a:hover { text-decoration: underline; text-decoration-color: var(--fire); text-decoration-thickness: 2px; }
+/* Phones: the flagship's cities come straight after the title; the contents list would push them below the fold. */
+@media (max-width: 860px) {
+  .toc { display: none; }
+}

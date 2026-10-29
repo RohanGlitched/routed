@@ -249,6 +249,6 @@ The first two rows (in bold) are the primary contrasts; the rest are secondary.
 - The model + Qloo blend's post hoc +5.8 pts on whole tours does not carry over to the smaller markets (−1.2).
 
 So on tours it can't have read, the model still names the smaller markets of a big act's tour better than Qloo's fan
-map does. Most of these 13 are arena and theatre tours, and their smaller stops are the next-biggest metros, which a
-model knows. Qloo's whole-tour gain over population comes from re-ordering cities, not from finding small ones the
+map does. A likely reason, not tested here: most of these 13 are arena and theatre tours, whose smaller stops are
+metros a model knows. Qloo's whole-tour gain over population comes from re-ordering cities, not from finding small ones the
 model misses.

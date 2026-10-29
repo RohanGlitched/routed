@@ -6,13 +6,15 @@ import { findMarket, marketId, unrankedLabel, type RegionId } from "@/lib/geo/ma
 import { outsideRow, REAL_TOURS, realTourFor } from "@/lib/outside";
 import { benchTours } from "@/lib/showcase";
 import type { TourRecord } from "@/lib/types";
-import { HeadToHead, H2H_ARTISTS as R_ALL, H2H_BLEND } from "@/components/proof/HeadToHead";
-import { POST, PostCutoff } from "@/components/proof/PostCutoff";
+import { HeadToHead } from "@/components/proof/HeadToHead";
+import { ModelPlusQloo } from "@/components/proof/ModelPlusQloo";
+import { OnlyQloo } from "@/components/proof/OnlyQloo";
+import { PostCutoff } from "@/components/proof/PostCutoff";
 import s from "./proof.module.css";
 
 export const metadata: Metadata = {
   title: "With and without Qloo",
-  description: "Qloo against population and against the model alone, on tours announced after the model's release, on 49 real tours, and on Qloo's own fan map, artist by artist.",
+  description: "What only Qloo found on the flagship tour, then Qloo against population and against the model alone: on tours announced after the model's release, on their smaller cities, on 49 older real tours, and on Qloo's own fan map, losses included.",
 };
 export const revalidate = 300;
 
@@ -115,13 +117,35 @@ export default async function Proof() {
   return (
     <div className={`wrap ${s.page}`}>
       <header className={s.head}>
-        <h1 className={s.h1}>With and without Qloo</h1>
-        <p className={s.lede}>
-          Three rulers, the fairest first. On {POST.n} tours announced after the model&apos;s release, the city ranking Routed ships (Qloo + population) found {(POST.blendVsPop.diff * 100).toFixed(1)} pts more of the real cities than population alone, better for {POST.blendVsPop.wins} artists and worse for {POST.blendVsPop.losses || "none"}. On {R_ALL} artists&apos; older real tours it found {(H2H_BLEND.diff * 100).toFixed(1)} pts more (better for {H2H_BLEND.wins}, worse for {H2H_BLEND.losses}); there the model alone, which may have read those tours, did better. Last, every tour on Routed runs twice, with and without Qloo, scored on Qloo&apos;s own fan map. Each test shows its losses next to its wins.
-        </p>
+        <div className={s.headLeft}>
+          <h1 className={s.h1}>With and without Qloo</h1>
+          <nav className={s.toc} aria-label="On this page">
+            <p>Every test on this page, the losses next to the wins:</p>
+            <ol>
+              <li>
+                <a href="#unread">Tours the model can&apos;t have read</a>
+              </li>
+              <li>
+                <a href="#model-plus-qloo">Does Qloo add to the model?</a>
+              </li>
+              <li>
+                <a href="#smaller-markets">Smaller cities only</a>
+              </li>
+              <li>
+                <a href="#head-to-head">49 older tours, head to head</a>
+              </li>
+              <li>
+                <a href="#own-ruler">On Qloo&apos;s own fan map</a>
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <OnlyQloo />
       </header>
 
       <PostCutoff />
+
+      <ModelPlusQloo />
 
       <HeadToHead />
 
@@ -140,10 +164,12 @@ export default async function Proof() {
           <section className={s.stats} aria-label="Totals">
             <div className={`${s.stat} ${s.fire}`}>
               <b>#{Math.round(mean(r.map((x) => x.routed)))}</b>
+              <em className={s.plain}>Routed&apos;s average city, ranked on Qloo&apos;s own fan map. Lower is closer to the fans.</em>
               <span>Average rank of Routed&apos;s cities on each artist&apos;s fan map (median stop #{median(ranksRouted)}; {top10(ranksRouted)}% of stops in the artist&apos;s top ten)</span>
             </div>
             <div className={s.stat}>
               <b>#{Math.round(mean(r.map((x) => x.guess)))}</b>
+              <em className={s.plain}>The model alone&apos;s average city, on the same fan map.</em>
               <span>The same model alone, on the same tours (median stop #{median(ranksGuess)}; {top10(ranksGuess)}% in the top ten)</span>
             </div>
             <div className={s.stat}>

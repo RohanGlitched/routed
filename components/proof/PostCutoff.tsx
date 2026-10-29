@@ -47,6 +47,9 @@ const OLD_QLOO_VS_MODEL = (h2h as unknown as { test1: { all: { n: number; primar
 
 const pc1 = (v: number) => `${(v * 100).toFixed(1)}%`;
 const pts = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(1)}`;
+const abs1 = (v: number) => Math.abs(v * 100).toFixed(1);
+/** The verdict under a big numeral, so a signed difference can't be misread. */
+const sig = (p: number) => (p < 0.05 ? "Significant" : "Not significant");
 const pv = (p: number) => (p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(p < 0.01 ? 3 : 2)}`);
 const REGION = { na: "N. America", uk: "UK & Ireland", eu: "Europe" } as const;
 /** The exact revision the ground truth was read from. */
@@ -65,36 +68,30 @@ export function PostCutoff() {
     ["The biggest fitting room on Wikidata", v.pooled.ladder],
     ["The model alone (Nemotron 3 Ultra)", v.pooled.model],
   ];
+  const mq = post.exploratory[0]!;
   return (
-    <section className={s.sec} aria-labelledby="unread-title" id="unread">
+    <section className={s.secTop} aria-labelledby="unread-title" id="unread">
       <h2 id="unread-title" className={s.h2}>
         Tours the model can&apos;t have read
       </h2>
+      <PostCutoffChart />
       <p className={s.lede2}>
         On older tours, the model alone may simply remember the announcement. So on Oct 25 we ran tests where memory helps less, with the{" "}
         <a href={`${REPO}/commit/${PROTOCOL2_COMMIT}`} target="_blank" rel="noreferrer">
           protocol committed
         </a>{" "}
-        before any Qloo or model call. The one that removes memory of the tour itself: {post.n} tours announced after Nemotron 3 Ultra&apos;s release on June 4, 2026, found by walking all {post.walked} pages in Wikipedia&apos;s 2026 and 2027 concert-tour categories. As in the head-to-head, each ranking picks as many cities as the tour announced, and the score is how many were right.
+        before any Qloo or model call. The one that removes memory of the tour itself: {post.n} tours announced after Nemotron 3 Ultra&apos;s release on June 4, 2026, found by walking all {post.walked} pages in Wikipedia&apos;s 2026 and 2027 concert-tour categories. Each ranking picks as many cities as the tour announced, and the score is how many were right. Against the model alone:
       </p>
 
       <div className={s.stats} data-part="unread-stats">
-        <div className={`${s.stat} ${s.fire}`}>
-          <b>
-            {pts(bp.diff)}
-            <small> pts</small>
-          </b>
-          <span>
-            The ranking Routed ships, Qloo + population, against population alone: {pc1(bp.meanA)} of the announced cities against {pc1(bp.meanB)}. Better for {bp.wins} of {bp.n} artists, worse for {bp.losses || "none"} ({pv(bp.p)}).
-          </span>
-        </div>
         <div className={s.stat}>
           <b>
             {pts(qm.diff)}
             <small> pts</small>
           </b>
+          <em className={s.plain}>Qloo&apos;s ranking is {abs1(qm.diff)} pts {qm.diff >= 0 ? "ahead of" : "behind"} the model alone. {sig(qm.p)}.</em>
           <span>
-            Qloo&apos;s ranking against the model alone: {pc1(qm.meanA)} against {pc1(qm.meanB)}, not significant ({qm.wins}–{qm.losses}–{qm.ties}, {pv(qm.p)}). On the {OLD_QLOO_VS_MODEL.n} older tours below it was {pts(oldQm.diff)} pts.
+            {pc1(qm.meanA)} of the announced cities against {pc1(qm.meanB)} ({qm.wins}–{qm.losses}–{qm.ties}, {pv(qm.p)}). On the {OLD_QLOO_VS_MODEL.n} older tours below, Qloo was {abs1(oldQm.diff)} pts {oldQm.diff >= 0 ? "ahead" : "behind"}.
           </span>
         </div>
         <div className={s.stat}>
@@ -102,8 +99,19 @@ export function PostCutoff() {
             {pts(bm.diff)}
             <small> pts</small>
           </b>
+          <em className={s.plain}>Qloo + population, the ranking Routed ships, is {abs1(bm.diff)} pts {bm.diff >= 0 ? "ahead of" : "behind"} the model alone. {sig(bm.p)}.</em>
           <span>
-            Qloo + population against the model alone: {pc1(bm.meanA)} against {pc1(bm.meanB)}, not significant ({bm.wins}–{bm.losses}–{bm.ties}, {pv(bm.p)}).
+            {pc1(bm.meanA)} against {pc1(bm.meanB)} ({bm.wins}–{bm.losses}–{bm.ties}, {pv(bm.p)}).
+          </span>
+        </div>
+        <div className={s.stat}>
+          <b>
+            {pts(mq.diff)}
+            <small> pts</small>
+          </b>
+          <em className={s.plain}>The model with Qloo averaged in is {abs1(mq.diff)} pts {mq.diff >= 0 ? "ahead of" : "behind"} the model alone. {sig(mq.p)}, and chosen after the data.</em>
+          <span>
+            {pc1(mq.meanA)} against {pc1(mq.meanB)}, better for {mq.wins} artists and worse for {mq.losses} ({pv(mq.p)}). <a href="#model-plus-qloo">More below</a>.
           </span>
         </div>
       </div>
@@ -150,7 +158,7 @@ export function PostCutoff() {
                     <a href={wiki(r.source)} target="_blank" rel="noreferrer">
                       {r.tour}
                     </a>
-                    <span className={s.dim}> · {REGION[r.region]}</span>
+                    <span className={s.dim}> ({REGION[r.region]})</span>
                   </td>
                   <td>{r.announced ? r.announced : <span className={s.dim}>article created {r.created}</span>}</td>
                   <td>{r.R}</td>
@@ -198,5 +206,68 @@ export function PostCutoff() {
         Every artist, city, list and rank, the model&apos;s answers and every skipped page are in the repository: <a href={RESULTS2_URL} target="_blank" rel="noreferrer">data/outside2/RESULTS.md</a>, with the protocol in data/outside2/PROTOCOL.md. Raw Qloo responses aren&apos;t published. Cost: {OUTSIDE2.usage.qlooTotal} Qloo requests and {OUTSIDE2.usage.modelCalls} model calls, about ${OUTSIDE2.usage.dollars.toFixed(2)} of model time.
       </p>
     </section>
+  );
+}
+
+/**
+ * The top of /proof: the shipped ranking against population on the tours the model can't have read, one row per
+ * artist (population's share of the announced cities, then Qloo + population's), with the plain-words verdict.
+ */
+export function PostCutoffChart() {
+  const bp = POST.blendVsPop;
+  const share = (h: HitRow) => (h.of ? h.hits / h.of : 0);
+  const rows = [...post.rows]
+    .map((r) => ({ artist: r.artist, pop: share(r.rp.population), blend: share(r.rp.blend), R: r.R }))
+    .sort((a, b) => b.blend - b.pop - (a.blend - a.pop) || a.artist.localeCompare(b.artist));
+  const x = (v: number) => 10 + v * 580;
+  return (
+    <div className={s.chartTop} data-part="post-chart">
+      <div className={s.chartStat}>
+        <b>
+          {pts(bp.diff)}
+          <small> pts</small>
+        </b>
+        <em className={s.plain}>
+          Qloo + population, the city ranking Routed ships, against population alone, on {bp.n} tours announced after the model&apos;s release. {sig(bp.p)}.
+        </em>
+        <span>
+          It found {pc1(bp.meanA)} of the announced cities against {pc1(bp.meanB)}: better for {bp.wins} artists, worse for {bp.losses || "none"}, level for {bp.ties} ({pv(bp.p)}; 95% interval {pts(bp.lo)} to {pts(bp.hi)} pts).
+        </span>
+        <b className={s.chartScore}>
+          {bp.wins}–{bp.losses}–{bp.ties}
+        </b>
+        <em className={s.plain}>Artists better, worse and level with Qloo added.</em>
+      </div>
+      <figure className={s.chartFig}>
+        <ul className={s.dumbbells}>
+          {rows.map((r) => (
+            <li key={r.artist}>
+              <span className={s.name}>{r.artist}</span>
+              <svg viewBox="0 0 600 28" className={s.bell} role="img" aria-label={`${r.artist}: population found ${Math.round(r.pop * 100)}% of the ${r.R} announced cities, Qloo + population ${Math.round(r.blend * 100)}%`}>
+                <line x1="0" x2="600" y1="14" y2="14" stroke="var(--rule)" strokeWidth="1" />
+                <line x1={x(r.pop)} x2={x(r.blend)} y1="14" y2="14" stroke="var(--ink)" strokeWidth="2" />
+                <circle cx={x(r.pop)} cy="14" r="7" fill="var(--stock)" stroke="var(--blue)" strokeWidth="2.5" />
+                <circle cx={x(r.blend)} cy="14" r="7" fill="var(--fire)" />
+              </svg>
+              <span className={s.nums}>
+                <b>{Math.round(r.blend * 100)}%</b> vs {Math.round(r.pop * 100)}%
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className={s.axis} aria-hidden="true">
+          <div>
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
+          </div>
+        </div>
+        <figcaption className={s.legend}>
+          <span className={s.keyFire}>Qloo + population</span>
+          <span className={s.keyBlue}>Population alone</span>
+          <span className={s.legendNote}>Share of each tour&apos;s announced cities found, picking as many as it announced</span>
+        </figcaption>
+      </figure>
+    </div>
   );
 }

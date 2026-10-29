@@ -40,6 +40,7 @@ export const H2H_BLEND = R.test1.all.primary[0]!;
 const pc = (v: number, digits = 0) => `${(v * 100).toFixed(digits)}%`;
 const pts = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(1)}`;
 const abs1 = (v: number) => Math.abs(v * 100).toFixed(1);
+const sig = (p: number) => (p < 0.05 ? "Significant" : "Not significant");
 const pv = (p: number) => (p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(p < 0.01 ? 3 : 2)}`);
 const REGION = { na: "N. America", uk: "UK & Ireland", eu: "Europe" } as const;
 
@@ -108,6 +109,7 @@ export function HeadToHead() {
             {pts(blendVsPop.diff)}
             <small> pts</small>
           </b>
+          <em className={s.plain}>Qloo + population against population alone, on {all.n} older tours. {sig(blendVsPop.p)}.</em>
           <span>
             Qloo added to population: {pc(blendVsPop.meanA)} of real tour cities found against {pc(blendVsPop.meanB)} for population alone. Better for {blendVsPop.wins} artists, worse for {blendVsPop.losses}, level for {blendVsPop.ties} ({pv(blendVsPop.p)}).
           </span>
@@ -117,6 +119,7 @@ export function HeadToHead() {
             {pts(held.diff)}
             <small> pts</small>
           </b>
+          <em className={s.plain}>The same, on the {test1.heldOut.n} held-out artists only. {sig(held.p)}.</em>
           <span>
             The same comparison on the {test1.heldOut.n} held-out artists nobody here picked: better for {held.wins}, worse for {held.losses} ({pv(held.p)}).
           </span>
@@ -126,6 +129,7 @@ export function HeadToHead() {
             {pts(bench.diff)}
             <small> pts</small>
           </b>
+          <em className={s.plain}>The same, on the {test1.bench.n} benchmark artists only. {sig(bench.p)}.</em>
           <span>
             On the {test1.bench.n} benchmark artists, mid-size acts closer to who Routed is for: better for {bench.wins}, worse for {bench.losses} ({pv(bench.p)}).
           </span>
@@ -168,8 +172,8 @@ export function HeadToHead() {
                     </a>
                     <span className={s.dim}>
                       {" "}
-                      · {REGION[r.region]}
-                      {r.set === "held-out" ? " · held out" : ""}
+                      ({REGION[r.region]}
+                      {r.set === "held-out" ? ", held out" : ""})
                     </span>
                   </td>
                   <td>{r.R}</td>

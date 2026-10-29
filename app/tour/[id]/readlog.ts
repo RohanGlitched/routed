@@ -15,11 +15,11 @@ export function withReadLog(rec: TourRecord): TourRecord {
   return ctx ? { ...rec, log: rec.log.map((l) => readLine(l, ctx)) } : rec;
 }
 
-/** The Oct 30 re-run where the agent cleared check_plan's objection itself (Alvvays, 1 to none in one round). */
-export const CLEARED_RERUN = "g8x884hdsw";
+/** The Oct 30 re-run on the poster wall where the agent cleared check_plan's objections itself (Japanese Breakfast, 3 to none in one round). */
+export const CLEARED_RERUN = "ipgunjvpgt";
 
 /** That re-run in a few fields, read from its stored record; none unless the agent really cleared everything there.
- *  Dated in IST, as the loop versions are named on /how (this one ran 02:31 IST on Oct 30). */
+ *  Dated in IST, as the loop versions are named on /how (this one ran on Oct 30). */
 export async function clearedRerun(): Promise<Rerun | undefined> {
   const t = await loadTour(CLEARED_RERUN).catch(() => null);
   const c = t?.engine?.check;

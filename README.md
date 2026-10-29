@@ -284,7 +284,7 @@ git clone https://github.com/RohanGlitched/routed && cd routed
 npm install
 cp .env.example .env.local   # then fill in the keys
 npm run dev                  # http://localhost:3000
-npm test                     # 214 unit tests: every booking rule, scoring, capacity parsing, evidence checks (both nights of a two-night stand), the outside check, the head-to-head's scoring and tour-table reader, the city map, the calendar file
+npm test                     # 215 unit tests: every booking rule, scoring, capacity parsing, evidence checks (both nights of a two-night stand), the outside check, the head-to-head's scoring and tour-table reader, the city map, the calendar file
 ```
 
 No keys? `npx tsx scripts/dev-fixture.ts` writes a sample tour to `.data/` (every number in it is made up), then `npm run dev` opens its tour book so you can see every page.

@@ -97,3 +97,8 @@ test("rooms: a free park stage or a campus arena goes last; under 65% a loose fi
   const mm = { id: "mm", name: "Megan Moroney", popularity: 0.83 };
   assert.equal(pickSupport([{ openers: [hw, mm], openerId: "hw" }], 0.971)?.id, "mm");
 });
+
+test("call-sheet results print Qloo's tag names the way the tour book does", () => {
+  const l = readLine({ at: "", kind: "qloo", text: "What do Sierra Ferrell fans listen to?", result: "Alt- country, Indie - Folk, Americana" });
+  assert.equal(l.result, "Alt-country, Indie folk, Americana");
+});

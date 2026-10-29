@@ -58,6 +58,8 @@ export function readLine(l: LogLine, ctx?: LineContext): ReadLine {
       break;
     }
   }
+  // Qloo's tag names as stored ("Alt- country", "Indie - Folk") read the way the tour book prints them.
+  if (out.result && /\b[A-Za-z]+(- | - )[A-Za-z]/.test(out.result)) out = { ...out, result: out.result.replace(/\b([A-Za-z]+)- ([a-z])/g, "$1-$2").replace(/\b([A-Z][a-z]+) - ([A-Z])([a-z]+)\b/g, (_m, a: string, b: string, c: string) => `${a} ${b.toLowerCase()}${c}`) };
   if (!ctx) return out;
   const same = ctx.same ?? plain;
 

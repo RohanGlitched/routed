@@ -108,7 +108,14 @@ async function readWall(): Promise<{ hero: TourRecord | null; wall: TourRecord[]
   // The pin holds only while that tour is on the poster wall; a tour taken off it (re-routed under newer rules)
   // gives way to the newest one there.
   const hero = pinned?.status === "done" && pinned.showcase ? pinned : (wall[0] ?? null);
-  return { hero, wall: wall.filter((t) => t.plan?.stops?.length) };
+  return { hero, wall: byQlooChanged(wall.filter((t) => t.plan?.stops?.length)) };
+}
+
+/** The wall leads with the tours Qloo changed most against the same rules on city size alone (plan.qlooDiff), the
+ *  shelf's own order (newest first) breaking ties; the hero is picked before this, so it stays the pinned tour. */
+export function byQlooChanged(tours: TourRecord[]): TourRecord[] {
+  const changed = (t: TourRecord) => t.plan?.qlooDiff?.added.length ?? -1;
+  return tours.map((t, i) => ({ t, i })).sort((a, b) => changed(b.t) - changed(a.t) || a.i - b.i).map((x) => x.t);
 }
 
 /** Everything the home page reads: the hero tour, the wall in a few fields each, and the benchmark in two numbers. */
@@ -117,7 +124,7 @@ export const homeData = unstable_cache(
     const [{ hero, wall }, bench] = await Promise.all([readWall(), benchTours()]);
     return { hero: hero ? slimHero(hero) : null, wall: wall.map(wallItem), bench: summarise(bench) };
   },
-  ["home-data-v3"],
+  ["home-data-v4"],
   { revalidate: WINDOW, tags: ["showcase", "bench", "tours"] },
 );
 
@@ -133,7 +140,7 @@ export const wallPosters = unstable_cache(
     }
     return out;
   },
-  ["wall-posters-v1"],
+  ["wall-posters-v2"],
   { revalidate: WINDOW, tags: ["showcase", "tours"] },
 );
 

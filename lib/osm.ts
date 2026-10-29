@@ -19,15 +19,22 @@ export function neighbourhoodOf(address: Address | undefined, city: string): str
   if (!address) return undefined;
   const fold = (s: string) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   const c = fold(city);
-  for (const k of ["neighbourhood", "quarter", "suburb", "city_district", "borough", "hamlet"] as const) {
-    const v = address[k]?.trim();
-    if (!v || v.length > 40) continue;
-    const f = fold(v);
-    // "City of Nashville", "Nashville" or a county are no answer; "Downtown Nashville" is one.
-    if (!f || f === c || f === `city of ${c}` || /\bcounty\b/.test(f)) continue;
-    return v;
+  // Administrative units and housing estates aren't neighbourhoods a booker would name ("Ward 2", "North City ED",
+  // "The Estates at Wiedemann Mansion").
+  const BAD = /\d|\bward\b|\bed\b|\bestates?\b|\bmansion\b|\bapartments?\b|\bcondo|\bsubdivision\b|\bhomes\b|\belectoral\b|\bdistrict of\b/;
+  const ok = (v?: string) => {
+    const f = v ? fold(v) : "";
+    return Boolean(v && v.length <= 40 && f && f !== c && f !== `city of ${c}` && !/\bcounty\b/.test(f) && !BAD.test(f));
+  };
+  const local = (["neighbourhood", "quarter", "suburb", "city_district", "borough"] as const).map((k) => address[k]?.trim()).find(ok);
+  // The hottest blocks across a city line (Cambridge for Boston, Newport across the river from Cincinnati): the town
+  // is the answer, with its own neighbourhood when it has one.
+  const town = address.city ?? address.town ?? address.village;
+  if (town && fold(town) !== c && ok(town)) {
+    const inner = (["suburb", "quarter"] as const).map((k) => address[k]?.trim()).find(ok);
+    return inner ? `${inner}, ${town}` : town;
   }
-  return undefined;
+  return local;
 }
 
 let last = 0;

@@ -1,6 +1,7 @@
 import type { Opener, Plan, Room, Stop } from "../types";
 import { kmBetween, localEvidence, readLocal, type LocalRead } from "../geo/local";
-import { addDays, radiusFor } from "../geo/route";
+import { addDays, radiusFor, tooClose } from "../geo/route";
+import { marketById } from "../geo/markets";
 import { AGE_LABEL, topAge } from "./audience";
 import { sharedGenres } from "./rooms";
 
@@ -110,8 +111,11 @@ function sizeEvidence(r: Room, draw: number | undefined, nights: number): string
  *  major markets); nothing otherwise. A buyer asks for the radius clause before anything else. */
 export function radiusLine(plan: Pick<Plan, "stops" | "region">, s: Stop): string | undefined {
   const r = radiusFor(plan.region);
-  const close = plan.stops.some((x) => x !== s && x.marketId !== s.marketId && kmBetween(x, s) < r);
-  return close ? undefined : `Radius: no other show on this run within ${r} km of ${s.city}.`;
+  const at = (x: Stop) => ({ lat: x.lat, lon: x.lon, pop: marketById(x.marketId)?.pop ?? 0 });
+  const close = plan.stops.filter((x) => x !== s && x.marketId !== s.marketId && tooClose(at(x), at(s), r));
+  if (!close.length) return `Radius: no other show on this run within ${r} km of ${s.city}.`;
+  // Two major markets don't share one audience by rule; anything else inside the radius is a carve-out to ask for.
+  return `Radius: ${close.map((x) => `${x.city} (${Math.round(kmBetween(x, s))} km)`).join(" and ")} also plays this run, inside a ${r} km radius, so ask whether this date can be carved out of the clause.`;
 }
 
 /**
@@ -127,7 +131,7 @@ export function buyerBlock(plan: Pick<Plan, "stops" | "region">, s: Stop): strin
     "- Deal ask: $__ guarantee vs __% of the door, or a straight door split",
     "- Set lengths: headliner __ min, support __ min",
     `- Last play in ${s.city}: __`,
-    `- ${radius ? `${radius.slice(0, -1)}; tell us your clause` : "Radius: tell us your clause"}`,
+    `- ${radius && /^Radius: no other/.test(radius) ? `${radius.slice(0, -1)}; tell us your clause` : radius ?? "Radius: tell us your clause"}`,
   ].join("\n");
 }
 
@@ -135,7 +139,7 @@ export function buyerBlock(plan: Pick<Plan, "stops" | "region">, s: Stop): strin
 export function withBuyerBlock(body: string, block: string): string {
   const clean = body.replace(/\n*For the offer \(to fill in before sending\):[\s\S]*?(?=\n\nThanks,|\nThanks,|$)/, "").trimEnd();
   const at = clean.search(/\n\s*Thanks,\s*(\n|$)/);
-  return at < 0 ? `${clean}\n\n${block}` : `${clean.slice(0, at).trimEnd()}\n\n${block}\n${clean.slice(at)}`;
+  return at < 0 ? `${clean}\n\n${block}` : `${clean.slice(0, at).trimEnd()}\n\n${block}\n\n${clean.slice(at).trimStart()}`;
 }
 
 /** The genres both acts are filed under among the tastes their audiences share (nothing off-genre in a pitch). */

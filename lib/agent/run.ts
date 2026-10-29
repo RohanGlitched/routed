@@ -11,7 +11,7 @@ import { buildDossier } from "./dossier";
 import { HEAT_AREAS, scoreCities, strength, type HeatTile } from "./cities";
 import { checkWhy, room } from "./evidence";
 import { writePitches } from "./pitch";
-import { OSM_CREDIT, osmNeighbourhood } from "../osm";
+import { OSM_CREDIT, osmNeighbourhoodNear } from "../osm";
 import { askWithoutQloo, scoreGuess } from "./guess";
 import { planTour, type Ask, type PlanDeps } from "./plan";
 import { lookUpLocal, lookUpShared, placeLocal } from "./local";
@@ -254,9 +254,9 @@ export async function* runTour(input: TourInput, useModel: boolean): AsyncGenera
         // Qloo's places name no neighbourhood for the hottest blocks: OpenStreetMap's for that point, if it has one.
         if (local && !local.hot.name && !late()) {
           const t = Date.now();
-          const name = await osmNeighbourhood(local.hot.lat, local.hot.lon, s.city);
-          log({ kind: "web", text: `Qloo's places name no neighbourhood for ${s.city}'s hottest blocks; which one does OpenStreetMap put them in?`, result: name ? `${name} (${OSM_CREDIT})` : "OpenStreetMap names none there either", ms: Date.now() - t });
-          if (name) local.hot = { ...local.hot, name, named: "osm" };
+          const found = await osmNeighbourhoodNear(local.hot.lat, local.hot.lon, s.city, 4);
+          log({ kind: "web", text: `Qloo's places name no neighbourhood for ${s.city}'s hottest blocks; which one does OpenStreetMap put them in?`, result: found ? `${found.name}${found.km ? `, the nearest named one (about ${found.km} km)` : ""} (${OSM_CREDIT})` : "OpenStreetMap names none there either", ms: Date.now() - t });
+          if (found) local.hot = { ...local.hot, name: found.name, named: "osm", ...(found.km ? { osmKm: found.km } : {}) };
         }
         if (local) s.local = placeLocal(local, booked, [...posters, ...after], s.city, log, s.rooms);
         if (chosenOpener) chosenOpener.shared = shared;

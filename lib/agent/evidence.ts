@@ -41,6 +41,8 @@ export const snugFit = (capacity: number, draw: number) => capacity >= draw * SN
 
 const n0 = (v: number) => v.toLocaleString("en-US");
 const NIGHTS_WORD = ["", "One night", "Two nights", "Three nights", "Four nights"];
+/** Nights a room needs to hold the usual crowd (a 1,145 room for 3,000: 3). */
+export const nightsFor = (capacity: number, draw: number) => Math.max(1, Math.ceil(draw / Math.max(1, capacity)));
 
 /**
  * The day sheet's sentence on a room's size against the usual crowd, by rule. "Fits" only at 85–130% for one
@@ -58,7 +60,7 @@ export function sizeNote(capacity: number, draw: number, nights = 1): { text: st
       : { text: `${word} hold ${n0(all)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit it in one.`, kind: "short", alarm: true };
   }
   if (snugFit(capacity, draw)) return { text: `Fits a usual crowd of ${crowd}.`, kind: "fits", alarm: false };
-  if (capacity < draw * 0.6) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a second night or a bigger room.`, kind: "short", alarm: capacity < draw * 0.5 };
+  if (capacity < draw * 0.6) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd}: it takes ${nightsFor(capacity, draw)} nights to hold the crowd, and no bigger room these fans go to here was confirmed, so the pitch asks for ${nightsFor(capacity, draw)} nights or a bigger room.`, kind: "short", alarm: capacity < draw * 0.5 };
   if (capacity < draw) return { text: `Holds ${n0(capacity)} of a usual crowd of ${crowd} in one night.`, kind: "short", alarm: false };
   if (capacity > draw * 2.5) return { text: `Holds ${n0(capacity)} against a usual crowd of ${crowd}: no room these fans go to here was confirmed to fit, so the pitch asks about a reduced configuration.`, kind: "large", alarm: true };
   return { text: `Room for ${n0(capacity)} against a usual crowd of ${crowd}.`, kind: "large", alarm: false };
@@ -101,7 +103,7 @@ function sizeEvidence(r: Room, draw: number | undefined, nights: number): string
       ? ` One night is small for the usual crowd of about ${draw}; ${nights === 2 ? "two" : nights} nights hold ${all}, which covers it, so ask for both nights and don't call the room a fit for one.`
       : ` One night is small for the usual crowd of about ${draw}; ${nights === 2 ? "two" : nights} nights hold ${all}, still short of it, so ask for both nights, say plainly that they hold ${all} of about ${draw}, and don't call the room a fit.`;
   }
-  if (f === "too small") return ` That is small for the usual crowd of about ${draw}: ask whether a second night or a larger room is possible, and don't call the room a fit.`;
+  if (f === "too small") return ` That is small for the usual crowd of about ${draw}: it would take ${nightsFor(cap, draw)} nights to hold it, so ask whether ${nightsFor(cap, draw)} nights or a larger room is possible, and don't call the room a fit.`;
   if (f === "too big") return ` That is large for the usual crowd of about ${draw}: ask about a reduced configuration, and don't call the room a fit.`;
   if (snugFit(cap, draw)) return ` That fits the usual crowd of about ${draw}.`;
   return cap < draw ? ` That holds ${cap} of the usual crowd of about ${draw} in one night: say so plainly, and don't call the room a fit.` : ` That is more than the usual crowd of about ${draw}: say it holds ${cap} against a usual crowd of about ${draw}, and don't call the room a fit.`;
@@ -330,8 +332,9 @@ export function roomClause(r: Room, draw: number | undefined, nights: number, ro
     const alt = rooms
       .filter((x) => x.id !== r.id && x.capacity && strongSource(x.capacity) && x.capacity.value >= draw && x.capacity.value <= draw * 1.6)
       .sort((a, b) => a.capacity!.value - b.capacity!.value)[0];
-    const next = `ask about a second night${alt ? ` or ${alt.name} (${n0(alt.capacity!.value)})` : cap < draw * 0.6 ? " or a bigger room" : ""}`;
-    return cap >= draw * 0.6 ? `${r.name} holds ${n0(cap)} of a usual crowd of ${n0(draw)}: the fans should sell it out, so ${next}` : `${r.name} holds ${n0(cap)} of a usual crowd of ${n0(draw)}, so ${next}`;
+    if (cap < draw * 0.6) return `${r.name} holds ${n0(cap)} of a usual crowd of ${n0(draw)}: it takes ${nightsFor(cap, draw)} nights to hold the crowd, so ask for ${nightsFor(cap, draw)} nights${alt ? ` or ${alt.name} (${n0(alt.capacity!.value)})` : " or a bigger room"}`;
+    const next = `ask about a second night${alt ? ` or ${alt.name} (${n0(alt.capacity!.value)})` : ""}`;
+    return `${r.name} holds ${n0(cap)} of a usual crowd of ${n0(draw)}: the fans should sell it out, so ${next}`;
   }
   return `${r.name} holds ${n0(cap)} against a usual crowd of ${n0(draw)}${cap > draw * 2.5 ? ", so ask about a reduced configuration" : ""}`;
 }
@@ -395,7 +398,7 @@ function sizeAsk(r: Room, draw: number | undefined, nights: number): string {
     return all >= draw ? `The room holds ${cap} and we usually draw about ${crowd}, so we're asking for both nights (${n0(all)} across the two).` : `The room holds ${cap} and we usually draw about ${crowd}; both nights together hold ${n0(all)} of that, so we're asking for both.`;
   }
   if (snugFit(r.capacity.value, draw)) return `The room's ${cap} fits our usual crowd of about ${crowd}.`;
-  if (r.capacity.value < draw * 0.6) return `The room holds ${cap} against our usual crowd of about ${crowd}: would a second night or a larger room be possible?`;
+  if (r.capacity.value < draw * 0.6) return `The room holds ${cap} against our usual crowd of about ${crowd}, so it would take ${nightsFor(r.capacity.value, draw)} nights: would ${nightsFor(r.capacity.value, draw)} nights or a larger room be possible?`;
   if (r.capacity.value > draw * 2.5) return `The room holds ${cap} against our usual crowd of about ${crowd}: could we talk about a reduced configuration?`;
   return r.capacity.value < draw ? `The room holds ${cap} of our usual crowd of about ${crowd}.` : `The room holds ${cap} against our usual crowd of about ${crowd}.`;
 }

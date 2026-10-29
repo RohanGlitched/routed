@@ -87,7 +87,7 @@ export type Local = {
   tiles: [lat: number, lon: number, strength: number][];
   /** `named: "near"` when the name came from the run-time vote of Qloo places around the tile (absent on older tours);
    *  "osm" when Qloo's places named none and the neighbourhood containing the tile came from OpenStreetMap. */
-  hot: { lat: number; lon: number; name?: string; trait?: string; named?: "near" | "osm" };
+  hot: { lat: number; lon: number; name?: string; trait?: string; named?: "near" | "osm"; /** With "osm": km to the nearest named neighbourhood when the tile itself sits in none. */ osmKm?: number };
   /** Straight-line km from the booked room to the hottest tile. */
   roomKm?: number;
   /** The room sits in the fans' strongest area (within 1.5 km of the hottest tile, or on a top-tenth tile). */

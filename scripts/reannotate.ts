@@ -23,7 +23,7 @@ loadEnv();
 
 const { reannotate } = await import("../lib/agent/reannotate.ts");
 const { writePitches } = await import("../lib/agent/pitch.ts");
-const { osmNeighbourhood } = await import("../lib/osm.ts");
+const { osmNeighbourhoodNear } = await import("../lib/osm.ts");
 const { newUsage, withUsage } = await import("../lib/usage.ts");
 
 /** The poster wall and the flagship, and what each may change in its route (lib/agent/reannotate.ts RouteMode). */
@@ -61,11 +61,11 @@ for (const id of todo) {
     .filter((r) => r.id !== id && r.status === "done" && r.plan?.stops?.length && r.createdAt >= DONOR_FROM && r.plan.artist.name === rec.plan!.artist.name && r.input.draw === rec.input.draw && r.plan.region === rec.plan!.region)
     .flatMap((r) => r.plan!.stops.map((stop) => ({ stop, tour: r.id, createdAt: r.createdAt })));
   // OpenStreetMap for the hottest tile of each stop Qloo's places named nothing for (donor stops included: one may come in).
-  const osm = new Map<string, string>();
+  const osm = new Map<string, { name: string; km?: number }>();
   for (const s of [...rec.plan.stops, ...donors.map((d) => d.stop)]) {
     if (osm.has(s.marketId) || !s.local?.hot || s.local.hot.name) continue;
-    const name = await osmNeighbourhood(s.local.hot.lat, s.local.hot.lon, s.city);
-    if (name) osm.set(s.marketId, name);
+    const found = await osmNeighbourhoodNear(s.local.hot.lat, s.local.hot.lon, s.city);
+    if (found) osm.set(s.marketId, found);
   }
   const r = reannotate(rec, { route: mode.route, donors, osm, at, carveHome: mode.carveHome });
   let next = r.rec;

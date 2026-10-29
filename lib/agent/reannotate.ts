@@ -55,7 +55,7 @@ const rulesBetter = (a: Cost, b: Cost) => {
 /** A detour fix: the same rules, at least 15% less road, the fan ranks no more than 30% weaker, top fan cities kept. */
 const detourBetter = (a: Cost, b: Cost) => b.legs <= a.legs && b.home <= a.home && b.clash <= a.clash && b.keep <= a.keep && b.km <= a.km * 0.85 && b.rank <= a.rank * 1.3;
 
-export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Donor[]; osm?: Map<string, string>; at?: string; carveHome?: boolean } = {}): Reannotated {
+export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Donor[]; osm?: Map<string, string | { name: string; km?: number }>; at?: string; carveHome?: boolean } = {}): Reannotated {
   if (!rec.plan?.stops?.length) return { rec, changes: [], stale: false };
   const at = o.at ?? new Date().toISOString();
   const plan = structuredClone(rec.plan);
@@ -201,10 +201,11 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
   const named: string[] = [];
   for (const s of plan.stops) {
     if (!s.local?.hot || s.local.hot.name) continue;
-    const name = o.osm?.get(s.marketId);
-    if (!name) continue;
-    s.local.hot = { ...s.local.hot, name, named: "osm" };
-    named.push(`${s.city}: ${name}`);
+    const got = o.osm?.get(s.marketId);
+    if (!got) continue;
+    const { name, km } = typeof got === "string" ? { name: got, km: undefined } : got;
+    s.local.hot = { ...s.local.hot, name, named: "osm", ...(km ? { osmKm: km } : {}) };
+    named.push(`${s.city}: ${name}${km ? ` (nearest, about ${km} km)` : ""}`);
   }
   if (named.length) {
     changes.push(`neighbourhoods: ${named.join(", ")}`);

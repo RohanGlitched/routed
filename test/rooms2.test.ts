@@ -204,7 +204,7 @@ test("the day sheet says 'fits' only at 85–130% and 'cover' only when the nigh
   assert.deepEqual(sizeNote(1400, 1500), { text: "Fits a usual crowd of 1,500.", kind: "fits", alarm: false });
   assert.equal(sizeNote(1270, 1500).text, "Holds 1,270 of a usual crowd of 1,500 in one night.");
   assert.equal(sizeNote(3000, 1500).text, "Room for 3,000 against a usual crowd of 1,500.");
-  assert.match(sizeNote(460, 1500).text, /^Holds 460 of a usual crowd of 1,500: .*second night or a bigger room/);
+  assert.match(sizeNote(460, 1500).text, /^Holds 460 of a usual crowd of 1,500: it takes 4 nights to hold the crowd, .*4 nights or a bigger room/);
   assert.match(sizeNote(5000, 1500).text, /reduced configuration/);
   assert.equal(sizeNote(460, 1500, 2).text, "Two nights hold 920 of a usual crowd of 1,500: no room these fans go to here was confirmed to fit it in one.");
   assert.equal(sizeNote(460, 1500, 2).kind, "short");

@@ -183,7 +183,7 @@ export function nameHot(tiles: LocalTile[], places: LocalPlace[]): { name?: stri
  * places than the stop keeps, so it stands. A tour saved before it has no mark, and its stored name (from a
  * majority of places within 2 km, which reached across rivers) is re-derived from the stop's own places instead.
  */
-export type HotName = { lat: number; lon: number; name?: string; trait?: string; named?: "near" | "osm" };
+export type HotName = { lat: number; lon: number; name?: string; trait?: string; named?: "near" | "osm"; osmKm?: number };
 
 /** The radius of the run-time vote around the hottest tile (one Qloo places call per city). */
 export const NEAR_VOTE_M = 600;
@@ -194,6 +194,8 @@ export type LocalRead = {
   area?: string;
   /** "osm" when the name is OpenStreetMap's neighbourhood around the tile (Qloo's places there named none). */
   source?: "osm";
+  /** With "osm": the tile sits in no named neighbourhood, and this is the nearest one, about this far away. */
+  osmKm?: number;
   /** How Qloo characterises that neighbourhood ("Creative hub"), from the places filed under it. */
   trait?: string;
   /** The nearest Qloo place to the hottest blocks (within NEAR_KM), to point at when no neighbourhood is named. */
@@ -211,7 +213,7 @@ export type LocalRead = {
 export function readLocal(local: { tiles: LocalTile[]; hot?: HotName }, room: LocalPlace | undefined, places: LocalPlace[]): LocalRead {
   const all = room ? [room, ...places] : places;
   const named = local.hot?.named === "near" || local.hot?.named === "osm" ? { name: local.hot.name, trait: local.hot.trait } : nameHot(local.tiles, all);
-  const out: LocalRead = { ...(named.name ? { area: named.name } : {}), ...(named.trait ? { trait: named.trait } : {}), ...(named.name && local.hot?.named === "osm" ? { source: "osm" as const } : {}) };
+  const out: LocalRead = { ...(named.name ? { area: named.name } : {}), ...(named.trait ? { trait: named.trait } : {}), ...(named.name && local.hot?.named === "osm" ? { source: "osm" as const, ...(local.hot.osmKm ? { osmKm: local.hot.osmKm } : {}) } : {}) };
   const hot = hotSpot(local.tiles);
   if (hot) {
     const near = uniquePlaces(all)
@@ -239,7 +241,7 @@ const kmFrom = (km: number) => (km < 0.1 ? "under 100 m from" : `${km} km from`)
 export function localWords(r: LocalRead, city: string, who = "fans"): { lead: string; name?: string; tail: string; verdict: string } {
   const head = `Inside ${city}, ${who} over-index most`;
   const words = r.area
-    ? { lead: `${head} around `, name: `${r.area}${r.trait ? ` (${r.trait.toLowerCase()})` : ""}`, tail: r.source === "osm" ? ", the neighbourhood OpenStreetMap places those blocks in." : "." }
+    ? { lead: `${head} around `, name: `${r.area}${r.trait ? ` (${r.trait.toLowerCase()})` : ""}`, tail: r.source === "osm" ? (r.osmKm ? `, the nearest neighbourhood OpenStreetMap names (about ${r.osmKm} km from those blocks).` : ", the neighbourhood OpenStreetMap places those blocks in.") : "." }
     : r.near && r.near.name !== r.room?.name
       ? { lead: `${head} in the blocks around ${r.near.name}; Qloo names no neighbourhood there.`, tail: "" }
       : { lead: `${head} in one cluster of blocks; Qloo names no neighbourhood there.`, tail: "" };
@@ -261,7 +263,7 @@ export function roomVerdict(r: LocalRead): string {
  * neighbourhood only when Qloo files the room there.
  */
 export function localEvidence(r: LocalRead, city: string, artist: string): string {
-  const where = r.area ? `around ${r.area}${r.trait ? `, ${r.trait.toLowerCase()}` : ""}${r.source === "osm" ? " (the neighbourhood OpenStreetMap places those blocks in)" : ""}` : r.near ? `in the blocks around ${r.near.name} (Qloo names no neighbourhood there)` : "in one cluster of blocks (Qloo names no neighbourhood there)";
+  const where = r.area ? `around ${r.area}${r.trait ? `, ${r.trait.toLowerCase()}` : ""}${r.source === "osm" ? (r.osmKm ? ` (the nearest neighbourhood OpenStreetMap names, about ${r.osmKm} km away)` : " (the neighbourhood OpenStreetMap places those blocks in)") : ""}` : r.near ? `in the blocks around ${r.near.name} (Qloo names no neighbourhood there)` : "in one cluster of blocks (Qloo names no neighbourhood there)";
   const lead = `Qloo's street-level heatmap puts ${artist} fans' strongest area in ${city} ${where}`;
   const m = r.room;
   if (!m) return `${lead}.`;

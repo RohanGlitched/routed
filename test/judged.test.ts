@@ -77,3 +77,23 @@ test("re-annotating the stored flagship keeps its cities, books a support act we
   }
   assert.equal(reannotate(out, { route: "keep" }).changes.length, 0, "a second pass changes nothing");
 });
+
+test("rooms: a free park stage or a campus arena goes last; under 65% a loose fit up to 160% beats a sell-out; no supergroup supports", async () => {
+  const { roomGrade, civicOrCampus, pickSupport } = await import("../lib/agent/rooms.ts");
+  const cap = (value: number, quote = "q") => ({ value, source: "https://www.wikidata.org/wiki/Q1", quote });
+  const miller = { id: "m", name: "Miller Outdoor Theatre", tags: ["Public park setting"], capacity: cap(6200) };
+  const chiles = { id: "c", name: "Chiles Center", tags: ["Indoor arena"], capacity: cap(4852, "Chiles Center: building on the University of Portland campus in Portland, Oregon") };
+  const unmeasured = { id: "u", name: "White Oak Music Hall", tags: ["Bar service"] };
+  assert.ok(civicOrCampus(miller) && civicOrCampus(chiles) && !civicOrCampus(unmeasured));
+  assert.ok(roomGrade(unmeasured, 3000) < roomGrade(miller, 3000));
+  assert.ok(roomGrade(unmeasured, 3000) < roomGrade(chiles, 3000));
+  const ogden = { id: "o", name: "Ogden Theatre", tags: [], capacity: cap(1600) };
+  const fillmore = { id: "f", name: "Fillmore Auditorium", tags: [], capacity: cap(3900) };
+  assert.ok(roomGrade(fillmore, 2500) < roomGrade(ogden, 2500), "Denver for 2,500: the Fillmore");
+  const peel = { id: "p", name: "The Orange Peel", tags: [], capacity: cap(1050) };
+  const wolfe = { id: "w", name: "Thomas Wolfe Auditorium", tags: [], capacity: cap(2431) };
+  assert.ok(roomGrade(peel, 1500) < roomGrade(wolfe, 1500), "Asheville for 1,500: still the Orange Peel");
+  const hw = { id: "hw", name: "The Highwomen", popularity: 0.888, description: "an American country music supergroup formed in 2019" };
+  const mm = { id: "mm", name: "Megan Moroney", popularity: 0.83 };
+  assert.equal(pickSupport([{ openers: [hw, mm], openerId: "hw" }], 0.971)?.id, "mm");
+});

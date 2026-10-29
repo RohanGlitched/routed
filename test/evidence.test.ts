@@ -104,7 +104,7 @@ test("a stop's reason may cite what the booking model saw (room popularity), and
 test("a model's 'why' with prompt jargon, a false 'fits' or a score written as a rank gives way to the rule's sentence", () => {
   const keep = { keepModel: true };
   const one = { ...lexington, nights: 1 } as Stop;
-  const rule = "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 of a usual crowd of 1,500, so ask about a second night or a bigger room.";
+  const rule = "Lexington is Sierra Ferrell's #9 city on Qloo, and Lyric Theatre & Cultural Arts Center holds 600 of a usual crowd of 1,500: it takes 3 nights to hold the crowd, so ask for 3 nights or a bigger room.";
   for (const why of ["Lexington ranks #9 and the Lyric is the rule_pick room.", "Lexington ranks #9, marked named_by_you.", "Lexington ranks #9 and the Lyric fits the 1,500 crowd at 600 capacity.", "Lexington ranks #9; Kelsey Waldon ranked 98 for Sierra Ferrell's audience."]) {
     assert.deepEqual(checkWhy(plan, { ...one, why } as Stop, 1500, keep), rule, why);
   }

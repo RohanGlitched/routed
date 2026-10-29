@@ -189,13 +189,33 @@ export const SMALL_ONLY_DRAW = 1500;
  * the Ogden goes before Swallow Hill Music); then rooms known to miss by how far they miss. So a measured room at
  * 40–250% always beats one nobody measured (Ghost's 8,000 crowd once got Strom, a club nobody could measure).
  */
+/**
+ * A room a touring act can't sell tickets in the usual way: a free civic stage in a public park (Miller Outdoor
+ * Theatre) or a university's own arena or fieldhouse (Chiles Center, Fertitta Center), by Qloo's place tags or the
+ * Wikidata description stored with its capacity. Booked only when nothing else in the city can be (Oct 30 judges).
+ */
+export function civicOrCampus(r: Pick<Room, "tags" | "capacity">): boolean {
+  return /\b(public park setting|academic campus|campus traditions)\b/i.test(r.tags.join(" | ")) || /\b(universit(y|é|à)|college) campus\b|\bon the [^;]*\bcampus\b|\buniversity\b[^;]*\barena\b/i.test(r.capacity?.quote ?? "");
+}
+
 export function roomGrade(r: Room, draw?: number): number {
   if (!draw) return 0;
+  if (civicOrCampus(r)) return 2.9 + roomGradeOf(r, draw) / 10;
+  return roomGradeOf(r, draw);
+}
+
+function roomGradeOf(r: Room, draw: number): number {
   const f = fit(r, draw);
   // One night, in a booker's order: a close fit (85–130% of the crowd), then a room the fans sell out (60–85%), then
   // a loose fit (130–250%). Selling out a slightly small room beats half-filling a big one: the Crystal Ballroom's
   // 1,500 before Arlene Schnitzer's 2,776, the Orange Peel's 1,050 before Thomas Wolfe's 2,431.
-  if (f === "fits") return roomFit(r, draw) === "close" ? 0 : roomFit(r, draw) === "sells out" ? 0.1 : 0.2;
+  // Under 65% of the crowd the room turns away more than a third of the fans: a loose fit up to 160% comes first then
+  // (Turnstile's Denver: the Fillmore's 3,900 before the Ogden's 1,600 for 2,500; Oct 30 judges).
+  if (f === "fits") {
+    const share = r.capacity!.value / draw;
+    const g = roomFit(r, draw);
+    return g === "close" ? 0 : g === "sells out" ? (share >= 0.65 ? 0.1 : 0.22) : share <= 1.6 ? 0.2 : 0.3;
+  }
   if (twoNights(r, draw)) return 1;
   if (reducedHouse(r, draw)) return 1.5;
   if (shortHouse(r, draw)) return 1.8;
@@ -407,8 +427,11 @@ export const SUPPORT_RATIO = 2.5;
 export const smallEnough = (o: { popularity?: number }, headliner?: number) =>
   headliner === undefined || o.popularity === undefined || 1 - o.popularity >= SUPPORT_RATIO * Math.max(0.005, 1 - headliner);
 
-export function pickSupport<O extends { id: string; affinity?: number; popularity?: number }>(stops: { openers: O[]; openerId?: string }[], headliner?: number): O | undefined {
-  const all = pickSupportFrom(stops);
+/** A supergroup of headliners (The Highwomen: Brandi Carlile, Amanda Shires…) doesn't open, whatever its Qloo score. */
+export const supergroup = (o: { description?: string }) => /\bsupergroup\b/i.test(o.description ?? "");
+
+export function pickSupport<O extends { id: string; affinity?: number; popularity?: number; description?: string }>(stops: { openers: O[]; openerId?: string }[], headliner?: number): O | undefined {
+  const all = pickSupportFrom(stops).filter((o) => !supergroup(o));
   return all.find((o) => smallEnough(o, headliner)) ?? all[0];
 }
 

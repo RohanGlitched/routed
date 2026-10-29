@@ -60,3 +60,25 @@ export function osmNeighbourhood(lat: number, lon: number, city: string, timeout
   chain = p.catch(() => undefined);
   return p;
 }
+
+/** The ring searched when the hottest tile itself sits in no named neighbourhood (a river, a rail yard). */
+export const RING_M = 500;
+
+/**
+ * The neighbourhood for a hot tile: the one OpenStreetMap puts the tile in, else the name most of the points
+ * RING_M around it fall in (Asheville's hottest tile is on a street between South Slope and the River Arts
+ * District), with how far that is, so the page says "nearest". `samples` points on the ring (4 or 8).
+ */
+export async function osmNeighbourhoodNear(lat: number, lon: number, city: string, samples = 8): Promise<{ name: string; km?: number } | undefined> {
+  const at = await osmNeighbourhood(lat, lon, city);
+  if (at) return { name: at };
+  const dLat = RING_M / 111_000, dLon = RING_M / (111_000 * Math.cos((lat * Math.PI) / 180));
+  const tally = new Map<string, number>();
+  for (let i = 0; i < samples; i++) {
+    const a = (2 * Math.PI * i) / samples;
+    const name = await osmNeighbourhood(lat + dLat * Math.cos(a), lon + dLon * Math.sin(a), city);
+    if (name) tally.set(name, (tally.get(name) ?? 0) + 1);
+  }
+  const best = [...tally.entries()].sort((x, y) => y[1] - x[1])[0];
+  return best ? { name: best[0], km: RING_M / 1000 } : undefined;
+}

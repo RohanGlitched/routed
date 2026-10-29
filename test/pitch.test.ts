@@ -43,7 +43,7 @@ test("the template says 'fits' only at 85–130% of the crowd", () => {
   assert.match(at(1400), /The room's 1,400 fits our usual crowd of about 1,500\./);
   assert.match(at(1270), /The room holds 1,270 of our usual crowd of about 1,500\./);
   assert.match(at(3000), /The room holds 3,000 against our usual crowd of about 1,500\./);
-  assert.match(at(460), /second night or a larger room/);
+  assert.match(at(460), /it would take 4 nights: would 4 nights or a larger room be possible/);
   assert.match(at(5000), /reduced configuration/);
   assert.match(at(821, 2), /both nights \(1,642 across the two\)/);
   for (const cap of [400, 900, 1270, 1300, 1950, 2000, 3000, 5000]) assert.equal(/\bfits\b/.test(at(cap)), cap >= 1275 && cap <= 1950, `${cap}`);

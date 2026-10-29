@@ -42,5 +42,5 @@
 /* The agent loop, measured: one row per loop version. Scrolls sideways on a phone rather than squeezing. */
 .loopTable { display: block; overflow-x: auto; width: 100%; max-width: 52em; border-collapse: collapse; margin-top: 16px; font-size: 15px; font-variant-numeric: tabular-nums; }
 .loopTable th, .loopTable td { padding: 8px 12px 8px 0; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
-.loopTable th { font-weight: 600; color: var(--mute); font-size: 14px; }
-.loopTable td:first-child { white-space: normal; min-width: 14em; }
+.loopTable th { font-weight: 600; color: var(--mute); font-size: 14px; white-space: normal; vertical-align: bottom; min-width: 6em; }
+.loopTable td:first-child { white-space: normal; min-width: 12em; }

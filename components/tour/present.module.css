@@ -102,3 +102,26 @@
   .where span { display: none; }
   .swaps { font-size: 14px; }
 }
+
+/* Step 1: the run in legs, and fill dates for its dark days. */
+.legs { margin: 18px 0 0; font-size: clamp(16px, 1.4vw, 22px); line-height: 1.4; color: var(--ink-2); max-width: 40em; }
+.legs b { color: var(--ink); font-weight: 700; }
+.fills { margin: 18px 0 0; max-width: 46em; }
+.fills h3 { margin: 0 0 6px; font-size: clamp(14px, 1.2vw, 18px); font-weight: 700; color: var(--blue-deep); }
+.fills ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.fills li { display: grid; grid-template-columns: minmax(9em, auto) minmax(0, 1fr); gap: 4px 16px; padding: 7px 0; border-bottom: 1px solid var(--rule); font-size: clamp(14px, 1.15vw, 18px); color: var(--ink-2); }
+.fills li b { color: var(--ink); font-weight: 600; }
+.fillLeg { font-weight: 600; color: var(--mute); white-space: nowrap; }
+
+/* Step 2: each number with its baseline. */
+.bigs { display: flex; flex-wrap: wrap; gap: clamp(16px, 3vw, 48px); align-items: flex-end; }
+.bigLabel { display: block; max-width: 15em; margin-top: 6px; font-size: clamp(14px, 1.15vw, 18px); line-height: 1.3; color: var(--ink-2); }
+.bigBlue b { color: var(--blue) !important; }
+
+/* Step 4: what was finally booked. */
+.booked b { display: block; font-weight: 700; color: var(--ink); }
+.booked span { display: block; margin-top: 3px; font-size: clamp(12px, 0.95vw, 15px); color: var(--mute); line-height: 1.35; }
+
+@media (max-width: 860px) {
+  .fills li { grid-template-columns: 1fr; }
+}

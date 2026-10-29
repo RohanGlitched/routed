@@ -105,7 +105,9 @@ export default async function Home() {
             <>
               <Link href={`/tour/${hero.id}`} className={s.posterLink} aria-label={`Open the ${poster.artist} tour book`}>
                 <div className={s.posterTilt}>
-                  <Poster {...poster} print />
+                  {/* Printed in the server's HTML at every width: the first frame is the finished poster (Oct 30: at 1440 px
+                      the load frame was a blank sheet for 2-3 s). The print plays on the wall and on a new run. */}
+                  <Poster {...poster} />
                 </div>
               </Link>
               <figcaption className={s.caption}>

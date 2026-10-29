@@ -71,10 +71,14 @@ export function LocalMap({ local, room, others, city, artist, places, spots = []
   const scaleBox: MapLabel["box"] = [0, size - 20, 34 + barPx, size];
   const bookedBox = booked ? [box(booked.x, booked.y, 8)] : [];
   const hotBox = hot ? [box(hot.x, hot.y, ringR)] : [];
+  // Every mark is kept clear too, so no label sits on another room's dot or a spot's diamond (Oct 30: "The Bow Tie
+  // Cafe" printed over a dot).
+  const restBoxes = rest.map((m) => box(m.x, m.y, 4));
+  const spotBox = (m: { x: number; y: number }) => box(m.x, m.y, 5);
   const want = [
-    ...(booked && room ? [{ text: mapName(room.name, 24), x: booked.x, y: booked.y, gap: 10, kind: "room" as const, avoid: [scaleBox] }] : []),
-    ...(hot ? [{ text: areaName ? mapName(areaName, 24) : "Hottest blocks", x: hot.x, y: hot.y, gap: ringR + 4, kind: "area" as const, avoid: [scaleBox, ...bookedBox] }] : []),
-    ...spotMarks.map((m) => ({ text: mapName(m.p.name, 18), x: m.x, y: m.y, gap: 6, kind: "spot" as const, avoid: [scaleBox, ...bookedBox, ...hotBox] })),
+    ...(booked && room ? [{ text: mapName(room.name, 24), x: booked.x, y: booked.y, gap: 10, kind: "room" as const, avoid: [scaleBox, ...restBoxes, ...spotMarks.map(spotBox)] }] : []),
+    ...(hot ? [{ text: areaName ? mapName(areaName, 24) : "Hottest blocks", x: hot.x, y: hot.y, gap: ringR + 4, kind: "area" as const, avoid: [scaleBox, ...bookedBox, ...restBoxes, ...spotMarks.map(spotBox)] }] : []),
+    ...spotMarks.map((m) => ({ text: mapName(m.p.name, 18), x: m.x, y: m.y, gap: 7, kind: "spot" as const, avoid: [scaleBox, ...bookedBox, ...hotBox, ...restBoxes, ...spotMarks.filter((o) => o !== m).map(spotBox)] })),
   ];
   const placedLabels: (MapLabel & { kind: keyof typeof fs })[] = [];
   for (const w of want) {

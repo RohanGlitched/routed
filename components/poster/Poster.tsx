@@ -7,8 +7,10 @@ import s from "./poster.module.css";
 /**
  * The tour poster, printed in two inks the way a letterpress shop would: the blue plate carries the halftone map
  * (each dot sized by Qloo fan affinity) and the type; the fire plate carries the artist, the route and the dates.
- * Where the inks cross they multiply to purple. On a wide screen it "prints" once as the page paints (blue plate,
- * then fire plate landing slightly out of register); on a phone or with reduced motion it is simply there.
+ * Where the inks cross they multiply to purple. Drawn printed by default, so a server-rendered poster is finished in
+ * the first frame at every width. With `print` (a poster-wall card scrolling in, a tour that just finished routing)
+ * it prints once on a wide screen: blue plate, then the fire plate landing slightly out of register; on a phone or
+ * with reduced motion it is simply there.
  */
 export type PosterStop = { date: string; city: string; venue?: string };
 
@@ -25,7 +27,8 @@ export type PosterProps = {
   topRank?: number;
   /** The support act on every date, printed under the rule; older tours had one per city. */
   support?: string;
-  /** Print once as it first paints (wide screens, motion allowed); otherwise drawn printed. */
+  /** Print once as it first paints (wide screens, motion allowed): the wall's scroll-ins and a new run only, never a
+   *  poster in the server's first frame. Otherwise drawn printed. */
   print?: boolean;
   /** Smaller type for the wall. */
   compact?: boolean;

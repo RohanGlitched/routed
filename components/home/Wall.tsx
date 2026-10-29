@@ -76,7 +76,8 @@ export function Wall({ items }: { items: WallEntry[] }) {
   );
 }
 
-/** One poster, drawn when it comes within half a screen of view; a blank sheet with the artist's name before. */
+/** One poster, drawn when it comes within half a screen of view, printing as it scrolls in (on a wide screen with
+ *  motion allowed); a blank sheet with the artist's name before. */
 function Sheet({ artist, poster }: { artist: string; poster?: PosterProps }) {
   const ref = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
@@ -104,7 +105,7 @@ function Sheet({ artist, poster }: { artist: string; poster?: PosterProps }) {
   return (
     <div ref={ref} className={s.sheet}>
       {poster && near ? (
-        <Poster {...poster} compact />
+        <Poster {...poster} compact print />
       ) : (
         <span className={s.blank} aria-hidden="true">
           {artist}

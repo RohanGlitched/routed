@@ -5,9 +5,10 @@ import { sizeNote, unmeasuredNote } from "@/lib/agent/evidence";
 import { addDays, MAX_LEG_KM, VAN_KMH } from "@/lib/geo/route";
 import { independents } from "@/lib/chains";
 import { sharedGenres } from "@/lib/agent/rooms";
+import type { FillLeg } from "@/lib/geo/fill";
 import type { Spot, Stop } from "@/lib/types";
 import { displayTag, displayTags } from "@/lib/tags";
-import { otherRoomLabel, shownCapacity } from "./display";
+import { fillLead, fillOption, otherRoomLabel, shownCapacity } from "./display";
 import { LocalMap } from "./LocalMap";
 import s from "./tour.module.css";
 
@@ -39,8 +40,11 @@ function Checked({ text }: { text: string }) {
 }
 
 /** One stop, laid out like a tour manager's day sheet. */
-export function DaySheet({ stop, prev, total, artist, pending, draw, first = false, genres, anchor }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number; first?: boolean; /** The headliner's genre keys, so only tastes both acts are filed under are shown as shared. */ genres?: string[]; /** The sheet's id, for the poster's rows and the stop strip ("stop-3"). */ anchor?: string }) {
+export function DaySheet({ stop, prev, total, artist, pending, draw, first = false, genres, anchor, fill }: { stop: Stop; prev: string; total: number; artist: string; pending: boolean; draw?: number; first?: boolean; /** The headliner's genre keys, so only tastes both acts are filed under are shown as shared. */ genres?: string[]; /** The sheet's id, for the poster's rows and the stop strip ("stop-3"). */ anchor?: string; /** Fan cities on the way that could fill the dark days before this stop (lib/geo/fill.ts). */ fill?: FillLeg }) {
   const [open, setOpen] = useState(false);
+  // On a phone the street map (after the first stop's), the posters, after-show and other-room rows wait behind
+  // "More for this stop" (tour.module.css); the map's one-line reading stays.
+  const [more, setMore] = useState(false);
   const [copied, setCopied] = useState(false);
   const d = new Date(`${stop.date}T12:00:00Z`);
   const room = stop.rooms.find((r) => r.id === stop.roomId) ?? stop.rooms[0];
@@ -60,9 +64,10 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
   // The leg cap the route search uses (route.ts legCost): door-to-door hours at van speed, so a ferry's sailing and
   // a border count the same here as there.
   const long = !first && Math.round(stop.fromHours * VAN_KMH) > MAX_LEG_KM;
+  const hasMore = (!first && !!stop.local) || others.length > 0 || locals.length > 0 || shared.length > 0 || independents(stop.posters).length > 0 || stop.after.length > 0;
 
   return (
-    <li className={s.day} id={anchor}>
+    <li className={s.day} id={anchor} data-more={more ? "" : undefined} data-lead={first ? "" : undefined}>
       <div className={s.when}>
         <span className={s.dow}>{d.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })}</span>
         <time dateTime={stop.date} className={s.date}>
@@ -142,7 +147,7 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                     !pending && (unmeasuredNote(draw).alarm ? <span className={s.sizeNote}>{unmeasuredNote(draw).text}</span> : unmeasuredNote(draw).text)
                   )}
                 </span>
-                {others.length > 0 && <span className={s.alt}>Other rooms these fans go to: {others.map(otherRoomLabel).join(", ")}</span>}
+                {others.length > 0 && <span className={`${s.alt} ${s.extraInline}`}>Other rooms these fans go to: {others.map(otherRoomLabel).join(", ")}</span>}
               </dd>
             </>
           )}
@@ -155,11 +160,30 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
                   {opener.affinity !== undefined && <span className={s.aff}>Audience affinity {pct(opener.affinity)}. </span>}
                   {opener.genres?.length ? `${displayTags(opener.genres).slice(0, 2).join(", ")}. ` : ""}
                 </span>
-                {shared.length > 0 && <span className={s.alt}>What both audiences share: {shared.slice(0, 3).join(", ")}</span>}
-                {locals.length > 0 && <span className={s.alt}>Local options here: {locals.map((o) => o.name).join(", ")}</span>}
+                {shared.length > 0 && <span className={`${s.alt} ${s.extraInline}`}>What both audiences share: {shared.slice(0, 3).join(", ")}</span>}
+                {locals.length > 0 && <span className={`${s.alt} ${s.extraInline}`}>Local options here: {locals.map((o) => o.name).join(", ")}</span>}
               </dd>
             </>
           )}
+          {fill && fill.options.length > 0 && (
+            <>
+              <dt>Fill dates</dt>
+              <dd className={s.fill}>
+                {fillLead(fill)}{" "}
+                {fill.options.map((o, k) => {
+                  const x = fillOption(o);
+                  return (
+                    <span key={o.marketId}>
+                      {k > 0 && ", "}
+                      <b>{x.city}</b> ({x.note})
+                    </span>
+                  );
+                })}
+                .
+              </dd>
+            </>
+          )}
+          <div className={s.extra}>
           {independents(stop.posters).length > 0 && (
             <>
               <dt>Posters</dt>
@@ -178,7 +202,13 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
               </dd>
             </>
           )}
+          </div>
         </dl>
+        {hasMore && (
+          <button type="button" className={s.moreBtn} aria-expanded={more} onClick={() => setMore(!more)}>
+            {more ? "Less for this stop" : "More for this stop"}
+          </button>
+        )}
       </div>
 
       <div className={s.pitch}>

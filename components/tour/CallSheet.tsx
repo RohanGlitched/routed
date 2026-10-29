@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { readLine } from "@/lib/log";
+import { readLine, type ReadLine } from "@/lib/log";
 import { dropEchoes } from "@/lib/tags";
 import type { LogLine } from "@/lib/types";
 import { shownLine } from "./display";
@@ -25,12 +25,13 @@ export function CallSheet({ log, running, full = false }: { log: LogLine[]; runn
 
   return (
     <ol className={`${s.sheet} ${full ? s.sheetFull : ""}`} aria-live={running ? "polite" : undefined} aria-label="Agent call sheet">
-      {log.filter(shownLine).map(readLine).map((l, i) => (
+      {log.filter(shownLine).map((x) => readLine(x)).map((l: ReadLine, i) => (
         <li key={i} className={`${s.call} ${s[l.kind]} ${l.failed ? s.callFailed : ""}`}>
           <span className={s.kind}>{KIND[l.kind]}</span>
           <div className={s.callBody}>
             <p className={s.q}>{dropEchoes(l.text)}</p>
-            {l.result && <p className={s.a}>{dropEchoes(l.result)}</p>}
+            {l.result && <p className={s.a}>{l.check?.wrong ? <del title="Rejected by the hand check">{dropEchoes(l.result)}</del> : dropEchoes(l.result)}</p>}
+            {l.check && <p className={l.check.wrong ? s.rejected : s.a}>{l.check.text}</p>}
             {l.swaps && l.swaps.length > 0 && (
               <ul className={a.swaps} aria-label="What the agent changed after the check">
                 {l.swaps.map((sw, j) => (

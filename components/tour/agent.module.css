@@ -37,3 +37,15 @@
 @media print {
   .diff { break-inside: avoid; }
 }
+
+/* The agent check in the tour book's head: proposed, objected, each round, settled. */
+.check { margin: 22px 0 0; padding: 14px 16px 12px; border: 1px solid var(--rule); border-left: 4px solid var(--blue); border-radius: 4px; background: var(--panel); max-width: 44em; }
+.checkTitle { margin: 0 0 8px; font-size: 15px; font-weight: 700; color: var(--ink); }
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 7px; }
+.steps li { counter-increment: step; position: relative; padding-left: 26px; font-size: 13.5px; line-height: 1.45; color: var(--ink-2); }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 18px; font-family: var(--wood); font-weight: 900; font-size: 16px; line-height: 1.2; color: var(--blue); }
+.steps b { color: var(--ink); font-weight: 700; }
+.stepRule::before { color: var(--fire-deep) !important; }
+.stepDone::before { color: var(--fire-deep) !important; }
+.checkLinks { margin: 10px 0 0; font-size: 13px; color: var(--mute); }
+.checkLinks a { color: var(--blue); font-weight: 600; }

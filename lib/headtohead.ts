@@ -154,3 +154,20 @@ export const pooled = (xs: Hit[]) => {
   const of = xs.reduce((n, x) => n + x.of, 0);
   return { hits, of, share: of ? hits / of : 0 };
 };
+
+/** The club and theatre subset's ceiling (data/outside2/PROTOCOL-5.md): real rooms of this many or fewer. */
+export const CLUB_THEATRE_MAX = 3000;
+
+/**
+ * A tour's room size from its venues' capacities, the way the venue test sets a crowd (scripts/outside2.ts truth):
+ * the lower middle value, rounded to the nearest 100 (a room under 50 keeps its own number).
+ */
+export function medianCapacity(capacities: number[]): number | null {
+  if (!capacities.length) return null;
+  const s = [...capacities].sort((a, b) => a - b);
+  const mid = s[Math.floor((s.length - 1) / 2)]!;
+  return Math.round(mid / 100) * 100 || s[0]!;
+}
+
+/** In the club and theatre subset: a known room size of CLUB_THEATRE_MAX or fewer. An unknown size is out. */
+export const isClubAndTheatre = (size: number | null | undefined, max = CLUB_THEATRE_MAX) => typeof size === "number" && size > 0 && size <= max;

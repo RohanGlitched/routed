@@ -1,0 +1,1799 @@
+{
+ "scored": "2026-10-29T22:05:17.057Z",
+ "protocol": "data/outside2/PROTOCOL-5.md",
+ "status": "protocol committed before scoring, from offline caches",
+ "script": "scripts/indie-subset.ts",
+ "rule": "real rooms 3,000 or fewer: the median Wikidata capacity of the real tour's venues where at least 2 are measured, else the benchmark's stated usual crowd",
+ "calls": {
+  "qloo": 0,
+  "model": 0,
+  "network": 0
+ },
+ "results": {
+  "pooled": {
+   "label": "Club and theatre tours, both sets (real rooms 3,000 or fewer)",
+   "n": 20,
+   "seed": 20261025,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 20,
+     "meanA": 0.5026062185445125,
+     "meanB": 0.4238984069588051,
+     "diff": 0.0787078115857074,
+     "lo": 0.03754043235331268,
+     "hi": 0.11906449987505822,
+     "wins": 14,
+     "losses": 2,
+     "ties": 4,
+     "p": 0.004180908203125
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 20,
+     "meanA": 0.5026062185445125,
+     "meanB": 0.5208056310052946,
+     "diff": -0.018199412460782178,
+     "lo": -0.05940428824049513,
+     "hi": 0.026053903808254168,
+     "wins": 5,
+     "losses": 9,
+     "ties": 6,
+     "p": 0.4239501953125
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs the model alone",
+     "n": 20,
+     "meanA": 0.4506768201994794,
+     "meanB": 0.5208056310052946,
+     "diff": -0.0701288108058152,
+     "lo": -0.12278795593811073,
+     "hi": -0.016545888470330675,
+     "wins": 5,
+     "losses": 11,
+     "ties": 4,
+     "p": 0.210113525390625
+    },
+    {
+     "name": "Qloo vs population",
+     "n": 20,
+     "meanA": 0.4506768201994794,
+     "meanB": 0.4238984069588051,
+     "diff": 0.02677841324067437,
+     "lo": -0.03861603764312742,
+     "hi": 0.09161802452378412,
+     "wins": 11,
+     "losses": 5,
+     "ties": 4,
+     "p": 0.210113525390625
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 20,
+     "meanA": 0.5208056310052946,
+     "meanB": 0.4238984069588051,
+     "diff": 0.09690722404648958,
+     "lo": 0.04166381386190291,
+     "hi": 0.1518085560810019,
+     "wins": 14,
+     "losses": 3,
+     "ties": 3,
+     "p": 0.012725830078125
+    },
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 20,
+     "meanA": 0.5456899225319477,
+     "meanB": 0.5208056310052946,
+     "diff": 0.024884291526652995,
+     "lo": -0.004745405179615712,
+     "hi": 0.060004346566212674,
+     "wins": 5,
+     "losses": 5,
+     "ties": 10,
+     "p": 1
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 206,
+     "of": 443,
+     "share": 0.4650112866817156
+    },
+    "model": {
+     "hits": 248,
+     "of": 443,
+     "share": 0.5598194130925508
+    },
+    "qloo": {
+     "hits": 213,
+     "of": 443,
+     "share": 0.48081264108352145
+    },
+    "blend": {
+     "hits": 248,
+     "of": 443,
+     "share": 0.5598194130925508
+    },
+    "modelQloo": {
+     "hits": 261,
+     "of": 443,
+     "share": 0.5891647855530474
+    }
+   },
+   "artists": [
+    "Caamp",
+    "Waxahatchee",
+    "Khruangbin",
+    "Durand Jones & The Indications",
+    "Knocked Loose",
+    "Cuco",
+    "MJ Lenderman",
+    "Parcels",
+    "Alvvays",
+    "Arlo Parks",
+    "Wet Leg",
+    "Japanese Breakfast",
+    "Fontaines D.C.",
+    "JPEGMAFIA",
+    "Chappell Roan",
+    "Queens of the Stone Age",
+    "Flo",
+    "Gary Barlow",
+    "Ledisi",
+    "Flo"
+   ]
+  },
+  "older": {
+   "label": "Of those, the older tours (head-to-head)",
+   "n": 19,
+   "seed": 20261018,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 19,
+     "meanA": 0.4919074746288986,
+     "meanB": 0.41834507234053786,
+     "diff": 0.07356240228836072,
+     "lo": 0.032152599500848957,
+     "hi": 0.11513373257486127,
+     "wins": 13,
+     "losses": 2,
+     "ties": 4,
+     "p": 0.00738525390625
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 19,
+     "meanA": 0.4919074746288986,
+     "meanB": 0.5172567013678024,
+     "diff": -0.02534922673890384,
+     "lo": -0.06620228907696672,
+     "hi": 0.0188968025201611,
+     "wins": 4,
+     "losses": 9,
+     "ties": 6,
+     "p": 0.266845703125
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs the model alone",
+     "n": 19,
+     "meanA": 0.4403409252873778,
+     "meanB": 0.5172567013678024,
+     "diff": -0.07691577608042467,
+     "lo": -0.1309347900358897,
+     "hi": -0.022540419676642595,
+     "wins": 4,
+     "losses": 11,
+     "ties": 4,
+     "p": 0.11846923828125
+    },
+    {
+     "name": "Qloo vs population",
+     "n": 19,
+     "meanA": 0.4403409252873778,
+     "meanB": 0.41834507234053786,
+     "diff": 0.021995852946839894,
+     "lo": -0.044579137160006166,
+     "hi": 0.08979869338125929,
+     "wins": 10,
+     "losses": 5,
+     "ties": 4,
+     "p": 0.3017578125
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 19,
+     "meanA": 0.5172567013678024,
+     "meanB": 0.41834507234053786,
+     "diff": 0.09891162902726457,
+     "lo": 0.04090951819961276,
+     "hi": 0.15707825569321415,
+     "wins": 13,
+     "losses": 3,
+     "ties": 3,
+     "p": 0.021270751953125
+    },
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 19,
+     "meanA": 0.5341627667518954,
+     "meanB": 0.5172567013678024,
+     "diff": 0.01690606538409294,
+     "lo": -0.010162907268170429,
+     "hi": 0.05013251385821942,
+     "wins": 4,
+     "losses": 5,
+     "ties": 10,
+     "p": 1
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 197,
+     "of": 426,
+     "share": 0.4624413145539906
+    },
+    "model": {
+     "hits": 238,
+     "of": 426,
+     "share": 0.5586854460093896
+    },
+    "qloo": {
+     "hits": 202,
+     "of": 426,
+     "share": 0.47417840375586856
+    },
+    "blend": {
+     "hits": 236,
+     "of": 426,
+     "share": 0.5539906103286385
+    },
+    "modelQloo": {
+     "hits": 248,
+     "of": 426,
+     "share": 0.5821596244131455
+    }
+   },
+   "artists": [
+    "Caamp",
+    "Waxahatchee",
+    "Khruangbin",
+    "Durand Jones & The Indications",
+    "Knocked Loose",
+    "Cuco",
+    "MJ Lenderman",
+    "Parcels",
+    "Alvvays",
+    "Arlo Parks",
+    "Wet Leg",
+    "Japanese Breakfast",
+    "Fontaines D.C.",
+    "JPEGMAFIA",
+    "Chappell Roan",
+    "Queens of the Stone Age",
+    "Flo",
+    "Gary Barlow",
+    "Ledisi"
+   ]
+  },
+  "postcut": {
+   "label": "Of those, the tours announced after the model's release",
+   "n": 1,
+   "seed": 20261025,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 1,
+     "meanA": 0.7058823529411765,
+     "meanB": 0.5294117647058824,
+     "diff": 0.17647058823529416,
+     "lo": 0.17647058823529416,
+     "hi": 0.17647058823529416,
+     "wins": 1,
+     "losses": 0,
+     "ties": 0,
+     "p": 1
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 1,
+     "meanA": 0.7058823529411765,
+     "meanB": 0.5882352941176471,
+     "diff": 0.11764705882352944,
+     "lo": 0.11764705882352944,
+     "hi": 0.11764705882352944,
+     "wins": 1,
+     "losses": 0,
+     "ties": 0,
+     "p": 1
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs the model alone",
+     "n": 1,
+     "meanA": 0.6470588235294118,
+     "meanB": 0.5882352941176471,
+     "diff": 0.05882352941176472,
+     "lo": 0.05882352941176472,
+     "hi": 0.05882352941176472,
+     "wins": 1,
+     "losses": 0,
+     "ties": 0,
+     "p": 1
+    },
+    {
+     "name": "Qloo vs population",
+     "n": 1,
+     "meanA": 0.6470588235294118,
+     "meanB": 0.5294117647058824,
+     "diff": 0.11764705882352944,
+     "lo": 0.11764705882352944,
+     "hi": 0.11764705882352944,
+     "wins": 1,
+     "losses": 0,
+     "ties": 0,
+     "p": 1
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 1,
+     "meanA": 0.5882352941176471,
+     "meanB": 0.5294117647058824,
+     "diff": 0.05882352941176472,
+     "lo": 0.05882352941176472,
+     "hi": 0.05882352941176472,
+     "wins": 1,
+     "losses": 0,
+     "ties": 0,
+     "p": 1
+    },
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 1,
+     "meanA": 0.7647058823529411,
+     "meanB": 0.5882352941176471,
+     "diff": 0.17647058823529405,
+     "lo": 0.17647058823529405,
+     "hi": 0.17647058823529405,
+     "wins": 1,
+     "losses": 0,
+     "ties": 0,
+     "p": 1
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 9,
+     "of": 17,
+     "share": 0.5294117647058824
+    },
+    "model": {
+     "hits": 10,
+     "of": 17,
+     "share": 0.5882352941176471
+    },
+    "qloo": {
+     "hits": 11,
+     "of": 17,
+     "share": 0.6470588235294118
+    },
+    "blend": {
+     "hits": 12,
+     "of": 17,
+     "share": 0.7058823529411765
+    },
+    "modelQloo": {
+     "hits": 13,
+     "of": 17,
+     "share": 0.7647058823529411
+    }
+   },
+   "artists": [
+    "Flo"
+   ]
+  },
+  "measuredOnly": {
+   "label": "Sensitivity: only tours whose room size was measured, not stated",
+   "n": 7,
+   "seed": 20261025,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 7,
+     "meanA": 0.6479692145156007,
+     "meanB": 0.5202052657139664,
+     "diff": 0.1277639488016343,
+     "lo": 0.06756302521008406,
+     "hi": 0.1893557422969188,
+     "wins": 6,
+     "losses": 0,
+     "ties": 1,
+     "p": 0.03125
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 7,
+     "meanA": 0.6479692145156007,
+     "meanB": 0.6497374437953064,
+     "diff": -0.0017682292797057528,
+     "lo": -0.05201465201465202,
+     "hi": 0.048478193455240515,
+     "wins": 3,
+     "losses": 2,
+     "ties": 2,
+     "p": 1
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs the model alone",
+     "n": 7,
+     "meanA": 0.5896988780409299,
+     "meanB": 0.6497374437953064,
+     "diff": -0.060038565754376605,
+     "lo": -0.13968927624100042,
+     "hi": 0.012592332758874867,
+     "wins": 2,
+     "losses": 3,
+     "ties": 2,
+     "p": 1
+    },
+    {
+     "name": "Qloo vs population",
+     "n": 7,
+     "meanA": 0.5896988780409299,
+     "meanB": 0.5202052657139664,
+     "diff": 0.06949361232696344,
+     "lo": -0.02175438596491232,
+     "hi": 0.17834586466165409,
+     "wins": 4,
+     "losses": 1,
+     "ties": 2,
+     "p": 0.375
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 7,
+     "meanA": 0.6497374437953064,
+     "meanB": 0.5202052657139664,
+     "diff": 0.12953217808134004,
+     "lo": 0.056688780775468094,
+     "hi": 0.2162406015037594,
+     "wins": 6,
+     "losses": 0,
+     "ties": 1,
+     "p": 0.03125
+    },
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 7,
+     "meanA": 0.6915303642302681,
+     "meanB": 0.6497374437953064,
+     "diff": 0.04179292043496162,
+     "lo": -0.003909774436090244,
+     "hi": 0.09792737421647421,
+     "wins": 3,
+     "losses": 1,
+     "ties": 3,
+     "p": 0.625
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 98,
+     "of": 180,
+     "share": 0.5444444444444444
+    },
+    "model": {
+     "hits": 122,
+     "of": 180,
+     "share": 0.6777777777777778
+    },
+    "qloo": {
+     "hits": 107,
+     "of": 180,
+     "share": 0.5944444444444444
+    },
+    "blend": {
+     "hits": 122,
+     "of": 180,
+     "share": 0.6777777777777778
+    },
+    "modelQloo": {
+     "hits": 130,
+     "of": 180,
+     "share": 0.7222222222222222
+    }
+   },
+   "artists": [
+    "Japanese Breakfast",
+    "Chappell Roan",
+    "Queens of the Stone Age",
+    "Flo",
+    "Gary Barlow",
+    "Ledisi",
+    "Flo"
+   ]
+  },
+  "rest": {
+   "label": "For comparison: the tours over 3,000",
+   "n": 40,
+   "seed": 20261025,
+   "primary": [
+    {
+     "name": "Qloo + population vs population",
+     "n": 40,
+     "meanA": 0.5763406971346294,
+     "meanB": 0.4831265946726434,
+     "diff": 0.09321410246198579,
+     "lo": 0.0651651300099648,
+     "hi": 0.12016730982178932,
+     "wins": 32,
+     "losses": 5,
+     "ties": 3,
+     "p": 0.000007427530363202095
+    },
+    {
+     "name": "Qloo + population vs the model alone",
+     "n": 40,
+     "meanA": 0.5763406971346294,
+     "meanB": 0.6090558823835412,
+     "diff": -0.03271518524891206,
+     "lo": -0.06912569068335297,
+     "hi": 0.004830312137589403,
+     "wins": 14,
+     "losses": 23,
+     "ties": 3,
+     "p": 0.18774155899882317
+    }
+   ],
+   "secondary": [
+    {
+     "name": "Qloo vs the model alone",
+     "n": 40,
+     "meanA": 0.4751671500544353,
+     "meanB": 0.6090558823835412,
+     "diff": -0.1338887323291058,
+     "lo": -0.18473472454213072,
+     "hi": -0.08368556901017427,
+     "wins": 6,
+     "losses": 32,
+     "ties": 2,
+     "p": 0.000024342560209333897
+    },
+    {
+     "name": "Qloo vs population",
+     "n": 40,
+     "meanA": 0.4751671500544353,
+     "meanB": 0.4831265946726434,
+     "diff": -0.007959444618207962,
+     "lo": -0.05248273014033106,
+     "hi": 0.03488834921684646,
+     "wins": 17,
+     "losses": 18,
+     "ties": 5,
+     "p": 1
+    },
+    {
+     "name": "The model alone vs population",
+     "n": 40,
+     "meanA": 0.6090558823835412,
+     "meanB": 0.4831265946726434,
+     "diff": 0.12592928771089787,
+     "lo": 0.08843408959726246,
+     "hi": 0.16383615215087738,
+     "wins": 33,
+     "losses": 5,
+     "ties": 2,
+     "p": 0.000004255962267052382
+    },
+    {
+     "name": "The model + Qloo vs the model alone",
+     "n": 40,
+     "meanA": 0.6026257222862906,
+     "meanB": 0.6090558823835412,
+     "diff": -0.006430160097250675,
+     "lo": -0.03584046661750646,
+     "hi": 0.02242842382561786,
+     "wins": 14,
+     "losses": 16,
+     "ties": 10,
+     "p": 0.855535551905632
+    }
+   ],
+   "pooled": {
+    "population": {
+     "hits": 533,
+     "of": 1061,
+     "share": 0.5023562676720076
+    },
+    "model": {
+     "hits": 649,
+     "of": 1061,
+     "share": 0.6116870876531574
+    },
+    "qloo": {
+     "hits": 516,
+     "of": 1061,
+     "share": 0.48633364750235625
+    },
+    "blend": {
+     "hits": 637,
+     "of": 1061,
+     "share": 0.6003770028275212
+    },
+    "modelQloo": {
+     "hits": 655,
+     "of": 1061,
+     "share": 0.6173421300659755
+    }
+   },
+   "artists": [
+    "Zach Bryan",
+    "Tyler Childers",
+    "Ghost",
+    "Turnstile",
+    "Clairo",
+    "Pierce the Veil",
+    "Dua Lipa",
+    "Troye Sivan",
+    "Queen + Adam Lambert",
+    "Billy Joel",
+    "Kim Petras",
+    "Tame Impala",
+    "Nine Inch Nails",
+    "Omar Apollo",
+    "Sugababes",
+    "Travis Scott",
+    "Halsey",
+    "Bonnie Tyler",
+    "Ado",
+    "Doja Cat",
+    "Depeche Mode",
+    "Addison Rae",
+    "Nicki Minaj",
+    "The 1975",
+    "21 Savage",
+    "Green Day",
+    "Pink",
+    "SZA",
+    "For King & Country",
+    "Twenty One Pilots",
+    "Beabadoobee",
+    "Lizzy McAlpine",
+    "Karol G",
+    "Garth Brooks",
+    "Role Model",
+    "Victoria Monét",
+    "Phoebe Bridgers",
+    "James Blunt",
+    "Jonas Brothers",
+    "Charli XCX"
+   ]
+  }
+ },
+ "tours": [
+  {
+   "artist": "Zach Bryan",
+   "set": "bench",
+   "region": "na",
+   "R": 43,
+   "size": 15000,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": false,
+   "hits": {
+    "population": 20,
+    "model": 16,
+    "qloo": 13,
+    "blend": 22,
+    "modelQloo": 19
+   }
+  },
+  {
+   "artist": "Tyler Childers",
+   "set": "bench",
+   "region": "na",
+   "R": 27,
+   "size": 5000,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": false,
+   "hits": {
+    "population": 10,
+    "model": 7,
+    "qloo": 7,
+    "blend": 6,
+    "modelQloo": 6
+   }
+  },
+  {
+   "artist": "Caamp",
+   "set": "bench",
+   "region": "na",
+   "R": 28,
+   "size": 2500,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 12,
+    "model": 15,
+    "qloo": 9,
+    "blend": 13,
+    "modelQloo": 15
+   }
+  },
+  {
+   "artist": "Waxahatchee",
+   "set": "bench",
+   "region": "na",
+   "R": 36,
+   "size": 1500,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 16,
+    "model": 21,
+    "qloo": 18,
+    "blend": 20,
+    "modelQloo": 20
+   }
+  },
+  {
+   "artist": "Khruangbin",
+   "set": "bench",
+   "region": "na",
+   "R": 20,
+   "size": 3000,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 4,
+    "model": 8,
+    "qloo": 5,
+    "blend": 8,
+    "modelQloo": 8
+   }
+  },
+  {
+   "artist": "Durand Jones & The Indications",
+   "set": "bench",
+   "region": "na",
+   "R": 34,
+   "size": 1200,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 24,
+    "model": 19,
+    "qloo": 24,
+    "blend": 27,
+    "modelQloo": 27
+   }
+  },
+  {
+   "artist": "Ghost",
+   "set": "bench",
+   "region": "eu",
+   "R": 19,
+   "size": 13500,
+   "sizeSource": "measured",
+   "measured": 17,
+   "note": "venues-truth.json: median of 17 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 7,
+    "model": 10,
+    "qloo": 7,
+    "blend": 7,
+    "modelQloo": 9
+   }
+  },
+  {
+   "artist": "Knocked Loose",
+   "set": "bench",
+   "region": "na",
+   "R": 20,
+   "size": 2500,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 4,
+    "model": 4,
+    "qloo": 5,
+    "blend": 4,
+    "modelQloo": 3
+   }
+  },
+  {
+   "artist": "Turnstile",
+   "set": "bench",
+   "region": "na",
+   "R": 21,
+   "size": 7000,
+   "sizeSource": "measured",
+   "measured": 2,
+   "note": "venues-truth.json: median of 2 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 9,
+    "model": 11,
+    "qloo": 11,
+    "blend": 12,
+    "modelQloo": 13
+   }
+  },
+  {
+   "artist": "Cuco",
+   "set": "bench",
+   "region": "na",
+   "R": 28,
+   "size": 2500,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 16,
+    "model": 19,
+    "qloo": 12,
+    "blend": 17,
+    "modelQloo": 18
+   }
+  },
+  {
+   "artist": "MJ Lenderman",
+   "set": "bench",
+   "region": "na",
+   "R": 24,
+   "size": 900,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 5,
+    "model": 7,
+    "qloo": 6,
+    "blend": 7,
+    "modelQloo": 6
+   }
+  },
+  {
+   "artist": "Parcels",
+   "set": "bench",
+   "region": "eu",
+   "R": 5,
+   "size": 2000,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 2,
+    "model": 3,
+    "qloo": 2,
+    "blend": 2,
+    "modelQloo": 3
+   }
+  },
+  {
+   "artist": "Alvvays",
+   "set": "bench",
+   "region": "na",
+   "R": 17,
+   "size": 1500,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 1,
+    "model": 0,
+    "qloo": 0,
+    "blend": 0,
+    "modelQloo": 0
+   }
+  },
+  {
+   "artist": "Arlo Parks",
+   "set": "bench",
+   "region": "uk",
+   "R": 6,
+   "size": 1500,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 1,
+    "model": 3,
+    "qloo": 3,
+    "blend": 2,
+    "modelQloo": 3
+   }
+  },
+  {
+   "artist": "Wet Leg",
+   "set": "bench",
+   "region": "uk",
+   "R": 8,
+   "size": 2000,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 2,
+    "model": 2,
+    "qloo": 3,
+    "blend": 1,
+    "modelQloo": 3
+   }
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "set": "bench",
+   "region": "na",
+   "R": 11,
+   "size": 2800,
+   "sizeSource": "measured",
+   "measured": 3,
+   "note": "venues-truth.json: median of 3 Wikidata capacities",
+   "inSubset": true,
+   "hits": {
+    "population": 5,
+    "model": 5,
+    "qloo": 5,
+    "blend": 5,
+    "modelQloo": 5
+   }
+  },
+  {
+   "artist": "Fontaines D.C.",
+   "set": "bench",
+   "region": "uk",
+   "R": 9,
+   "size": 3000,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 6,
+    "model": 5,
+    "qloo": 3,
+    "blend": 6,
+    "modelQloo": 5
+   }
+  },
+  {
+   "artist": "JPEGMAFIA",
+   "set": "bench",
+   "region": "na",
+   "R": 28,
+   "size": 1500,
+   "sizeSource": "stated",
+   "measured": 0,
+   "note": "no Wikipedia article (press listings only): the usual crowd in scripts/bench.mjs, fixed Oct 8",
+   "inSubset": true,
+   "hits": {
+    "population": 15,
+    "model": 20,
+    "qloo": 16,
+    "blend": 19,
+    "modelQloo": 20
+   }
+  },
+  {
+   "artist": "Clairo",
+   "set": "bench",
+   "region": "na",
+   "R": 22,
+   "size": 3500,
+   "sizeSource": "measured",
+   "measured": 7,
+   "note": "venues-truth.json: median of 7 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 13,
+    "model": 17,
+    "qloo": 12,
+    "blend": 16,
+    "modelQloo": 16
+   }
+  },
+  {
+   "artist": "Pierce the Veil",
+   "set": "held-out",
+   "region": "na",
+   "R": 37,
+   "size": 17500,
+   "sizeSource": "measured",
+   "measured": 12,
+   "note": "venues-truth.json: median of 12 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 15,
+    "model": 21,
+    "qloo": 20,
+    "blend": 19,
+    "modelQloo": 21
+   }
+  },
+  {
+   "artist": "Dua Lipa",
+   "set": "held-out",
+   "region": "na",
+   "R": 10,
+   "size": 18600,
+   "sizeSource": "measured",
+   "measured": 10,
+   "note": "venues-truth.json: median of 10 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 4,
+    "model": 7,
+    "qloo": 5,
+    "blend": 5,
+    "modelQloo": 7
+   }
+  },
+  {
+   "artist": "Troye Sivan",
+   "set": "held-out",
+   "region": "eu",
+   "R": 11,
+   "size": 7500,
+   "sizeSource": "measured",
+   "measured": 9,
+   "note": "venues-truth.json: median of 9 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 4,
+    "model": 7,
+    "qloo": 5,
+    "blend": 5,
+    "modelQloo": 6
+   }
+  },
+  {
+   "artist": "Queen + Adam Lambert",
+   "set": "held-out",
+   "region": "na",
+   "R": 27,
+   "size": 19100,
+   "sizeSource": "measured",
+   "measured": 26,
+   "note": "venues-truth.json: median of 26 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 15,
+    "model": 19,
+    "qloo": 3,
+    "blend": 13,
+    "modelQloo": 14
+   }
+  },
+  {
+   "artist": "Chappell Roan",
+   "set": "held-out",
+   "region": "na",
+   "R": 57,
+   "size": 1600,
+   "sizeSource": "measured",
+   "measured": 8,
+   "note": "venues-truth.json: median of 8 Wikidata capacities",
+   "inSubset": true,
+   "hits": {
+    "population": 33,
+    "model": 41,
+    "qloo": 34,
+    "blend": 42,
+    "modelQloo": 44
+   }
+  },
+  {
+   "artist": "Billy Joel",
+   "set": "held-out",
+   "region": "na",
+   "R": 54,
+   "size": 37900,
+   "sizeSource": "measured",
+   "measured": 76,
+   "note": "venues-truth.json: median of 76 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 34,
+    "model": 38,
+    "qloo": 28,
+    "blend": 42,
+    "modelQloo": 43
+   }
+  },
+  {
+   "artist": "Kim Petras",
+   "set": "held-out",
+   "region": "na",
+   "R": 22,
+   "size": 9400,
+   "sizeSource": "measured",
+   "measured": 9,
+   "note": "venues-truth.json: median of 9 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 12,
+    "model": 20,
+    "qloo": 15,
+    "blend": 17,
+    "modelQloo": 17
+   }
+  },
+  {
+   "artist": "Tame Impala",
+   "set": "held-out",
+   "region": "na",
+   "R": 25,
+   "size": 19100,
+   "sizeSource": "measured",
+   "measured": 25,
+   "note": "venues-truth.json: median of 25 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 16,
+    "model": 21,
+    "qloo": 13,
+    "blend": 18,
+    "modelQloo": 17
+   }
+  },
+  {
+   "artist": "Queens of the Stone Age",
+   "set": "held-out",
+   "region": "na",
+   "R": 15,
+   "size": 2800,
+   "sizeSource": "measured",
+   "measured": 10,
+   "note": "venues-truth.json: median of 10 Wikidata capacities",
+   "inSubset": true,
+   "hits": {
+    "population": 5,
+    "model": 10,
+    "qloo": 10,
+    "blend": 9,
+    "modelQloo": 10
+   }
+  },
+  {
+   "artist": "Nine Inch Nails",
+   "set": "held-out",
+   "region": "na",
+   "R": 40,
+   "size": 18500,
+   "sizeSource": "measured",
+   "measured": 42,
+   "note": "venues-truth.json: median of 42 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 28,
+    "model": 32,
+    "qloo": 25,
+    "blend": 29,
+    "modelQloo": 31
+   }
+  },
+  {
+   "artist": "Flo",
+   "set": "held-out",
+   "region": "na",
+   "R": 26,
+   "size": 2300,
+   "sizeSource": "measured",
+   "measured": 7,
+   "note": "venues-truth.json: median of 7 Wikidata capacities",
+   "inSubset": true,
+   "hits": {
+    "population": 15,
+    "model": 21,
+    "qloo": 15,
+    "blend": 18,
+    "modelQloo": 21
+   }
+  },
+  {
+   "artist": "Omar Apollo",
+   "set": "held-out",
+   "region": "na",
+   "R": 26,
+   "size": 8500,
+   "sizeSource": "measured",
+   "measured": 10,
+   "note": "venues-truth.json: median of 10 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 15,
+    "model": 19,
+    "qloo": 12,
+    "blend": 17,
+    "modelQloo": 19
+   }
+  },
+  {
+   "artist": "Sugababes",
+   "set": "held-out",
+   "region": "uk",
+   "R": 9,
+   "size": 13000,
+   "sizeSource": "measured",
+   "measured": 8,
+   "note": "venues-truth.json: median of 8 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 6,
+    "model": 7,
+    "qloo": 5,
+    "blend": 6,
+    "modelQloo": 6
+   }
+  },
+  {
+   "artist": "Travis Scott",
+   "set": "held-out",
+   "region": "na",
+   "R": 31,
+   "size": 19200,
+   "sizeSource": "measured",
+   "measured": 33,
+   "note": "venues-truth.json: median of 33 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 17,
+    "model": 21,
+    "qloo": 17,
+    "blend": 22,
+    "modelQloo": 22
+   }
+  },
+  {
+   "artist": "Halsey",
+   "set": "held-out",
+   "region": "na",
+   "R": 23,
+   "size": 17500,
+   "sizeSource": "measured",
+   "measured": 3,
+   "note": "venues-truth.json: median of 3 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 7,
+    "model": 10,
+    "qloo": 5,
+    "blend": 6,
+    "modelQloo": 7
+   }
+  },
+  {
+   "artist": "Bonnie Tyler",
+   "set": "held-out",
+   "region": "eu",
+   "R": 27,
+   "size": 15000,
+   "sizeSource": "measured",
+   "measured": 3,
+   "note": "venues-truth.json: median of 3 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 5,
+    "model": 12,
+    "qloo": 9,
+    "blend": 9,
+    "modelQloo": 10
+   }
+  },
+  {
+   "artist": "Ado",
+   "set": "held-out",
+   "region": "na",
+   "R": 12,
+   "size": 18800,
+   "sizeSource": "measured",
+   "measured": 10,
+   "note": "venues-truth.json: median of 10 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 5,
+    "model": 6,
+    "qloo": 1,
+    "blend": 4,
+    "modelQloo": 4
+   }
+  },
+  {
+   "artist": "Doja Cat",
+   "set": "held-out",
+   "region": "na",
+   "R": 31,
+   "size": 19000,
+   "sizeSource": "measured",
+   "measured": 30,
+   "note": "venues-truth.json: median of 30 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 19,
+    "model": 27,
+    "qloo": 22,
+    "blend": 25,
+    "modelQloo": 26
+   }
+  },
+  {
+   "artist": "Depeche Mode",
+   "set": "held-out",
+   "region": "eu",
+   "R": 34,
+   "size": 23000,
+   "sizeSource": "measured",
+   "measured": 39,
+   "note": "venues-truth.json: median of 39 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 20,
+    "model": 24,
+    "qloo": 20,
+    "blend": 23,
+    "modelQloo": 24
+   }
+  },
+  {
+   "artist": "Addison Rae",
+   "set": "held-out",
+   "region": "na",
+   "R": 14,
+   "size": 5900,
+   "sizeSource": "measured",
+   "measured": 4,
+   "note": "venues-truth.json: median of 4 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 7,
+    "model": 11,
+    "qloo": 4,
+    "blend": 8,
+    "modelQloo": 8
+   }
+  },
+  {
+   "artist": "Nicki Minaj",
+   "set": "held-out",
+   "region": "na",
+   "R": 41,
+   "size": 19000,
+   "sizeSource": "measured",
+   "measured": 43,
+   "note": "venues-truth.json: median of 43 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 26,
+    "model": 29,
+    "qloo": 23,
+    "blend": 31,
+    "modelQloo": 32
+   }
+  },
+  {
+   "artist": "Gary Barlow",
+   "set": "held-out",
+   "region": "uk",
+   "R": 25,
+   "size": 2400,
+   "sizeSource": "measured",
+   "measured": 8,
+   "note": "venues-truth.json: median of 8 Wikidata capacities",
+   "inSubset": true,
+   "hits": {
+    "population": 18,
+    "model": 19,
+    "qloo": 15,
+    "blend": 19,
+    "modelQloo": 18
+   }
+  },
+  {
+   "artist": "The 1975",
+   "set": "held-out",
+   "region": "na",
+   "R": 36,
+   "size": 18400,
+   "sizeSource": "measured",
+   "measured": 33,
+   "note": "venues-truth.json: median of 33 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 20,
+    "model": 28,
+    "qloo": 23,
+    "blend": 23,
+    "modelQloo": 26
+   }
+  },
+  {
+   "artist": "21 Savage",
+   "set": "held-out",
+   "region": "na",
+   "R": 27,
+   "size": 18400,
+   "sizeSource": "measured",
+   "measured": 4,
+   "note": "venues-truth.json: median of 4 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 8,
+    "model": 5,
+    "qloo": 9,
+    "blend": 9,
+    "modelQloo": 9
+   }
+  },
+  {
+   "artist": "Green Day",
+   "set": "held-out",
+   "region": "na",
+   "R": 27,
+   "size": 41100,
+   "sizeSource": "measured",
+   "measured": 22,
+   "note": "venues-truth.json: median of 22 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 15,
+    "model": 18,
+    "qloo": 13,
+    "blend": 14,
+    "modelQloo": 18
+   }
+  },
+  {
+   "artist": "Pink",
+   "set": "held-out",
+   "region": "na",
+   "R": 29,
+   "size": 42300,
+   "sizeSource": "measured",
+   "measured": 31,
+   "note": "venues-truth.json: median of 31 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 13,
+    "model": 18,
+    "qloo": 15,
+    "blend": 16,
+    "modelQloo": 18
+   }
+  },
+  {
+   "artist": "SZA",
+   "set": "held-out",
+   "region": "na",
+   "R": 28,
+   "size": 19000,
+   "sizeSource": "measured",
+   "measured": 31,
+   "note": "venues-truth.json: median of 31 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 17,
+    "model": 15,
+    "qloo": 18,
+    "blend": 23,
+    "modelQloo": 18
+   }
+  },
+  {
+   "artist": "For King & Country",
+   "set": "held-out",
+   "region": "na",
+   "R": 48,
+   "size": 18200,
+   "sizeSource": "measured",
+   "measured": 37,
+   "note": "venues-truth.json: median of 37 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 19,
+    "model": 14,
+    "qloo": 20,
+    "blend": 24,
+    "modelQloo": 20
+   }
+  },
+  {
+   "artist": "Ledisi",
+   "set": "held-out",
+   "region": "na",
+   "R": 29,
+   "size": 2700,
+   "sizeSource": "measured",
+   "measured": 13,
+   "note": "venues-truth.json: median of 13 Wikidata capacities",
+   "inSubset": true,
+   "hits": {
+    "population": 13,
+    "model": 16,
+    "qloo": 17,
+    "blend": 17,
+    "modelQloo": 19
+   }
+  },
+  {
+   "artist": "Twenty One Pilots",
+   "set": "held-out",
+   "region": "na",
+   "R": 44,
+   "size": 19200,
+   "sizeSource": "measured",
+   "measured": 33,
+   "note": "venues-truth.json: median of 33 Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 25,
+    "model": 25,
+    "qloo": 23,
+    "blend": 30,
+    "modelQloo": 28
+   }
+  },
+  {
+   "artist": "Flo",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 17,
+   "size": 2200,
+   "sizeSource": "measured",
+   "measured": 2,
+   "note": "median of 2 cached Wikidata capacities",
+   "inSubset": true,
+   "hits": {
+    "population": 9,
+    "model": 10,
+    "qloo": 11,
+    "blend": 12,
+    "modelQloo": 13
+   }
+  },
+  {
+   "artist": "Beabadoobee",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 17,
+   "size": 18600,
+   "sizeSource": "measured",
+   "measured": 11,
+   "note": "median of 11 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 7,
+    "model": 10,
+    "qloo": 9,
+    "blend": 11,
+    "modelQloo": 11
+   }
+  },
+  {
+   "artist": "Lizzy McAlpine",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 26,
+   "size": 18000,
+   "sizeSource": "measured",
+   "measured": 13,
+   "note": "median of 13 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 14,
+    "model": 17,
+    "qloo": 14,
+    "blend": 18,
+    "modelQloo": 17
+   }
+  },
+  {
+   "artist": "Karol G",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 17,
+   "size": 65900,
+   "sizeSource": "measured",
+   "measured": 5,
+   "note": "median of 5 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 9,
+    "model": 10,
+    "qloo": 7,
+    "blend": 11,
+    "modelQloo": 11
+   }
+  },
+  {
+   "artist": "Garth Brooks",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 9,
+   "size": 19200,
+   "sizeSource": "measured",
+   "measured": 8,
+   "note": "median of 8 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 1,
+    "model": 1,
+    "qloo": 2,
+    "blend": 1,
+    "modelQloo": 3
+   }
+  },
+  {
+   "artist": "Take That",
+   "set": "post-cutoff",
+   "region": "eu",
+   "R": 23,
+   "size": null,
+   "sizeSource": "none",
+   "measured": 0,
+   "note": "0 of the tour's venues have a cached Wikidata capacity (fewer than 2); 15 show rows name a venue",
+   "inSubset": false,
+   "hits": {
+    "population": 9,
+    "model": 5,
+    "qloo": 4,
+    "blend": 10,
+    "modelQloo": 8
+   }
+  },
+  {
+   "artist": "Role Model",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 22,
+   "size": 6900,
+   "sizeSource": "measured",
+   "measured": 5,
+   "note": "median of 5 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 9,
+    "model": 17,
+    "qloo": 13,
+    "blend": 14,
+    "modelQloo": 16
+   }
+  },
+  {
+   "artist": "Sugarland",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 21,
+   "size": null,
+   "sizeSource": "none",
+   "measured": 1,
+   "note": "1 of the tour's venues have a cached Wikidata capacity (fewer than 2); 17 show rows name a venue",
+   "inSubset": false,
+   "hits": {
+    "population": 1,
+    "model": 1,
+    "qloo": 1,
+    "blend": 1,
+    "modelQloo": 1
+   }
+  },
+  {
+   "artist": "Victoria Monét",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 26,
+   "size": 7500,
+   "sizeSource": "measured",
+   "measured": 5,
+   "note": "median of 5 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 13,
+    "model": 15,
+    "qloo": 18,
+    "blend": 18,
+    "modelQloo": 17
+   }
+  },
+  {
+   "artist": "Phoebe Bridgers",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 21,
+   "size": 18600,
+   "sizeSource": "measured",
+   "measured": 18,
+   "note": "median of 18 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 10,
+    "model": 15,
+    "qloo": 10,
+    "blend": 15,
+    "modelQloo": 15
+   }
+  },
+  {
+   "artist": "James Blunt",
+   "set": "post-cutoff",
+   "region": "eu",
+   "R": 26,
+   "size": 15000,
+   "sizeSource": "measured",
+   "measured": 11,
+   "note": "median of 11 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 11,
+    "model": 12,
+    "qloo": 10,
+    "blend": 13,
+    "modelQloo": 14
+   }
+  },
+  {
+   "artist": "Jonas Brothers",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 43,
+   "size": 18600,
+   "sizeSource": "measured",
+   "measured": 35,
+   "note": "median of 35 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 24,
+    "model": 32,
+    "qloo": 23,
+    "blend": 30,
+    "modelQloo": 32
+   }
+  },
+  {
+   "artist": "Charli XCX",
+   "set": "post-cutoff",
+   "region": "na",
+   "R": 9,
+   "size": 19400,
+   "sizeSource": "measured",
+   "measured": 7,
+   "note": "median of 7 cached Wikidata capacities",
+   "inSubset": false,
+   "hits": {
+    "population": 4,
+    "model": 5,
+    "qloo": 7,
+    "blend": 5,
+    "modelQloo": 5
+   }
+  }
+ ]
+}

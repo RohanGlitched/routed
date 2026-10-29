@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { beyondBiggest, blendRanking, secondaryRPrecision, SECONDARY_TOP, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
+import { beyondBiggest, blendRanking, CLUB_THEATRE_MAX, isClubAndTheatre, medianCapacity, secondaryRPrecision, SECONDARY_TOP, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
 import { infoboxArtist, marketsByRegion, showRows } from "../lib/wikitours.ts";
 import { marketById } from "../lib/geo/markets.ts";
 
@@ -193,4 +193,21 @@ test("popularity and affinity together average the two ranks, ties in Qloo's ord
   const two = popularityAffinityOrder([{ name: "a", affinity: 0.5 }, { name: "b", affinity: 0.4, popularity: 0.1 }]);
   assert.deepEqual(two.map((r) => r.name), ["a", "b"]);
   assert.deepEqual(popularityAffinityOrder([]), []);
+});
+
+test("a tour's room size is the lower middle capacity, rounded to 100, as the venue test sets a crowd", () => {
+  assert.equal(medianCapacity([]), null);
+  assert.equal(medianCapacity([2176, 3481, 3500, 3500]), 3500);
+  assert.equal(medianCapacity([18400, 1080, 2712]), 2700);
+  assert.equal(medianCapacity([40]), 40);
+});
+
+test("the club and theatre subset: a known size of 3,000 or fewer; unknown sizes are out", () => {
+  assert.equal(CLUB_THEATRE_MAX, 3000);
+  assert.equal(isClubAndTheatre(3000), true);
+  assert.equal(isClubAndTheatre(900), true);
+  assert.equal(isClubAndTheatre(3100), false);
+  assert.equal(isClubAndTheatre(null), false);
+  assert.equal(isClubAndTheatre(undefined), false);
+  assert.equal(isClubAndTheatre(0), false);
 });

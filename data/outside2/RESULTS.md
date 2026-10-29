@@ -207,10 +207,12 @@ contrast was chosen after the data. On older tours, which the model may remember
 alone. That fits the reading above: Qloo's data helps where the model's memory runs out, and adds little where the
 model has read the answer. A fresh, pre-registered test on new tours is the way to settle it.
 
-## Round 3: secondary markets on the post-cutoff tours (pre-registered)
+## Round 3: secondary markets on the post-cutoff tours (protocol committed before scoring, from offline caches)
 
 **Sources.**
-- Protocol: `data/outside2/PROTOCOL-3.md`, committed in d5991e2 before the test was scored.
+- Protocol: `data/outside2/PROTOCOL-3.md`, committed in d5991e2 before the test was scored: 22 seconds before the
+  results (25a4f02), on caches already on disk. So it fixed the metric and contrasts before any score was computed,
+  not before the data were collected; it is not pre-registered in the stronger sense Round 4 is.
 - Script: `scripts/model-plus-qloo.ts secondary`.
 - Numbers: `secondary-markets.json`.
 - Cost: offline from round 2's caches, with 0 Qloo requests, 0 model calls and 0 network calls.
@@ -332,3 +334,61 @@ from Qloo's list, 22 from the agent's names and 2 from the ladder.
   stays below popularity alone.
 - These are 2023–2025 tours that the model may have read about. Rooms are measured here without the live service's
   stored index or web search, so 19 booked rooms stayed unmeasured.
+
+## Round 5: club and theatre acts only (protocol committed before scoring, from offline caches)
+
+**Sources.**
+- Protocol: `data/outside2/PROTOCOL-5.md`, committed in 2e915c4 before the subset was scored. The only thing computed
+  before it was each tour's room size, and so who is in the subset.
+- Script: `scripts/indie-subset.ts`. Rules: `medianCapacity` and `isClubAndTheatre` in `lib/headtohead.ts`.
+- Numbers: `indie-subset.json`, with every tour's room size, where it came from, and its published hits.
+- Cost: 0 Qloo requests, 0 model calls and 0 network calls. The per-tour hits are the published ones
+  (`data/head-to-head/results.json`, `data/outside2/results.json`), which `scripts/model-plus-qloo.ts` already
+  checked against the caches.
+
+**The test.** Of the 62 tours (the head-to-head's 49 and the 13 announced after the model's release), keep the ones
+whose real rooms held 3,000 or fewer: the median Wikidata capacity of the tour's venues where at least 2 are
+measured, else, for the 15 benchmark tours with no Wikipedia article, the usual crowd fixed in `scripts/bench.mjs` on
+Oct 8. 20 tours qualify: 19 older ones (6 measured, 13 stated) and 1 post-cutoff tour (Flo). The same five rankings,
+scored by R-precision.
+
+| Contrast | n | A | B | A − B, pts [95% CI] | wins–losses–ties | sign test p |
+|---|---|---|---|---|---|---|
+| **Qloo + population vs population** | 20 | 50.3% | 42.4% | +7.9 [+3.8, +11.9] | 14–2–4 | 0.004 |
+| **Qloo + population vs the model alone** | 20 | 50.3% | 52.1% | −1.8 [−5.9, +2.6] | 5–9–6 | 0.424 |
+| Qloo vs the model alone | 20 | 45.1% | 52.1% | −7.0 [−12.3, −1.7] | 5–11–4 | 0.210 |
+| Qloo vs population | 20 | 45.1% | 42.4% | +2.7 [−3.9, +9.2] | 11–5–4 | 0.210 |
+| The model alone vs population | 20 | 52.1% | 42.4% | +9.7 [+4.2, +15.2] | 14–3–3 | 0.013 |
+| The model + Qloo vs the model alone | 20 | 54.6% | 52.1% | +2.5 [−0.5, +6.0] | 5–5–10 | 1.000 |
+
+The first two rows (in bold) are the primary contrasts; the rest are secondary.
+
+| Group | n | Qloo + population vs population | Qloo + population vs the model alone | Qloo vs the model alone |
+|---|---|---|---|---|
+| Club and theatre tours (above) | 20 | +7.9, 14–2–4, p = 0.004 | −1.8, 5–9–6, p = 0.42 | −7.0, 5–11–4, p = 0.21 |
+| Of those, the older tours | 19 | +7.4, 13–2–4, p = 0.007 | −2.5, 4–9–6, p = 0.27 | −7.7, 4–11–4, p = 0.12 |
+| Of those, room size measured, not stated | 7 | +12.8, 6–0–1, p = 0.031 | −0.2, 3–2–2, p = 1.00 | −6.0, 2–3–2, p = 1.00 |
+| For comparison: the tours over 3,000 (30 older, 10 post-cutoff) | 40 | +9.3, 32–5–3, p < 0.001 | −3.3, 14–23–3, p = 0.19 | −13.4, 6–32–2, p < 0.001 |
+
+The one post-cutoff tour (Flo) is in the first row only; on its own it is a single pair: the blend found 12 of its
+17 markets, population 9 and the model 10.
+
+| Ranking | Hits / picks (pooled, 20 tours) | Share |
+|---|---|---|
+| Population | 206 / 443 | 46.5% |
+| The model alone | 248 / 443 | 56.0% |
+| Qloo | 213 / 443 | 48.1% |
+| Qloo + population (what Routed ships) | 248 / 443 | 56.0% |
+| The model + Qloo | 261 / 443 | 58.9% |
+
+**Reading.**
+- For club and theatre acts, the blend Routed ships finds more of the real cities than city size: 7.9 pts more,
+  better for 14 tours and worse for 2 (p = 0.004).
+- It is level with the model alone (−1.8 pts, 5–9–6, not significant), and pooled over all 443 picks each found 248
+  of the real cities.
+- Qloo's ranking on its own trails the model by 7.0 pts (5–11–4, not significant). On the tours over 3,000 the same
+  gap is 13.4 pts (6–32–2), so it narrows for the smaller acts, though that comparison is descriptive, not a test.
+- 19 of the 20 tours are older ones the model may have read about, and 13 of the 20 room sizes are stated, not
+  measured (in the 4 benchmark tours that have both, the stated crowd was below the measured median every time). On
+  the 7 measured tours the blend's lead over size holds (+12.8, 6–0–1, p = 0.031).
+

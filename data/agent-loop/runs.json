@@ -1,5 +1,5 @@
 {
- "note": "Counts come from each run's own check_plan record (engine.check): objections to the agent's first booking, and what was still open after its last round. Oct 30 runs were made on a local server with the production code at the commit named, the same inputs as the poster-wall tours (8 shows from 2027-05-06), and the event's Qloo and Nebius keys; their tour records stay out of the repository with the other raw Qloo data, and each one opens on the site at /tour/<tour id> (none is on the poster wall).",
+ "note": "A tour counts as cleared only if it ends with fewer objections and no leg longer than the longest one check_plan objected to on the first booking (or the 1,800 km cap): Sierra Ferrell nk53jakf3w went from 3 objections to 1 but ended on a 3,298 km Austin to Portland leg, so it counts as worse, not cleared. Counts come from each run's own check_plan record (engine.check): objections to the agent's first booking, and what was still open after its last round. Oct 30 runs were made on a local server with the production code at the commit named, the same inputs as the poster-wall tours (8 shows from 2027-05-06), and the event's Qloo and Nebius keys; their tour records are kept out of the repository with the other raw Qloo data.",
  "oct25": {
   "label": "Before Oct 30 (the poster wall, routed Oct 25): last round kept",
   "tours": [
@@ -11,7 +11,10 @@
     "rounds": 2,
     "revised": 4,
     "modelCalls": 6,
-    "qloo": 87
+    "qloo": 87,
+    "longestLegObjected": 1895,
+    "longestLegFinal": 1694,
+    "legWorse": false
    },
    {
     "artist": "Japanese Breakfast",
@@ -21,7 +24,10 @@
     "rounds": 2,
     "revised": 3,
     "modelCalls": 6,
-    "qloo": 88
+    "qloo": 88,
+    "longestLegObjected": null,
+    "longestLegFinal": 1770,
+    "legWorse": false
    },
    {
     "artist": "Fontaines D.C.",
@@ -31,7 +37,10 @@
     "rounds": 2,
     "revised": 3,
     "modelCalls": 6,
-    "qloo": 95
+    "qloo": 95,
+    "longestLegObjected": null,
+    "longestLegFinal": 354,
+    "legWorse": false
    },
    {
     "artist": "Khruangbin",
@@ -41,7 +50,10 @@
     "rounds": 2,
     "revised": 0,
     "modelCalls": 6,
-    "qloo": 104
+    "qloo": 104,
+    "longestLegObjected": 1887,
+    "longestLegFinal": 1609,
+    "legWorse": false
    },
    {
     "artist": "Zach Bryan",
@@ -51,7 +63,10 @@
     "rounds": 2,
     "revised": 1,
     "modelCalls": 6,
-    "qloo": 87
+    "qloo": 87,
+    "longestLegObjected": null,
+    "longestLegFinal": 1117,
+    "legWorse": false
    },
    {
     "artist": "Alvvays",
@@ -61,7 +76,10 @@
     "rounds": 2,
     "revised": 1,
     "modelCalls": 6,
-    "qloo": 86
+    "qloo": 86,
+    "longestLegObjected": 3452,
+    "longestLegFinal": 3423,
+    "legWorse": false
    },
    {
     "artist": "Turnstile",
@@ -71,7 +89,10 @@
     "rounds": 2,
     "revised": 2,
     "modelCalls": 6,
-    "qloo": 89
+    "qloo": 89,
+    "longestLegObjected": 3342,
+    "longestLegFinal": 1770,
+    "legWorse": false
    },
    {
     "artist": "MJ Lenderman",
@@ -81,7 +102,10 @@
     "rounds": 2,
     "revised": 5,
     "modelCalls": 6,
-    "qloo": 81
+    "qloo": 81,
+    "longestLegObjected": null,
+    "longestLegFinal": 1375,
+    "legWorse": false
    }
   ]
  },
@@ -97,7 +121,10 @@
      "rounds": 3,
      "revised": 0,
      "modelCalls": 8,
-     "qloo": 88
+     "qloo": 88,
+     "longestLegObjected": 3551,
+     "longestLegFinal": 1799,
+     "legWorse": false
     },
     {
      "artist": "Sierra Ferrell",
@@ -107,7 +134,10 @@
      "rounds": 3,
      "revised": 0,
      "modelCalls": 8,
-     "qloo": 90
+     "qloo": 90,
+     "longestLegObjected": 1895,
+     "longestLegFinal": 1718,
+     "legWorse": false
     },
     {
      "artist": "Japanese Breakfast",
@@ -117,7 +147,10 @@
      "rounds": 3,
      "revised": 0,
      "modelCalls": 8,
-     "qloo": 81
+     "qloo": 81,
+     "longestLegObjected": null,
+     "longestLegFinal": 1609,
+     "legWorse": false
     }
    ]
   },
@@ -132,7 +165,10 @@
      "rounds": 3,
      "revised": 0,
      "modelCalls": 8,
-     "qloo": 83
+     "qloo": 83,
+     "longestLegObjected": 1895,
+     "longestLegFinal": 1718,
+     "legWorse": false
     },
     {
      "artist": "Alvvays",
@@ -142,7 +178,10 @@
      "rounds": 3,
      "revised": 0,
      "modelCalls": 8,
-     "qloo": 85
+     "qloo": 85,
+     "longestLegObjected": 4646,
+     "longestLegFinal": 4646,
+     "legWorse": false
     },
     {
      "artist": "Japanese Breakfast",
@@ -152,7 +191,10 @@
      "rounds": 3,
      "revised": 0,
      "modelCalls": 8,
-     "qloo": 80
+     "qloo": 80,
+     "longestLegObjected": null,
+     "longestLegFinal": 1609,
+     "legWorse": false
     }
    ]
   },
@@ -167,7 +209,10 @@
      "rounds": 3,
      "revised": 3,
      "modelCalls": 8,
-     "qloo": 82
+     "qloo": 82,
+     "longestLegObjected": 1895,
+     "longestLegFinal": 3298,
+     "legWorse": true
     },
     {
      "artist": "Japanese Breakfast",
@@ -177,7 +222,10 @@
      "rounds": 3,
      "revised": 0,
      "modelCalls": 7,
-     "qloo": 82
+     "qloo": 82,
+     "longestLegObjected": null,
+     "longestLegFinal": 1609,
+     "legWorse": false
     },
     {
      "artist": "Alvvays",
@@ -187,7 +235,10 @@
      "rounds": 1,
      "revised": 1,
      "modelCalls": 6,
-     "qloo": 82
+     "qloo": 82,
+     "longestLegObjected": 3551,
+     "longestLegFinal": 1148,
+     "legWorse": false
     }
    ]
   }

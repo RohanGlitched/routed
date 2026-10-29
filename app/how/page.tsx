@@ -51,7 +51,8 @@ export default async function How() {
   const ex = await example();
   const ws = wallStats(await showcaseTours().catch(() => []));
   const typical = ws ? `${span(ws.qloo.min, ws.qloo.max)} Qloo requests (median ${ws.qloo.median}), ${span(ws.model.min, ws.model.max)} model calls and ${span(Math.round(ws.tokens.min / 1000), Math.round(ws.tokens.max / 1000))} thousand tokens each` : undefined;
-  const sum = (rows: { before: number; after: number }[]) => ({ raised: rows.reduce((n, r) => n + r.before, 0), open: rows.reduce((n, r) => n + r.after, 0), cleared: rows.reduce((n, r) => n + Math.max(0, r.before - r.after), 0), worse: rows.filter((r) => r.after > r.before).length, n: rows.length });
+  // A tour counts as cleared only with fewer objections and no longer worst leg than its first booking's (legWorse).
+  const sum = (rows: { before: number; after: number; legWorse?: boolean }[]) => ({ raised: rows.reduce((n, r) => n + r.before, 0), open: rows.reduce((n, r) => n + r.after, 0), cleared: rows.reduce((n, r) => n + (r.legWorse ? 0 : Math.max(0, r.before - r.after)), 0), worse: rows.filter((r) => r.after > r.before || r.legWorse).length, n: rows.length });
   const old = sum(LOOP.oct25.tours);
   const fresh = LOOP.oct30.map((b) => ({ ...b, ...sum(b.tours) }));
   return (
@@ -80,7 +81,7 @@ export default async function How() {
       <section className={s.sec}>
         <h2 className={s.h2} id="agent-check">Does the agent really re-book?</h2>
         <p>
-          Measured, not claimed. On the {old.n} tours on the poster wall (routed Oct 25), check_plan raised {old.raised} objections to the agent&apos;s first bookings. After two rounds of re-booking {old.open} were still open, so rules settled them: the agent cleared {old.cleared} itself, and {old.worse} of the {old.n} tours ended with more objections than they started with, because the last round was kept even when it was worse.
+          Measured, not claimed. On the {old.n} tours on the poster wall (routed Oct 25), check_plan raised {old.raised} objections to the agent&apos;s first bookings. After two rounds {old.open} were open, some of them new (Alvvays went from 1 to 4), and rules settled them: net of the new ones the agent cleared {old.cleared}, and {old.worse} of the {old.n} tours ended worse than they started, because the last round was kept even when it was worse.
         </p>
         <p>
           On Oct 30 the loop changed: a re-booking replaces the booking only when it leaves fewer objections (a worse one is set aside and the agent is told why), each objection names the cities or swaps that would clear it, and a third round fits in the planning time. Re-runs of poster-wall artists under the new loop, measured the same way:
@@ -93,7 +94,7 @@ export default async function How() {
               <th scope="col">Objections raised</th>
               <th scope="col">Cleared by the agent itself</th>
               <th scope="col">Open after the last round, settled by rule</th>
-              <th scope="col">Tours left worse</th>
+              <th scope="col">Tours left worse (more objections or a longer worst leg)</th>
             </tr>
           </thead>
           <tbody>
@@ -119,7 +120,7 @@ export default async function How() {
         </table>
         {fresh.length > 0 && (
           <p>
-            With the last version the agent itself cleared {fresh.at(-1)!.cleared} of the {fresh.at(-1)!.raised} objections on {fresh.at(-1)!.n} re-runs{fresh.length > 1 ? `; the earlier Oct 30 versions cleared ${fresh.slice(0, -1).reduce((n, b) => n + b.cleared, 0)} of ${fresh.slice(0, -1).reduce((n, b) => n + b.raised, 0)}` : ""}, and no re-run ended with more objections than it started with. Three runs a version is a small sample. None of the re-runs replaced a poster-wall tour: each traded away a fan-rank number or a clean leg somewhere else, so the wall keeps its Oct 25 tours, re-checked under the current rules.
+            With the last version the agent itself cleared {fresh.at(-1)!.cleared} of the {fresh.at(-1)!.raised} objections on {fresh.at(-1)!.n} re-runs{fresh.length > 1 ? `; the earlier Oct 30 versions cleared ${fresh.slice(0, -1).reduce((n, b) => n + b.cleared, 0)} of ${fresh.slice(0, -1).reduce((n, b) => n + b.raised, 0)}` : ""}. One of those re-runs, Sierra Ferrell, went from 3 objections to 1 but ended on a 3,298 km leg, longer than the 1,895 km one first objected to, so it counts as worse, not cleared. Since then a round only counts as better if it doesn&apos;t lengthen the worst leg, and the leg cap is enforced after the rules settle, from cities already scouted. Three runs a version is a small sample. None of the re-runs replaced a poster-wall tour: each traded away a fan-rank number or a clean leg somewhere else, so the wall keeps its Oct 25 tours, re-checked under the current rules.
           </p>
         )}
         <p className={s.note}>{LOOP.note}</p>

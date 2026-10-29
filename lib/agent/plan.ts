@@ -20,7 +20,10 @@ import { concertRoom, type LadderRoom } from "./rooms";
  *  3. Book (model): pick the final cities, one room each and one support act for the run, knowing what each room
  *     holds, with a one-sentence reason that cites the evidence.
  *  4. Check (rules as a tool): check_plan runs the tour's rules over the booking and sends every objection back to
- *     the agent, which re-books; at most two rounds. Only what is still broken after that is fixed by a rule.
+ *     the agent, which re-books; at most MAX_REVISIONS rounds (3), a round kept only when it is better by
+ *     `better` (fewer objections and no longer worst leg), or only its changes that help on their own. In a round
+ *     the agent may ask Routed to scout up to SCOUT_PER_ROUND cities it hasn't seen (scout_city). Only what is
+ *     still broken after that is fixed by a rule, and the leg cap is then enforced from scouted cities.
  *  5. Reasons (model): once the rules have settled, the agent writes the reason for any stop a rule changed.
  * A free-running tool loop was tried first: Nemotron repeated lookups and ran out of turns on most tours
  * (measured Oct 7), so the moves are fixed and the choices are the model's. Rules hold it in (Playbook L1/L2):
@@ -312,6 +315,8 @@ export type Objection = {
   text: string;
   /** The same in a few words, for the call sheet. */
   short: string;
+  /** A leg objection's road km, so a booking that makes the worst leg longer is never counted as better. */
+  km?: number;
 };
 
 export type CheckContext = { byId: Map<string, CityScore>; rooms: Map<string, Room[]>; shows: number; draw?: number; from: { lat: number; lon: number }; radius: number; /** Qloo's top fan cities, kept like anchors. */ mustKeep?: Set<string> };
@@ -380,7 +385,7 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
     const rest = kept.map((k) => k.score).filter((x) => x.marketId !== b.marketId);
     const keepB = guarded(b) ? bridgeFix(rest, b, c, guarded) : "";
     const alt = keepB ? "" : clearing(rest, c);
-    out.push({ city_id: b.marketId, rule: "leg", text: `${a.name} to ${b.name} is ${n(l.km)} km of road with no show between, over the ${n(MAX_LEG_KM)} km leg cap: keep the tour in one part of the region.${keepB ? ` ${b.name} is a city the rules keep, so bridge the route rather than drop it: ${keepB}.` : alt ? ` Cities that clear it in ${b.name}'s place: ${alt}.` : ""}`, short: `${n(l.km)} km leg from ${a.name}` });
+    out.push({ city_id: b.marketId, rule: "leg", text: `${a.name} to ${b.name} is ${n(l.km)} km of road with no show between, over the ${n(MAX_LEG_KM)} km leg cap: keep the tour in one part of the region.${keepB ? ` ${b.name} is a city the rules keep, so bridge the route rather than drop it: ${keepB}.` : alt ? ` Cities that clear it in ${b.name}'s place: ${alt}.` : ""}`, short: `${n(l.km)} km leg from ${a.name}`, km: l.km });
   }
   // The radius objections get the same: cities that clear every rule from the stops kept so far.
   for (const o of out) {
@@ -515,7 +520,7 @@ export function keepHelpful(best: BookStop[], next: BookStop[], check: (s: BookS
       const cand = e.apply(stops);
       if (!cand) continue;
       const o = check(cand);
-      if (o.length < objections.length) {
+      if (better({ objections }, { objections: o })) {
         stops = cand;
         objections = o;
         kept.push(e.label);
@@ -526,8 +531,53 @@ export function keepHelpful(best: BookStop[], next: BookStop[], check: (s: BookS
   return kept.length ? { stops, objections, kept } : null;
 }
 
+/**
+ * The leg cap enforced after the rules settle: while a leg between shows runs over `max`, swap one stop for a city
+ * in `pool` (already scouted, with a bookable room) that lowers the road over the cap the most, never breaking the
+ * radius clause, swapping out a protected stop (`keep`) only when nothing else works. Up to 4 swaps. Pure.
+ */
+export function enforceLegCap(o: { from: { lat: number; lon: number }; stops: CityScore[]; pool: CityScore[]; radius: number; first?: string; keep?: (c: CityScore) => boolean; max?: number }): { stops: CityScore[]; swaps: { out: CityScore; in: CityScore; before: number; after: number }[] } {
+  const max = o.max ?? MAX_LEG_KM;
+  const over = (run: CityScore[]) => {
+    const ordered = orderStops(o.from, run.map((c) => ({ ...c, id: c.marketId })), { max, first: o.first && run.some((c) => c.marketId === o.first) ? o.first : undefined });
+    const legs = longLegs(o.from, ordered, max);
+    return { n: legs.length, excess: legs.reduce((t, l) => t + l.km - max, 0), worst: Math.max(0, ...legs.map((l) => l.km)) };
+  };
+  let stops = [...o.stops];
+  const swaps: { out: CityScore; in: CityScore; before: number; after: number }[] = [];
+  for (let k = 0; k < 4; k++) {
+    const now = over(stops);
+    if (!now.n) break;
+    let best: { i: number; c: CityScore; s: ReturnType<typeof over>; prot: boolean } | null = null;
+    for (const pass of [false, true]) {
+      for (let i = 0; i < stops.length; i++) {
+        const prot = Boolean(o.keep?.(stops[i]!));
+        if (prot !== pass) continue;
+        for (const c of o.pool) {
+          if (stops.some((x) => x.marketId === c.marketId)) continue;
+          const run = stops.map((x, j) => (j === i ? c : x));
+          if (run.some((a, x) => run.some((b, y) => y > x && tooClose(placed(a), placed(b), o.radius)))) continue;
+          const s = over(run);
+          if (s.excess >= now.excess) continue;
+          if (!best || s.n < best.s.n || (s.n === best.s.n && (s.excess < best.s.excess || (s.excess === best.s.excess && c.rank < best.c.rank)))) best = { i, c, s, prot };
+        }
+      }
+      if (best) break;
+    }
+    const pick = best as { i: number; c: CityScore; s: ReturnType<typeof over> } | null;
+    if (!pick) break;
+    swaps.push({ out: stops[pick.i]!, in: pick.c, before: now.worst, after: pick.s.worst });
+    stops = stops.map((x, j) => (j === pick.i ? pick.c : x));
+  }
+  return { stops, swaps };
+}
+
 /** The better of two bookings by check_plan: fewer objections wins; on a tie the earlier one stands. */
-export const better = (a: { objections: Objection[] }, b: { objections: Objection[] }) => b.objections.length < a.objections.length;
+export const worstLeg = (o: Objection[]) => Math.max(0, ...o.map((x) => x.km ?? 0));
+/** b beats a only with fewer objections and a worst leg no longer than a's (or within the cap): trading a 1,895 km
+ *  leg for a 3,298 km one is never progress, however few objections are left (Oct 30, Sierra Ferrell nk53jakf3w). */
+export const better = (a: { objections: Objection[] }, b: { objections: Objection[] }) =>
+  b.objections.length < a.objections.length && worstLeg(b.objections) <= Math.max(worstLeg(a.objections), MAX_LEG_KM);
 
 /** What changed between two bookings, as "proposed → objected → chose" rows for the call sheet. */
 export function bookingSwaps(prev: BookStop[], next: BookStop[], objections: Objection[], name: (id: string) => string, roomName: (city: string, id: string) => string): NonNullable<LogLine["swaps"]> {
@@ -1165,8 +1215,20 @@ export async function planTour(
     },
   });
   chosen.splice(0, chosen.length, ...settled.stops);
+  // The leg cap as a post-condition: any leg still over it is closed from cities already scouted (no Qloo call),
+  // by swapping a stop for one that leaves less road over the cap, protected stops last.
+  {
+    const scouted = cities.filter((c) => (rooms.get(c.marketId)?.length ?? 0) > 0 && (!draw || roomCheck(rooms.get(c.marketId)!, undefined, draw).bookable));
+    const fixed = enforceLegCap({ from: opts.from, stops: chosen.map((c) => c.score), pool: scouted, radius: RADIUS_KM, first: settled.homeId, keep: (c) => c.marketId === settled.homeId || mustKeep.has(c.marketId) });
+    for (const sw of fixed.swaps) {
+      const i = chosen.findIndex((c) => c.score.marketId === sw.out.marketId);
+      if (i < 0) continue;
+      chosen[i] = { score: sw.in };
+      log({ kind: "rule", text: `${sw.out.name} left a leg over ${n(MAX_LEG_KM)} km, so ${sw.in.name} (#${sw.in.rank} on the fan map, already scouted) takes its place.`, result: `Longest leg ${n(sw.before)} km before, ${n(sw.after)} km after` });
+    }
+  }
   const leftover = longLegs(opts.from, orderStops(opts.from, chosen.map((c) => ({ ...c.score, id: c.score.marketId })), { max: MAX_LEG_KM, first: settled.homeId }), MAX_LEG_KM);
-  if (leftover.length) log({ kind: "rule", text: `${leftover.length === 1 ? "One leg is" : `${leftover.length} legs are`} still over ${n(MAX_LEG_KM)} km: no city with rooms within reach could close ${leftover.length === 1 ? "it" : "them"}, so the day sheet flags ${leftover.length === 1 ? "it" : "them"}.`, failed: true });
+  if (leftover.length) log({ kind: "rule", text: `${leftover.length === 1 ? "One leg is" : `${leftover.length} legs are`} still over ${n(MAX_LEG_KM)} km: no scouted city with a room that fits closes ${leftover.length === 1 ? "it" : "them"} without breaking another rule, so the day sheet flags ${leftover.length === 1 ? "it" : "them"}.`, failed: true });
 
   // Every picked city gets its lookups, whatever the model skipped. With a known crowd the booked room's capacity
   // is checked, then the city's other rooms in order (best-known first for a big crowd, best-matched for a small

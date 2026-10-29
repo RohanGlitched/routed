@@ -263,3 +263,29 @@ test("no country takes more than about 40% of a Europe run's dates", async () =>
   assert.ok(longLegs(from, orderStops(from, stops)).length === 0);
   assert.equal(MAX_LEG_KM, 1800);
 });
+
+test("the leg cap holds after the rules settle: Austin to Portland (3,298 km) is closed from scouted cities", async () => {
+  const { enforceLegCap, better } = await import("../lib/agent/plan.ts");
+  const { findMarket, marketId, marketLabel } = await import("../lib/geo/markets.ts");
+  const { longLegs, orderStops } = await import("../lib/geo/route.ts");
+  const ranks: Record<string, number> = { Nashville: 2, Asheville: 1, Pittsburgh: 19, Cincinnati: 11, Memphis: 18, "New Orleans": 14, Austin: 5, Portland: 3, Denver: 4, "Salt Lake City": 24, Boise: 34 };
+  const c = (name: string) => {
+    const m = findMarket(name)!;
+    return { marketId: marketId(m), name: m.name, label: marketLabel(m), lat: m.lat, lon: m.lon, affinity: 0.9, tiles: 3, rank: ranks[name]! };
+  };
+  const stops = ["Nashville", "Asheville", "Pittsburgh", "Cincinnati", "Memphis", "New Orleans", "Austin", "Portland"].map(c);
+  const pool = ["Denver", "Salt Lake City", "Boise"].map(c);
+  const from = { lat: stops[0]!.lat, lon: stops[0]!.lon };
+  const before = longLegs(from, orderStops(from, stops.map((s) => ({ ...s, id: s.marketId })), { first: stops[0]!.marketId }));
+  assert.ok(before.some((l) => l.km > 3000), JSON.stringify(before));
+  const keep = new Set([stops[0]!.marketId, stops[1]!.marketId, stops[7]!.marketId]);
+  const r = enforceLegCap({ from, stops, pool, radius: 150, first: stops[0]!.marketId, keep: (x) => keep.has(x.marketId) });
+  const after = longLegs(from, orderStops(from, r.stops.map((s) => ({ ...s, id: s.marketId })), { first: stops[0]!.marketId }));
+  assert.equal(after.length, 0, `${r.stops.map((s) => s.name).join(", ")}: ${JSON.stringify(after)}`);
+  assert.ok(r.stops.some((s) => s.name === "Portland"), "the fan city stays; a bridge comes in");
+  // A booking with fewer objections but a longer worst leg is not better.
+  const leg = (km: number) => ({ rule: "leg" as const, text: "", short: "", km });
+  const room = { rule: "room" as const, text: "", short: "" };
+  assert.equal(better({ objections: [room, room, leg(1895)] }, { objections: [leg(3298)] }), false);
+  assert.equal(better({ objections: [room, leg(1895)] }, { objections: [leg(1895)] }), true);
+});

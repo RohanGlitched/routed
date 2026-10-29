@@ -487,6 +487,45 @@ export function bridgeFix(kept: CityScore[], want: CityScore, c: CheckContext, p
   return "";
 }
 
+/**
+ * The agent's own changes, kept one at a time where they help: each change in its re-booking (a city swapped for
+ * another, a room changed) is applied to the best booking so far on its own and kept when check_plan then objects
+ * to less. A round that fixes the leg but breaks a room keeps the leg fix. Returns the merged booking and what was
+ * kept, in the agent's words ("Louisville to Lexington"), or null when no single change helps.
+ */
+export function keepHelpful(best: BookStop[], next: BookStop[], check: (s: BookStop[]) => Objection[], name: (id: string) => string): { stops: BookStop[]; objections: Objection[]; kept: string[] } | null {
+  type Edit = { label: string; apply: (s: BookStop[]) => BookStop[] | null };
+  const edits: Edit[] = [];
+  const gone = best.filter((p) => !next.some((x) => x.city_id === p.city_id));
+  const came = next.filter((x) => !best.some((p) => p.city_id === x.city_id));
+  for (const g of gone)
+    for (const c of came)
+      edits.push({ label: `${name(g.city_id)} to ${name(c.city_id)}`, apply: (s) => (s.some((x) => x.city_id === g.city_id) && !s.some((x) => x.city_id === c.city_id) ? s.map((x) => (x.city_id === g.city_id ? { ...c, opener_id: x.opener_id } : x)) : null) });
+  for (const x of next) {
+    const p = best.find((y) => y.city_id === x.city_id);
+    if (p && p.room_id !== x.room_id) edits.push({ label: `the room in ${name(x.city_id)}`, apply: (s) => s.map((y) => (y.city_id === x.city_id ? { ...y, room_id: x.room_id } : y)) });
+  }
+  let stops = best;
+  let objections = check(best);
+  const kept: string[] = [];
+  for (let improved = true; improved; ) {
+    improved = false;
+    for (const e of edits) {
+      if (kept.includes(e.label)) continue;
+      const cand = e.apply(stops);
+      if (!cand) continue;
+      const o = check(cand);
+      if (o.length < objections.length) {
+        stops = cand;
+        objections = o;
+        kept.push(e.label);
+        improved = true;
+      }
+    }
+  }
+  return kept.length ? { stops, objections, kept } : null;
+}
+
 /** The better of two bookings by check_plan: fewer objections wins; on a tie the earlier one stands. */
 export const better = (a: { objections: Objection[] }, b: { objections: Objection[] }) => b.objections.length < a.objections.length;
 
@@ -1058,9 +1097,12 @@ export async function planTour(
       const after = checkPlan(next, ctx());
       const kept = better(best, { objections: after });
       const was = best.objections.length;
-      log({ kind: "model", text: `The agent re-booked after the check (round ${rounds} of ${MAX_REVISIONS}).`, result: `${swaps.length ? `${swaps.length} pick${swaps.length === 1 ? "" : "s"} changed` : "No pick changed"}; ${after.length ? `${after.length} objection${after.length === 1 ? "" : "s"} left: ${after.map((o) => `${o.city_id ? `${name(o.city_id)}: ` : ""}${o.short}`).join("; ")}` : "every rule clears"}${kept ? "" : `; that is no better than the ${was} before, so the earlier booking stands`}`, swaps, ms: Date.now() - t });
+      // A round no better as a whole may still hold changes that help on their own: keep those.
+      const merged = kept ? null : keepHelpful(best.stops, next, (s) => checkPlan(s, ctx()), name);
+      log({ kind: "model", text: `The agent re-booked after the check (round ${rounds} of ${MAX_REVISIONS}).`, result: `${swaps.length ? `${swaps.length} pick${swaps.length === 1 ? "" : "s"} changed` : "No pick changed"}; ${after.length ? `${after.length} objection${after.length === 1 ? "" : "s"} left: ${after.map((o) => `${o.city_id ? `${name(o.city_id)}: ` : ""}${o.short}`).join("; ")}` : "every rule clears"}${kept ? "" : merged ? `; as a whole no better than the ${was} before, so only the agent's changes that help on their own are kept (${merged.kept.join(", ")}), leaving ${merged.objections.length}` : `; that is no better than the ${was} before, so the earlier booking stands`}`, swaps, ms: Date.now() - t });
       if (kept) best = { stops: next, objections: after, round: rounds };
-      else setAside.push(`Your round ${rounds} re-booking (${swaps.map((x) => `${x.proposed} to ${x.chose}`).join(", ") || "no change"}) left ${after.length} objection${after.length === 1 ? "" : "s"}, no fewer than the ${was} before, so it was set aside: try a different fix.`);
+      else if (merged) best = { stops: merged.stops, objections: merged.objections, round: rounds };
+      if (!kept) setAside.push(`Your round ${rounds} re-booking (${swaps.map((x) => `${x.proposed} to ${x.chose}`).join(", ") || "no change"}) left ${after.length} objection${after.length === 1 ? "" : "s"}, no fewer than the ${was} before${merged ? `; of it, ${merged.kept.join(" and ")} helped and ${merged.kept.length === 1 ? "is" : "are"} kept` : ", so it was set aside"}: fix what is still objected to below.`);
     }
     booked = best.stops;
     objections = best.objections;

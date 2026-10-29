@@ -10,6 +10,9 @@ import type { LogLine, Usage } from "@/lib/types";
 import { H2H_ARTISTS } from "@/components/proof/HeadToHead";
 import { OUTSIDE2, POST } from "@/components/proof/PostCutoff";
 import { AgentLoop } from "./AgentLoop";
+import { span, wallStats } from "@/lib/wallstats";
+import { SUPPORT_RATIO } from "@/lib/agent/rooms";
+import LOOP from "@/data/agent-loop/runs.json";
 import s from "./how.module.css";
 
 const pc = (v: number) => `${Math.round(v * 100)}%`;
@@ -46,6 +49,11 @@ async function example(): Promise<{ id: string; artist: string; log: LogLine[]; 
 
 export default async function How() {
   const ex = await example();
+  const ws = wallStats(await showcaseTours().catch(() => []));
+  const typical = ws ? `${span(ws.qloo.min, ws.qloo.max)} Qloo requests (median ${ws.qloo.median}), ${span(ws.model.min, ws.model.max)} model calls and ${span(Math.round(ws.tokens.min / 1000), Math.round(ws.tokens.max / 1000))} thousand tokens each` : undefined;
+  const sum = (rows: { before: number; after: number }[]) => ({ raised: rows.reduce((n, r) => n + r.before, 0), open: rows.reduce((n, r) => n + r.after, 0), cleared: rows.reduce((n, r) => n + Math.max(0, r.before - r.after), 0), worse: rows.filter((r) => r.after > r.before).length, n: rows.length });
+  const old = sum(LOOP.oct25.tours);
+  const fresh = LOOP.oct30.map((b) => ({ ...b, ...sum(b.tours) }));
   return (
     <div className={`wrap ${s.page}`}>
       <h1 className={s.h1}>How Routed works</h1>
@@ -57,7 +65,7 @@ export default async function How() {
 
       <section className={s.sec}>
         <h2 className={s.h2}>The agent</h2>
-        <AgentLoop log={ex?.log} usage={ex?.usage} artist={ex?.artist} />
+        <AgentLoop log={ex?.log} usage={ex?.usage} artist={ex?.artist} typical={typical} />
         <p>
           NVIDIA Nemotron 3 Ultra (on Nebius Token Factory) works the way a booking agent does. It <b>shortlists</b> cities from Qloo&apos;s fan cities, weighing fan strength against geography, with a few alternates. It reads them in the order that tested best against real tours, each city&apos;s Qloo fan rank averaged with its rank by population; Qloo&apos;s top {FAN_KEEP} fan cities always stay, and only the top {FAN_CAP} are candidates unless a long leg needs a city to close it. Routed then <b>scouts</b> every shortlisted city through Qloo: the rooms these fans go to and the artists who share the audience. With that evidence the model <b>books</b> one room per city and one support act for the whole run, and writes one sentence on why. Then <b>check_plan</b> runs the tour&apos;s rules over the booking as a tool and sends every objection back; the model <b>re-books</b>, changing only what an objection names, up to {MAX_REVISIONS} times.
         </p>
@@ -67,6 +75,49 @@ export default async function How() {
         <p>
           A free-running tool loop came first. Nemotron repeated lookups and ran out of turns on most tours, so the moves are fixed and the choices are the model&apos;s. Every model call returns strict JSON with reasoning off, which took a booking from about a minute to a few seconds.
         </p>
+      </section>
+
+      <section className={s.sec}>
+        <h2 className={s.h2} id="agent-check">Does the agent really re-book?</h2>
+        <p>
+          Measured, not claimed. On the {old.n} tours on the poster wall (routed Oct 25), check_plan raised {old.raised} objections to the agent&apos;s first bookings. After two rounds of re-booking {old.open} were still open, so rules settled them: the agent cleared {old.cleared} itself, and {old.worse} of the {old.n} tours ended with more objections than they started with, because the last round was kept even when it was worse.
+        </p>
+        <p>
+          On Oct 30 the loop changed: a re-booking replaces the booking only when it leaves fewer objections (a worse one is set aside and the agent is told why), each objection names the cities or swaps that would clear it, and a third round fits in the planning time. Re-runs of poster-wall artists under the new loop, measured the same way:
+        </p>
+        <table className={s.loopTable}>
+          <thead>
+            <tr>
+              <th scope="col">Loop</th>
+              <th scope="col">Tours</th>
+              <th scope="col">Objections raised</th>
+              <th scope="col">Cleared by the agent</th>
+              <th scope="col">Settled by rule</th>
+              <th scope="col">Tours left worse</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{LOOP.oct25.label}</td>
+              <td>{old.n}</td>
+              <td>{old.raised}</td>
+              <td>{old.cleared}</td>
+              <td>{old.open}</td>
+              <td>{old.worse}</td>
+            </tr>
+            {fresh.map((b) => (
+              <tr key={b.label}>
+                <td>{b.label}</td>
+                <td>{b.n}</td>
+                <td>{b.raised}</td>
+                <td>{b.cleared}</td>
+                <td>{b.open}</td>
+                <td>{b.worse}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className={s.note}>{LOOP.note}</p>
       </section>
 
       <section className={s.sec}>
@@ -135,9 +186,10 @@ export default async function How() {
           <li>
             Rooms are sized to the usual crowd. Capacities come from Wikidata&apos;s maximum-capacity property (the item must be the room itself, not a hall inside it), then from a web page that names the room, read by rule with the source linked; one number per room, everywhere. A room that holds 60–250% of the crowd is booked for one night, in a booker&apos;s order: a close fit ({pc(SNUG.min)}–{pc(SNUG.max)}) first, then one the fans sell out (60–{pc(SNUG.min)}), then a loose fit ({pc(SNUG.max)}–250%), because selling out a slightly small room beats half-filling a big one. Failing that, one that holds {pc(TWO_NIGHT_MIN)}–60% is booked for two nights, so the two nights hold everyone; then one up to {REDUCED_MAX} times the crowd in a reduced configuration; then a measured room at {pc(SHORT_MIN)}–{pc(TWO_NIGHT_MIN)} for one night, with the sheet saying how short; then a room whose capacity couldn&apos;t be found (the sheet says to ask). A room known to miss by more is booked only when nothing else is left. No stadium below a {STADIUM_MIN_DRAW.toLocaleString("en-US")} crowd.
           </li>
-          <li>One support act for the whole run, as on a real tour: never the headliner&apos;s own member or a member of another band, clearly smaller than the headliner, and sharing a genre with them. The other artists each city suggested are listed as local options.</li>
-          <li>A pitch may only use figures from its stop&apos;s evidence. Any other figure is struck through on the page.</li>
-          <li>The fans&apos; neighbourhood is named by a vote of the Qloo places within {NEAR_VOTE_M} m of the city&apos;s hottest heatmap tile, each filed by Qloo under a neighbourhood. A room &ldquo;sits in&rdquo; it only when Qloo files the room under that same name; otherwise the day sheet gives the room&apos;s distance from the hottest blocks. Where Qloo names no neighbourhood, the sheet says so.</li>
+          <li>One support act for the whole run, as on a real tour: never the headliner&apos;s own member or a member of another band, well below the headliner on Qloo&apos;s popularity (at least {SUPPORT_RATIO} times further from the top, so a co-headliner priced like one isn&apos;t booked as support), and sharing a genre with them. The other artists each city suggested are listed as local options.</li>
+          <li>A pitch may only use figures from its stop&apos;s evidence; any other figure is struck through on the page. A stop&apos;s one-line reason is held to more: prompt jargon, &ldquo;fits&rdquo; outside {pc(SNUG.min)}–{pc(SNUG.max)} of the crowd, a figure not in the evidence or a match score written as a rank, and the rule&apos;s own sentence replaces it.</li>
+          <li>The hold request is written for the talent buyer: the dates and the hold, the routing in and out, the room against the crowd, one line of Qloo evidence and the support act, then the fields an offer needs (ticket price, deal, set lengths, last play in the market, the radius) left for the agent to fill in.</li>
+          <li>The fans&apos; neighbourhood is named by a vote of the Qloo places within {NEAR_VOTE_M} m of the city&apos;s hottest heatmap tile, each filed by Qloo under a neighbourhood. A room &ldquo;sits in&rdquo; it only when Qloo files the room under that same name; otherwise the day sheet gives the room&apos;s distance from the hottest blocks. Where Qloo names no neighbourhood, the one OpenStreetMap puts the hottest tile in is named and credited; where neither does, the sheet says so.</li>
           <li>A day sheet says a room &ldquo;fits&rdquo; only when it holds {pc(SNUG.min)}–{pc(SNUG.max)} of the crowd; otherwise it says what the room holds against the crowd.</li>
         </ul>
       </section>

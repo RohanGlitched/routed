@@ -786,3 +786,20 @@ test("check_plan says how to keep a fan city a leg would break: book it and a br
   assert.ok(fan, JSON.stringify(o));
   assert.match(fan!.text, /book Portland \(portland-us-or, room_id portland-us-or-a\) in place of (Wichita|Omaha)/);
 });
+
+test("a round that fixes one thing and breaks another keeps the fix: the agent's helpful change stands on its own", async () => {
+  const calls: string[] = [];
+  const ask = model((name) => {
+    if (name === "shortlist") return { cities: [id("Denver"), id("Boulder"), id("Salt Lake City")].map((c) => ({ city_id: c, why: "strong" })), alternates: [id("Albuquerque")] };
+    if (name === "book") return { stops: [stop(id("Denver")), stop(id("Boulder")), stop(id("Salt Lake City"))] };
+    // Boulder for Albuquerque fixes the radius clause; Salt Lake City for an invented city breaks the count.
+    if (name === "rebook") return { stops: [stop(id("Denver")), stop(id("Albuquerque")), stop("atlantis-xx")] };
+    return { reasons: [] };
+  }, calls);
+  const { p, lines } = run(tools(ask));
+  const r = await p;
+  assert.deepEqual(calls.slice(0, 3), ["shortlist", "book", "rebook"], "one round: the merged booking clears every rule");
+  assert.ok(lines.some((l) => /only the agent's changes that help on their own are kept \(Boulder to Albuquerque\), leaving 0/.test(l.result ?? "")));
+  assert.equal(r.check!.after, 0);
+  assert.deepEqual(r.picks.map((x) => x.marketId).sort(), [id("Albuquerque"), id("Denver"), id("Salt Lake City")].sort());
+});

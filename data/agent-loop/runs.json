@@ -1,0 +1,125 @@
+{
+ "note": "Counts come from each run's own check_plan record (engine.check): objections to the agent's first booking, and what was still open after its last round. Oct 30 runs were made on a local server with the production code at the commit named, the same inputs as the poster-wall tours (8 shows from 2027-05-06), and the event's Qloo and Nebius keys; their tour records are kept out of the repository with the other raw Qloo data.",
+ "oct25": {
+  "label": "Before Oct 30 (the poster wall, routed Oct 25): last round kept",
+  "tours": [
+   {
+    "artist": "Sierra Ferrell",
+    "tour": "8v4ce57nx6",
+    "before": 3,
+    "after": 3,
+    "rounds": 2,
+    "revised": 4,
+    "modelCalls": 6,
+    "qloo": 87
+   },
+   {
+    "artist": "Japanese Breakfast",
+    "tour": "5ezd3ab55f",
+    "before": 2,
+    "after": 0,
+    "rounds": 2,
+    "revised": 3,
+    "modelCalls": 6,
+    "qloo": 88
+   },
+   {
+    "artist": "Fontaines D.C.",
+    "tour": "fx3xht5bex",
+    "before": 3,
+    "after": 1,
+    "rounds": 2,
+    "revised": 3,
+    "modelCalls": 6,
+    "qloo": 95
+   },
+   {
+    "artist": "Khruangbin",
+    "tour": "at2uxhew2q",
+    "before": 2,
+    "after": 2,
+    "rounds": 2,
+    "revised": 0,
+    "modelCalls": 6,
+    "qloo": 104
+   },
+   {
+    "artist": "Zach Bryan",
+    "tour": "3nuqugrj3n",
+    "before": 1,
+    "after": 0,
+    "rounds": 2,
+    "revised": 1,
+    "modelCalls": 6,
+    "qloo": 87
+   },
+   {
+    "artist": "Alvvays",
+    "tour": "w4cverzz63",
+    "before": 1,
+    "after": 4,
+    "rounds": 2,
+    "revised": 1,
+    "modelCalls": 6,
+    "qloo": 86
+   },
+   {
+    "artist": "Turnstile",
+    "tour": "xf4rbjj9s9",
+    "before": 1,
+    "after": 2,
+    "rounds": 2,
+    "revised": 2,
+    "modelCalls": 6,
+    "qloo": 89
+   },
+   {
+    "artist": "MJ Lenderman",
+    "tour": "xzm49sq9qt",
+    "before": 2,
+    "after": 1,
+    "rounds": 2,
+    "revised": 5,
+    "modelCalls": 6,
+    "qloo": 81
+   }
+  ]
+ },
+ "oct30": [
+  {
+   "label": "Oct 30, best booking kept (commit ffa45fc)",
+   "tours": [
+    {
+     "artist": "Alvvays",
+     "tour": "bbwd33vxdb",
+     "before": 2,
+     "after": 2,
+     "rounds": 3,
+     "revised": 0,
+     "modelCalls": 8,
+     "qloo": 88
+    },
+    {
+     "artist": "Sierra Ferrell",
+     "tour": "kae4mm4tz3",
+     "before": 1,
+     "after": 1,
+     "rounds": 3,
+     "revised": 0,
+     "modelCalls": 8,
+     "qloo": 90
+    },
+    {
+     "artist": "Japanese Breakfast",
+     "tour": "en9nug938i",
+     "before": 2,
+     "after": 2,
+     "rounds": 3,
+     "revised": 0,
+     "modelCalls": 8,
+     "qloo": 81
+    }
+   ]
+  }
+ ]
+}

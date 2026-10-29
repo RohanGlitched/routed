@@ -3,11 +3,12 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PrefilledForm } from "@/components/home/PrefilledForm";
 import { RouteForm } from "@/components/home/RouteForm";
-import { StickyRoute } from "@/components/home/StickyRoute";
+import { RouteJump, StickyRoute } from "@/components/home/StickyRoute";
 import { Wall } from "@/components/home/Wall";
 import { Poster } from "@/components/poster/Poster";
 import { opener, room } from "@/lib/agent/evidence";
 import { MARKETS, type RegionId } from "@/lib/geo/markets";
+import { MAX_SHOWS_IN_A_ROW, radiusFor, SHOW_DAY_DRIVE_H, TRAVEL_DAY_DRIVE_H } from "@/lib/geo/route";
 import { independents } from "@/lib/chains";
 import { posterFor } from "@/lib/poster";
 import { homeData } from "@/lib/showcase";
@@ -46,6 +47,32 @@ function pitchLine(body: string): string {
 function showCount(stops: { nights?: number }[]): string {
   const shows = stops.reduce((n, x) => n + (x.nights ?? 1), 0);
   return shows > stops.length ? `${stops.length} cities (${shows} shows)` : `${shows} shows`;
+}
+
+const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const count = (n: number, one: string, many = `${one}s`) => `${WORDS[n] ?? n} ${n === 1 ? one : many}`;
+
+type Leg = { city: string; fromKm: number; fromHours: number; travelDays: number; dayOff: boolean };
+
+/** The days before a show that aren't show days, from the stored leg: "After 2 travel days", "After a day off". */
+function legDays(x: Leg): string | null {
+  if (x.dayOff) return "After a day off";
+  if (x.travelDays > 0) return `After ${x.travelDays} travel day${x.travelDays === 1 ? "" : "s"}`;
+  return null;
+}
+
+/** The longest drive among these stops that needed travel days, told as the rule plays it out, or null. */
+function longLeg(stops: Leg[]): string | null {
+  let at = -1;
+  stops.forEach((x, i) => {
+    if (i > 0 && x.travelDays > 0 && !x.dayOff && (at < 0 || x.fromKm > stops[at]!.fromKm)) at = i;
+  });
+  if (at < 0) return null;
+  const x = stops[at]!;
+  // Whatever the travel days don't cover is driven on the show day itself, within its limit.
+  const rest = Math.round(x.fromHours - x.travelDays * TRAVEL_DAY_DRIVE_H);
+  const then = rest > 0 ? `then about ${count(rest, "hour")} on the day ${x.city} plays` : `then ${x.city}`;
+  return `${stops[at - 1]!.city} to ${x.city} is ${x.fromKm.toLocaleString("en-US")} km, about ${Math.round(x.fromHours)} hours of road: ${count(x.travelDays, "travel day")}, ${then}.`;
 }
 
 export default async function Home() {
@@ -92,6 +119,9 @@ export default async function Home() {
             </div>
           )}
         </figure>
+        <div className={s.jumpRow}>
+          <RouteJump />
+        </div>
       </section>
 
       {plan && stop && (
@@ -142,11 +172,18 @@ export default async function Home() {
             </li>
             <li className={s.step}>
               <h3>Route and date it by rule</h3>
-              <p>The shortest drive from {plan.from.label.split(",")[0]}, no two shows within 150 km, at most 8 hours behind the wheel on a show day, a day off after five in a row.</p>
+              <p>
+                The shortest drive from {plan.from.label.split(",")[0]}, no two shows within {radiusFor(plan.region)} km, up to {SHOW_DAY_DRIVE_H} hours behind the wheel on a show day and {TRAVEL_DAY_DRIVE_H} on a travel day, a day off after {WORDS[MAX_SHOWS_IN_A_ROW]} in a row.
+                {longLeg(plan.stops.slice(0, 5)) ? ` ${longLeg(plan.stops.slice(0, 5))}` : ""}
+              </p>
               <ul className={s.legs}>
                 {plan.stops.slice(0, 5).map((x, i) => (
                   <li key={x.marketId}>
-                    <b>{x.date.slice(5).replace("-", "/")}</b> {x.city}
+                    <b>{x.date.slice(5).replace("-", "/")}</b>
+                    <span className={s.legCity}>
+                      {x.city}
+                      {i > 0 && legDays(x) ? <em>{legDays(x)}</em> : null}
+                    </span>
                     <span>{i === 0 ? "Opening night" : `${x.fromKm.toLocaleString("en-US")} km`}</span>
                   </li>
                 ))}
@@ -259,8 +296,8 @@ export default async function Home() {
           <h2 id="wall-title" className={s.h2}>
             Poster wall
           </h2>
-          <p className={s.wallLede}>Tours routed on Routed. Each poster is printed from its own run: the dots are that artist&apos;s Qloo heatmap.</p>
-          <Wall items={wall.map(({ id, artist, shows, nights, from }) => ({ id, artist, shows, nights, from }))} />
+          <p className={s.wallLede}>Tours routed on Routed. Each poster is printed from its own run: the dots are that artist&apos;s Qloo heatmap. The number under it is where its cities rank, on average, on that artist&apos;s fan map; 1 is the strongest city.</p>
+          <Wall items={wall.map(({ id, artist, from, fanRank }) => ({ id, artist, from, fanRank }))} />
         </section>
       )}
     </>

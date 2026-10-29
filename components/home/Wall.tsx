@@ -5,8 +5,17 @@ import { useEffect, useRef, useState } from "react";
 import { Poster, type PosterProps } from "@/components/poster/Poster";
 import s from "./wall.module.css";
 
-/** `shows` is cities; `nights` counts a two-night stand twice ("8 cities (12 shows)"). */
-export type WallEntry = { id: string; artist: string; shows: number; nights?: number; from: string };
+/** `fanRank` is the cities' average rank on the artist's Qloo fan map, the one number on each card. */
+export type WallEntry = { id: string; artist: string; from: string; fanRank: number };
+
+/**
+ * Columns that leave no hole in the last row: four when the count allows, else five or three; a count none of
+ * them divides gets four and a short last row.
+ */
+function columns(n: number): { wide: number; mid: number } {
+  const wide = n % 4 === 0 ? 4 : n % 5 === 0 ? 5 : n % 3 === 0 ? 3 : 4;
+  return { wide, mid: n % 3 === 0 ? 3 : 2 };
+}
 
 /**
  * The poster wall. The page sends only the list (names and links, so it reads and links without script); the
@@ -47,14 +56,18 @@ export function Wall({ items }: { items: WallEntry[] }) {
     };
   }, []);
 
+  const cols = columns(items.length);
   return (
-    <ul className={s.wall} ref={ref}>
+    <ul className={s.wall} ref={ref} style={{ "--cols": cols.wide, "--cols-mid": cols.mid } as React.CSSProperties}>
       {items.map((t) => (
         <li key={t.id}>
           <Link href={`/tour/${t.id}`} className={s.link}>
             <Sheet artist={t.artist} poster={posters?.[t.id]} />
-            <span>
-              {t.artist}, {t.shows} cities{t.nights && t.nights !== t.shows ? ` (${t.nights} shows)` : ""} from {t.from.split(",")[0]}
+            <span className={s.label}>
+              <b>{t.artist}</b> from {t.from.split(",")[0]}
+            </span>
+            <span className={s.stat}>
+              <b>#{Math.round(t.fanRank)}</b> average fan rank
             </span>
           </Link>
         </li>

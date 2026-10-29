@@ -41,6 +41,8 @@ export type WallItem = {
   shows: number;
   nights: number;
   from: string;
+  /** The cities' average rank on the artist's Qloo fan map (1 = strongest), the one number on the wall card. */
+  fanRank: number;
   region: RegionId;
   lat: number;
   lon: number;
@@ -85,6 +87,7 @@ const wallItem = (t: TourRecord): WallItem => ({
   shows: t.plan!.stops.length,
   nights: t.plan!.stops.reduce((n, x) => n + (x.nights ?? 1), 0),
   from: t.plan!.from.label,
+  fanRank: t.plan!.guess?.rankMean.routed ?? t.plan!.stops.reduce((n, x) => n + x.score.rank, 0) / t.plan!.stops.length,
   region: t.plan!.region,
   lat: t.plan!.from.lat,
   lon: t.plan!.from.lon,
@@ -114,7 +117,7 @@ export const homeData = unstable_cache(
     const [{ hero, wall }, bench] = await Promise.all([readWall(), benchTours()]);
     return { hero: hero ? slimHero(hero) : null, wall: wall.map(wallItem), bench: summarise(bench) };
   },
-  ["home-data-v2"],
+  ["home-data-v3"],
   { revalidate: WINDOW, tags: ["showcase", "bench", "tours"] },
 );
 

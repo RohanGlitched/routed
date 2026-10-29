@@ -175,7 +175,7 @@ export function PostCutoff() {
 
       <h3 className={s.h3}>Venues: which room in a city</h3>
       <p className={s.note}>
-        {v.cities} cities, 3 per artist, from {v.n} real tours with named venues. Each method gets the tour&apos;s usual crowd and lists rooms in order.
+        {v.cities} cities, 3 per artist, from {v.n} real tours with named venues. Each method gets the tour&apos;s usual crowd and lists rooms in order. This scores Qloo&apos;s list as Routed asks for it; <a href="#rooms">the room Routed actually books</a> is tested below.
       </p>
       <div className={s.tableWrap}>
         <table className={`${s.table} ${s.narrow}`}>

@@ -10,6 +10,7 @@ import { HeadToHead } from "@/components/proof/HeadToHead";
 import { ModelPlusQloo } from "@/components/proof/ModelPlusQloo";
 import { OnlyQloo } from "@/components/proof/OnlyQloo";
 import { PostCutoff } from "@/components/proof/PostCutoff";
+import { RoomPick } from "@/components/proof/RoomPick";
 import s from "./proof.module.css";
 
 export const metadata: Metadata = {
@@ -132,6 +133,9 @@ export default async function Proof() {
                 <a href="#smaller-markets">Smaller cities only</a>
               </li>
               <li>
+                <a href="#rooms">The room Routed actually books</a>
+              </li>
+              <li>
                 <a href="#head-to-head">49 older tours, head to head</a>
               </li>
               <li>
@@ -146,6 +150,8 @@ export default async function Proof() {
       <PostCutoff />
 
       <ModelPlusQloo />
+
+      <RoomPick />
 
       <HeadToHead />
 

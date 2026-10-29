@@ -23,7 +23,7 @@ export function Control({ plan, agent }: { plan: Plan; agent?: string }) {
   const better = (g.rankMean.routed ?? 0) < (g.rankMean.guess ?? 0);
 
   return (
-    <section className={c.control} aria-labelledby="control-title">
+    <section className={c.control} aria-labelledby="control-title" id="without-qloo">
       <div className={c.head}>
         <h2 id="control-title" className={c.h2}>
           The same model, without Qloo

@@ -1,3 +1,4 @@
+import { displayTag } from "@/lib/tags";
 import type { Named, Plan } from "@/lib/types";
 import c from "./campaign.module.css";
 
@@ -38,7 +39,7 @@ export function Campaign({ plan }: { plan: Plan }) {
             <ol className={c.items}>
               {b.items.slice(0, 8).map((x) => (
                 <li key={x.id}>
-                  <span>{x.name}</span>
+                  <span>{b.key === "brief" || b.key === "sound" ? displayTag(x.name) : x.name}</span>
                 </li>
               ))}
             </ol>

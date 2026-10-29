@@ -1,0 +1,894 @@
+{
+ "scored": "2026-10-29T18:47:56.733Z",
+ "protocol": "data/outside2/PROTOCOL-3.md",
+ "script": "scripts/model-plus-qloo.ts secondary",
+ "top": 25,
+ "minimum": 3,
+ "seed": 20261025,
+ "calls": {
+  "qloo": 0,
+  "model": 0,
+  "network": 0
+ },
+ "n": 13,
+ "primary": [
+  {
+   "name": "Qloo vs the model alone",
+   "n": 13,
+   "meanA": 0.3274507543738313,
+   "meanB": 0.4639200543046697,
+   "diff": -0.1364692999308384,
+   "lo": -0.24342196265273186,
+   "hi": -0.04301339685955071,
+   "wins": 3,
+   "losses": 8,
+   "ties": 2,
+   "p": 0.2265625
+  },
+  {
+   "name": "Qloo + population vs population",
+   "n": 13,
+   "meanA": 0.4464541868388022,
+   "meanB": 0.32525103102026176,
+   "diff": 0.12120315581854045,
+   "lo": 0.04761904761904762,
+   "hi": 0.20946745562130176,
+   "wins": 8,
+   "losses": 1,
+   "ties": 4,
+   "p": 0.0390625
+  }
+ ],
+ "secondary": [
+  {
+   "name": "Qloo vs population",
+   "n": 13,
+   "meanA": 0.3274507543738313,
+   "meanB": 0.32525103102026176,
+   "diff": 0.0021997233535695107,
+   "lo": -0.09853287737903121,
+   "hi": 0.11657509157509159,
+   "wins": 5,
+   "losses": 6,
+   "ties": 2,
+   "p": 1
+  },
+  {
+   "name": "The model alone vs population",
+   "n": 13,
+   "meanA": 0.4639200543046697,
+   "meanB": 0.32525103102026176,
+   "diff": 0.1386690232844079,
+   "lo": 0.040496682804375114,
+   "hi": 0.23864468864468866,
+   "wins": 9,
+   "losses": 1,
+   "ties": 3,
+   "p": 0.021484375
+  },
+  {
+   "name": "Qloo + population vs the model alone",
+   "n": 13,
+   "meanA": 0.4464541868388022,
+   "meanB": 0.4639200543046697,
+   "diff": -0.017465867465867466,
+   "lo": -0.08066933066933067,
+   "hi": 0.045720945720945746,
+   "wins": 2,
+   "losses": 3,
+   "ties": 8,
+   "p": 1
+  },
+  {
+   "name": "The model + Qloo vs the model alone",
+   "n": 13,
+   "meanA": 0.45176169983862285,
+   "meanB": 0.4639200543046697,
+   "diff": -0.012158354466046767,
+   "lo": -0.08076923076923076,
+   "hi": 0.05059171597633136,
+   "wins": 4,
+   "losses": 3,
+   "ties": 6,
+   "p": 1
+  }
+ ],
+ "pooled": {
+  "population": {
+   "hits": 48,
+   "of": 148,
+   "share": 0.32432432432432434
+  },
+  "model": {
+   "hits": 61,
+   "of": 148,
+   "share": 0.41216216216216217
+  },
+  "qloo": {
+   "hits": 44,
+   "of": 148,
+   "share": 0.2972972972972973
+  },
+  "blend": {
+   "hits": 61,
+   "of": 148,
+   "share": 0.41216216216216217
+  },
+  "modelQloo": {
+   "hits": 64,
+   "of": 148,
+   "share": 0.43243243243243246
+  }
+ },
+ "rows": [
+  {
+   "artist": "Flo",
+   "region": "na",
+   "markets": 17,
+   "R": 6,
+   "rp": {
+    "population": {
+     "hits": 2,
+     "of": 6,
+     "cities": [
+      "Washington",
+      "Boston"
+     ]
+    },
+    "model": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Atlanta"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "Atlanta",
+      "Washington",
+      "Orlando"
+     ]
+    },
+    "blend": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "Washington",
+      "Atlanta",
+      "Boston"
+     ]
+    },
+    "modelQloo": {
+     "hits": 3,
+     "of": 6,
+     "cities": [
+      "Washington",
+      "Atlanta",
+      "Boston"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Beabadoobee",
+   "region": "na",
+   "markets": 17,
+   "R": 7,
+   "rp": {
+    "population": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Vancouver",
+      "Boston"
+     ]
+    },
+    "model": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Vancouver",
+      "Boston"
+     ]
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 7,
+     "cities": [
+      "Boston"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Boston",
+      "Vancouver"
+     ]
+    },
+    "modelQloo": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Boston",
+      "Vancouver"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Lizzy McAlpine",
+   "region": "na",
+   "markets": 26,
+   "R": 12,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 12,
+     "cities": [
+      "Nashville",
+      "Oklahoma City",
+      "Boston",
+      "Portland",
+      "Detroit"
+     ]
+    },
+    "model": {
+     "hits": 6,
+     "of": 12,
+     "cities": [
+      "Nashville",
+      "Atlanta",
+      "Portland",
+      "Boston",
+      "Minneapolis",
+      "Detroit"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 12,
+     "cities": [
+      "Boston",
+      "Nashville",
+      "Portland",
+      "Minneapolis"
+     ]
+    },
+    "blend": {
+     "hits": 6,
+     "of": 12,
+     "cities": [
+      "Nashville",
+      "Boston",
+      "Portland",
+      "Atlanta",
+      "Minneapolis",
+      "Detroit"
+     ]
+    },
+    "modelQloo": {
+     "hits": 5,
+     "of": 12,
+     "cities": [
+      "Nashville",
+      "Boston",
+      "Portland",
+      "Minneapolis",
+      "Atlanta"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Karol G",
+   "region": "na",
+   "markets": 17,
+   "R": 7,
+   "rp": {
+    "population": {
+     "hits": 2,
+     "of": 7,
+     "cities": [
+      "Washington",
+      "El Paso"
+     ]
+    },
+    "model": {
+     "hits": 5,
+     "of": 7,
+     "cities": [
+      "Miami",
+      "Atlanta",
+      "Las Vegas",
+      "Tampa",
+      "Washington"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 7,
+     "cities": [
+      "Miami",
+      "El Paso",
+      "Las Vegas"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 7,
+     "cities": [
+      "El Paso",
+      "Las Vegas",
+      "Miami",
+      "Washington"
+     ]
+    },
+    "modelQloo": {
+     "hits": 5,
+     "of": 7,
+     "cities": [
+      "Miami",
+      "Las Vegas",
+      "Tampa",
+      "El Paso",
+      "Washington"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Garth Brooks",
+   "region": "na",
+   "markets": 9,
+   "R": 5,
+   "rp": {
+    "population": {
+     "hits": 1,
+     "of": 5,
+     "cities": [
+      "Washington"
+     ]
+    },
+    "model": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Kansas City",
+      "Tulsa"
+     ]
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 5,
+     "cities": [
+      "Kansas City"
+     ]
+    },
+    "blend": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Kansas City",
+      "Tulsa"
+     ]
+    },
+    "modelQloo": {
+     "hits": 2,
+     "of": 5,
+     "cities": [
+      "Kansas City",
+      "Tulsa"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Take That",
+   "region": "eu",
+   "markets": 23,
+   "R": 13,
+   "rp": {
+    "population": {
+     "hits": 2,
+     "of": 13,
+     "cities": [
+      "Amsterdam",
+      "Düsseldorf"
+     ]
+    },
+    "model": {
+     "hits": 3,
+     "of": 13,
+     "cities": [
+      "Düsseldorf",
+      "Bremen",
+      "Amsterdam"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 13,
+     "cities": [
+      "Málaga",
+      "Amsterdam"
+     ]
+    },
+    "blend": {
+     "hits": 3,
+     "of": 13,
+     "cities": [
+      "Amsterdam",
+      "Málaga",
+      "Düsseldorf"
+     ]
+    },
+    "modelQloo": {
+     "hits": 4,
+     "of": 13,
+     "cities": [
+      "Amsterdam",
+      "Düsseldorf",
+      "Zürich",
+      "Málaga"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Role Model",
+   "region": "na",
+   "markets": 22,
+   "R": 11,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "Washington",
+      "Nashville",
+      "Oklahoma City",
+      "Vancouver",
+      "Boston"
+     ]
+    },
+    "model": {
+     "hits": 7,
+     "of": 11,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Vancouver",
+      "Minneapolis",
+      "Atlanta",
+      "Nashville",
+      "Pittsburgh"
+     ]
+    },
+    "qloo": {
+     "hits": 4,
+     "of": 11,
+     "cities": [
+      "Boston",
+      "Pittsburgh",
+      "Washington",
+      "Nashville"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 11,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Nashville",
+      "Vancouver",
+      "Atlanta"
+     ]
+    },
+    "modelQloo": {
+     "hits": 7,
+     "of": 11,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Nashville",
+      "Pittsburgh",
+      "Atlanta",
+      "Minneapolis",
+      "Vancouver"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Sugarland",
+   "region": "na",
+   "markets": 21,
+   "R": 20,
+   "rp": {
+    "population": {
+     "hits": 0,
+     "of": 20,
+     "cities": []
+    },
+    "model": {
+     "hits": 0,
+     "of": 20,
+     "cities": []
+    },
+    "qloo": {
+     "hits": 1,
+     "of": 20,
+     "cities": [
+      "Charleston"
+     ]
+    },
+    "blend": {
+     "hits": 0,
+     "of": 20,
+     "cities": []
+    },
+    "modelQloo": {
+     "hits": 0,
+     "of": 20,
+     "cities": []
+    }
+   }
+  },
+  {
+   "artist": "Victoria Monét",
+   "region": "na",
+   "markets": 26,
+   "R": 14,
+   "rp": {
+    "population": {
+     "hits": 6,
+     "of": 14,
+     "cities": [
+      "Washington",
+      "Nashville",
+      "Vancouver",
+      "Boston",
+      "Detroit",
+      "Las Vegas"
+     ]
+    },
+    "model": {
+     "hits": 6,
+     "of": 14,
+     "cities": [
+      "Atlanta",
+      "Washington",
+      "Vancouver",
+      "Detroit",
+      "Nashville",
+      "New Orleans"
+     ]
+    },
+    "qloo": {
+     "hits": 7,
+     "of": 14,
+     "cities": [
+      "Atlanta",
+      "Las Vegas",
+      "Washington",
+      "New Orleans",
+      "Sacramento",
+      "Boston",
+      "Detroit"
+     ]
+    },
+    "blend": {
+     "hits": 9,
+     "of": 14,
+     "cities": [
+      "Washington",
+      "Las Vegas",
+      "Boston",
+      "Atlanta",
+      "Detroit",
+      "Sacramento",
+      "New Orleans",
+      "Nashville",
+      "Tampa"
+     ]
+    },
+    "modelQloo": {
+     "hits": 7,
+     "of": 14,
+     "cities": [
+      "Atlanta",
+      "Washington",
+      "New Orleans",
+      "Detroit",
+      "Raleigh",
+      "Nashville",
+      "Las Vegas"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Phoebe Bridgers",
+   "region": "na",
+   "markets": 21,
+   "R": 8,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 8,
+     "cities": [
+      "Washington",
+      "Nashville",
+      "Vancouver",
+      "Boston",
+      "Detroit"
+     ]
+    },
+    "model": {
+     "hits": 7,
+     "of": 8,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Minneapolis",
+      "Nashville",
+      "Atlanta",
+      "Vancouver",
+      "Detroit"
+     ]
+    },
+    "qloo": {
+     "hits": 2,
+     "of": 8,
+     "cities": [
+      "Boston",
+      "Minneapolis"
+     ]
+    },
+    "blend": {
+     "hits": 5,
+     "of": 8,
+     "cities": [
+      "Boston",
+      "Nashville",
+      "Vancouver",
+      "Minneapolis",
+      "Washington"
+     ]
+    },
+    "modelQloo": {
+     "hits": 5,
+     "of": 8,
+     "cities": [
+      "Boston",
+      "Minneapolis",
+      "Nashville",
+      "Vancouver",
+      "Washington"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "James Blunt",
+   "region": "eu",
+   "markets": 26,
+   "R": 15,
+   "rp": {
+    "population": {
+     "hits": 5,
+     "of": 15,
+     "cities": [
+      "Amsterdam",
+      "Wrocław",
+      "Düsseldorf",
+      "Stuttgart",
+      "Gothenburg"
+     ]
+    },
+    "model": {
+     "hits": 2,
+     "of": 15,
+     "cities": [
+      "Amsterdam",
+      "Zürich"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 15,
+     "cities": [
+      "Florence",
+      "Zürich",
+      "Amsterdam"
+     ]
+    },
+    "blend": {
+     "hits": 4,
+     "of": 15,
+     "cities": [
+      "Amsterdam",
+      "Zürich",
+      "Florence",
+      "Stuttgart"
+     ]
+    },
+    "modelQloo": {
+     "hits": 5,
+     "of": 15,
+     "cities": [
+      "Zürich",
+      "Amsterdam",
+      "Florence",
+      "Geneva",
+      "Stuttgart"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Jonas Brothers",
+   "region": "na",
+   "markets": 43,
+   "R": 26,
+   "rp": {
+    "population": {
+     "hits": 12,
+     "of": 26,
+     "cities": [
+      "Washington",
+      "Nashville",
+      "Oklahoma City",
+      "Boston",
+      "Detroit",
+      "Las Vegas",
+      "Milwaukee",
+      "Sacramento",
+      "Atlanta",
+      "Miami",
+      "Raleigh",
+      "Kansas City"
+     ]
+    },
+    "model": {
+     "hits": 15,
+     "of": 26,
+     "cities": [
+      "Atlanta",
+      "Miami",
+      "Washington",
+      "Boston",
+      "Tampa",
+      "Orlando",
+      "Minneapolis",
+      "Nashville",
+      "Sacramento",
+      "Las Vegas",
+      "Cleveland",
+      "Kansas City",
+      "Raleigh",
+      "Milwaukee",
+      "Oklahoma City"
+     ]
+    },
+    "qloo": {
+     "hits": 10,
+     "of": 26,
+     "cities": [
+      "Orlando",
+      "Boston",
+      "Nashville",
+      "Pittsburgh",
+      "Irvine",
+      "Minneapolis",
+      "Milwaukee",
+      "Salt Lake City",
+      "Kansas City",
+      "Tampa"
+     ]
+    },
+    "blend": {
+     "hits": 15,
+     "of": 26,
+     "cities": [
+      "Nashville",
+      "Boston",
+      "Milwaukee",
+      "Orlando",
+      "Washington",
+      "Minneapolis",
+      "Pittsburgh",
+      "Kansas City",
+      "Oklahoma City",
+      "Las Vegas",
+      "Tampa",
+      "Irvine",
+      "Sacramento",
+      "Miami",
+      "Salt Lake City"
+     ]
+    },
+    "modelQloo": {
+     "hits": 17,
+     "of": 26,
+     "cities": [
+      "Boston",
+      "Orlando",
+      "Nashville",
+      "Minneapolis",
+      "Washington",
+      "Tampa",
+      "Milwaukee",
+      "Kansas City",
+      "Miami",
+      "Las Vegas",
+      "Sacramento",
+      "Pittsburgh",
+      "Oklahoma City",
+      "Irvine",
+      "Cleveland",
+      "Raleigh",
+      "Salt Lake City"
+     ]
+    }
+   }
+  },
+  {
+   "artist": "Charli XCX",
+   "region": "na",
+   "markets": 9,
+   "R": 4,
+   "rp": {
+    "population": {
+     "hits": 1,
+     "of": 4,
+     "cities": [
+      "Washington"
+     ]
+    },
+    "model": {
+     "hits": 3,
+     "of": 4,
+     "cities": [
+      "Boston",
+      "Washington",
+      "Atlanta"
+     ]
+    },
+    "qloo": {
+     "hits": 3,
+     "of": 4,
+     "cities": [
+      "Las Vegas",
+      "Boston",
+      "Washington"
+     ]
+    },
+    "blend": {
+     "hits": 3,
+     "of": 4,
+     "cities": [
+      "Washington",
+      "Boston",
+      "Las Vegas"
+     ]
+    },
+    "modelQloo": {
+     "hits": 2,
+     "of": 4,
+     "cities": [
+      "Boston",
+      "Washington"
+     ]
+    }
+   }
+  }
+ ],
+ "skipped": []
+}

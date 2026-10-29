@@ -206,3 +206,49 @@ of 1,271 against 753.
 contrast was chosen after the data. On older tours, which the model may remember, the blend is level with the model
 alone. That fits the reading above: Qloo's data helps where the model's memory runs out, and adds little where the
 model has read the answer. A fresh, pre-registered test on new tours is the way to settle it.
+
+## Round 3: secondary markets on the post-cutoff tours (pre-registered)
+
+**Sources.**
+- Protocol: `data/outside2/PROTOCOL-3.md`, committed in d5991e2 before the test was scored.
+- Script: `scripts/model-plus-qloo.ts secondary`.
+- Numbers: `secondary-markets.json`.
+- Cost: offline from round 2's caches, with 0 Qloo requests, 0 model calls and 0 network calls.
+
+**The test.** These are the same 13 tours and the same five rankings as Test 3, with each region's 25 biggest markets
+left out of both the ranking and the tour. The question is how many of the remaining markets the tour announced each
+ranking's top R found, R being the tour's remaining markets. Every tour had at least 4 (median 11), so all 13 were
+scored.
+
+| Contrast | n | A | B | A − B, pts [95% CI] | wins–losses–ties | sign test p |
+|---|---|---|---|---|---|---|
+| **Qloo vs the model alone** | 13 | 32.7% | 46.4% | −13.6 [−24.3, −4.3] | 3–8–2 | 0.227 |
+| **Qloo + population vs population** | 13 | 44.6% | 32.5% | +12.1 [+4.8, +20.9] | 8–1–4 | 0.039 |
+| Qloo vs population | 13 | 32.7% | 32.5% | +0.2 [−9.9, +11.7] | 5–6–2 | 1.000 |
+| The model alone vs population | 13 | 46.4% | 32.5% | +13.9 [+4.0, +23.9] | 9–1–3 | 0.021 |
+| Qloo + population vs the model alone | 13 | 44.6% | 46.4% | −1.7 [−8.1, +4.6] | 2–3–8 | 1.000 |
+| The model + Qloo vs the model alone | 13 | 45.2% | 46.4% | −1.2 [−8.1, +5.1] | 4–3–6 | 1.000 |
+
+The first two rows (in bold) are the primary contrasts; the rest are secondary.
+
+| Ranking | Hits / picks (pooled) | Share |
+|---|---|---|
+| Population | 48 / 148 | 32.4% |
+| The model alone | 61 / 148 | 41.2% |
+| Qloo | 44 / 148 | 29.7% |
+| Qloo + population (what Routed ships) | 61 / 148 | 41.2% |
+| The model + Qloo | 64 / 148 | 43.2% |
+
+**Reading.** The test was meant to find where Qloo beats the model, and it didn't:
+- Outside the 25 biggest markets, Qloo's heatmap ranking found fewer of the announced cities than the model alone:
+  13.6 pts fewer, worse for 8 artists and better for 3. The interval is clear of zero, though the sign test is not
+  significant (p = 0.23).
+- On its own, Qloo's ranking is level with population on these markets.
+- The blend Routed ships beats population by 12.1 pts (8–1–4, p = 0.039), but so does the model alone (+13.9).
+- The blend is level with the model (−1.7, 2–3–8).
+- The model + Qloo blend's post hoc +5.8 pts on whole tours does not carry over to the smaller markets (−1.2).
+
+So on tours it can't have read, the model still names the smaller markets of a big act's tour better than Qloo's fan
+map does. Most of these 13 are arena and theatre tours, and their smaller stops are the next-biggest metros, which a
+model knows. Qloo's whole-tour gain over population comes from re-ordering cities, not from finding small ones the
+model misses.

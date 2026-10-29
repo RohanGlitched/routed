@@ -79,9 +79,9 @@ export const PRE_MEASURE_MS = 45_000;
 /** Rooms measured per shortlisted city before the book call, in the order the room rule would measure them. */
 export const PRE_MEASURE = 4;
 /** check_plan's objections go back to the agent at most this many times. */
-export const MAX_REVISIONS = 2;
+export const MAX_REVISIONS = 3;
 /** Model calls the agent may add to shortlist + book: revision rounds and the final reasons together. */
-export const EXTRA_CALLS = 2;
+export const EXTRA_CALLS = 4;
 /** Qloo's strongest cities always shown to the agent, even when the blend ranks them lower. */
 export const QLOO_TOP_SHOWN = 5;
 /** Qloo's strongest fan cities, kept on the tour like anchors (any size): a tour never drops the artist's #1 city. */
@@ -376,7 +376,14 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
   const ordered = orderStops(c.from, kept.map((k) => k.score));
   for (const l of longLegs(c.from, ordered)) {
     const a = ordered[l.index - 1]!, b = ordered[l.index]!;
-    out.push({ city_id: b.marketId, rule: "leg", text: `${a.name} to ${b.name} is ${n(l.km)} km of road with no show between, over the ${n(MAX_LEG_KM)} km leg cap: keep the tour in one part of the region.`, short: `${n(l.km)} km leg from ${a.name}` });
+    const alt = clearing(kept.map((k) => k.score).filter((x) => x.marketId !== b.marketId), c);
+    out.push({ city_id: b.marketId, rule: "leg", text: `${a.name} to ${b.name} is ${n(l.km)} km of road with no show between, over the ${n(MAX_LEG_KM)} km leg cap: keep the tour in one part of the region.${alt ? ` Cities that clear it in ${b.name}'s place: ${alt}.` : ""}`, short: `${n(l.km)} km leg from ${a.name}` });
+  }
+  // The radius objections get the same: cities that clear every rule from the stops kept so far.
+  for (const o of out) {
+    if (o.rule !== "radius" && o.rule !== "rooms" && o.rule !== "candidate") continue;
+    const alt = clearing(kept.map((k) => k.score), c);
+    if (alt) o.text += ` Cities that clear it: ${alt}.`;
   }
 
   // A major market in the top ten the route can reach stays on the tour (keepAnchors).
@@ -411,6 +418,35 @@ export function checkPlan(stops: BookStop[], c: CheckContext): Objection[] {
   return out;
 }
 
+/** How many alternatives an objection names. */
+export const ALTERNATIVES = 4;
+
+/**
+ * Candidate cities that could take a stop's place and pass the rules against the stops kept: outside every kept
+ * stop's radius, rooms not ruled out, and with every leg of the re-ordered run under the cap. Strongest fan rank
+ * first, each with its road km to the nearest kept stop, so the agent can pick one that works ("albuquerque-us-nm
+ * (Albuquerque, fan #4, 720 km from Denver)").
+ */
+export function clearing(kept: CityScore[], c: CheckContext, k = ALTERNATIVES): string {
+  const out: string[] = [];
+  const pool = [...c.byId.values()].filter((x) => !kept.some((y) => y.marketId === x.marketId)).sort((a, b) => a.rank - b.rank);
+  for (const x of pool) {
+    if (out.length >= k) break;
+    if (kept.some((y) => tooClose(placed(y), placed(x), c.radius))) continue;
+    const rs = c.rooms.get(x.marketId);
+    if (rs && !rs.length) continue;
+    if (rs && c.draw && !roomCheck(rs, undefined, c.draw).bookable) continue;
+    const run = [...kept, x];
+    if (longLegs(c.from, orderStops(c.from, run)).length) continue;
+    const near = kept.length ? kept.reduce((best, y) => (roadKm(y, x) < roadKm(best, x) ? y : best)) : undefined;
+    out.push(`${x.marketId} (${x.name}, fan #${x.rank}${near ? `, ${n(roadKm(near, x))} km from ${near.name}` : ""}${rs ? "" : ", rooms looked up if you book it"})`);
+  }
+  return out.join("; ");
+}
+
+/** The better of two bookings by check_plan: fewer objections wins; on a tie the earlier one stands. */
+export const better = (a: { objections: Objection[] }, b: { objections: Objection[] }) => b.objections.length < a.objections.length;
+
 /** What changed between two bookings, as "proposed → objected → chose" rows for the call sheet. */
 export function bookingSwaps(prev: BookStop[], next: BookStop[], objections: Objection[], name: (id: string) => string, roomName: (city: string, id: string) => string): NonNullable<LogLine["swaps"]> {
   const objected = (id: string, rules?: Objection["rule"][]) => objections.find((o) => o.city_id === id && (!rules || rules.includes(o.rule)))?.short;
@@ -432,8 +468,8 @@ export function bookingSwaps(prev: BookStop[], next: BookStop[], objections: Obj
 /** Stops whose city or room differ between two bookings. */
 const changedStops = (a: BookStop[], b: BookStop[]) => b.filter((x) => !a.some((y) => y.city_id === x.city_id && y.room_id === x.room_id)).length;
 
-function revisePrompt(objections: Objection[], shows: number, others: CityScore[], scouted: { city_id: string }[] = []): string {
-  return `check_plan ran the tour's rules over your booking and objects to ${objections.length === 1 ? "one thing" : `${objections.length} things`}:\n${objections.map((o) => `- ${o.text}`).join("\n")}\n\n${scouted.length ? `Scouting results for the cities the check asks you to book (use these room_ids):\n${JSON.stringify(scouted)}\n\n` : ""}${others.length ? `Other candidate cities (not scouted yet; their rooms are looked up if you book one): ${others.map((c) => `${c.marketId} (${c.name}, fan #${c.rank})`).join(", ")}.\n\n` : ""}Re-book exactly ${shows} stops in the same JSON shape. Keep every stop the check didn't object to; change only what an objection names, using city_ids from the candidates and room_ids from that city's rooms. Write each "why" for the stop as you now book it.`;
+function revisePrompt(objections: Objection[], shows: number, others: CityScore[], scouted: { city_id: string }[] = [], setAside: string[] = []): string {
+  return `${setAside.length ? `${setAside.join("\n")}\n\n` : ""}check_plan ran the tour's rules over your booking and objects to ${objections.length === 1 ? "one thing" : `${objections.length} things`}:\n${objections.map((o) => `- ${o.text}`).join("\n")}\n\n${scouted.length ? `Scouting results for the cities the check asks you to book (use these room_ids):\n${JSON.stringify(scouted)}\n\n` : ""}${others.length ? `Other candidate cities (not scouted yet; their rooms are looked up if you book one): ${others.map((c) => `${c.marketId} (${c.name}, fan #${c.rank})`).join(", ")}.\n\n` : ""}Re-book exactly ${shows} stops in the same JSON shape. Keep every stop the check didn't object to; change only what an objection names, using city_ids from the candidates and room_ids from that city's rooms. Write each "why" for the stop as you now book it.`;
 }
 
 /* ───────────────────────── the city rules ───────────────────────── */
@@ -934,9 +970,15 @@ export async function planTour(
     let objections = checkPlan(booked, ctx());
     const before = objections.length;
     log({ kind: "rule", text: objections.length ? `check_plan: ${objections.length === 1 ? "one objection" : `${objections.length} objections`} to the agent's booking, sent back to it.` : "check_plan: the agent's booking clears every rule (radius clause, leg cap, room fit, major markets).", result: objections.length ? objections.map((o) => `${o.city_id ? `${name(o.city_id)}: ` : ""}${o.short}`).join("; ") : undefined });
-    let messages = bookMessages;
     let rounds = 0;
-    while (objections.length && rounds < MAX_REVISIONS && extra < EXTRA_CALLS) {
+    // The best booking so far by check_plan. A re-booking replaces it only with fewer objections; otherwise it is set
+    // aside, the agent is told why, and the next round starts from the best one again (Oct 29: re-booking rounds that
+    // added objections, Alvvays 1 to 4, were kept).
+    let best = { stops: booked, objections, round: 0 };
+    const setAside: string[] = [];
+    while (best.objections.length && rounds < MAX_REVISIONS && extra < EXTRA_CALLS) {
+      booked = best.stops;
+      objections = best.objections;
       if (left() < minCall) {
         log({ kind: "rule", text: "No time left for the agent to answer the check, so the rules settle what's left.", failed: true });
         break;
@@ -953,7 +995,7 @@ export async function planTour(
       }));
       const scouted = asked.map((id) => ({ city_id: id, rooms: compactRooms(rooms.get(id) ?? [], draw), openers: compactOpeners(openers.get(id) ?? []) }));
       const others = candidates.filter((c) => !rooms.has(c.marketId)).slice(0, 12);
-      messages = [...messages, { role: "assistant", content: JSON.stringify({ stops: booked }) }, { role: "user", content: revisePrompt(objections, shows, others, scouted) }];
+      const messages: Msg[] = [...bookMessages, { role: "assistant", content: JSON.stringify({ stops: booked }) }, { role: "user", content: revisePrompt(objections, shows, others, scouted, setAside) }];
       let next: BookStop[];
       try {
         const r = await ask<{ stops: BookStop[] }>({ name: "rebook", schema: BOOK_SCHEMA, maxTokens: 8000, timeoutMs: 90_000, messages });
@@ -971,11 +1013,16 @@ export async function planTour(
       }));
       const swaps = bookingSwaps(booked, next, objections, name, roomName);
       const after = checkPlan(next, ctx());
-      log({ kind: "model", text: `The agent re-booked after the check (round ${rounds} of ${MAX_REVISIONS}).`, result: `${swaps.length ? `${swaps.length} pick${swaps.length === 1 ? "" : "s"} changed` : "No pick changed"}; ${after.length ? `${after.length} objection${after.length === 1 ? "" : "s"} left: ${after.map((o) => `${o.city_id ? `${name(o.city_id)}: ` : ""}${o.short}`).join("; ")}` : "every rule clears"}`, swaps, ms: Date.now() - t });
-      booked = next;
-      objections = after;
+      const kept = better(best, { objections: after });
+      const was = best.objections.length;
+      log({ kind: "model", text: `The agent re-booked after the check (round ${rounds} of ${MAX_REVISIONS}).`, result: `${swaps.length ? `${swaps.length} pick${swaps.length === 1 ? "" : "s"} changed` : "No pick changed"}; ${after.length ? `${after.length} objection${after.length === 1 ? "" : "s"} left: ${after.map((o) => `${o.city_id ? `${name(o.city_id)}: ` : ""}${o.short}`).join("; ")}` : "every rule clears"}${kept ? "" : `; that is no better than the ${was} before, so the earlier booking stands`}`, swaps, ms: Date.now() - t });
+      if (kept) best = { stops: next, objections: after, round: rounds };
+      else setAside.push(`Your round ${rounds} re-booking (${swaps.map((x) => `${x.proposed} to ${x.chose}`).join(", ") || "no change"}) left ${after.length} objection${after.length === 1 ? "" : "s"}, no fewer than the ${was} before, so it was set aside: try a different fix.`);
     }
-    if (objections.length && rounds) log({ kind: "rule", text: `${objections.length === 1 ? "One objection still stands" : `${objections.length} objections still stand`} after the agent's ${rounds === 1 ? "revision" : `${rounds} revisions`}, so the rules settle ${objections.length === 1 ? "it" : "them"}.` });
+    booked = best.stops;
+    objections = best.objections;
+    if (objections.length && rounds) log({ kind: "rule", text: `${objections.length === 1 ? "One objection still stands" : `${objections.length} objections still stand`} after the agent's ${rounds === 1 ? "revision" : `${rounds} revisions`} (the agent cleared ${before - objections.length} of ${before}), so the rules settle ${objections.length === 1 ? "it" : "them"}.` });
+    else if (rounds) log({ kind: "rule", text: `The agent cleared all ${before} of check_plan's objections itself, in ${best.round === 1 ? "one round" : `${best.round} rounds`}.` });
     check = { before, after: objections.length, rounds, revised: changedStops(first, booked), ruled: 0, stops: 0 };
   }
 

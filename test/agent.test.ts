@@ -94,8 +94,8 @@ test("an invented city_id is rejected: sent back twice, then dropped and the ran
   assert.equal(r.picks.length, 3);
   assert.ok(!r.picks.some((x) => x.marketId === "atlantis-xx"));
   assert.ok(r.picks.some((x) => x.marketId === id("Denver")) && r.picks.some((x) => x.marketId === id("Salt Lake City")));
-  assert.deepEqual(calls, ["shortlist", "book", "rebook", "rebook"], "at most two revision rounds, and no call left for reasons");
-  assert.equal(r.check!.rounds, 2);
+  assert.deepEqual(calls, ["shortlist", "book", "rebook", "rebook", "rebook", "reasons"], "at most three revision rounds, then the reasons for the stop the rules filled");
+  assert.equal(r.check!.rounds, 3);
   assert.equal(r.check!.before, 1, "the invented city (the stop it leaves short isn't counted twice)");
   assert.equal(r.check!.after, 1);
   assert.equal(r.check!.ruled, 1, "the rules filled one stop");
@@ -103,6 +103,47 @@ test("an invented city_id is rejected: sent back twice, then dropped and the ran
   // The filled stop gets the rule's sentence, built from evidence only.
   const filled = r.picks.find((x) => ![id("Denver"), id("Salt Lake City")].includes(x.marketId))!;
   assert.match(filled.why!, /^.+ is Test Artist's #\d+ city on Qloo, and .+ matches these fans at \d+\.$/);
+});
+
+test("a re-booking that makes things worse is set aside: the earlier booking stands, the agent hears why, and the next round clears it", async () => {
+  const calls: string[] = [];
+  const prompts: string[] = [];
+  const ask = model((name, messages) => {
+    if (name === "shortlist") return { cities: [id("Denver"), id("Boulder"), id("Salt Lake City")].map((c) => ({ city_id: c, why: "strong" })), alternates: [id("Albuquerque")] };
+    if (name === "book") return { stops: [stop(id("Denver")), stop(id("Boulder")), stop(id("Salt Lake City"))] };
+    if (name === "rebook") {
+      prompts.push(lastUser(messages));
+      // Round 1 makes it worse (the radius clause still broken, and an invented city); round 2 fixes it.
+      if (prompts.length === 1) return { stops: [stop(id("Denver")), stop(id("Boulder")), stop("atlantis-xx")] };
+      return { stops: [stop(id("Denver")), stop(id("Albuquerque")), stop(id("Salt Lake City"))] };
+    }
+    throw new Error(`unexpected call ${name}`);
+  }, calls);
+  const { p, lines } = run(tools(ask));
+  const r = await p;
+  assert.deepEqual(calls, ["shortlist", "book", "rebook", "rebook"]);
+  assert.match(prompts[0]!, /Cities that clear it: .*albuquerque/i, "the radius objection names cities that clear it");
+  assert.match(prompts[1]!, /Your round 1 re-booking .* left 3 objections, no fewer than the 1 before, so it was set aside/);
+  assert.match(prompts[1]!, /Boulder is 39 km from Denver/, "round 2 starts again from the best booking, not the worse one");
+  assert.ok(lines.some((l) => /so the earlier booking stands/.test(l.result ?? "")));
+  assert.ok(lines.some((l) => /The agent cleared all 1 of check_plan's objections itself, in 2 rounds\./.test(l.text)));
+  assert.deepEqual(r.check, { before: 1, after: 0, rounds: 2, revised: 1, ruled: 0, stops: 3, suggested: 0 });
+  assert.deepEqual(r.picks.map((x) => x.marketId).sort(), [id("Albuquerque"), id("Denver"), id("Salt Lake City")].sort());
+});
+
+test("when every re-booking is worse, the agent's first booking is the one the rules settle", async () => {
+  const ask = model((name) => {
+    if (name === "shortlist") return { cities: [id("Denver"), id("Boulder"), id("Salt Lake City")].map((c) => ({ city_id: c, why: "strong" })), alternates: [] };
+    if (name === "book") return { stops: [stop(id("Denver")), stop(id("Boulder")), stop(id("Salt Lake City"))] };
+    if (name === "rebook") return { stops: [stop(id("Denver")), stop(id("Boulder")), stop("atlantis-xx")] };
+    return { reasons: [] };
+  });
+  const { p, lines } = run(tools(ask));
+  const r = await p;
+  assert.equal(r.check!.rounds, 3);
+  assert.equal(r.check!.after, 1, "the first booking's one objection, not the worse answers' two");
+  assert.ok(lines.some((l) => /One objection still stands after the agent's 3 revisions \(the agent cleared 0 of 1\)/.test(l.text)));
+  assert.ok(r.picks.some((x) => x.marketId === id("Salt Lake City")), "the first booking's Salt Lake City, not the invented city's slot");
 });
 
 test("rooms are measured before booking, and after the rules settle the agent writes the reasons for stops a rule changed", async () => {

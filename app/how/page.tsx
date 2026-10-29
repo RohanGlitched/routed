@@ -91,8 +91,8 @@ export default async function How() {
               <th scope="col">Loop</th>
               <th scope="col">Tours</th>
               <th scope="col">Objections raised</th>
-              <th scope="col">Cleared by the agent</th>
-              <th scope="col">Settled by rule</th>
+              <th scope="col">Cleared by the agent itself</th>
+              <th scope="col">Open after the last round, settled by rule</th>
               <th scope="col">Tours left worse</th>
             </tr>
           </thead>
@@ -117,6 +117,11 @@ export default async function How() {
             ))}
           </tbody>
         </table>
+        {fresh.length > 0 && (
+          <p>
+            With the last version the agent itself cleared {fresh.at(-1)!.cleared} of the {fresh.at(-1)!.raised} objections on {fresh.at(-1)!.n} re-runs{fresh.length > 1 ? `; the earlier Oct 30 versions cleared ${fresh.slice(0, -1).reduce((n, b) => n + b.cleared, 0)} of ${fresh.slice(0, -1).reduce((n, b) => n + b.raised, 0)}` : ""}, and no re-run ended with more objections than it started with. Three runs a version is a small sample. None of the re-runs replaced a poster-wall tour: each traded away a fan-rank number or a clean leg somewhere else, so the wall keeps its Oct 25 tours, re-checked under the current rules.
+          </p>
+        )}
         <p className={s.note}>{LOOP.note}</p>
       </section>
 

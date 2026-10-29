@@ -1,5 +1,5 @@
 {
- "note": "Counts come from each run's own check_plan record (engine.check): objections to the agent's first booking, and what was still open after its last round. Oct 30 runs were made on a local server with the production code at the commit named, the same inputs as the poster-wall tours (8 shows from 2027-05-06), and the event's Qloo and Nebius keys; their tour records are kept out of the repository with the other raw Qloo data.",
+ "note": "Counts come from each run's own check_plan record (engine.check): objections to the agent's first booking, and what was still open after its last round. Oct 30 runs were made on a local server with the production code at the commit named, the same inputs as the poster-wall tours (8 shows from 2027-05-06), and the event's Qloo and Nebius keys; their tour records stay out of the repository with the other raw Qloo data, and each one opens on the site at /tour/<tour id> (none is on the poster wall).",
  "oct25": {
   "label": "Before Oct 30 (the poster wall, routed Oct 25): last round kept",
   "tours": [
@@ -118,6 +118,76 @@
      "revised": 0,
      "modelCalls": 8,
      "qloo": 81
+    }
+   ]
+  },
+  {
+   "label": "Oct 30, objections name the swaps that clear them (commit d23fe9a)",
+   "tours": [
+    {
+     "artist": "Sierra Ferrell",
+     "tour": "5wi4b67iwr",
+     "before": 2,
+     "after": 2,
+     "rounds": 3,
+     "revised": 0,
+     "modelCalls": 8,
+     "qloo": 83
+    },
+    {
+     "artist": "Alvvays",
+     "tour": "a9jjqfhmg2",
+     "before": 3,
+     "after": 3,
+     "rounds": 3,
+     "revised": 0,
+     "modelCalls": 8,
+     "qloo": 85
+    },
+    {
+     "artist": "Japanese Breakfast",
+     "tour": "qsagfnxarj",
+     "before": 2,
+     "after": 2,
+     "rounds": 3,
+     "revised": 0,
+     "modelCalls": 8,
+     "qloo": 80
+    }
+   ]
+  },
+  {
+   "label": "Oct 30, the agent's helpful changes kept one by one (commit 76330c2)",
+   "tours": [
+    {
+     "artist": "Sierra Ferrell",
+     "tour": "nk53jakf3w",
+     "before": 3,
+     "after": 1,
+     "rounds": 3,
+     "revised": 3,
+     "modelCalls": 8,
+     "qloo": 82
+    },
+    {
+     "artist": "Japanese Breakfast",
+     "tour": "49pm9f5q7y",
+     "before": 1,
+     "after": 1,
+     "rounds": 3,
+     "revised": 0,
+     "modelCalls": 7,
+     "qloo": 82
+    },
+    {
+     "artist": "Alvvays",
+     "tour": "g8x884hdsw",
+     "before": 1,
+     "after": 0,
+     "rounds": 1,
+     "revised": 1,
+     "modelCalls": 6,
+     "qloo": 82
     }
    ]
   }

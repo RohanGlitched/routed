@@ -1,7 +1,8 @@
 // The model + Qloo, against the model alone: post hoc and exploratory, not pre-registered.
 //
 // Usage (from routed/; no keys are read and no network call is made, so it needs no .env):
-//   npx tsx scripts/model-plus-qloo.ts          # data/outside2/model-plus-qloo.json
+//   npx tsx scripts/model-plus-qloo.ts             # data/outside2/model-plus-qloo.json (post hoc)
+//   npx tsx scripts/model-plus-qloo.ts secondary   # data/outside2/secondary-markets.json (pre-registered: PROTOCOL-3.md)
 //
 // What it asks. Routed's tests so far compare Qloo with the model alone, or Qloo + population with population. A
 // judge's question is different: does Qloo add anything to the model? Here each market's place in the model's own
@@ -30,7 +31,7 @@ globalThis.fetch = (async () => {
 }) as typeof fetch;
 
 const { CA_ABBR, findMarket, marketById, marketId, nearestMarket, US_STATES } = await import("../lib/geo/markets.ts");
-const { avg, blendTwo, completeRanking, meanCI, rPrecision, signTest } = await import("../lib/headtohead.ts");
+const { avg, blendRanking, blendTwo, completeRanking, meanCI, populationRanking, rPrecision, secondaryRPrecision, SECONDARY_TOP, signTest } = await import("../lib/headtohead.ts");
 const { realMarkets, realTourFor } = await import("../lib/outside.ts");
 const { BENCH_IDS } = await import("../lib/headtohead-meta.ts");
 type RegionId = "na" | "uk" | "eu";
@@ -201,6 +202,75 @@ function f6() {
   console.log(`network calls: ${fetchCalls}`);
 }
 
+/* ───────────────── secondary markets: pre-registered in data/outside2/PROTOCOL-3.md ───────────────── */
+
+/** A tour needs this many of its markets outside the region's 25 biggest to be scored (PROTOCOL-3.md). */
+const SECONDARY_MIN = 3;
+const SECONDARY_OUT = "data/outside2/secondary-markets.json";
+
+type Hits = { hits: number; of: number; cities: string[] };
+type SecondaryRow = { artist: string; region: RegionId; markets: number; R: number; rp: Record<"population" | "model" | "qloo" | "blend" | "modelQloo", Hits> };
+
+function secondary() {
+  const rows: SecondaryRow[] = [];
+  const skipped: { artist: string; reason: string }[] = [];
+  for (const s of postcutSubjects()) {
+    const big = new Set(populationRanking(s.region).slice(0, SECONDARY_TOP));
+    const R = [...s.truth].filter((id) => !big.has(id)).length;
+    if (R < SECONDARY_MIN) {
+      skipped.push({ artist: s.artist, reason: `${R} of the tour's markets are outside the region's ${SECONDARY_TOP} biggest (fewer than ${SECONDARY_MIN})` });
+      continue;
+    }
+    const rankings = {
+      population: populationRanking(s.region),
+      model: s.model,
+      qloo: completeRanking(s.qloo, s.region),
+      blend: blendRanking(s.qloo, s.region),
+      modelQloo: blendTwo(s.model, s.qloo, s.region),
+    };
+    const rp = Object.fromEntries(
+      Object.entries(rankings).map(([k, r]) => {
+        const h = secondaryRPrecision(r, s.truth, s.region);
+        return [k, { hits: h.hits, of: h.of, cities: h.ids.map(label) }];
+      }),
+    ) as SecondaryRow["rp"];
+    rows.push({ artist: s.artist, region: s.region, markets: s.truth.size, R, rp });
+  }
+  const v = (k: keyof SecondaryRow["rp"]) => rows.map((r) => share(r.rp[k]));
+  const pool = (k: keyof SecondaryRow["rp"]) => {
+    const hits = rows.reduce((n, r) => n + r.rp[k].hits, 0), of = rows.reduce((n, r) => n + r.rp[k].of, 0);
+    return { hits, of, share: of ? hits / of : 0 };
+  };
+  const seed = SEED.postcut;
+  const primary = [contrast("Qloo vs the model alone", v("qloo"), v("model"), seed), contrast("Qloo + population vs population", v("blend"), v("population"), seed)];
+  const secondaryRows = [
+    contrast("Qloo vs population", v("qloo"), v("population"), seed),
+    contrast("The model alone vs population", v("model"), v("population"), seed),
+    contrast("Qloo + population vs the model alone", v("blend"), v("model"), seed),
+    contrast("The model + Qloo vs the model alone", v("modelQloo"), v("model"), seed),
+  ];
+  if (fetchCalls !== 0) throw new Error(`${fetchCalls} network calls were attempted`);
+  const out = {
+    scored: new Date().toISOString(),
+    protocol: "data/outside2/PROTOCOL-3.md",
+    script: "scripts/model-plus-qloo.ts secondary",
+    top: SECONDARY_TOP,
+    minimum: SECONDARY_MIN,
+    seed,
+    calls: { qloo: 0, model: 0, network: fetchCalls },
+    n: rows.length,
+    primary,
+    secondary: secondaryRows,
+    pooled: Object.fromEntries((["population", "model", "qloo", "blend", "modelQloo"] as const).map((k) => [k, pool(k)])),
+    rows,
+    skipped,
+  };
+  writeFileSync(SECONDARY_OUT, JSON.stringify(out, null, 1) + "\n");
+  for (const c of [...primary, ...secondaryRows]) console.log(fmt(c));
+  console.log(JSON.stringify(out.pooled), `skipped ${skipped.length}`, `network calls: ${fetchCalls}`);
+}
+
 const stage = process.argv[2] ?? "f6";
 if (stage === "f6") f6();
-else console.log("stages: f6");
+else if (stage === "secondary") secondary();
+else console.log("stages: f6 | secondary");

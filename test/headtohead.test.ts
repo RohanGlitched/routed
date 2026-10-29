@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { beyondBiggest, blendRanking, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
+import { beyondBiggest, blendRanking, secondaryRPrecision, SECONDARY_TOP, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
 import { infoboxArtist, marketsByRegion, showRows } from "../lib/wikitours.ts";
 import { marketById } from "../lib/geo/markets.ts";
 
@@ -153,4 +153,27 @@ test("the infobox artist, and no artist for a co-headline tour", () => {
   assert.equal(infoboxArtist("| artist = [[Clairo (singer)|Clairo]]\n"), "Clairo");
   assert.equal(infoboxArtist("| artist = {{hlist|[[A]]|[[B]]}}\n"), undefined);
   assert.equal(infoboxArtist("| artist = [[Green Day]] and [[Smashing Pumpkins]]\n"), undefined);
+});
+
+/* ───────────── secondary markets (data/outside2/PROTOCOL-3.md) ───────────── */
+
+test("secondary-market R-precision drops the region's 25 biggest markets from the ranking and the tour", () => {
+  const pop = populationRanking("na");
+  const big = pop.slice(0, SECONDARY_TOP);
+  const small = pop.slice(SECONDARY_TOP, SECONDARY_TOP + 4);
+  // A tour of two big cities and four smaller ones: R is the four smaller ones.
+  const truth = new Set([big[0]!, big[3]!, ...small]);
+  // Population, restricted, puts exactly those four first.
+  const p = secondaryRPrecision(pop, truth, "na");
+  assert.equal(p.of, 4);
+  assert.equal(p.hits, 4);
+  // A ranking that leads with the big cities gains nothing from them: they are removed, and its next four count.
+  const r = secondaryRPrecision([big[0]!, big[3]!, small[0]!, "asheville-us-nc", small[1]!, pop[60]!, small[2]!], truth, "na");
+  assert.equal(r.of, 4);
+  assert.deepEqual(r.ids, [small[0], small[1]]);
+  // A tour played only in big cities has nothing to score.
+  assert.equal(secondaryRPrecision(pop, new Set(big.slice(0, 5)), "na").of, 0);
+  // The cut is per region.
+  const uk = populationRanking("uk");
+  assert.equal(secondaryRPrecision(uk, new Set([uk[0]!, uk[SECONDARY_TOP]!]), "uk").of, 1);
 });

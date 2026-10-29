@@ -77,6 +77,22 @@ export function beyondBiggest(ranking: string[], truth: Set<string>, region: Reg
   return { hits: ids.length, of: small.length, ids };
 }
 
+/** The region's biggest markets left out of the secondary-market test (data/outside2/PROTOCOL-3.md). */
+export const SECONDARY_TOP = 25;
+
+/**
+ * R-precision on secondary markets only (data/outside2/PROTOCOL-3.md): the region's `top` biggest markets by
+ * population are removed from the ranking and from the real tour, the ranking keeps its order, and R is the number of
+ * the tour's markets left. Where model memory and city size help least, how many of those did a ranking's top R find?
+ */
+export function secondaryRPrecision(ranking: string[], truth: Set<string>, region: RegionId, top = SECONDARY_TOP): Hit {
+  const big = new Set(populationRanking(region).slice(0, top));
+  return rPrecision(
+    ranking.filter((id) => !big.has(id)),
+    new Set([...truth].filter((id) => !big.has(id))),
+  );
+}
+
 /** Share of a tour's cities that were on the real tour (the eight-pick check). Unplaced stops are left out. */
 export function precision(stops: (string | undefined)[], truth: Set<string>): Hit {
   const placed = stops.filter((x): x is string => Boolean(x));

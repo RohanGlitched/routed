@@ -220,6 +220,7 @@ const OVERRIDES: { venue: string[]; city: string; value: number; source: string;
   // Listings range 600 to 750 (750 is the private-events figure); 650 is the concert number most of them give.
   { venue: ["Neumos"], city: "Seattle, WA", value: 650, source: "https://seattlemag.com/music/best-live-music-venues-seattle/", quote: "Neumos: capacity 650 (Seattle Magazine venue listing; ReverbNation lists 700; checked by hand Oct 25)." },
   { venue: ["El Corazón", "El Corazon"], city: "Seattle, WA", value: 807, source: "https://songkick.com/concerts/40301737-origin-at-el-corazon", quote: "El Corazon, 109 Eastlake Ave E: capacity 807 (Songkick venue listing, checked by hand Oct 25)." },
+  { venue: ["Jones Hall for the Performing Arts", "Jones Hall"], city: "Houston, TX", value: 2912, source: "https://en.wikipedia.org/wiki/Jones_Hall", quote: "Jones Hall: capacity 2,912 (Wikipedia infobox; about 2,300 with the balcony closed), checked by hand Oct 30" },
   // Oct 30: the booked rooms on the poster wall and the flagship's other rooms, checked by hand against Wikipedia, the
   // venue, its operator or the trade press, replacing ticket-resale and event-hire listings (Showbox SoDo's 1,800 had been
   // read for The Showbox; the Gaiety's 2,000 was its 1871 figure; Madison Theater's 17,556 was another building's).

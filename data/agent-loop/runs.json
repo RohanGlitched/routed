@@ -1,9 +1,11 @@
 {
  "note": "A tour counts as cleared only if it ends with fewer objections and no leg longer than the longest one check_plan objected to on the first booking (or the 1,800 km cap): Sierra Ferrell nk53jakf3w went from 3 objections to 1 but ended on a 3,298 km Austin to Portland leg, so it counts as worse, not cleared. Counts come from each run's own check_plan record (engine.check): objections to the agent's first booking, and what was still open after its last round. Oct 30 runs were made on a local server with the production code at the commit named, the same inputs as the poster-wall tours (8 shows from 2027-05-06), and the event's Qloo and Nebius keys; their tour records are kept out of the repository with the other raw Qloo data.",
  "oct25": {
-  "label": "Before Oct 30 (the poster wall, routed Oct 25): last round kept",
+  "label": "The Oct 25 wall as first routed (2 tours since replaced by Oct 30 re-runs): last round kept",
   "tours": [
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "Sierra Ferrell",
     "tour": "8v4ce57nx6",
     "before": 3,
@@ -17,6 +19,8 @@
     "legWorse": false
    },
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "Japanese Breakfast",
     "tour": "5ezd3ab55f",
     "before": 2,
@@ -30,6 +34,8 @@
     "legWorse": false
    },
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "Fontaines D.C.",
     "tour": "fx3xht5bex",
     "before": 3,
@@ -43,6 +49,8 @@
     "legWorse": false
    },
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "Khruangbin",
     "tour": "at2uxhew2q",
     "before": 2,
@@ -56,6 +64,8 @@
     "legWorse": false
    },
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "Zach Bryan",
     "tour": "3nuqugrj3n",
     "before": 1,
@@ -69,6 +79,8 @@
     "legWorse": false
    },
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "Alvvays",
     "tour": "w4cverzz63",
     "before": 1,
@@ -82,6 +94,8 @@
     "legWorse": false
    },
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "Turnstile",
     "tour": "xf4rbjj9s9",
     "before": 1,
@@ -95,6 +109,8 @@
     "legWorse": false
    },
    {
+    "scoutCalls": 0,
+    "clearedAfterScout": 0,
     "artist": "MJ Lenderman",
     "tour": "xzm49sq9qt",
     "before": 2,
@@ -114,6 +130,8 @@
    "label": "Oct 30, best booking kept (commit ffa45fc)",
    "tours": [
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Alvvays",
      "tour": "bbwd33vxdb",
      "before": 2,
@@ -127,6 +145,8 @@
      "legWorse": false
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Sierra Ferrell",
      "tour": "kae4mm4tz3",
      "before": 1,
@@ -140,6 +160,8 @@
      "legWorse": false
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Japanese Breakfast",
      "tour": "en9nug938i",
      "before": 2,
@@ -158,6 +180,8 @@
    "label": "Oct 30, objections name the swaps that clear them (commit d23fe9a)",
    "tours": [
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Sierra Ferrell",
      "tour": "5wi4b67iwr",
      "before": 2,
@@ -171,6 +195,8 @@
      "legWorse": false
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Alvvays",
      "tour": "a9jjqfhmg2",
      "before": 3,
@@ -184,6 +210,8 @@
      "legWorse": false
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Japanese Breakfast",
      "tour": "qsagfnxarj",
      "before": 2,
@@ -202,6 +230,8 @@
    "label": "Oct 30, the agent's helpful changes kept one by one (commit 76330c2)",
    "tours": [
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Sierra Ferrell",
      "tour": "nk53jakf3w",
      "before": 3,
@@ -215,6 +245,8 @@
      "legWorse": true
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Japanese Breakfast",
      "tour": "49pm9f5q7y",
      "before": 1,
@@ -228,6 +260,8 @@
      "legWorse": false
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Alvvays",
      "tour": "g8x884hdsw",
      "before": 1,
@@ -243,9 +277,11 @@
    ]
   },
   {
-   "label": "Oct 30, scored by severity, leg cap enforced, and scout_city: the agent may ask for 2 cities a round (commits 6a145b7 to a180653; the room-grade change landed between runs)",
+   "label": "Oct 30, rounds compared on fewer objections and no longer worst leg, the leg cap enforced, and scout_city offered (commits 6a145b7 to a180653; the room-grade change landed between runs)",
    "tours": [
     {
+     "scoutCalls": 1,
+     "clearedAfterScout": 0,
      "artist": "Sierra Ferrell",
      "tour": "qisgzhe5tj",
      "before": 3,
@@ -259,6 +295,8 @@
      "legWorse": false
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Alvvays",
      "tour": "jrp8bq4md8",
      "before": 1,
@@ -272,6 +310,8 @@
      "legWorse": false
     },
     {
+     "scoutCalls": 0,
+     "clearedAfterScout": 0,
      "artist": "Japanese Breakfast",
      "tour": "ipgunjvpgt",
      "before": 3,

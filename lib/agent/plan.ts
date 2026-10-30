@@ -20,8 +20,8 @@ import { concertRoom, type LadderRoom } from "./rooms";
  *  3. Book (model): pick the final cities, one room each and one support act for the run, knowing what each room
  *     holds, with a one-sentence reason that cites the evidence.
  *  4. Check (rules as a tool): check_plan runs the tour's rules over the booking and sends every objection back to
- *     the agent, which re-books; at most MAX_REVISIONS rounds (3), a round kept only when it is better by
- *     `better` (fewer objections and no longer worst leg), or only its changes that help on their own. In a round
+ *     the agent, which re-books; at most MAX_REVISIONS rounds (3), a round kept only when `better` holds (fewer
+ *     objections and no longer worst leg), or only its changes that help on their own. In a round
  *     the agent may ask Routed to scout up to SCOUT_PER_ROUND cities it hasn't seen (scout_city). Only what is
  *     still broken after that is fixed by a rule, and the leg cap is then enforced from scouted cities.
  *  5. Reasons (model): once the rules have settled, the agent writes the reason for any stop a rule changed.

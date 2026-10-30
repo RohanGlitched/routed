@@ -52,7 +52,7 @@ export default async function How() {
   const ws = wallStats(await showcaseTours().catch(() => []));
   const typical = ws ? `${span(ws.qloo.min, ws.qloo.max)} Qloo requests (median ${ws.qloo.median}), ${span(ws.model.min, ws.model.max)} model calls and ${span(Math.round(ws.tokens.min / 1000), Math.round(ws.tokens.max / 1000))} thousand tokens each` : undefined;
   // A tour counts as cleared only with fewer objections and no longer worst leg than its first booking's (legWorse).
-  const sum = (rows: { before: number; after: number; legWorse?: boolean }[]) => ({ raised: rows.reduce((n, r) => n + r.before, 0), open: rows.reduce((n, r) => n + r.after, 0), cleared: rows.reduce((n, r) => n + (r.legWorse ? 0 : Math.max(0, r.before - r.after)), 0), worse: rows.filter((r) => r.after > r.before || r.legWorse).length, n: rows.length });
+  const sum = (rows: { before: number; after: number; legWorse?: boolean; scoutCalls?: number }[]) => ({ scout: rows.reduce((n, r) => n + (r.scoutCalls ?? 0), 0), raised: rows.reduce((n, r) => n + r.before, 0), open: rows.reduce((n, r) => n + r.after, 0), cleared: rows.reduce((n, r) => n + (r.legWorse ? 0 : Math.max(0, r.before - r.after)), 0), worse: rows.filter((r) => r.after > r.before || r.legWorse).length, n: rows.length });
   const old = sum(LOOP.oct25.tours);
   const fresh = LOOP.oct30.map((b) => ({ ...b, ...sum(b.tours) }));
   return (
@@ -81,7 +81,7 @@ export default async function How() {
       <section className={s.sec}>
         <h2 className={s.h2} id="agent-check">Does the agent really re-book?</h2>
         <p>
-          Measured, not claimed. On the {old.n} tours on the poster wall (routed Oct 25), check_plan raised {old.raised} objections to the agent&apos;s first bookings. After two rounds {old.open} were open, some of them new (Alvvays went from 1 to 4), and rules settled them: net of the new ones the agent cleared {old.cleared}, and {old.worse} of the {old.n} tours ended worse than they started, because the last round was kept even when it was worse.
+          Measured, not claimed. On the {old.n} tours of the Oct 25 poster wall as first routed (2 of them since replaced by Oct 30 re-runs), check_plan raised {old.raised} objections to the agent&apos;s first bookings. After two rounds {old.open} were open, some of them new (Alvvays went from 1 to 4), and rules settled them: net of the new ones the agent cleared {old.cleared}, and {old.worse} of the {old.n} tours ended worse than they started, because the last round was kept even when it was worse.
         </p>
         <p>
           On Oct 30 the loop changed: a re-booking replaces the booking only when it leaves fewer objections (a worse one is set aside and the agent is told why), each objection names the cities or swaps that would clear it, and a third round fits in the planning time. Re-runs of poster-wall artists under the new loop, measured the same way:
@@ -95,6 +95,7 @@ export default async function How() {
               <th scope="col">Cleared by the agent itself</th>
               <th scope="col">Open after the last round, settled by rule</th>
               <th scope="col">Tours left worse (more objections or a longer worst leg)</th>
+              <th scope="col">scout_city calls</th>
             </tr>
           </thead>
           <tbody>
@@ -105,6 +106,7 @@ export default async function How() {
               <td>{old.cleared}</td>
               <td>{old.open}</td>
               <td>{old.worse}</td>
+              <td>not offered</td>
             </tr>
             {fresh.map((b) => (
               <tr key={b.label}>
@@ -114,13 +116,14 @@ export default async function How() {
                 <td>{b.cleared}</td>
                 <td>{b.open}</td>
                 <td>{b.worse}</td>
+                <td>{/scout_city/.test(b.label) ? b.scout : "not offered"}</td>
               </tr>
             ))}
           </tbody>
         </table>
         {fresh.length > 0 && (
           <p>
-            With the latest version (rounds scored by severity, the leg cap enforced after the rules settle, and scout_city, which lets the agent ask Routed to look up 2 cities of its choice a round) the agent itself cleared {fresh.at(-1)!.cleared} of the {fresh.at(-1)!.raised} objections on {fresh.at(-1)!.n} re-runs, and left {fresh.at(-1)!.worse} worse. The version before cleared {fresh.length > 1 ? fresh.at(-2)!.cleared : 0} of {fresh.length > 1 ? fresh.at(-2)!.raised : 0}: one of its runs, Sierra Ferrell, went from 3 objections to 1 but ended on a 3,298 km leg, longer than the 1,895 km one first objected to, so it counts as worse, not cleared; that is what the severity rule and the leg cap now stop. Three runs a version is a small sample. None of these re-runs replaced the flagship, whose stops the demo video shows.
+            With the latest version the agent itself cleared {fresh.at(-1)!.cleared} of the {fresh.at(-1)!.raised} objections on {fresh.at(-1)!.n} re-runs and left {fresh.at(-1)!.worse} worse. What drove it: a round counts only with fewer objections and no longer worst leg, and the 1,800 km leg cap is enforced after the rules settle. scout_city (the agent asking Routed to look up 2 cities of its choice a round) was offered in all three and called in {fresh.at(-1)!.scout} run, whose round then cleared nothing new; the other two cleared everything in their first round without it. The room-grade change landed between these runs, so they don&apos;t isolate one cause. The version before cleared {fresh.length > 1 ? fresh.at(-2)!.cleared : 0} of {fresh.length > 1 ? fresh.at(-2)!.raised : 0}: one of its runs, Sierra Ferrell, went from 3 objections to 1 but ended on a 3,298 km leg, longer than the 1,895 km one first objected to, so it counts as worse, not cleared. Three runs a version is a small sample.
           </p>
         )}
         <p className={s.note}>{LOOP.note}</p>

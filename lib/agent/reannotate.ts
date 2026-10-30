@@ -39,23 +39,30 @@ export function placeKind(name: string, kind?: string): string | undefined {
 
 /** What a route costs against the rules: legs over the cap, the hometown missing, top fan cities missing, radius
  *  clashes (a hometown carve-out excepted), then road km and the stops' fan ranks. Lower is better, compared in order. */
-function costOf(plan: Plan, stops: Stop[], home: string | undefined, keep: string[], carve?: string) {
+/** A stop whose booked room would need three nights or more to hold the usual crowd (under half of it): a booker
+ *  changes the room or the city instead (Fontaines D.C.'s Gaiety and Leisureland for 3,000, Oct 30 judges). */
+const tooSmall = (s: Stop, draw?: number) => {
+  const r = bookedRoom(s);
+  return Boolean(draw && r?.capacity && r.capacity.value < draw * 0.5);
+};
+
+function costOf(plan: Plan, stops: Stop[], home: string | undefined, keep: string[], carve?: string, draw?: number) {
   const ordered = orderStops(plan.from, stops.map(pt), { max: MAX_LEG_KM, first: home && stops.some((s) => s.marketId === home) ? home : undefined });
   const legs = longLegs(plan.from, ordered).length;
   const r = radiusFor(plan.region);
   let clash = 0;
   for (let i = 0; i < stops.length; i++) for (let j = i + 1; j < stops.length; j++) if (tooClose(pt(stops[i]!), pt(stops[j]!), r) && stops[i]!.marketId !== carve && stops[j]!.marketId !== carve) clash++;
   const km = schedule(plan.from, ordered, plan.firstDate).reduce((t, l) => t + l.fromKm, 0);
-  return { legs, home: home && !stops.some((s) => s.marketId === home) ? 1 : 0, keep: keep.filter((k) => !stops.some((s) => s.marketId === k)).length, clash, km, rank: stops.reduce((t, s) => t + s.score.rank, 0) };
+  return { legs, home: home && !stops.some((s) => s.marketId === home) ? 1 : 0, keep: keep.filter((k) => !stops.some((s) => s.marketId === k)).length, clash, crowd: stops.filter((s) => tooSmall(s, draw)).length, km, rank: stops.reduce((t, s) => t + s.score.rank, 0) };
 }
 type Cost = ReturnType<typeof costOf>;
 const rulesBetter = (a: Cost, b: Cost) => {
-  const va = [a.legs, a.home, a.clash], vb = [b.legs, b.home, b.clash];
+  const va = [a.legs, a.home, a.clash, a.crowd], vb = [b.legs, b.home, b.clash, b.crowd];
   for (let i = 0; i < va.length; i++) if (vb[i]! !== va[i]!) return vb[i]! < va[i]!;
   return false;
 };
 /** A detour fix: the same rules, at least 15% less road, the fan ranks no more than 30% weaker, top fan cities kept. */
-const detourBetter = (a: Cost, b: Cost) => b.legs <= a.legs && b.home <= a.home && b.clash <= a.clash && b.keep <= a.keep && b.km <= a.km * 0.85 && b.rank <= a.rank * 1.3;
+const detourBetter = (a: Cost, b: Cost) => b.legs <= a.legs && b.home <= a.home && b.clash <= a.clash && b.crowd <= a.crowd && b.keep <= a.keep && b.km <= a.km * 0.85 && b.rank <= a.rank * 1.3;
 
 export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Donor[]; osm?: Map<string, string | { name: string; km?: number }>; at?: string; carveHome?: boolean } = {}): Reannotated {
   if (!rec.plan?.stops?.length) return { rec, changes: [], stale: false };
@@ -82,6 +89,26 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
   if (capped.length) {
     changes.push(`capacities: ${capped.join(", ")}`);
     say("Room capacities checked by hand against Wikipedia, the venue, its operator or the trade press now replace the ticket-resale and event-hire listings they came from.", capped.join("; "));
+  }
+
+  // 1b. A stop whose room needs three nights or more borrows a room that holds at least 60% of the crowd in the
+  //     same city from this artist's earlier scouting (Wikidata, Wikipedia or hand-checked capacity), if one exists.
+  const borrowed: string[] = [];
+  for (const s of plan.stops) {
+    if (!tooSmall(s, draw)) continue;
+    for (const d of o.donors ?? []) {
+      if (d.stop.marketId !== s.marketId) continue;
+      for (const r of d.stop.rooms) {
+        if (!r.capacity || !strongSource(r.capacity) || !draw || r.capacity.value < draw * 0.6 || r.capacity.value > draw * 2.5) continue;
+        if (s.rooms.some((x) => x.id === r.id || x.name === r.name)) continue;
+        s.rooms.push(structuredClone(r));
+        borrowed.push(`${s.city}: ${r.name} (${n0(r.capacity.value)}, from tour ${d.tour})`);
+      }
+    }
+  }
+  if (borrowed.length) {
+    changes.push(`borrowed rooms: ${borrowed.join("; ")}`);
+    say("A room that would need three nights or more to hold the usual crowd gives way: a room that holds at least 60% of it, found in the same city on Routed's earlier scouting for this artist, joins the city's list.", borrowed.join("; "));
   }
 
   // 2. The room rule on the corrected capacities.
@@ -126,7 +153,7 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
       })
       .filter(({ s }) => roomCheck(s.rooms, s.roomId, draw).bookable && Boolean(bookedRoom(s)?.capacity));
     for (let pass = 0; pass < 2; pass++) {
-      const now = costOf(plan, plan.stops, home, keep, carve);
+      const now = costOf(plan, plan.stops, home, keep, carve, draw);
       let best: { cost: Cost; i: number; c: (typeof pool)[number] } | null = null;
       for (let i = 0; i < plan.stops.length; i++) {
         const out = plan.stops[i]!;
@@ -134,7 +161,7 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
         for (const c of pool) {
           if (plan.stops.some((s) => s.marketId === c.s.marketId)) continue;
           const trial = plan.stops.map((s, j) => (j === i ? c.s : s));
-          const cost = costOf(plan, trial, home, keep, carve);
+          const cost = costOf(plan, trial, home, keep, carve, draw);
           const ok = rulesBetter(now, cost) || (o.route === "detour" && detourBetter(now, cost));
           if (!ok) continue;
           if (!best || rulesBetter(best.cost, cost) || (!rulesBetter(cost, best.cost) && cost.km + 40 * cost.rank < best.cost.km + 40 * best.cost.rank)) best = { cost, i, c };
@@ -241,7 +268,8 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
     const old = s.why;
     const gone = s.openers.filter((x) => x.id !== s.openerId).some((x) => old?.includes(x.name));
     const stale = !old || gone || whyProblems(plan, s, draw).length > 0 || Boolean(bookedRoom(s) && !old.includes(bookedRoom(s)!.name));
-    s.why = checkWhy(plan, { ...s, why: old ?? "x" }, draw, { keepModel: !stale });
+    void stale;
+    s.why = checkWhy(plan, { ...s, why: old ?? "x" }, draw);
     if (s.why !== old) whys.push(s.city);
   }
   if (whys.length) {

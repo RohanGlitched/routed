@@ -35,11 +35,14 @@ const short = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("
 export function TourRoom({
   initial,
   rerun,
+  same,
   reality,
 }: {
   initial: TourRecord;
   /** A re-run where the agent cleared its own objections, for tours where it didn't. */
   rerun?: Rerun;
+  /** The same artist re-run with the current loop, as it came out. */
+  same?: Rerun & { after: number; scout: number };
   /** The flagship against the artist's real tour (data/flagship-reality.json), when that file is there. */
   reality?: RealityCheck;
 }) {
@@ -217,7 +220,7 @@ export function TourRoom({
               {rec.engine.usage ? ` ${usageLine(rec.engine.usage)}` : ""} The call sheet at the end of the tour book lists every step.
             </p>
           )}
-          {rec.engine?.check && story && <AgentCheck log={rec.log} check={rec.engine.check} rerun={rerun && rerun.id !== rec.id ? rerun : undefined} />}
+          {rec.engine?.check && story && <AgentCheck log={rec.log} check={rec.engine.check} rerun={rerun && rerun.id !== rec.id ? rerun : undefined} same={same} />}
         </div>
       </div>
 

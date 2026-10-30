@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { TourRoom } from "@/components/tour/TourRoom";
 import { publicTour } from "@/lib/publictour";
 import { loadTour } from "@/lib/store";
-import { clearedRerun, withReadLog } from "./readlog";
+import { clearedRerun, sameArtistRerun, withReadLog } from "./readlog";
 import { flagshipReality } from "./reality";
 
 export const dynamic = "force-dynamic";
@@ -25,5 +25,6 @@ export default async function TourPage({ params }: { params: Promise<{ id: strin
   // what was booked; a tour whose agent left objections links the re-run where the agent cleared its own.
   const rerun = rec.status === "done" && rec.engine?.check?.after ? await clearedRerun() : undefined;
   const reality = rec.status === "done" ? await flagshipReality(rec.id, rec.plan?.artist?.name) : undefined;
-  return <TourRoom initial={withReadLog(publicTour(rec))} rerun={rerun} reality={reality} />;
+  const same = rec.status === "done" ? await sameArtistRerun(rec.id) : undefined;
+  return <TourRoom initial={withReadLog(publicTour(rec))} rerun={rerun} same={same} reality={reality} />;
 }

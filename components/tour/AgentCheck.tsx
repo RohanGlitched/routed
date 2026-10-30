@@ -24,7 +24,7 @@ const roundWord = (n: number) => (n === 1 ? "one round" : `${n} rounds`);
  * The agent check in the tour book's head: the agent proposed, check_plan objected, each revision round, and how the
  * rules settled what was left. Read from the tour's own call sheet (display.ts agentStory), so no figure is typed.
  */
-export function AgentCheck({ log, check, rerun }: { log: LogLine[]; check?: Check; rerun?: Rerun }) {
+export function AgentCheck({ log, check, rerun, same }: { log: LogLine[]; check?: Check; rerun?: Rerun; same?: Rerun & { after: number; scout: number } }) {
   const story = agentStory(log);
   if (!story || !check) return null;
   const left = story.rounds.at(-1)?.left ?? story.first;
@@ -71,6 +71,16 @@ export function AgentCheck({ log, check, rerun }: { log: LogLine[]; check?: Chec
             </li>
           ))}
       </ol>
+      {same ? (
+        <p className={a.checkLinks}>
+          Same artist, re-run on {same.date} with the current loop:{" "}
+          <Link href={`/tour/${same.id}`}>
+            the agent cleared {same.before - same.after} of {count(same.before)} itself
+          </Link>
+          {same.after ? (same.after === same.before ? ", and the rules settled them" : `, and the rules settled ${same.after === 1 ? "the other" : `the other ${same.after}`}`) : ""}
+          {same.scout ? `; it asked to scout ${same.scout === 1 ? "once" : `${same.scout} times`} (scout_city)` : ""}. This tour stays as the demo video shows it.
+        </p>
+      ) : null}
       <p className={a.checkLinks}>
         <Link href="/how#agent-check">How the check works</Link>
         {rerun && !story.cleared ? (

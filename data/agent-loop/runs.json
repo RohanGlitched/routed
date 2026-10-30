@@ -326,5 +326,25 @@
     }
    ]
   }
- ]
+ ],
+ "flagshipRerun": {
+  "label": "Sierra Ferrell re-run for the flagship with the final loop (commit 82c9545: scout_city answered inside the round); not promoted, the flagship keeps the stops the video shows",
+  "tours": [
+   {
+    "scoutCalls": 1,
+    "clearedAfterScout": 0,
+    "artist": "Sierra Ferrell",
+    "tour": "d53j244bwp",
+    "before": 2,
+    "after": 2,
+    "rounds": 3,
+    "revised": 0,
+    "modelCalls": 9,
+    "qloo": 93,
+    "longestLegObjected": 1895,
+    "longestLegFinal": 1718,
+    "legWorse": false
+   }
+  ]
+ }
 }

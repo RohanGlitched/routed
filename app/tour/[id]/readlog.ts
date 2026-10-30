@@ -21,6 +21,20 @@ export const CLEARED_RERUN = "ipgunjvpgt";
 
 /** That re-run in a few fields, read from its stored record; none unless the agent really cleared everything there.
  *  Dated in IST, as the loop versions are named on /how (this one ran on Oct 30). */
+/** The same artist re-run with the current loop, for a tour routed before it (the flagship stays as the video shows it). */
+export const SAME_ARTIST_RERUN: Record<string, string> = { "8v4ce57nx6": "d53j244bwp" };
+
+/** That re-run as it came out, cleared or not (Oct 30 judges: publish it whatever it shows). */
+export async function sameArtistRerun(id: string): Promise<(Rerun & { after: number; scout: number }) | undefined> {
+  const rid = SAME_ARTIST_RERUN[id];
+  const t = rid ? await loadTour(rid).catch(() => null) : null;
+  const c = t?.engine?.check;
+  if (!t?.plan || !c) return undefined;
+  const date = new Date(t.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "Asia/Kolkata" });
+  const scout = t.log.filter((l) => /\(scout_city, round \d+\)\.$/.test(l.text) && /^The agent asked to scout/.test(l.text)).length;
+  return { id: t.id, artist: t.plan.artist.name, before: c.before, after: c.after, rounds: c.rounds, date, scout };
+}
+
 export async function clearedRerun(): Promise<Rerun | undefined> {
   const t = await loadTour(CLEARED_RERUN).catch(() => null);
   const c = t?.engine?.check;

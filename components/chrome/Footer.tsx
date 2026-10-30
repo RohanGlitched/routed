@@ -6,7 +6,7 @@ import s from "./chrome.module.css";
 
 /** The tour book the demo video opens; kept reachable under the same link. */
 const FLAGSHIP = "/tour/8v4ce57nx6";
-const VIDEO_URL = "https://youtu.be/Ck4u-36QRPY";
+const VIDEO_URL = "https://youtu.be/gOBjoFHAQTc";
 const MCP_URL = "https://routed-tours.vercel.app/api/mcp";
 
 type Item = { href: string; label: string; note: string; external?: boolean };
@@ -24,7 +24,7 @@ const COLUMNS: { title: string; items: Item[] }[] = [
     title: "See it work",
     items: [
       { href: FLAGSHIP, label: "A finished tour book", note: "Sierra Ferrell, the tour in the video" },
-      { href: VIDEO_URL, label: "The demo video", note: "A real run, start to finish", external: true },
+      { href: VIDEO_URL, label: "The demo video", note: "The 3-minute demo", external: true },
       { href: "/#wall", label: "Poster wall", note: "Every tour, printed from its own run" },
     ],
   },

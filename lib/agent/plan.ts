@@ -84,7 +84,7 @@ export const PRE_MEASURE = 4;
 /** check_plan's objections go back to the agent at most this many times. */
 export const MAX_REVISIONS = 3;
 /** Model calls the agent may add to shortlist + book: revision rounds and the final reasons together. */
-export const EXTRA_CALLS = 4;
+export const EXTRA_CALLS = 5;
 /** Qloo's strongest cities always shown to the agent, even when the blend ranks them lower. */
 export const QLOO_TOP_SHOWN = 5;
 /** Qloo's strongest fan cities, kept on the tour like anchors (any size): a tour never drops the artist's #1 city. */
@@ -1169,6 +1169,22 @@ export async function planTour(
           }));
           scoutedByAgent.push(...wanted);
           log({ kind: "qloo", text: `The agent asked to scout ${wanted.map(name).join(" and ")} before re-booking (scout_city, round ${rounds}).`, result: wanted.map((id) => `${name(id)}: ${(rooms.get(id) ?? []).length} rooms, ${(openers.get(id) ?? []).length} support acts`).join("; "), ms: Date.now() - ts });
+          // The tool's answer goes straight back to the agent, which re-books once more in the same round with the
+          // scouted rooms in front of it (one call, inside EXTRA_CALLS and the planning time).
+          if (extra < EXTRA_CALLS && left() >= minCall) {
+            extra++;
+            const found = wanted.map((id) => ({ city_id: id, rooms: compactRooms(rooms.get(id) ?? [], draw), openers: compactOpeners(openers.get(id) ?? []) }));
+            const again = [...messages, { role: "assistant" as const, content: JSON.stringify(r.data) }, { role: "user" as const, content: `scout_city results (use these room_ids):\n${JSON.stringify(found)}\n\nRe-book now with them: exactly ${shows} stops in the same JSON shape, and "scout": [] this time.` }];
+            try {
+              const r2 = await ask<{ stops: BookStop[]; scout?: string[] }>({ name: "rebook-scouted", schema: REBOOK_SCHEMA, maxTokens: 8000, timeoutMs: 90_000, messages: again });
+              model = r2.model;
+              if (r2.data.stops?.length) next = r2.data.stops;
+              log({ kind: "model", text: `The agent re-booked with the scouted rooms in front of it (scout_city, round ${rounds}).`, result: (r2.data.stops ?? []).filter((s) => wanted.includes(s.city_id)).map((s) => `${name(s.city_id)}: ${rooms.get(s.city_id)?.find((x) => x.id === s.room_id)?.name ?? "a room it couldn't name"}`).join("; ") || "It booked none of the scouted cities" });
+            } catch (e) {
+              console.error("[plan] scouted re-book failed", e);
+              log({ kind: "model", text: `The agent didn't answer with the scouted rooms (round ${rounds}); its first answer stands.`, failed: true });
+            }
+          }
         }
       } catch (e) {
         console.error("[plan] revision failed", e);

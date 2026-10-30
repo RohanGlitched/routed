@@ -857,3 +857,24 @@ test("scout_city: the agent asks Routed to scout a city it hasn't seen, books it
   const omaha = r.picks.find((x) => x.marketId === id("Omaha"));
   assert.ok(omaha && omaha.rooms.some((x) => x.id === omaha.roomId), "a real room, chosen by the size rule");
 });
+
+test("scout_city is a step inside the round: the scouted rooms go back to the agent, which books one of them itself", async () => {
+  const calls: string[] = [];
+  const ask = model((name, messages) => {
+    if (name === "shortlist") return { cities: [id("Denver"), id("Boulder"), id("Salt Lake City")].map((c) => ({ city_id: c, why: "strong" })), alternates: [] };
+    if (name === "book") return { stops: [stop(id("Denver")), stop(id("Boulder")), stop(id("Salt Lake City"))] };
+    if (name === "rebook") return { stops: [stop(id("Denver")), { ...stop(id("Omaha")), room_id: "a-guess" }, stop(id("Salt Lake City"))], scout: [id("Omaha")] };
+    if (name === "rebook-scouted") {
+      assert.match(lastUser(messages), new RegExp(`scout_city results \\(use these room_ids\\)[\\s\\S]*${id("Omaha")}-b`));
+      return { stops: [stop(id("Denver")), stop(id("Omaha"), "b"), stop(id("Salt Lake City"))], scout: [] };
+    }
+    return { reasons: [] };
+  }, calls);
+  const { p, lines } = run(tools(ask));
+  const r = await p;
+  assert.deepEqual(calls.slice(0, 4), ["shortlist", "book", "rebook", "rebook-scouted"]);
+  assert.ok(lines.some((l) => /re-booked with the scouted rooms in front of it/.test(l.text)));
+  const omaha = r.picks.find((x) => x.marketId === id("Omaha"))!;
+  assert.equal(omaha.roomId, `${id("Omaha")}-b`, "the agent's own pick among the scouted rooms");
+  assert.equal(r.check!.after, 0);
+});

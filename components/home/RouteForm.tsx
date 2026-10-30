@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { CROWD_OPTIONS } from "@/lib/draw";
 import s from "./form.module.css";
 
@@ -20,7 +20,7 @@ function leftLine(l: Left): string {
 }
 
 /** The one form: who, from where, when, how many shows. Defaults let a first-time visitor just press the button. */
-export function RouteForm({ artist = "", from = "", draw = "" }: { artist?: string; from?: string; draw?: string }) {
+export function RouteForm({ artist = "", from = "", draw = "", aside }: { artist?: string; from?: string; draw?: string; /** A line beside the button (the home page's /proof headline). */ aside?: ReactNode }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<{ text: string; field?: string } | null>(null);
@@ -114,6 +114,7 @@ export function RouteForm({ artist = "", from = "", draw = "" }: { artist?: stri
         <p className={s.hint} aria-live="polite">
           About a minute. No sign-up.{left ? ` ${leftLine(left)}` : ""}
         </p>
+        {aside}
       </div>
       {error && (
         <p className={s.error} id="route-error" role="alert">

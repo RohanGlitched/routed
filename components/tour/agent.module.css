@@ -49,3 +49,11 @@
 .stepDone::before { color: var(--fire-deep) !important; }
 .checkLinks { margin: 10px 0 0; font-size: 13px; color: var(--mute); }
 .checkLinks a { color: var(--blue); font-weight: 600; }
+
+/* The reality check: the flagship against the artist's real tour, in the blue ink (outside data, not Qloo's). */
+.reality { border-top-color: var(--blue); }
+.reality .diffCount b { color: var(--blue); }
+.reality .diffAdded h4 { color: var(--blue-deep); }
+.reality a { color: var(--blue); }
+.reality .diffCols li span { white-space: normal; text-align: right; }
+.realityCrowd { margin: 12px 0 0; font-size: 14px; color: var(--ink-2); max-width: 60em; }

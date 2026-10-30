@@ -5,6 +5,7 @@ import { Present, type ProofHeadline } from "@/components/tour/Present";
 import { publicTour } from "@/lib/publictour";
 import { loadTour } from "@/lib/store";
 import { clearedRerun, withReadLog } from "../readlog";
+import { flagshipReality } from "../reality";
 
 export const dynamic = "force-dynamic";
 
@@ -30,5 +31,6 @@ export default async function PresentPage({ params }: { params: Promise<{ id: st
   const rec = await loadTour((await params).id);
   if (!rec || rec.status !== "done" || !rec.plan?.stops?.length) notFound();
   const rerun = rec.engine?.check?.after ? await clearedRerun() : undefined;
-  return <Present rec={withReadLog(publicTour(rec))} proof={headline()} rerun={rerun} />;
+  const reality = await flagshipReality(rec.id, rec.plan.artist.name);
+  return <Present rec={withReadLog(publicTour(rec))} proof={headline()} rerun={rerun} reality={reality} />;
 }

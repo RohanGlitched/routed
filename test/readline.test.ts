@@ -55,7 +55,7 @@ test("the agent check reads as proposed, objected, each round, settled", () => {
   assert.equal(s.rounds[0]!.left[0], "Madison Theater too big for Cincinnati, on a wrong web figure of 17,556 (hand-checked about 1,200)");
   assert.equal(s.cleared, false);
   // Settled up to the support-act line, not after it.
-  assert.deepEqual(s.settled, ["Memphis (fan #18) replaced Austin, a 1,841 km leg", "Cincinnati gets Bogart's"]);
+  assert.deepEqual(s.settled, ["Memphis (fan #18) replaced Austin, which would have needed a 1,841 km leg with no show", "Cincinnati gets Bogart's"]);
   assert.equal(agentStory([line("rule", "check_plan: one objection to the agent's booking, sent back to it.", "Vancouver: 3,551 km leg from Chicago"), line("model", "The agent re-booked after the check (round 1 of 3).", "1 pick changed; every rule clears")])!.cleared, true);
   assert.equal(agentStory([line("rule", "Booked.")]), null);
   assert.equal(objectionPhrase("Chicago: Chicago is a major market, #8 (anchor rule)"), "Chicago missing, a major market and fan city #8");

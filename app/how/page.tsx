@@ -137,6 +137,11 @@ export default async function How() {
             With the latest version the agent itself cleared {fresh.at(-1)!.cleared} of the {fresh.at(-1)!.raised} objections on {fresh.at(-1)!.n} re-runs and left {fresh.at(-1)!.worse} worse. What drove it: a round counts only with fewer objections and no longer worst leg, and the 1,800 km leg cap is enforced after the rules settle. scout_city (the agent asking Routed to look up 2 cities of its choice a round) was offered in all three and called in {fresh.at(-1)!.scout} run, whose round then cleared nothing new; the other two cleared everything in their first round without it. The room-grade change landed between these runs, so they don&apos;t isolate one cause. The version before cleared {fresh.length > 1 ? fresh.at(-2)!.cleared : 0} of {fresh.length > 1 ? fresh.at(-2)!.raised : 0}: one of its runs, Sierra Ferrell, went from 3 objections to 1 but ended on a 3,298 km leg, longer than the 1,895 km one first objected to, so it counts as worse, not cleared. Three runs a version is a small sample.
           </p>
         )}
+        {LOOP.byType ? (
+          <p>
+            Across the {LOOP.byType.runs.length} re-runs on the latest loops the agent cleared {(fresh.at(-1)?.cleared ?? 0) + Math.max(0, (LOOP.flagshipRerun?.tours[0]?.before ?? 0) - (LOOP.flagshipRerun?.tours[0]?.after ?? 0))} of {(fresh.at(-1)?.raised ?? 0) + (LOOP.flagshipRerun?.tours[0]?.before ?? 0)} objections itself. By rule: {LOOP.byType.types.map((t) => `${t.rule} ${t.gone} of ${t.raised} gone`).join(", ")}, with one new fan-city objection along the way.
+          </p>
+        ) : null}
         {LOOP.flagshipRerun?.tours[0] ? (
           <p>
             The flagship artist again, with the final loop (scout_city now answered inside the round):{" "}

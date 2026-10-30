@@ -2,8 +2,9 @@ import { createHash } from "node:crypto";
 import type { Artist, Audience, CityScore, Guess, Local, LogLine, Named, Opener, Plan, QlooDiff, ReadThrough, Room, Spot, Stop, TourRecord } from "./types";
 
 /**
- * A tour as it leaves the server (M8: Qloo's developer terms, no Qloo response data published): only what the
- * pages draw. Qloo's entity ids become opaque ids (a short hash, the same for one entity on every page and in every
+ * A tour as it leaves the server (M8, Qloo's developer terms): no Qloo ids, image links, raw scores or raw
+ * street-level tiles, and none of Qloo's descriptive text; only what the pages draw, which still names the places
+ * and artists Qloo returned. Qloo's entity ids become opaque ids (a short hash, the same for one entity on every page and in every
  * streamed piece, so a stop's room and booked-room id still match) and image links go; every score left is rounded
  * to two places; the poster's heatmap and the street maps are snapped to grids finer than their dots can show;
  * cities keep their place on the fan map, not Qloo's raw scores; the call sheet's requests show their shape with

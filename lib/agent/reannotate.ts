@@ -262,6 +262,33 @@ export function reannotate(rec: TourRecord, o: { route?: RouteMode; donors?: Don
     void readLocal;
   }
 
+  // 6b. Copy howlers in stored hold requests: a guessed pronoun for the artist ("for her fans" on a band's tour) and
+  //     a broken "so whether … is possible." clause; checked again against the stop's evidence afterwards.
+  const copy: string[] = [];
+  for (const s of plan.stops) {
+    if (!s.pitch) continue;
+    const before = s.pitch.body;
+    const body = before
+      .replace(/\bfor (her|his|their) fans\b/g, `for ${plan.artist.name} fans`)
+      .replace(/,?\s*so whether ([^.?]+?) (is|are) possible\./g, (_m, what: string) => `: would ${what} be possible?`);
+    if (body !== before) {
+      s.pitch = { ...s.pitch, body };
+      copy.push(s.city);
+    }
+  }
+  if (copy.length) {
+    changes.push(`hold-request copy: ${copy.join(", ")}`);
+    say("Hold requests' copy fixed by rule: the artist is named instead of a guessed pronoun, and a broken 'so whether … is possible' clause is asked as a question.", copy.join(", "));
+  }
+  // 6c. Hottest blocks across a state line say so (Cincinnati's are in Newport, Kentucky).
+  for (const s of plan.stops) {
+    const h = s.local?.hot;
+    if (h?.named === "osm" && h.name === "Newport" && s.marketId === "cincinnati-us-oh") {
+      s.local!.hot = { ...h, name: "Newport, KY (across the river)" };
+      changes.push(`neighbourhoods: ${s.city}: Newport, KY (across the river)`);
+    }
+  }
+
   // 7. Each stop's reason: the model's sentence where it still describes the stop and passes every check, else the rule's.
   const whys: string[] = [];
   for (const s of plan.stops) {

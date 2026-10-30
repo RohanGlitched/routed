@@ -102,3 +102,12 @@ test("call-sheet results print Qloo's tag names the way the tour book does", () 
   const l = readLine({ at: "", kind: "qloo", text: "What do Sierra Ferrell fans listen to?", result: "Alt- country, Indie - Folk, Americana" });
   assert.equal(l.result, "Alt-country, Indie folk, Americana");
 });
+
+test("stored hold requests: the artist is named instead of a guessed pronoun, and a broken 'so whether' clause becomes a question", async () => {
+  const { reannotate } = await import("../lib/agent/reannotate.ts");
+  const stop = { marketId: "bristol-gb", city: "Bristol", label: "Bristol, UK", lat: 51.45, lon: -2.59, date: "2027-05-13", fromKm: 0, fromHours: 0, travelDays: 0, dayOff: false, score: { marketId: "bristol-gb", name: "Bristol", label: "Bristol, UK", lat: 51.45, lon: -2.59, affinity: 0.9, tiles: 1, rank: 7 }, rooms: [], openers: [], after: [], pitch: { subject: "Hold request", body: "Qloo ranks it #7 of 99 cities in the region for her fans. The room holds 1,600 against our usual crowd of about 3,000, so whether 2 nights or a larger room is possible.", struck: [] } };
+  const rec = { id: "abcdefghij", createdAt: "", status: "done", input: { artist: "Fontaines D.C.", from: "Dublin", firstDate: "2027-05-13", shows: 1, draw: 3000 }, log: [], plan: { artist: { id: "a", name: "Fontaines D.C.", genres: [] }, region: "uk", from: { marketId: "bristol-gb", label: "Bristol", lat: 51.45, lon: -2.59 }, firstDate: "2027-05-13", lastDate: "2027-05-13", heat: [], cities: [stop.score], stops: [stop], totalKm: 0, audience: { age: {}, gender: {}, tags: [], trend: [], brands: [] } } };
+  const out = reannotate(rec as never, { route: "keep" }).rec.plan!.stops[0]!.pitch!.body;
+  assert.match(out, /for Fontaines D\.C\. fans/);
+  assert.match(out, /about 3,000: would 2 nights or a larger room be possible\?$/);
+});

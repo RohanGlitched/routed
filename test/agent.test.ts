@@ -863,7 +863,11 @@ test("scout_city is a step inside the round: the scouted rooms go back to the ag
   const ask = model((name, messages) => {
     if (name === "shortlist") return { cities: [id("Denver"), id("Boulder"), id("Salt Lake City")].map((c) => ({ city_id: c, why: "strong" })), alternates: [] };
     if (name === "book") return { stops: [stop(id("Denver")), stop(id("Boulder")), stop(id("Salt Lake City"))] };
-    if (name === "rebook") return { stops: [stop(id("Denver")), { ...stop(id("Omaha")), room_id: "a-guess" }, stop(id("Salt Lake City"))], scout: [id("Omaha")] };
+    if (name === "rebook") {
+      assert.match(lastUser(messages), /Routed looks them up now and shows you their rooms before you re-book/);
+      assert.doesNotMatch(lastUser(messages), /next round/);
+      return { stops: [stop(id("Denver")), { ...stop(id("Omaha")), room_id: "a-guess" }, stop(id("Salt Lake City"))], scout: [id("Omaha")] };
+    }
     if (name === "rebook-scouted") {
       assert.match(lastUser(messages), new RegExp(`scout_city results \\(use these room_ids\\)[\\s\\S]*${id("Omaha")}-b`));
       return { stops: [stop(id("Denver")), stop(id("Omaha"), "b"), stop(id("Salt Lake City"))], scout: [] };

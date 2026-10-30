@@ -346,5 +346,36 @@
     "legWorse": false
    }
   ]
+ },
+ "byType": {
+  "runs": [
+   "qisgzhe5tj",
+   "jrp8bq4md8",
+   "ipgunjvpgt",
+   "d53j244bwp"
+  ],
+  "note": "The 9 objections check_plan raised on the first bookings of the 4 re-runs on the latest loops, by rule, and how many were gone when the agent's rounds ended (one new fan-city objection appeared along the way, so the net is 6 of 9).",
+  "types": [
+   {
+    "rule": "leg cap",
+    "raised": 5,
+    "gone": 4
+   },
+   {
+    "rule": "radius clause",
+    "raised": 2,
+    "gone": 1
+   },
+   {
+    "rule": "room",
+    "raised": 1,
+    "gone": 1
+   },
+   {
+    "rule": "major market",
+    "raised": 1,
+    "gone": 1
+   }
+  ]
  }
 }

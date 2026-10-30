@@ -44,6 +44,8 @@ export type WallItem = {
   /** The cities' average rank on the artist's Qloo fan map (1 = strongest), the one number on the wall card. */
   fanRank: number;
   region: RegionId;
+  /** Routed for a usual crowd of ARENA_CROWD or more: the card says it is a scale test. */
+  arena: boolean;
   lat: number;
   lon: number;
   createdAt: string;
@@ -89,6 +91,7 @@ const wallItem = (t: TourRecord): WallItem => ({
   from: t.plan!.from.label,
   fanRank: t.plan!.guess?.rankMean.routed ?? t.plan!.stops.reduce((n, x) => n + x.score.rank, 0) / t.plan!.stops.length,
   region: t.plan!.region,
+  arena: isArena(t),
   lat: t.plan!.from.lat,
   lon: t.plan!.from.lon,
   createdAt: t.createdAt,
@@ -108,14 +111,34 @@ async function readWall(): Promise<{ hero: TourRecord | null; wall: TourRecord[]
   // The pin holds only while that tour is on the poster wall; a tour taken off it (re-routed under newer rules)
   // gives way to the newest one there.
   const hero = pinned?.status === "done" && pinned.showcase ? pinned : (wall[0] ?? null);
-  return { hero, wall: byQlooChanged(wall.filter((t) => t.plan?.stops?.length)) };
+  return { hero, wall: wallOrder(wall.filter((t) => t.plan?.stops?.length)) };
 }
 
-/** The wall leads with the tours Qloo changed most against the same rules on city size alone (plan.qlooDiff), the
- *  shelf's own order (newest first) breaking ties; the hero is picked before this, so it stays the pinned tour. */
-export function byQlooChanged(tours: TourRecord[]): TourRecord[] {
+/** The wall opens on the indie runs the pitch is about, in this order, matched by artistKey. */
+export const WALL_LEAD = ["Sierra Ferrell", "MJ Lenderman", "Alvvays", "Japanese Breakfast"];
+
+/** From this usual crowd up a tour is an arena run: it closes the wall, as a scale test, not the pitch. */
+export const ARENA_CROWD = 10_000;
+
+/** The usual crowd the tour was routed for (typed, or the one Routed assumed and printed on the tour). */
+const crowdOf = (t: TourRecord) => t.input.draw ?? t.plan?.assumedDraw ?? 0;
+export const isArena = (t: TourRecord) => crowdOf(t) >= ARENA_CROWD;
+
+/** The wall's order: the lead artists first, then the tours Qloo changed most against the same rules on city size
+ *  alone (plan.qlooDiff), arena runs last; the shelf's own order (newest first) breaks ties. The hero is picked
+ *  before this, so it stays the pinned tour. */
+export function wallOrder(tours: TourRecord[]): TourRecord[] {
+  const lead = WALL_LEAD.map(artistKey);
+  const leadAt = (t: TourRecord) => {
+    const keys = [artistKey(t.plan?.artist.name ?? ""), artistKey(t.input.artist)];
+    const i = lead.findIndex((k) => keys.includes(k));
+    return i < 0 ? lead.length : i;
+  };
   const changed = (t: TourRecord) => t.plan?.qlooDiff?.added.length ?? -1;
-  return tours.map((t, i) => ({ t, i })).sort((a, b) => changed(b.t) - changed(a.t) || a.i - b.i).map((x) => x.t);
+  return tours
+    .map((t, i) => ({ t, i }))
+    .sort((a, b) => Number(isArena(a.t)) - Number(isArena(b.t)) || leadAt(a.t) - leadAt(b.t) || changed(b.t) - changed(a.t) || a.i - b.i)
+    .map((x) => x.t);
 }
 
 /** Everything the home page reads: the hero tour, the wall in a few fields each, and the benchmark in two numbers. */
@@ -124,7 +147,7 @@ export const homeData = unstable_cache(
     const [{ hero, wall }, bench] = await Promise.all([readWall(), benchTours()]);
     return { hero: hero ? slimHero(hero) : null, wall: wall.map(wallItem), bench: summarise(bench) };
   },
-  ["home-data-v4"],
+  ["home-data-v5"],
   { revalidate: WINDOW, tags: ["showcase", "bench", "tours"] },
 );
 
@@ -140,7 +163,7 @@ export const wallPosters = unstable_cache(
     }
     return out;
   },
-  ["wall-posters-v2"],
+  ["wall-posters-v3"],
   { revalidate: WINDOW, tags: ["showcase", "tours"] },
 );
 

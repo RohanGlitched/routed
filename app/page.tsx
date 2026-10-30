@@ -86,17 +86,29 @@ export default async function Home() {
   const media = plan?.audience?.media;
   const watch = [media?.films?.[0], media?.tv?.[0], media?.books?.[0], media?.films?.[1]].filter((x) => x?.name).slice(0, 3).map((x) => x!.name);
 
+  // /proof's headline beside the button, in plain words: real cities found per 100, against city size and the model
+  // alone, on the tours announced after the model's release (data/outside2/results.json).
+  const perHundred = Math.round(POST.blendVsPop.diff * 100);
+  const level = POST.blendVsModel && POST.blendVsModel.p >= 0.05;
+  const proofLine = (
+    <p className={s.proofLine}>
+      <Link href="/proof#unread">
+        {perHundred} more of every 100 real cities than city size{level ? ", level with an AI model alone" : ""}
+      </Link>
+      , plus the block, the neighbourhood and the crowd a model can&apos;t give.
+    </p>
+  );
+
   return (
     <>
       <section className={`wrap ${s.hero}`}>
         <div className={s.pitch}>
           <h1 className={s.h1}>Tour where the fans are dense, not where the cities are big.</h1>
-          <Suspense fallback={<RouteForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />}>
-            <PrefilledForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} />
+          <Suspense fallback={<RouteForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} aside={proofLine} />}>
+            <PrefilledForm artist={hero?.input.artist ?? ""} from={hero?.input.from ?? ""} aside={proofLine} />
           </Suspense>
           <p className={s.lede}>
-            Which city, which neighbourhood, which room. Name an artist and an agent reads Qloo&apos;s taste graph for the cities where their fans over-index, the blocks inside each city where they live and the rooms they go to, sized to the crowd. It picks one support act for the run, routes and dates the shows, and drafts a checked pitch for each venue. On {POST.n} tours announced after the model&apos;s release, the city ranking Routed ships found{" "}
-            <Link href="/proof#unread">{(POST.blendVsPop.diff * 100).toFixed(1)} pts more of the real cities</Link> than a big-city list.
+            Which city, which neighbourhood, which room. Name an artist and an agent reads Qloo&apos;s taste graph for the cities where their fans over-index, the blocks inside each city where they live and the rooms they go to, sized to the crowd. It picks one support act for the run, routes and dates the shows, and drafts a checked pitch for each venue.
           </p>
           <StickyRoute />
         </div>
@@ -299,7 +311,7 @@ export default async function Home() {
             Poster wall
           </h2>
           <p className={s.wallLede}>Tours routed on Routed. Each poster is printed from its own run: the dots are that artist&apos;s Qloo heatmap. The number under it is where its cities rank, on average, on that artist&apos;s fan map; 1 is the strongest city.</p>
-          <Wall items={wall.map(({ id, artist, from, fanRank }) => ({ id, artist, from, fanRank }))} />
+          <Wall items={wall.map(({ id, artist, from, fanRank, arena }) => ({ id, artist, from, fanRank, arena }))} />
         </section>
       )}
     </>

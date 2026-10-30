@@ -6,7 +6,7 @@ import { Poster, type PosterProps } from "@/components/poster/Poster";
 import s from "./wall.module.css";
 
 /** `fanRank` is the cities' average rank on the artist's Qloo fan map, the one number on each card. */
-export type WallEntry = { id: string; artist: string; from: string; fanRank: number };
+export type WallEntry = { id: string; artist: string; from: string; fanRank: number; /** An arena run, shown last as a scale test. */ arena?: boolean };
 
 /**
  * Columns that leave no hole in the last row: four when the count allows, else five or three; a count none of
@@ -69,6 +69,7 @@ export function Wall({ items }: { items: WallEntry[] }) {
             <span className={s.stat}>
               <b>#{Math.round(t.fanRank)}</b> average fan rank
             </span>
+            {t.arena && <span className={s.scale}>Scale test: arena act</span>}
           </Link>
         </li>
       ))}

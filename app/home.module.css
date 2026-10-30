@@ -17,6 +17,9 @@
   max-width: 10.5em;
   text-wrap: balance;
 }
+/* /proof's headline beside "Route the tour": a full row under the button and its hint, in the first screen at 1440. */
+.proofLine { flex: 1 1 100%; margin: 2px 0 0; padding-left: 12px; border-left: 3px solid var(--blue); font-size: 15px; line-height: 1.45; color: var(--ink-2); max-width: 36em; }
+.proofLine a { color: var(--blue-deep); font-weight: 700; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .lede { margin: 28px 0 0; font-size: 17px; line-height: 1.55; color: var(--ink-2); max-width: 36em; }
 
 .stage { margin: 0; }

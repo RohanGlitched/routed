@@ -10,6 +10,7 @@ import { CallSheet } from "./CallSheet";
 import { DaySheet } from "./DaySheet";
 import { downloadPoster } from "./download";
 import { tourCalendar } from "@/lib/ics";
+import { allHolds, exportName, routingCsv } from "@/lib/export";
 import { Campaign } from "./Campaign";
 import { Control } from "./Control";
 import { QlooDiff } from "./QlooDiff";
@@ -19,6 +20,7 @@ import { fillDates, runLegs } from "@/lib/geo/fill";
 import { AgentCheck, type Rerun } from "./AgentCheck";
 import { agentStory, checkLine, jumpsLine, legsLead, plural, sheetCounts, stopAnchor } from "./display";
 import { StopStrip } from "./StopStrip";
+import { Reality, type RealityCheck } from "./Reality";
 import a from "./agent.module.css";
 import s from "./tour.module.css";
 
@@ -30,7 +32,17 @@ const short = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("
  * One tour: streams the agent's run when it's fresh (each Qloo call appears on the call sheet as it happens, the
  * poster fills in as the plan does), and shows the finished tour book on a revisit or a shared link.
  */
-export function TourRoom({ initial, rerun }: { initial: TourRecord; /** A re-run where the agent cleared its own objections, for tours where it didn't. */ rerun?: Rerun }) {
+export function TourRoom({
+  initial,
+  rerun,
+  reality,
+}: {
+  initial: TourRecord;
+  /** A re-run where the agent cleared its own objections, for tours where it didn't. */
+  rerun?: Rerun;
+  /** The flagship against the artist's real tour (data/flagship-reality.json), when that file is there. */
+  reality?: RealityCheck;
+}) {
   const [rec, setRec] = useState<TourRecord>(initial);
   const started = useRef(false);
   const posterRef = useRef<HTMLDivElement>(null);
@@ -126,6 +138,10 @@ export function TourRoom({ initial, rerun }: { initial: TourRecord; /** A re-run
               <button type="button" onClick={() => window.print()}>
                 Print the tour book
               </button>
+              <button type="button" onClick={() => saveGrid(plan!, title, rec.input.draw ?? plan!.assumedDraw)}>
+                Download routing grid (CSV)
+              </button>
+              <CopyHolds plan={plan!} />
               <CopyLink />
               <Link href={`/tour/${rec.id}/present`} className={s.presentLink}>
                 Present it
@@ -215,6 +231,7 @@ export function TourRoom({ initial, rerun }: { initial: TourRecord; /** A re-run
           {plan!.audience?.advice && <p className={s.advice}>{plan!.audience.advice}</p>}
           {plan!.tradeOff && <p className={s.advice}>Routing: {plan!.tradeOff}.</p>}
           {!running && <QlooDiff plan={plan!} />}
+          {!running && reality && <Reality data={reality} />}
           <ol className={s.sheets}>
             {stops.map((st, i) => (
               <DaySheet key={st.marketId} anchor={stopAnchor(i)} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} genres={plan!.artist.genreKeys ?? plan!.artist.genres} fill={fills.find((f) => f.index === i)} />
@@ -270,6 +287,33 @@ function saveCalendar(plan: Plan, id: string, title: string) {
   a.download = `${title.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase()}-tour.ics`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+/** The routing grid as a spreadsheet: one row a show, the columns a booker fills a routing sheet with (lib/export.ts). */
+function saveGrid(plan: Plan, title: string, draw?: number) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([routingCsv(plan, draw)], { type: "text/csv;charset=utf-8" }));
+  a.download = exportName(title, "routing-grid.csv");
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+/** Every stop's hold request, subject and body, in one paste. */
+function CopyHolds({ plan }: { plan: Plan }) {
+  const [done, setDone] = useState(false);
+  if (!plan.stops.some((x) => x.pitch)) return null;
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        await navigator.clipboard.writeText(allHolds(plan)).catch(() => {});
+        setDone(true);
+        setTimeout(() => setDone(false), 1800);
+      }}
+    >
+      {done ? "Holds copied" : "Copy all holds"}
+    </button>
+  );
 }
 
 function CopyLink() {

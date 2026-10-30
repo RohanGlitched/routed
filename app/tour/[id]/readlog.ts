@@ -4,6 +4,7 @@ import { lineContext, readLine } from "@/lib/log";
 import { loadTour } from "@/lib/store";
 import type { TourRecord } from "@/lib/types";
 import type { Rerun } from "@/components/tour/AgentCheck";
+import { agentStory, swapRows } from "@/components/tour/display";
 
 /**
  * The call sheet read against what the tour finally booked: a room the agent named that Qloo's search by name missed
@@ -25,5 +26,6 @@ export async function clearedRerun(): Promise<Rerun | undefined> {
   const c = t?.engine?.check;
   if (!t?.plan || !c || c.after !== 0 || !c.before) return undefined;
   const date = new Date(t.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "Asia/Kolkata" });
-  return { id: t.id, artist: t.plan.artist.name, before: c.before, rounds: c.rounds, date };
+  const story = agentStory(t.log);
+  return { id: t.id, artist: t.plan.artist.name, before: c.before, rounds: c.rounds, date, first: story?.first ?? [], rows: swapRows(t.log, t.plan.stops) };
 }

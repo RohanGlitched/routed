@@ -1,5 +1,5 @@
 import type { FillLeg, RunLegs } from "@/lib/geo/fill";
-import type { LogLine, Room, TourRecord } from "@/lib/types";
+import type { LogLine, Room, Stop, TourRecord } from "@/lib/types";
 
 /**
  * Pure helpers for the tour book's display (no React), tested in test/display.test.ts: the stop strip's labels,
@@ -155,7 +155,7 @@ function settledPhrase(l: LogLine): string | null {
   const t = l.text;
   let m: RegExpExecArray | null;
   if ((m = /^The agent booked (\d+) usable stops; the ranking filled the other (\d+)\.$/.exec(t))) return `the fan ranking filled ${m[2] === "1" ? "the stop" : `${m[2]} stops`} the agent left unusable${l.result ? ` (${l.result})` : ""}`;
-  if ((m = /^(.+?) would cost a ([\d,]+) km leg with no show, so (.+?) \(#(\d+) on the fan map\) takes its place\.$/.exec(t))) return `${m[3]} (fan #${m[4]}) replaced ${m[1]}, a ${m[2]} km leg`;
+  if ((m = /^(.+?) would cost a ([\d,]+) km leg with no show, so (.+?) \(#(\d+) on the fan map\) takes its place\.$/.exec(t))) return `${m[3]} (fan #${m[4]}) replaced ${m[1]}, which would have needed a ${m[2]} km leg with no show`;
   if ((m = /^(.+?) is where the tour starts and #(\d+) on .+?, so the run opens with a hometown show and (.+?) gives way\.$/.exec(t))) return `a hometown opener in ${m[1]}, so ${m[3]} gave way`;
   if ((m = /^(.+?) is #(\d+) on .+? fan map, but no route reaches it without a leg over ([\d,]+) km.*so it stays off this run\.$/.exec(t))) return `${m[1]} (fan #${m[2]}) stayed off: no route reaches it under ${m[3]} km`;
   if (/^One leg is still over ([\d,]+) km/.test(t)) return "one leg stays long, flagged on its day sheet";
@@ -264,4 +264,53 @@ export function jumpsLine(r: RunLegs): string {
   if (r.jumps.length === 1) return jumpLine(r.jumps[0]!);
   const each = r.jumps.map((j) => `${j.from} to ${j.to}, ${j.km.toLocaleString("en-US")} km (about ${j.hours} h, ${j.travelDays} travel days)`);
   return `The jumps between them: ${each.slice(0, -1).join(", ")} and ${each.at(-1)}. Drive them in the van, or fly the band and send the backline.`;
+}
+
+/* ───────────── the call-sheet slide (/present) ───────────── */
+
+export type SwapRow = { proposed: string; objection: string; chose: string; booked: string; rule?: string };
+
+/**
+ * The call-sheet slide's rows: what the agent proposed, what the rule objected, what the agent chose instead and
+ * what the tour finally booked, with the rule that booked it when that differs. The rounds on one city's room are
+ * one row ("Madison Theater, then Taft Theatre"); an objection that rested on a web capacity the hand check
+ * overturned is not shown as a row of its own (Madison Theater's 17,556), and the agent's own changes aren't
+ * objections.
+ */
+export function swapRows(log: LogLine[], stops: Stop[]): SwapRow[] {
+  const rows: (SwapRow & { city?: string })[] = [];
+  const all = log.flatMap((l) => l.swaps ?? []).filter((x) => !/agent's own change/i.test(x.objection));
+  const bookedIn = (city: string) => {
+    const st = stops.find((x) => x.city === city);
+    return st ? (st.rooms.find((r) => r.id === st.roomId)?.name ?? null) : null;
+  };
+  const ruleFor = (city: string, room: string) => {
+    const tail = `, so ${city} gets ${room}.`;
+    const l = log.find((x) => x.kind === "rule" && x.text.endsWith(tail));
+    return l ? l.text.slice(0, -tail.length) : undefined;
+  };
+  for (const sw of all) {
+    const m = /^(.+), ([^,]+)$/.exec(sw.proposed);
+    if (m) {
+      // A room in a city: later rounds on the same city's room join its row.
+      const room = m[1]!;
+      const city = m[2]!;
+      const row = rows.find((r) => r.city === city);
+      if (row) {
+        row.chose = `${row.chose}, then ${sw.chose}`;
+        continue;
+      }
+      if (/\(a web figure,/.test(sw.objection)) continue;
+      rows.push({ city, proposed: room === "an unlisted room" ? `${city}: a room Qloo doesn't list there` : `${room}, ${city}`, objection: sw.objection, chose: sw.chose, booked: bookedIn(city) ?? "Not on the tour" });
+    } else {
+      // A city swapped for another.
+      const booked = bookedIn(sw.chose);
+      rows.push({ proposed: sw.proposed, objection: sw.objection, chose: sw.chose, booked: booked ? `${booked}, ${sw.chose}` : "Not on the tour", ...(booked ? { rule: ruleFor(sw.chose, booked) } : {}) });
+    }
+  }
+  return rows.map(({ city, ...r }) => {
+    if (!city) return r;
+    const last = r.chose.split(", then ").at(-1)!;
+    return { ...r, ...(r.booked !== last && r.booked !== "Not on the tour" ? { rule: ruleFor(city, r.booked) } : {}) };
+  });
 }

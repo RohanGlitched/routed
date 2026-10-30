@@ -1,10 +1,20 @@
 import Link from "next/link";
 import type { AgentCheck as Check, LogLine } from "@/lib/types";
-import { agentStory } from "./display";
+import { agentStory, type SwapRow } from "./display";
 import a from "./agent.module.css";
 
 /** A re-run where the agent cleared check_plan's objections itself, linked from tours where it didn't. */
-export type Rerun = { id: string; artist: string; before: number; rounds: number; date: string };
+export type Rerun = {
+  id: string;
+  artist: string;
+  before: number;
+  rounds: number;
+  date: string;
+  /** check_plan's first objections there, in the tour book's words (display.ts agentStory). */
+  first?: string[];
+  /** Its call-sheet rows (display.ts swapRows): proposed, objected, re-chose, booked. */
+  rows?: SwapRow[];
+};
 
 const list = (xs: string[]) => (xs.length <= 1 ? (xs[0] ?? "") : `${xs.slice(0, -1).join("; ")}; and ${xs.at(-1)}`);
 const count = (n: number) => (n === 1 ? "one objection" : `${n} objections`);

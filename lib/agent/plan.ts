@@ -61,7 +61,7 @@ export type PlanDeps = {
   lookUpRooms: (artist: Artist, marketId: string, log: Log, draw?: number) => Promise<Room[]>;
   lookUpOpeners: (artist: Artist, marketId: string, log: Log) => Promise<Opener[]>;
   /** A room the agent named, searched for on Qloo in that city; null when Qloo has no such room there. */
-  findPlace?: (artist: Artist, name: string, marketId: string, draw?: number) => Promise<Room | null>;
+  findPlace?: (artist: Artist, name: string, marketId: string, draw?: number, onMiss?: (why: string) => void) => Promise<Room | null>;
   /** The artist's fans' affinity for these places, in one call. */
   scoreRooms?: (artist: Artist, ids: string[]) => Promise<Map<string, number>>;
   /** The city's rooms by capacity from Wikidata that fit this crowd, closest first. */
@@ -997,7 +997,8 @@ export async function planTour(
           if (searches >= NAMED_SEARCHES) break;
           searches++;
           let failed = false;
-          const r = await deps.findPlace!(artist, name, id, draw).catch(() => ((failed = true), null));
+          let why = "";
+          const r = await deps.findPlace!(artist, name, id, draw, (w) => (why = w)).catch(() => ((failed = true), null));
           if (failed) {
             missed.push(`${name} in ${city} (Qloo didn't answer)`);
             log({ kind: "qloo", text: `Couldn't look up ${name} in ${city}: Qloo didn't answer.`, failed: true });
@@ -1005,7 +1006,7 @@ export async function planTour(
           }
           if (!r || !roomNameMatches(name, r.name, place)) {
             missed.push(`${name} in ${city}`);
-            log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo's place search didn't return it there, so it isn't booked.` });
+            log({ kind: "qloo", text: `The agent suggested ${name} in ${city}; Qloo's place search didn't return it there, so it isn't booked.`, ...(why ? { result: why } : {}) });
             continue;
           }
           if (list.some((x) => x.id === r.id) || found.some((f) => f.room.id === r.id)) {

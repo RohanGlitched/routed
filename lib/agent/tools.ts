@@ -138,7 +138,7 @@ export async function lookUpOpeners(artist: Artist, marketId: string, log: Log):
  * orchestra's hall included), and carries the name (plan.ts roomNameMatches: "ACL Live at the Moody Theater" is
  * Qloo's "Austin City Limits Live (ACL Live & 3TEN ACL Live)"). Returns the place as a room, or null. One Qloo call.
  */
-export async function findPlace(artist: Artist, name: string, marketId: string, draw?: number): Promise<Room | null> {
+export async function findPlace(artist: Artist, name: string, marketId: string, draw?: number, onMiss?: (why: string) => void): Promise<Room | null> {
   const m = marketById(marketId);
   if (!m) return null;
   const place = placeWords(m);
@@ -149,12 +149,22 @@ export async function findPlace(artist: Artist, name: string, marketId: string, 
   // The name without the city's own words, then the city ("Alcatraz Milano" is searched as "Alcatraz Milan"); then,
   // for a renamed room, its current name once (Qloo lists the Mediolanum Forum as the Unipol Forum).
   const bare = name.split(/\s+/).filter((w) => !place.includes(w.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase())).join(" ") || name;
-  for (const q of [bare, ...aliasesOf(name).slice(0, 1)]) {
+  // Why the closest candidate was turned down, for the call sheet (Paramount Theatre in Denver, the Brown in
+  // Louisville and the Cannon Center in Memphis all missed on Oct 30 with no reason given).
+  const reject = (x: Entity, asked: string) =>
+    !nearCity(x, m) ? "not in the city" : x.place?.lat === undefined ? "no location" : !isRoom(x, draw, { stadiumOk: true }) ? "not filed as a room" : orchestraHallFor(x.name, genres) ? "an orchestra's own hall" : !roomNameMatches(asked, x.name, place) ? "a different name" : "";
+  let closest: { name: string; why: string } | undefined;
+  // With the city in the query, then the name alone (a search that ranks the city's name over the room's), kept to
+  // the city by distance; then a renamed room's current name once.
+  for (const q of [`${bare} ${m.name}`, bare, ...aliasesOf(name).slice(0, 1).map((a) => `${a} ${m.name}`)]) {
     // A failed search throws, so the call sheet can tell "Qloo didn't answer" from "no such room".
-    const r = await search(`${q} ${m.name}`, "urn:entity:place", 10);
+    const r = await search(q, "urn:entity:place", 10);
     const e = r.entities.find((x) => ok(x, name));
     if (e) return { ...toRoom(e), origin: "agent" };
+    const near = r.entities.find((x) => x.place?.lat !== undefined && nearCity(x, m)) ?? r.entities[0];
+    if (near && !closest) closest = { name: near.name, why: reject(near, name) };
   }
+  onMiss?.(closest ? `closest match ${closest.name}: ${closest.why}` : "no place came back");
   return null;
 }
 

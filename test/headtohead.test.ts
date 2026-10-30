@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { beyondBiggest, blendRanking, CLUB_THEATRE_MAX, isClubAndTheatre, medianCapacity, secondaryRPrecision, SECONDARY_TOP, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
+import { beyondBiggest, blendRanking, CLUB_THEATRE_MAX, lowerMedian, shareFarther, streetSpot, tileReachKm, isClubAndTheatre, medianCapacity, secondaryRPrecision, SECONDARY_TOP, blendTwo, completeRanking, meanCI, populationRanking, precision, rPrecision, signTest } from "../lib/headtohead.ts";
 import { infoboxArtist, marketsByRegion, showRows } from "../lib/wikitours.ts";
 import { marketById } from "../lib/geo/markets.ts";
 
@@ -210,4 +210,38 @@ test("the club and theatre subset: a known size of 3,000 or fewer; unknown sizes
   assert.equal(isClubAndTheatre(null), false);
   assert.equal(isClubAndTheatre(undefined), false);
   assert.equal(isClubAndTheatre(0), false);
+});
+
+/* ───────────── the street-level check (PROTOCOL-6) ───────────── */
+
+test("the lower median takes the lower middle value and is null for no values", () => {
+  assert.equal(lowerMedian([]), null);
+  assert.equal(lowerMedian([3]), 3);
+  assert.equal(lowerMedian([4, 1, 3, 2]), 2);
+  assert.equal(lowerMedian([5, 1, 3]), 3);
+});
+
+test("a place on a street heatmap: km to the hottest tile and the strongest tile within 0.35 km", () => {
+  const tiles: [number, number, number][] = [
+    [40.0, -75.0, 1],
+    [40.01, -75.0, 0.6],
+    [40.05, -75.0, 0.2],
+  ];
+  const onHot = streetSpot(tiles, { lat: 40.0, lon: -75.0 })!;
+  assert.equal(onHot.km, 0);
+  assert.equal(onHot.strength, 1);
+  const near = streetSpot(tiles, { lat: 40.011, lon: -75.0 })!;
+  assert.ok(Math.abs(near.km - 1.22) < 0.01, `about 1.22 km, got ${near.km}`);
+  assert.equal(near.strength, 0.6, "only the 0.6 tile is within 0.35 km");
+  const far = streetSpot(tiles, { lat: 40.03, lon: -75.0 })!;
+  assert.equal(far.strength, 0, "no kept tile within 0.35 km");
+  assert.equal(streetSpot([], { lat: 40, lon: -75 }), null);
+  assert.ok(Math.abs(tileReachKm(tiles, { lat: 40.0, lon: -75.0 }) - 5.56) < 0.01);
+});
+
+test("share farther: 1 for the nearest room, 0.5 at random, ties count half", () => {
+  assert.equal(shareFarther(1, [2, 3, 4]), 1);
+  assert.equal(shareFarther(5, [2, 3, 4]), 0);
+  assert.equal(shareFarther(3, [2, 3, 4]), 0.5);
+  assert.equal(shareFarther(1, []), null);
 });

@@ -1,0 +1,252 @@
+{
+ "scored": "2026-10-30",
+ "protocol": "data/outside2/PROTOCOL-6.md",
+ "script": "scripts/street-level.ts",
+ "usage": {
+  "qloo": 0,
+  "modelCalls": 0,
+  "fetchCalls": 0
+ },
+ "n": 9,
+ "candidates": 18,
+ "excluded": [
+  {
+   "artist": "Japanese Breakfast",
+   "city": "New York",
+   "venue": "Brooklyn Paramount",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "city": "Portland",
+   "venue": "Project Pabst",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "city": "Vancouver",
+   "venue": "Orpheum Theatre",
+   "why": "farther from the city centre than the heatmap's farthest kept tile"
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "city": "Seattle",
+   "venue": "Woodland Park Zoo",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  },
+  {
+   "artist": "Turnstile",
+   "city": "Boston",
+   "venue": "The Stage at Suffolk Downs",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  },
+  {
+   "artist": "Turnstile",
+   "city": "Chicago",
+   "venue": "Huntington Bank Pavilion",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  },
+  {
+   "artist": "Turnstile",
+   "city": "Denver",
+   "venue": "Project 70: Under the Bridge",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  },
+  {
+   "artist": "Turnstile",
+   "city": "Los Angeles",
+   "venue": "Exposition Park South Lawn",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  },
+  {
+   "artist": "Zach Bryan",
+   "city": "Tulsa",
+   "venue": "H.A. Chapman Stadium",
+   "why": "no candidate room of that name and no cached Wikidata coordinates"
+  }
+ ],
+ "primary": {
+  "name": "Real room vs the city's other candidate rooms (median): km to the hottest tile, positive = the real room is nearer",
+  "n": 9,
+  "meanDiff": -2.2653685312313767,
+  "lo": -6.761656331187065,
+  "hi": 0.644096043491918,
+  "wins": 5,
+  "losses": 4,
+  "ties": 0,
+  "p": 1
+ },
+ "secondary": [
+  {
+   "name": "Real room vs the city centre: km to the hottest tile, positive = the real room is nearer",
+   "n": 9,
+   "meanDiff": -3.003729072632316,
+   "lo": -8.117897902547405,
+   "hi": 0.7887016205481187,
+   "wins": 2,
+   "losses": 7,
+   "ties": 0,
+   "p": 0.1796875
+  },
+  {
+   "name": "Real room vs the city's other candidate rooms (median): tile strength within 0.35 km, positive = the real room's tile is hotter",
+   "n": 9,
+   "meanDiff": 0.09900000000000003,
+   "lo": -0.3423333333333333,
+   "hi": 0.5312222222222222,
+   "wins": 4,
+   "losses": 3,
+   "ties": 2,
+   "p": 1
+  }
+ ],
+ "meanShareFarther": 0.509888888888889,
+ "inHot": 6,
+ "tooSmall": true,
+ "rows": [
+  {
+   "artist": "Japanese Breakfast",
+   "city": "Philadelphia",
+   "venue": "Metropolitan Opera House",
+   "source": "venues-truth.json (The Melancholy Tour (spring 2025 North American leg))",
+   "tour": "ipgunjvpgt",
+   "located": "Wikidata",
+   "realKm": 1.4,
+   "realStrength": 0.881,
+   "othersMedianKm": 1.8,
+   "othersMedianStrength": 0,
+   "others": 14,
+   "centreKm": 1.3,
+   "centreStrength": 0.979,
+   "shareFarther": 0.714
+  },
+  {
+   "artist": "Turnstile",
+   "city": "San Francisco",
+   "venue": "Bill Graham Civic Auditorium",
+   "source": "venues-truth.json (Never Enough Tour (fall 2025 North American leg))",
+   "tour": "xf4rbjj9s9",
+   "located": "candidate room",
+   "realKm": 0.2,
+   "realStrength": 1,
+   "othersMedianKm": 1.1,
+   "othersMedianStrength": 0,
+   "others": 12,
+   "centreKm": 0.6,
+   "centreStrength": 0,
+   "shareFarther": 1
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "city": "Austin",
+   "venue": "Moody Theater",
+   "source": "Wikipedia: The Melancholy Tour",
+   "tour": "49pm9f5q7y",
+   "located": "Wikidata",
+   "realKm": 0.9,
+   "realStrength": 0,
+   "othersMedianKm": 2,
+   "othersMedianStrength": 0.834,
+   "others": 13,
+   "centreKm": 0.4,
+   "centreStrength": 0,
+   "shareFarther": 0.692
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "city": "Chicago",
+   "venue": "The Salt Shed",
+   "source": "Wikipedia: The Melancholy Tour",
+   "tour": "ipgunjvpgt",
+   "located": "candidate room",
+   "realKm": 1.5,
+   "realStrength": 0,
+   "othersMedianKm": 3.4,
+   "othersMedianStrength": 0,
+   "others": 14,
+   "centreKm": 7,
+   "centreStrength": 0,
+   "shareFarther": 0.929
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "city": "San Francisco",
+   "venue": "SF Masonic Auditorium",
+   "source": "Wikipedia: The Melancholy Tour",
+   "tour": "ipgunjvpgt",
+   "located": "Wikidata",
+   "realKm": 3.3,
+   "realStrength": 0.944,
+   "othersMedianKm": 2.4,
+   "othersMedianStrength": 0,
+   "others": 16,
+   "centreKm": 1.5,
+   "centreStrength": 0,
+   "shareFarther": 0.25
+  },
+  {
+   "artist": "Japanese Breakfast",
+   "city": "Denver",
+   "venue": "Mission Ballroom",
+   "source": "Wikipedia: The Melancholy Tour",
+   "tour": "ipgunjvpgt",
+   "located": "candidate room",
+   "realKm": 4.1,
+   "realStrength": 0.748,
+   "othersMedianKm": 2.7,
+   "othersMedianStrength": 0.659,
+   "others": 15,
+   "centreKm": 0.4,
+   "centreStrength": 0,
+   "shareFarther": 0.333
+  },
+  {
+   "artist": "Turnstile",
+   "city": "Philadelphia",
+   "venue": "Mann Center for the Performing Arts",
+   "source": "Wikipedia: Never Enough Tour",
+   "tour": "xf4rbjj9s9",
+   "located": "Wikidata",
+   "realKm": 6.6,
+   "realStrength": 0,
+   "othersMedianKm": 2.1,
+   "othersMedianStrength": 0,
+   "others": 15,
+   "centreKm": 1.3,
+   "centreStrength": 0.991,
+   "shareFarther": 0.133
+  },
+  {
+   "artist": "Sierra Ferrell",
+   "city": "Portland",
+   "venue": "McMenamins Edgefield",
+   "source": "flagship-reality.json (The Heavy Petal Tour (North American headline dates))",
+   "tour": "8v4ce57nx6",
+   "located": "Wikidata",
+   "realKm": 21.2,
+   "realStrength": 0,
+   "othersMedianKm": 2.7,
+   "othersMedianStrength": 0.876,
+   "others": 8,
+   "centreKm": 0.5,
+   "centreStrength": 0.987,
+   "shareFarther": 0
+  },
+  {
+   "artist": "Sierra Ferrell",
+   "city": "Pittsburgh",
+   "venue": "Stage AE Outdoors",
+   "source": "flagship-reality.json (The Heavy Petal Tour (North American headline dates))",
+   "tour": "nk53jakf3w",
+   "located": "candidate room",
+   "realKm": 1.3,
+   "realStrength": 0,
+   "othersMedianKm": 1.9,
+   "othersMedianStrength": 0.313,
+   "others": 13,
+   "centreKm": 0.3,
+   "centreStrength": 1,
+   "shareFarther": 0.538
+  }
+ ]
+}

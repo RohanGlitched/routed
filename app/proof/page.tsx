@@ -12,6 +12,7 @@ import { ModelPlusQloo } from "@/components/proof/ModelPlusQloo";
 import { OnlyQloo } from "@/components/proof/OnlyQloo";
 import { PostCutoff } from "@/components/proof/PostCutoff";
 import { RoomPick } from "@/components/proof/RoomPick";
+import { StreetLevel } from "@/components/proof/StreetLevel";
 import s from "./proof.module.css";
 
 export const metadata: Metadata = {
@@ -144,6 +145,9 @@ export default async function Proof() {
                 <a href="#rooms">The room Routed actually books</a>
               </li>
               <li>
+                <a href="#street-level">The street level, a pilot</a>
+              </li>
+              <li>
                 <a href="#head-to-head">49 older tours, head to head</a>
               </li>
               <li>
@@ -164,6 +168,8 @@ export default async function Proof() {
       <ClubTheatre />
 
       <RoomPick />
+
+      <StreetLevel />
 
       <HeadToHead />
 

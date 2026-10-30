@@ -1,4 +1,5 @@
 import { MARKETS, marketId, type RegionId } from "./geo/markets";
+import { hotSpot, kmBetween, placeHeat, type LocalPoint, type LocalTile } from "./geo/local";
 
 /**
  * The head-to-head: what Qloo's taste data changes, measured on a ruler Qloo didn't make (the cities artists
@@ -171,3 +172,39 @@ export function medianCapacity(capacities: number[]): number | null {
 
 /** In the club and theatre subset: a known room size of CLUB_THEATRE_MAX or fewer. An unknown size is out. */
 export const isClubAndTheatre = (size: number | null | undefined, max = CLUB_THEATRE_MAX) => typeof size === "number" && size > 0 && size <= max;
+
+/* ───────────── the street-level check (data/outside2/PROTOCOL-6.md) ───────────── */
+
+/** The lower middle value (the same convention as medianCapacity), or null for an empty list. */
+export function lowerMedian(xs: number[]): number | null {
+  if (!xs.length) return null;
+  const s = [...xs].sort((a, b) => a - b);
+  return s[Math.floor((s.length - 1) / 2)]!;
+}
+
+/**
+ * Where a place sits on a stop's street heatmap: km to the hottest tile (unrounded) and the strength of the
+ * strongest kept tile within 0.35 km (placeHeat's rule; 0 when no kept tile is that close).
+ */
+export function streetSpot(tiles: LocalTile[], place: LocalPoint): { km: number; strength: number } | null {
+  const hot = hotSpot(tiles);
+  const h = placeHeat(tiles, place);
+  if (!hot || !h) return null;
+  return { km: kmBetween(hot, place), strength: h.strength };
+}
+
+/** How far the farthest kept tile lies from a point (the reach of the heatmap around the city centre). */
+export function tileReachKm(tiles: LocalTile[], centre: LocalPoint): number {
+  return tiles.reduce((m, t) => Math.max(m, kmBetween(centre, { lat: t[0], lon: t[1] })), 0);
+}
+
+/**
+ * The share of the other rooms that sit farther from the hottest tile than the real room (ties count half):
+ * 1 means the real room is the closest of all, 0.5 is what a room picked at random would score.
+ */
+export function shareFarther(realKm: number, othersKm: number[], eps = 1e-9): number | null {
+  if (!othersKm.length) return null;
+  let n = 0;
+  for (const k of othersKm) n += k > realKm + eps ? 1 : Math.abs(k - realKm) <= eps ? 0.5 : 0;
+  return n / othersKm.length;
+}

@@ -392,3 +392,59 @@ The one post-cutoff tour (Flo) is in the first row only; on its own it is a sing
   measured (in the 4 benchmark tours that have both, the stated crowd was below the measured median every time). On
   the 7 measured tours the blend's lead over size holds (+12.8, 6–0–1, p = 0.031).
 
+
+## Round 6: the street level (protocol committed before scoring, from offline caches; a pilot, too small to test)
+
+**Sources.**
+- Protocol: `data/outside2/PROTOCOL-6.md`, committed in 034ad6e before anything was scored. The only thing computed
+  before it was which real rooms can be placed on a cached heatmap (names and coordinates, no distance to any tile).
+- Script: `scripts/street-level.ts`. Helpers: `lowerMedian`, `streetSpot`, `tileReachKm` and `shareFarther` in
+  `lib/headtohead.ts`, on the day sheet's own rules (`lib/geo/local.ts`).
+- Numbers: `street-level.json`, with every case and every room left out and why. No tiles or coordinates are kept.
+- Cost: 0 Qloo requests, 0 model calls and 0 network calls.
+
+**The test.** The only street heatmaps on disk are the ones stored with the tours, so the cases are the poster
+wall's artists. 18 real rooms (from `venues-truth.json`, the cached tour articles and `flagship-reality.json`) fall
+in a city with a stored heatmap for that artist; 9 can be placed and have 3 or more other candidate rooms. On that
+artist's heatmap for that city: is the real room nearer the hottest tile than the city's other candidate rooms
+(their lower median), and than the city centre?
+
+| Contrast | n | Mean difference [95% CI] | real room nearer–farther–level | sign test p |
+|---|---|---|---|---|
+| **Real room vs the city's other candidate rooms, km to the hottest tile** | 9 | −2.3 km [−6.8, +0.6] | 5–4–0 | 1.00 |
+| Real room vs the city centre, km to the hottest tile | 9 | −3.0 km [−8.1, +0.8] | 2–7–0 | 0.18 |
+| Real room vs the other rooms, tile strength within 0.35 km | 9 | +0.10 [−0.34, +0.53] | 4–3–2 | 1.00 |
+
+A positive difference means the real room is nearer the hottest tile (or on a hotter tile). The first row is the
+primary contrast.
+
+| Artist | City | Real room | Real room, km | Other rooms, km (lower median) | City centre, km | Other rooms farther |
+|---|---|---|---|---|---|---|
+| Japanese Breakfast | Philadelphia | Metropolitan Opera House | 1.4 | 1.8 (of 14) | 1.3 | 71% |
+| Turnstile | San Francisco | Bill Graham Civic Auditorium | 0.2 | 1.1 (of 12) | 0.6 | 100% |
+| Japanese Breakfast | Austin | Moody Theater | 0.9 | 2.0 (of 13) | 0.4 | 69% |
+| Japanese Breakfast | Chicago | The Salt Shed | 1.5 | 3.4 (of 14) | 7.0 | 93% |
+| Japanese Breakfast | San Francisco | SF Masonic Auditorium | 3.3 | 2.4 (of 16) | 1.5 | 25% |
+| Japanese Breakfast | Denver | Mission Ballroom | 4.1 | 2.7 (of 15) | 0.4 | 33% |
+| Turnstile | Philadelphia | Mann Center for the Performing Arts | 6.6 | 2.1 (of 15) | 1.3 | 13% |
+| Sierra Ferrell | Portland | McMenamins Edgefield | 21.2 | 2.7 (of 8) | 0.5 | 0% |
+| Sierra Ferrell | Pittsburgh | Stage AE Outdoors | 1.3 | 1.9 (of 13) | 0.3 | 54% |
+
+On average 51% of the other rooms sat farther from the hottest tile than the real room (a room picked at random
+scores 50%). 6 of the 9 real rooms are in the fans' area as the day sheet defines it (within 1.5 km of the hottest
+tile, or on a tile of strength 0.9 or more).
+
+**Reading.**
+- No evidence either way. The real room beat the other rooms' median in 5 of 9 cities and lost in 4 (p = 1.00); on
+  average it sat as near the hottest tile as a room picked at random from Qloo's own list for that artist.
+- The city centre is nearer the hottest tile than the real room in 7 of 9 cities (p = 0.18). The heatmap's hottest
+  tile mostly sits downtown, and several real rooms are outdoor or suburban (Edgefield, in Troutdale, is 21 km from
+  it), so the mean differences are pulled by one or two far rooms.
+- 9 cases from 3 artists (Japanese Breakfast is 5) cannot test the claim: with 9 pairs only 8–1 or 9–0 reaches
+  p < 0.05. Until the larger run, the street layer is untested, not shown.
+
+**The run that would settle it, sized and not run (needs the owner's OK).** The room test's 34 artists and 102
+cities already have the real room and the city's candidate rooms (round 4's cache). Each city needs the artist's
+street heatmap: 1 Qloo request per artist and city, about 102 requests and 0 model calls. 53 of the 102 can place
+the real room from today's caches; reading the other rooms' coordinates from Wikidata costs no Qloo request. That
+is a test of about 53 to 100 cases.

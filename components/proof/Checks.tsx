@@ -10,6 +10,7 @@ import s from "@/app/proof/proof.module.css";
 import { ContrastTable, type Contrast } from "./HeadToHead";
 import { FLAGSHIP } from "./OnlyQloo";
 import { OUTSIDE2, POST, PROTOCOL2_COMMIT } from "./PostCutoff";
+import { streetCheck } from "./StreetLevel";
 
 /**
  * Oct 30 (round 2 of the judges) on /proof: the one-sentence lead, every test in one table, and round 5 (club and
@@ -113,6 +114,7 @@ export function HowWeChecked({ ownRuler }: { ownRuler?: { n: number; routed: num
     { test: "Older real tours: Qloo alone vs the model alone", tours: `${hqm.n}`, result: `${pts(hqm.diff)} pts, ${pv(hqm.p)}`, wlt: wl(hqm), committed: yes(PROTOCOL_COMMIT), href: "#head-to-head" },
     { test: "Inside the agent: Qloo's table vs the biggest cities", tours: `${abl.n}`, result: `${pc1(abl.meanA)} vs ${pc1(abl.meanB)} of its cities on the real tour, ${pv(abl.p)}`, wlt: wl(abl), committed: yes(PROTOCOL_COMMIT), href: "#head-to-head" },
     { test: "The room Routed books vs the model's first guess", tours: `${R4.n} (${R4.cities} cities)`, result: `the real venue in ${R4.pooled.shipped.hit1} vs ${R4.pooled.model.hit1} cities (Qloo's first room: ${R4.pooled.qloo.hit1}); ${pts(r1.diff)} pts, ${pv(r1.p)}`, wlt: wl(r1), committed: yes(PROTOCOL4_COMMIT), href: "#rooms" },
+    streetCheck(),
     { test: "Qloo's room list vs the model alone, real room in the top 3", tours: `${v.n} (${v.cities} cities)`, result: `${v.pooled.qloo.hit3} vs ${v.pooled.model.hit3} cities, ${pv(vqm.p)}`, wlt: wl(vqm), committed: yes(PROTOCOL2_COMMIT), href: "#unread" },
     { test: "Openers: a real support act in the top 5", tours: `${sp.n}`, result: `${sp.pooled.qloo} vs ${sp.pooled.model} tours, ${pv(spq.p)}`, wlt: wl(spq), committed: yes(PROTOCOL2_COMMIT), href: "#unread" },
   ];

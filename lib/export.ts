@@ -44,7 +44,7 @@ function fillCell(leg: FillLeg | undefined): string {
 
 /** The grid as rows of plain values, header first (the tests read these; the CSV is these joined). */
 export function routingRows(plan: Plan, draw?: number): string[][] {
-  const fills = plan.cities?.length ? fillDates(plan.stops, plan.cities, plan.region) : [];
+  const fills = plan.cities?.length ? fillDates(plan.stops, plan.cities, plan.region, plan.guess?.stops) : [];
   const rows: string[][] = [[...GRID_COLUMNS]];
   plan.stops.forEach((s, i) => {
     const r = room(s);

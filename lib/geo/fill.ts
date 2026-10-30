@@ -27,6 +27,9 @@ export type FillOption = {
   fromHours: number;
   /** The dark day it could play. */
   date: string;
+  /** A room this tour's own data already names in the city (the model-alone tour's pick, found on Qloo); none
+   *  means the room is still to find. */
+  room?: string;
 };
 
 export type FillLeg = {
@@ -56,8 +59,16 @@ const hoursIn = (days: number) => (days <= 0 ? 0 : SHOW_DAY_DRIVE_H + (days - 1)
 
 const daysBetween = (a: string, b: string) => Math.round((Date.parse(`${b}T12:00:00Z`) - Date.parse(`${a}T12:00:00Z`)) / 86_400_000);
 
-/** Every leg with dark days, and the fan cities that could fill one of them. The first stop (no show before) has none. */
-export function fillDates(stops: FillStop[], cities: FillCity[], region?: keyof typeof RADIUS_BY_REGION): FillLeg[] {
+/** A room another plan on this tour named in a city: the model-alone tour's stops (plan.guess.stops). */
+export type KnownRoom = { marketId?: string; venue?: string; venueId?: string };
+
+/**
+ * Every leg with dark days, and the fan cities that could fill one of them. The first stop (no show before) has
+ * none. `known` names a room in a fill city when this tour's own data has one found on Qloo there; otherwise the
+ * option carries no room and the tour book prints "room to find".
+ */
+export function fillDates(stops: FillStop[], cities: FillCity[], region?: keyof typeof RADIUS_BY_REGION, known: KnownRoom[] = []): FillLeg[] {
+  const roomIn = new Map(known.filter((k) => k.marketId && k.venue && k.venueId).map((k) => [k.marketId!, k.venue!]));
   const radius = radiusFor(region);
   const onTour = new Set(stops.map((s) => s.marketId));
   const out: FillLeg[] = [];
@@ -85,7 +96,7 @@ export function fillDates(stops: FillStop[], cities: FillCity[], region?: keyof 
       // Play it on the first dark day the drive allows, and still make the next show on its date.
       const day = dark.findIndex((_, k) => a.hours <= hoursIn(k + 1) && b.hours <= hoursIn(gap - (k + 1)));
       if (day < 0) continue;
-      options.push({ marketId: c.marketId, city: c.name, fanRank: c.rank, addedKm: Math.max(0, added), fromKm: Math.round(a.km), fromHours: Math.round(a.hours * 10) / 10, date: dark[day]! });
+      options.push({ marketId: c.marketId, city: c.name, fanRank: c.rank, addedKm: Math.max(0, added), fromKm: Math.round(a.km), fromHours: Math.round(a.hours * 10) / 10, date: dark[day]!, ...(roomIn.has(c.marketId) ? { room: roomIn.get(c.marketId)! } : {}) });
     }
     out.push({ index: i, from: prev.city, to: next.city, km: Math.round(leg.km), hours: Math.round(leg.hours * 10) / 10, travelDays: next.travelDays, dayOff: next.dayOff, dark, options });
   }

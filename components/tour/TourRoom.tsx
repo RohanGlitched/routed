@@ -21,6 +21,7 @@ import { AgentCheck, type Rerun } from "./AgentCheck";
 import { agentStory, checkLine, jumpsLine, legsLead, plural, sheetCounts, stopAnchor } from "./display";
 import { StopStrip } from "./StopStrip";
 import { Reality, type RealityCheck } from "./Reality";
+import { scaleLine } from "./realityFacts";
 import a from "./agent.module.css";
 import s from "./tour.module.css";
 
@@ -118,7 +119,7 @@ export function TourRoom({
   const title = plan?.artist?.name ?? rec.input.artist;
   const done = rec.status === "done";
   // Fill dates for the dark days and the run in legs, from the stored stops and fan map only (lib/geo/fill.ts).
-  const fills = useMemo(() => (done && plan?.stops?.length && plan.cities?.length ? fillDates(plan.stops, plan.cities, plan.region) : []), [done, plan]);
+  const fills = useMemo(() => (done && plan?.stops?.length && plan.cities?.length ? fillDates(plan.stops, plan.cities, plan.region, plan.guess?.stops) : []), [done, plan]);
   const legs = useMemo(() => (done && plan?.stops?.length ? runLegs(plan.stops) : null), [done, plan]);
   const firstFill = fills.find((f) => f.options.length);
   const story = useMemo(() => (done ? agentStory(rec.log) : null), [done, rec.log]);
@@ -173,6 +174,11 @@ export function TourRoom({
             </p>
           )}
 
+          {done && reality && scaleLine(reality) ? (
+            <p className={a.scaleBanner}>
+              {scaleLine(reality)}. <a href="#reality-check">The reality check</a>
+            </p>
+          ) : null}
           {legs && (
             <p className={s.legs}>
               <b>{legsLead(legs)}</b> {jumpsLine(legs)}
@@ -220,7 +226,7 @@ export function TourRoom({
               {rec.engine.usage ? ` ${usageLine(rec.engine.usage)}` : ""} The call sheet at the end of the tour book lists every step.
             </p>
           )}
-          {rec.engine?.check && story && <AgentCheck log={rec.log} check={rec.engine.check} rerun={rerun && rerun.id !== rec.id ? rerun : undefined} same={same} />}
+          {rec.engine?.check && story && <AgentCheck log={rec.log} check={rec.engine.check} stops={stops} rerun={rerun && rerun.id !== rec.id ? rerun : undefined} same={same} />}
         </div>
       </div>
 
@@ -234,7 +240,7 @@ export function TourRoom({
           {plan!.audience?.advice && <p className={s.advice}>{plan!.audience.advice}</p>}
           {plan!.tradeOff && <p className={s.advice}>Routing: {plan!.tradeOff}.</p>}
           {!running && <QlooDiff plan={plan!} />}
-          {!running && reality && <Reality data={reality} />}
+          {!running && reality && <Reality data={reality} diff={plan!.qlooDiff} stops={stops} />}
           <ol className={s.sheets}>
             {stops.map((st, i) => (
               <DaySheet key={st.marketId} anchor={stopAnchor(i)} stop={st} prev={i === 0 ? plan!.from.label.split(",")[0]! : stops[i - 1]!.city} total={plan!.cities.length} artist={title} pending={running} draw={rec.input.draw} first={i === 0} genres={plan!.artist.genreKeys ?? plan!.artist.genres} fill={fills.find((f) => f.index === i)} />

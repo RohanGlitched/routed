@@ -76,7 +76,7 @@ test("the routing grid has one row a show, in the tour book's own fields", () =>
   assert.equal(second[6], "1st hold on both dates (2 nights), 2nd if taken");
   assert.deepEqual(second.slice(8, 11), ["1694", "19.9", "2"]);
   // Tulsa sits on a dark day between the two shows, from the same fan map the day sheet reads.
-  assert.match(second[11]!, /^Tulsa \(fan #61, (right on the way|adds [\d,]+ km), 5\/1[01]\)$/);
+  assert.match(second[11]!, /^Tulsa \(fan #61, (right on the way|adds [\d,]+ km), 5\/1[01], room to find\)$/);
 });
 
 test("the CSV quotes what needs quoting and reads as UTF-8 in a spreadsheet", () => {

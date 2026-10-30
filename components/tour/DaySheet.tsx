@@ -9,7 +9,7 @@ import type { FillLeg } from "@/lib/geo/fill";
 import type { Spot, Stop } from "@/lib/types";
 import { displayTag, displayTags } from "@/lib/tags";
 import { fillLead, fillOption, otherRoomLabel, shownCapacity } from "./display";
-import { LocalMap } from "./LocalMap";
+import { LocalCaption, LocalMap } from "./LocalMap";
 import s from "./tour.module.css";
 
 const pct = (v?: number) => (v === undefined ? null : Math.round(v * 100));
@@ -92,11 +92,12 @@ export function DaySheet({ stop, prev, total, artist, pending, draw, first = fal
           )}
           {long && <span className={s.sizeNote}> A long jump: no city with rooms within reach could break it up.</span>}
         </span>
-        {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} places={[...stop.rooms, ...(stop.posters ?? []), ...stop.after]} spots={[...independents(stop.posters), ...stop.after]} />}
+        {stop.local && <LocalMap local={stop.local} room={room} others={others} city={stop.city} artist={artist} places={[...stop.rooms, ...(stop.posters ?? []), ...stop.after]} spots={[...independents(stop.posters), ...stop.after]} captionElsewhere />}
       </div>
 
       <div className={s.what}>
         <h3 className={s.city}>{stop.label}</h3>
+        {stop.local && <LocalCaption local={stop.local} room={room} others={others} city={stop.city} places={[...stop.rooms, ...(stop.posters ?? []), ...stop.after]} className={s.captionPhone} />}
         <p className={s.score}>
           <span className={s.badge}>
             Fan city <b className="num">{stop.score.rank}</b> of <span className="num">{total}</span>

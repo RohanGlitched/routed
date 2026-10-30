@@ -57,3 +57,40 @@
 .reality a { color: var(--blue); }
 .reality .diffCols li span { white-space: normal; text-align: right; }
 .realityCrowd { margin: 12px 0 0; font-size: 14px; color: var(--ink-2); max-width: 60em; }
+/* The reality check's numbers, with the scale beside them, and its three short lines. */
+.realityNums { display: grid; justify-items: end; gap: 4px; text-align: right; }
+.realityScale { margin: 2px 0 0; font-size: 13px; color: var(--ink-2); max-width: 22em; }
+.realityLines { margin: 10px 0 14px; display: grid; gap: 6px; max-width: 48em; }
+.realityLines p { margin: 0; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.realityLead { font-weight: 700; color: var(--ink) !important; font-size: 16px !important; }
+@media (max-width: 600px) {
+  .reality .diffHead { flex-direction: column; }
+  .realityNums { justify-items: start; text-align: left; }
+  .reality .diffCount { white-space: normal; }
+}
+
+/* The scale banner on the flagship (data/flagship-reality.json). */
+.scaleBanner { margin: -12px 0 28px; padding: 8px 12px; border-left: 4px solid var(--blue); background: rgba(23, 71, 214, 0.06); font-size: 14px; font-weight: 600; color: var(--blue-deep); max-width: 44em; }
+.scaleBanner a { color: var(--blue); white-space: nowrap; }
+
+/* The agent check opens on the call sheet's table; each round in full sits behind "Show all rounds". */
+.checkLead { margin: 0 0 8px; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.checkTableBox { overflow-x: auto; }
+.checkTable { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.35; }
+.checkTable th { text-align: left; font-size: 12px; font-weight: 600; color: var(--mute); padding: 0 10px 5px 0; border-bottom: 2px solid var(--ink); }
+.checkTable td { padding: 6px 10px 6px 0; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink-2); }
+.checkBooked b { display: block; font-weight: 700; color: var(--ink); }
+.checkBooked span { display: block; margin-top: 2px; font-size: 12px; color: var(--mute); }
+.rounds { margin: 10px 0 0; }
+.rounds summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--blue); min-height: 32px; display: flex; align-items: center; }
+.rounds .steps { margin-top: 6px; }
+.checkLinks + .checkLinks { margin-top: 4px; }
+@media (max-width: 600px) {
+  .checkTable thead { display: none; }
+  .checkTable tr { display: grid; gap: 2px; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+  .checkTable td { padding: 0; border: 0; }
+}
+.checkTable td.chose { color: var(--fire-deep); }
+@media (max-width: 600px) {
+  .checkTable td::before { content: attr(data-label); display: block; font-size: 11px; font-weight: 600; color: var(--mute); }
+}

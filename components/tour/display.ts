@@ -102,6 +102,14 @@ export function placeLabels(items: { text: string; x: number; y: number; gap?: n
       { text, x: x - gap, y: y + fs * 0.35, anchor: "end", box: [x - gap - w - 2, y - h / 2, x - gap + 2, y + h / 2] },
       { text, x, y: y - gap - 2, anchor: "middle", box: [x - w / 2 - 2, y - gap - 2 - h, x + w / 2 + 2, y - gap + 1] },
       { text, x, y: y + gap + fs, anchor: "middle", box: [x - w / 2 - 2, y + gap - 1, x + w / 2 + 2, y + gap + fs + 3] },
+      // Then the corners, one line further out (a label kept off the dots may need the room).
+      ...[-1, 1].flatMap((dy) =>
+        [1, -1].map((dx): MapLabel => {
+          const ty = y + dy * (gap + h * 0.6) + fs * 0.35;
+          const tx = x + dx * gap * 0.7;
+          return { text, x: tx, y: ty, anchor: dx > 0 ? "start" : "end", box: dx > 0 ? [tx - 2, ty - fs * 0.85 - 1, tx + w + 2, ty + fs * 0.35 + 1] : [tx - w - 2, ty - fs * 0.85 - 1, tx + 2, ty + fs * 0.35 + 1] };
+        }),
+      ),
     ];
     const ok = tries.find((t) => t.box[0] >= 2 && t.box[1] >= 2 && t.box[2] <= size - 2 && t.box[3] <= size - 2 && !taken.some((b) => hit(b, t.box)));
     if (!ok) return null;
@@ -228,7 +236,7 @@ export const stripCity = (city: string) => STRIP_SHORT[city] ?? city;
 
 /** One fill-date option: "Tulsa", "fan #61, adds 24 km, 5/11". */
 export function fillOption(o: FillLeg["options"][number]): { city: string; note: string } {
-  return { city: o.city, note: `fan #${o.fanRank}, ${o.addedKm < 10 ? "right on the way" : `adds ${o.addedKm.toLocaleString("en-US")} km`}, ${shortDate(o.date)}` };
+  return { city: o.city, note: `fan #${o.fanRank}, ${o.addedKm < 10 ? "right on the way" : `adds ${o.addedKm.toLocaleString("en-US")} km`}, ${shortDate(o.date)}, ${o.room ? `room: ${o.room}` : "room to find"}` };
 }
 
 /** What the options fill: "On the 2 dark days from Memphis, fan cities on the way:". */

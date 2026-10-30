@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Poster } from "@/components/poster/Poster";
 import { posterFor } from "@/lib/poster";
 import { displayTags } from "@/lib/tags";
 import { fillDates, runLegs } from "@/lib/geo/fill";
 import type { LogLine, Plan, Stop, TourRecord } from "@/lib/types";
 import type { Rerun } from "./AgentCheck";
-import { FLAGSHIP, realityCount, type RealityCheck } from "./Reality";
+import { FLAGSHIP, playedCount, realityCount, realityLead, scaleLine, type RealityCheck } from "./realityFacts";
 import { sizeNote } from "@/lib/agent/evidence";
 import { agentStory, checkLine, fillOption, jumpsLine, legsLead, plural, sheetCounts, shownCapacity, swapRows, type SwapRow } from "./display";
 import { LocalMap } from "./LocalMap";
@@ -19,6 +19,10 @@ type Contrast = { n: number; meanA: number; meanB: number; diff: number; wins: n
 export type ProofHeadline = { tours: number; blend: Contrast; model?: Contrast };
 
 type Slide = { key: string; title: string; body: ReactNode };
+
+const useIsoLayout = typeof window === "undefined" ? useEffect : useLayoutEffect;
+/** The deck scales a slide down to fit the stage between the top bar and the nav, never below this. */
+const MIN_FIT = 0.5;
 
 const day = (iso: string, o: Intl.DateTimeFormatOptions) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { ...o, timeZone: "UTC" });
 const pts = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(1)}`;
@@ -96,6 +100,27 @@ export function Present({
     return () => window.removeEventListener("keydown", onKey);
   }, [n, rec.id]);
 
+  // Every slide fits above the nav: one that runs taller than the stage is scaled down to its height (on a wide
+  // screen; a phone scrolls). Re-measured when the slide, the window or the slide's own content (the poster) changes.
+  const stageRef = useRef<HTMLElement>(null);
+  const slideRef = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState(1);
+  useIsoLayout(() => {
+    const st = stageRef.current;
+    const sl = slideRef.current;
+    if (!st || !sl) return;
+    const measure = () => {
+      const h = sl.offsetHeight;
+      const room = st.clientHeight;
+      setFit(window.innerWidth > 860 && h > room + 1 ? Math.max(MIN_FIT, Math.floor((room / h) * 1000) / 1000) : 1);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(st);
+    ro.observe(sl);
+    return () => ro.disconnect();
+  }, [i]);
+
   const slide = slides[i]!;
   return (
     <div className={p.deck} role="region" aria-roledescription="slide deck" aria-label={`${plan.artist.name}, presented`}>
@@ -114,7 +139,9 @@ export function Present({
       </header>
 
       <section
+        ref={stageRef}
         className={p.stage}
+        data-fit={fit < 1 ? "" : undefined}
         aria-roledescription="slide"
         aria-label={`${slide.title}, ${i + 1} of ${n}`}
         aria-live="polite"
@@ -124,7 +151,7 @@ export function Present({
           go(e.clientX - r.left < r.width / 3 ? i - 1 : i + 1);
         }}
       >
-        <div className={p.slide} key={slide.key}>
+        <div className={p.slide} key={slide.key} ref={slideRef} style={fit < 1 ? { scale: String(fit), transformOrigin: "top center" } : undefined}>
           {slide.body}
         </div>
       </section>
@@ -163,7 +190,9 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null, r
   const out: Slide[] = [];
   // The run in legs and the fill dates on its dark days, from the stored stops and fan map (lib/geo/fill.ts).
   const legs = runLegs(stops);
-  const fills = plan.cities?.length ? fillDates(stops, plan.cities, plan.region).filter((f) => f.options.length) : [];
+  const fills = plan.cities?.length ? fillDates(stops, plan.cities, plan.region, plan.guess?.stops).filter((f) => f.options.length) : [];
+  // The flagship's scale against the artist's real rooms (data/flagship-reality.json), on slides 1 and 3.
+  const scale = reality ? scaleLine(reality) : undefined;
 
   out.push({
     key: "poster",
@@ -184,6 +213,7 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null, r
               "."
             )}
           </p>
+          {scale && <p className={p.scale}>{scale}.</p>}
           {legs && (
             <p className={p.legs}>
               <b>{legsLead(legs)}</b> {jumpsLine(legs)}
@@ -254,7 +284,7 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null, r
               ? `The same rules, re-run on city size alone with no Qloo data, would keep ${d.kept} of these cities and swap the rest for bigger ones.`
               : `The same rules, re-run on city size alone with no Qloo data, pick the same ${total} cities: on this tour Qloo's map and city size agree.`}
           </p>
-          {reality && <RealityLine data={reality} tourId={rec.id} />}
+          {reality && <RealityLine data={reality} tourId={rec.id} plan={plan} />}
           {d.added.length > 0 && (
             <div className={p.cols}>
               <div>
@@ -293,7 +323,7 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null, r
 
   // The strongest stop: the best fan city on the tour.
   const best = [...stops].sort((a, b) => a.score.rank - b.score.rank)[0]!;
-  out.push({ key: "day", title: `A day in ${best.city}`, body: <DaySlide stop={best} plan={plan} artist={artist} draw={rec.input.draw} /> });
+  out.push({ key: "day", title: `A day in ${best.city}`, body: <DaySlide stop={best} plan={plan} artist={artist} draw={rec.input.draw} scale={scale} /> });
 
   const counts = sheetCounts(rec.log);
   const u = rec.engine?.usage;
@@ -428,14 +458,15 @@ function buildSlides(rec: TourRecord, plan: Plan, proof: ProofHeadline | null, r
   return out;
 }
 
-/** The reality check in one line: how many of the tour's cities the artist really played, and the real rooms. */
-function RealityLine({ data, tourId }: { data: RealityCheck; tourId: string }) {
+/** The reality check in one line: Qloo's top fan city against her real tours, and how many of the cities she played. */
+function RealityLine({ data, tourId, plan }: { data: RealityCheck; tourId: string; plan: Plan }) {
   const { on, of } = realityCount(data);
-  const crowd = data.usualCrowd;
+  const played = playedCount(data);
+  const lead = realityLead(data, plan.qlooDiff, plan.stops);
   return (
     <p className={p.reality}>
-      <b>Reality check:</b> <span className="num">{on}</span> of <span className="num">{of}</span> of these cities were on {data.artist}&apos;s {data.tour.name} ({data.tour.years})
-      {crowd?.realMedian ? `; its rooms' median is ${crowd.realMedian.toLocaleString("en-US")}, against the ${crowd.input.toLocaleString("en-US")} Routed was given` : ""}.{" "}
+      <b>Reality check:</b> {lead ? `${lead.text} (${lead.city}). ` : ""}
+      <span className="num">{played.played}</span> of <span className="num">{played.of}</span> are markets she played in {played.years}; <span className="num">{on}</span> of <span className="num">{of}</span> are on the {data.tour.years} headline dates.{" "}
       <Link href={`/tour/${tourId}#reality-check`}>Every city and source</Link>
     </p>
   );
@@ -479,7 +510,7 @@ function roomLine(capacity: number, source: string, draw?: number, nights?: numb
   return /^Holds [\d,]+ /.test(note) ? `${note} Capacity per ${source}.` : `${holds} ${note}`;
 }
 
-function DaySlide({ stop, plan, artist, draw }: { stop: Stop; plan: Plan; artist: string; draw?: number }) {
+function DaySlide({ stop, plan, artist, draw, scale }: { stop: Stop; plan: Plan; artist: string; draw?: number; scale?: string }) {
   const room = stop.rooms.find((r) => r.id === stop.roomId) ?? stop.rooms[0];
   const others = stop.rooms.filter((r) => r !== room).slice(0, 2);
   const cap = room ? shownCapacity(room) : undefined;
@@ -497,6 +528,7 @@ function DaySlide({ stop, plan, artist, draw }: { stop: Stop; plan: Plan; artist
         <p className={p.kicker}>{day(stop.date, { weekday: "long" })}</p>
         <p className={p.date}>{day(stop.date, { month: "short", day: "numeric" })}</p>
         <h2 className={p.city}>{stop.label}</h2>
+        {scale && <p className={p.scale}>{scale}.</p>}
         <p className={p.badges}>
           <span>
             Fan city <b className="num">{stop.score.rank}</b> of <span className="num">{plan.cities.length}</span>

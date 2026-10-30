@@ -7,7 +7,7 @@
     "source": "https://shorefire.com/releases/entry/sierra-ferrell-announces-return-to-red-rocksadds-new-dates-to-the-heavy-petal-tour"
   },
   "realCities": [
-    { "city": "Portland, OR", "played": true, "venue": "McMenamins Edgefield (in Troutdale, OR)" },
+    { "city": "Portland, OR", "played": true, "venue": "McMenamins Edgefield (in Troutdale, OR)", "routedCity": "Portland" },
     { "city": "Spokane, WA", "played": true, "venue": "Gesa Pavilion" },
     { "city": "Grand Rapids, MI", "played": true, "venue": "Frederik Meijer Gardens", "capacity": 1900, "capacitySource": "https://en.wikipedia.org/wiki/Frederik_Meijer_Gardens_%26_Sculpture_Park" },
     { "city": "Chicago, IL", "played": true, "venue": "The Salt Shed Outdoors", "capacity": 5000, "capacitySource": "https://en.wikipedia.org/wiki/The_Salt_Shed" },
@@ -15,7 +15,7 @@
     { "city": "Los Angeles, CA", "played": true, "venue": "The Wiltern", "capacity": 1850, "capacitySource": "https://en.wikipedia.org/wiki/The_Wiltern" },
     { "city": "Santa Barbara, CA", "played": true, "venue": "Santa Barbara Bowl", "capacity": 4562, "capacitySource": "https://en.wikipedia.org/wiki/Santa_Barbara_Bowl" },
     { "city": "Dillon, CO", "played": true, "venue": "Dillon Amphitheater" },
-    { "city": "Morrison, CO (Denver area)", "played": true, "venue": "Red Rocks Amphitheatre", "capacity": 9525, "capacitySource": "https://en.wikipedia.org/wiki/Red_Rocks_Amphitheatre" },
+    { "city": "Morrison, CO (Denver area)", "played": true, "venue": "Red Rocks Amphitheatre", "capacity": 9525, "capacitySource": "https://en.wikipedia.org/wiki/Red_Rocks_Amphitheatre", "routedCity": "Denver" },
     { "city": "Bentonville, AR", "played": true, "venue": "The Momentary" },
     { "city": "Birmingham, AL", "played": true, "venue": "Avondale Brewing Company" },
     { "city": "Lewisburg, WV", "played": true, "venue": "State Fair of West Virginia" },
@@ -31,18 +31,19 @@
     { "city": "Greensboro, NC", "played": true, "venue": "Steven Tanger Center for the Performing Arts", "capacity": 3023, "capacitySource": "https://en.wikipedia.org/wiki/Steven_Tanger_Center_for_the_Performing_Arts" }
   ],
   "routedCities": [
-    { "city": "Nashville", "onRealTour": false },
-    { "city": "Asheville", "onRealTour": false },
+    { "city": "Nashville", "onRealTour": false, "played": { "year": "2026", "venue": "Bridgestone Arena", "note": "2 nights supporting The Red Clay Strays", "source": "https://shorefire.com/releases/entry/sierra-ferrell-announces-return-to-red-rocksadds-new-dates-to-the-heavy-petal-tour" } },
+    { "city": "Asheville", "onRealTour": false, "played": { "year": "2025", "venue": "Asheville Yards", "note": "the last date of her 2025 tour", "finale": true, "source": "https://savingcountrymusic.com/sierra-ferrell-announces-2025-shoot-for-the-moon-tour/" } },
     { "city": "Cincinnati", "onRealTour": false },
     { "city": "Memphis", "onRealTour": false },
     { "city": "Denver", "onRealTour": true, "venue": "Red Rocks Amphitheatre, Morrison (Denver area)" },
-    { "city": "Salt Lake City", "onRealTour": false },
+    { "city": "Salt Lake City", "onRealTour": false, "played": { "year": "2025", "venue": "Rice-Eccles Stadium", "note": "opening for Post Malone", "source": "https://savingcountrymusic.com/sierra-ferrell-announces-2025-shoot-for-the-moon-tour/" } },
     { "city": "Portland", "onRealTour": true, "venue": "McMenamins Edgefield, Troutdale (billed as Portland, OR)" },
-    { "city": "Seattle", "onRealTour": false }
+    { "city": "Seattle", "onRealTour": false, "played": { "year": "2024", "venue": "Woodland Park Zoo Amphitheatre", "source": "https://americansongwriter.com/sierra-ferrell-tops-multiple-charts-her-sophomore-release-trail-of-flowers/?nb=1" } }
   ],
   "summary": "Of Routed's 8 cities, 2 are on her 2026 North American headline dates: Portland (Edgefield, in Troutdale) and the Denver area (Red Rocks, in Morrison). Nashville is on the 2026 listing only as 2 support nights for The Red Clay Strays at Bridgestone Arena. Routed's other 5 cities are not 2026 headline stops: Asheville, Salt Lake City and Seattle are markets she played in 2024 or 2025 (Asheville Yards as the 2025 tour finale, Rice-Eccles Stadium opening for Post Malone in 2025, Woodland Park Zoo in 2024), while Cincinnati and Memphis appear on none of the 2024, 2025 or 2026 listings we read. Her 2026 rooms are far bigger than Routed's: the 9 headline rooms with a Wikipedia capacity run from 1,850 (The Wiltern, seated) to 9,525 (Red Rocks), median 4,500, against 1,050 to 1,900 for the flagship's 8 rooms. The 1,500 usual crowd does not hold for 2026: she now plays 2,000+ rooms, so the flagship is a 2024-scale club and theatre run, not her current tour.",
   "usualCrowd": {
     "input": 1500,
+    "inputScale": "2024",
     "realMedian": 4500,
     "note": "Median of the 9 Heavy Petal headline rooms with a Wikipedia capacity (1,850 to 9,525; outdoor figures used where the show was outdoors, the smaller infobox figure where the page gives two). 7 of the 9 hold 2,000 or more. The flagship's 1,500 input is low for her 2026 draw; re-routing her today would call for about 4,500."
   },

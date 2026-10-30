@@ -70,3 +70,15 @@ test("a run with a two-travel-day jump reads as two legs, named by region where 
   // No jump of two travel days: one run, no legs to name.
   assert.equal(runLegs(stops.map((s) => ({ ...s, travelDays: Math.min(1, s.travelDays) }))), null);
 });
+
+test("a fill date names a room only when this tour's own data found one on Qloo there, else none (room to find)", () => {
+  const known = [
+    { marketId: "tulsa-us-ok", venue: "Cain's Ballroom", venueId: "q1" },
+    // Named by the model but never found on Qloo: not a room to print.
+    { marketId: "boise-us-id", venue: "Somewhere Hall" },
+  ];
+  const legs = fillDates(stops, fanMap, "na", known);
+  assert.equal(legs.find((l) => l.to === "Denver")!.options[0]!.room, "Cain's Ballroom");
+  assert.equal(legs.find((l) => l.to === "Portland")!.options[0]!.room, undefined);
+  assert.ok(fillDates(stops, fanMap, "na").every((l) => l.options.every((o) => o.room === undefined)));
+});

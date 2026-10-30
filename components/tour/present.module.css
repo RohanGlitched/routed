@@ -1,5 +1,5 @@
 /* The tour as slides: a full-screen sheet of poster stock over the site chrome, large type, two inks. */
-.deck { position: fixed; inset: 0; z-index: 100; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: var(--stock); color: var(--ink); }
+.deck { position: fixed; inset: 0; height: 100dvh; z-index: 100; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: var(--stock); color: var(--ink); }
 
 .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px clamp(16px, 3vw, 40px); border-bottom: 1px solid var(--rule); }
 .where { margin: 0; font-size: 15px; color: var(--mute); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -9,6 +9,8 @@
 .textButton:hover { color: var(--ink); }
 
 .stage { min-height: 0; overflow: auto; cursor: pointer; display: grid; }
+/* A slide scaled to fit (Present.tsx): its layout box is still full height, so the stage mustn't scroll to it. */
+.stage[data-fit] { overflow: hidden; }
 .slide { width: min(100%, 1480px); margin: auto; padding: clamp(20px, 3.5vw, 56px) clamp(16px, 4vw, 64px); cursor: auto; animation: enter 260ms ease-out both; }
 @keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .slide { animation: none; } }
@@ -146,3 +148,6 @@
 .reality a { color: var(--blue); font-weight: 600; }
 .changedTight .rows li { padding: clamp(3px, min(0.5vw, 0.7vh), 10px) 0; font-size: clamp(16px, min(1.6vw, 2.5vh), 28px); }
 .changedTight .reality { margin-top: 12px; }
+
+/* Steps 1 and 3: the flagship's scale against the artist's real rooms (data/flagship-reality.json). */
+.scale { margin: 14px 0 0; padding-left: 12px; border-left: 3px solid var(--blue); font-size: clamp(14px, min(1.3vw, 2.3vh), 21px); font-weight: 600; line-height: 1.35; color: var(--blue-deep); max-width: 40em; }

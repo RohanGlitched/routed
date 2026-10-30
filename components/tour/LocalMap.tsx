@@ -20,7 +20,7 @@ const niceKm = (km: number) => [0.5, 1, 2, 5, 10, 20].reduce((best, v) => (Math.
  * too: a neighbourhood is bold only when Qloo's places (or OpenStreetMap, credited) name it, and the room "sits in"
  * it only when Qloo files the room there.
  */
-export function LocalMap({ local, room, others, city, artist, places, spots = [], size = SIZE }: { local: Local; room?: Room; others: Room[]; city: string; artist: string; /** Every Qloo place on the stop (rooms, poster shops, bars): they name the hottest blocks. */ places?: LocalPlace[]; /** Poster shops and after-show bars to mark on the map. */ spots?: Spot[]; size?: number }) {
+export function LocalMap({ local, room, others, city, artist, places, spots = [], size = SIZE, captionElsewhere = false }: { local: Local; room?: Room; others: Room[]; city: string; artist: string; /** Every Qloo place on the stop (rooms, poster shops, bars): they name the hottest blocks. */ places?: LocalPlace[]; /** Poster shops and after-show bars to mark on the map. */ spots?: Spot[]; size?: number; /** The page prints the caption under the city's name below 768px (LocalCaption), so the figure drops it there. */ captionElsewhere?: boolean }) {
   const placed = [room, ...others].filter((r): r is Room => r?.lat !== undefined && r?.lon !== undefined);
   const bookedRoom = room && placed[0] === room ? room : undefined;
 
@@ -51,12 +51,7 @@ export function LocalMap({ local, room, others, city, artist, places, spots = []
     .sort((x, y) => (hot ? Math.hypot(x.x - hot.x, x.y - hot.y) - Math.hypot(y.x - hot.x, y.y - hot.y) : 0))
     .slice(0, SPOTS);
 
-  // A neighbourhood named from OpenStreetMap (when Qloo's places there name none) is settled at run time like the
-  // Qloo vote, and credited under the map.
-  const osm = (local.hot as { named?: string }).named === "osm" && !!local.hot.name;
-  const settled: Local = osm ? { ...local, hot: { ...local.hot, named: "near" } } : local;
-  const read = readLocal(settled, room, places ?? [room, ...others].filter((r): r is Room => !!r));
-  const words = localWords(read, city);
+  const { read, osm, words } = mapReading(local, room, others, city, places);
   const aria = localWords(read, city, `${artist} fans`);
   const label = `${aria.lead}${aria.name ?? ""}${aria.tail} ${aria.verdict}`.trim();
 
@@ -80,9 +75,16 @@ export function LocalMap({ local, room, others, city, artist, places, spots = []
     ...(hot ? [{ text: areaName ? mapName(areaName, 24) : "Hottest blocks", x: hot.x, y: hot.y, gap: ringR + 4, kind: "area" as const, avoid: [scaleBox, ...bookedBox, ...restBoxes, ...spotMarks.map(spotBox)] }] : []),
     ...spotMarks.map((m) => ({ text: mapName(m.p.name, 18), x: m.x, y: m.y, gap: 7, kind: "spot" as const, avoid: [scaleBox, ...bookedBox, ...hotBox, ...restBoxes, ...spotMarks.filter((o) => o !== m).map(spotBox)] })),
   ];
+  // Each label also keeps off the fans' dots where it can (Oct 30: "Voltage Records" and "The Orange Peel" sat on
+  // dots on the deck's day slide): first clear of every dot, then of the larger ones, then over dots with its halo.
+  const dotTiers = [dots.map((d) => box(d.x, d.y, d.r + 1)), dots.filter((d) => d.r >= 3).map((d) => box(d.x, d.y, d.r)), []];
   const placedLabels: (MapLabel & { kind: keyof typeof fs })[] = [];
   for (const w of want) {
-    const [l] = placeLabels([w], size, fs[w.kind], [...w.avoid, ...placedLabels.map((p) => p.box)]);
+    let l: MapLabel | null = null;
+    for (const tier of dotTiers) {
+      [l] = placeLabels([w], size, fs[w.kind], [...w.avoid, ...tier, ...placedLabels.map((p) => p.box)]);
+      if (l) break;
+    }
     if (l) placedLabels.push({ ...l, kind: w.kind });
   }
 
@@ -173,22 +175,50 @@ export function LocalMap({ local, room, others, city, artist, places, spots = []
           </li>
         )}
       </ul>
-      <figcaption>
-        {words.lead}
-        {words.name && <b>{words.name}</b>}
-        {words.tail}
-        {words.verdict ? ` ${words.verdict}` : ""}
-        {osm && (
-          <span className={s.credit}>
-            {" "}
-            Neighbourhood name from OpenStreetMap,{" "}
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
-              © OpenStreetMap contributors
-            </a>
-            .
-          </span>
-        )}
+      <figcaption className={captionElsewhere ? s.captionWide : undefined}>
+        <CaptionText words={words} osm={osm} />
       </figcaption>
     </figure>
+  );
+}
+
+/** The map's reading: the fans' hottest blocks, named, and how far the room sits from them (lib/geo/local.ts). */
+function mapReading(local: Local, room: Room | undefined, others: Room[], city: string, places?: LocalPlace[]) {
+  // A neighbourhood named from OpenStreetMap (when Qloo's places there name none) is settled at run time like the
+  // Qloo vote, and credited under the map.
+  const osm = (local.hot as { named?: string }).named === "osm" && !!local.hot.name;
+  const settled: Local = osm ? { ...local, hot: { ...local.hot, named: "near" } } : local;
+  const read = readLocal(settled, room, places ?? [room, ...others].filter((r): r is Room => !!r));
+  return { read, osm, words: localWords(read, city) };
+}
+
+function CaptionText({ words, osm }: { words: ReturnType<typeof localWords>; osm: boolean }) {
+  return (
+    <>
+      {words.lead}
+      {words.name && <b>{words.name}</b>}
+      {words.tail}
+      {words.verdict ? ` ${words.verdict}` : ""}
+      {osm && (
+        <span className={s.credit}>
+          {" "}
+          Neighbourhood name from OpenStreetMap,{" "}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+            © OpenStreetMap contributors
+          </a>
+          .
+        </span>
+      )}
+    </>
+  );
+}
+
+/** The map's one-line reading on its own, for a phone's day sheet, where it prints under the city's name. */
+export function LocalCaption({ local, room, others, city, places, className }: { local: Local; room?: Room; others: Room[]; city: string; places?: LocalPlace[]; className?: string }) {
+  const { osm, words } = mapReading(local, room, others, city, places);
+  return (
+    <p className={className}>
+      <CaptionText words={words} osm={osm} />
+    </p>
   );
 }

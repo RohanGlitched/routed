@@ -234,3 +234,11 @@
   .moreBtn { display: none !important; }
 }
 .sizeNote { color: var(--fire-deep); }
+
+/* Below 768px the map's one-line reading prints under the city's name (DaySheet), not under the map. */
+.captionPhone { display: none; }
+@media (max-width: 767px) {
+  .captionWide { display: none; }
+  .captionPhone { display: block; margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: var(--mute); }
+  .captionPhone b { color: var(--ink); font-weight: 600; }
+}

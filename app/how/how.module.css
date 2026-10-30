@@ -44,3 +44,15 @@
 .loopTable th, .loopTable td { padding: 8px 12px 8px 0; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
 .loopTable th { font-weight: 600; color: var(--mute); font-size: 14px; white-space: normal; vertical-align: bottom; min-width: 6em; }
 .loopTable td:first-child { white-space: normal; min-width: 12em; }
+
+/* Use it from your own agent: the tools, and a client config to paste. */
+.tools { margin: 18px 0 0; padding: 0; border-top: 2px solid var(--ink); max-width: 44em; }
+.tools > div { display: grid; grid-template-columns: 13em minmax(0, 1fr); gap: 4px 16px; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.tools dt { font-weight: 700; }
+.tools dd { margin: 0; color: var(--ink-2); font-size: 15px; }
+.configLead { margin-top: 22px; }
+.config { margin: 8px 0 0; padding: 14px 16px; max-width: 44em; overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-left: 3px solid var(--blue); border-radius: 4px; font-size: 14px; line-height: 1.5; }
+.config code { background: none !important; padding: 0 !important; white-space: pre; overflow-wrap: normal !important; }
+@media (max-width: 600px) {
+  .tools > div { grid-template-columns: 1fr; }
+}

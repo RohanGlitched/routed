@@ -47,6 +47,17 @@ async function example(): Promise<{ id: string; artist: string; log: LogLine[]; 
   return t?.status === "done" ? { id: t.id, artist: t.plan?.artist.name ?? t.input.artist, log: t.log, usage: t.engine?.usage } : null;
 }
 
+/** Routed's MCP server (app/api/mcp/route.ts, tools in lib/mcp.ts), as an agent adds it. */
+const MCP_URL = "https://routed-tours.vercel.app/api/mcp";
+const MCP_TOOLS = [
+  { name: "fan_map", what: "Where an artist's fans over-index: the region's cities ranked on Qloo's heatmap, strongest first." },
+  { name: "fan_neighbourhoods", what: "Where inside one city: the neighbourhood the fans over-index in most, with the record stores, bookshops and cafés there for a poster run." },
+  { name: "fan_profile", what: "Who the fans are: age skew and door advice, the sound they love, and the podcasts, brands, films and books they over-index on." },
+  { name: "route_tour", what: "A whole tour in about a minute: cities, a room in each, one support act, dates and pitches, with a link to the tour book." },
+  { name: "get_tour", what: "Reads back a tour book by its link or id." },
+];
+const MCP_CONFIG = JSON.stringify({ mcpServers: { routed: { type: "http", url: MCP_URL } } }, null, 2);
+
 export default async function How() {
   const ex = await example();
   const ws = wallStats(await showcaseTours().catch(() => []));
@@ -136,9 +147,26 @@ export default async function How() {
       </section>
 
       <section className={s.sec}>
-        <h2 className={s.h2} id="mcp">Use it from your own agent</h2>
+        <h2 className={s.h2} id="mcp">Use Routed&apos;s Qloo tools from your own agent</h2>
         <p>
-          Routed is also an MCP server. Add <code>https://routed-tours.vercel.app/api/mcp</code> to any assistant that supports remote MCP servers (Claude, ChatGPT, VS Code) and it gets five tools: <b>fan_map</b> (where an artist&apos;s fans over-index), <b>fan_neighbourhoods</b> (where inside one city, with the record stores and cafés there for a poster run), <b>fan_profile</b> (who they are and what else they love), <b>route_tour</b> (a whole tour in about a minute, with a link to its tour book) and <b>get_tour</b>.
+          Routed is also an MCP server, over Streamable HTTP with no account: add <code>{MCP_URL}</code> to any assistant that supports remote MCP servers (Claude, ChatGPT, VS Code) and it gets five tools. The first two answer from Qloo alone, with no model.
+        </p>
+        <dl className={s.tools}>
+          {MCP_TOOLS.map((x) => (
+            <div key={x.name}>
+              <dt>
+                <code>{x.name}</code>
+              </dt>
+              <dd>{x.what}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className={s.configLead}>In a client that reads an <code>mcpServers</code> file (Claude Desktop, Claude Code&apos;s <code>.mcp.json</code>, Cursor):</p>
+        <pre className={s.config}>
+          <code>{MCP_CONFIG}</code>
+        </pre>
+        <p className={s.note}>
+          Or from a terminal: <code>claude mcp add --transport http routed {MCP_URL}</code>. Then ask &ldquo;Where do MJ Lenderman&apos;s fans over-index in the UK?&rdquo; or &ldquo;Which Portland neighbourhood should get Waxahatchee posters?&rdquo;
         </p>
       </section>
 
